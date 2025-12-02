@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Essentials - Master Catalog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        header .prepared-by {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-description {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-features {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .card-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card-features li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+
+        .badge-complete {
+            background: #27ae60;
+            color: white;
+        }
+
+        .badge-pending {
+            background: #e67e22;
+            color: white;
+        }
+
+        .badge-priority {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .lab-card {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        .progress-indicator {
+            font-size: 0.9em;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Network Essentials</h1>
+            <div class="subtitle">Complete Course Materials Catalog</div>
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="prepared-by">Last Updated: 2025-12-01</div>
+        </header>
+
+        <!-- Statistics Section -->
+        <div class="section">
+            <h2>📊 Course Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Interactive Presentations</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">90+</span>
+                    <span class="stat-label">Total Slides</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Cumulative Labs</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Network Devices</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Complete Speaker Notes</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">250+</span>
+                    <span class="stat-label">Pages of Documentation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presentations Section -->
+        <div class="section">
+            <h2>🎓 Interactive Presentations</h2>
+            <div class="section-description">
+                HTML presentations with CSS animations, interactive visualizations, and comprehensive coverage of networking protocols.
+                Each presentation includes configuration examples, troubleshooting tips, and best practices.
+            </div>
+
+            <div class="grid">
+                <!-- OSPF Presentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔄</div>
+                        <div class="card-title">OSPF</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>18 Slides</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Open Shortest Path First - Link-state routing protocol with multi-area design, Dijkstra algorithm,
+                        and neighbor state transitions.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>LSA flooding animation</li>
+                            <li>DR/BDR election explained</li>
+                            <li>7 neighbor states visualized</li>
+                            <li>Cost calculation examples</li>
+                            <li>Complete speaker notes (70+ pages)</li>
+                        </ul>
+                    </div>
+                    <a href="ospf-presentation.html" class="btn">View Presentation</a>
+                    <a href="ospf-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+
+                <!-- STP Presentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🌳</div>
+                        <div class="card-title">STP</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>18 Slides</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Spanning Tree Protocol - Loop prevention, Root Bridge election, and port state transitions.
+                        Covers 802.1D, 802.1w (RSTP), and 802.1s (MSTP).
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Broadcast storm animation</li>
+                            <li>Root Bridge selection process</li>
+                            <li>Port states (Blocking to Forwarding)</li>
+                            <li>BPDU Guard & PortFast</li>
+                            <li>Complete speaker notes (70+ pages)</li>
+                        </ul>
+                    </div>
+                    <a href="stp-presentation.html" class="btn">View Presentation</a>
+                    <a href="stp-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+
+                <!-- VLAN Presentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🏷️</div>
+                        <div class="card-title">VLANs & Trunking</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>18 Slides</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Virtual Local Area Networks - Network segmentation with 802.1Q tagging, trunk configuration,
+                        and inter-VLAN routing techniques.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>VLAN segmentation animation</li>
+                            <li>802.1Q tagging visualized</li>
+                            <li>Trunk vs Access ports</li>
+                            <li>Native VLAN concept</li>
+                            <li>Inter-VLAN routing (SVI & ROAS)</li>
+                            <li>Complete speaker notes (75+ pages)</li>
+                        </ul>
+                    </div>
+                    <a href="vlan-presentation.html" class="btn">View Presentation</a>
+                    <a href="vlan-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+
+                <!-- ARP Presentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔍</div>
+                        <div class="card-title">ARP</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>17 Slides</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Address Resolution Protocol - IP to MAC address resolution, cache management,
+                        Gratuitous ARP, and security considerations.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>ARP request/reply animation</li>
+                            <li>Cache population demo</li>
+                            <li>Gratuitous ARP explained</li>
+                            <li>ARP spoofing attack illustrated</li>
+                            <li>IPv6 NDP comparison</li>
+                            <li>Complete speaker notes (65+ pages)</li>
+                        </ul>
+                    </div>
+                    <a href="arp-presentation.html" class="btn">View Presentation</a>
+                    <a href="arp-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+
+                <!-- EIGRP Presentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">EIGRP</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>19 Slides</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Enhanced Interior Gateway Routing Protocol - Cisco's advanced distance-vector protocol
+                        with DUAL algorithm and rapid convergence.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>DUAL algorithm animation</li>
+                            <li>Successor selection visualized</li>
+                            <li>Metric calculation (K-values)</li>
+                            <li>Query/Reply process</li>
+                            <li>OSPF comparison chart</li>
+                            <li>Complete speaker notes (comprehensive)</li>
+                        </ul>
+                    </div>
+                    <a href="eigrp-presentation.html" class="btn">View Presentation</a>
+                    <a href="eigrp-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cumulative Lab Series Section -->
+        <div class="section">
+            <h2>🔬 Cumulative Lab Series</h2>
+            <div class="section-description">
+                Progressive hands-on labs using Cisco Packet Tracer. Each lab builds upon the previous one, creating a complete
+                enterprise network. Students develop ONE network throughout the course, adding new technologies incrementally.
+            </div>
+
+            <div class="info-box">
+                <h3>🎯 Pedagogical Approach</h3>
+                <p><strong>Why Cumulative Labs?</strong> Instead of starting fresh each week, students progressively enhance
+                their existing network topology. This mirrors real-world network evolution and helps students understand how
+                different technologies integrate together.</p>
+            </div>
+
+            <div class="grid">
+                <!-- Lab 1 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">🏗️</div>
+                        <div class="card-title">Lab 1: Static Routes</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Foundation</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Build the base enterprise network topology with 12 devices across Edge, Core, Distribution,
+                        and Access layers. Configure IP addressing and static routes.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>1 Edge Router, 6 Switches</li>
+                            <li>4 VLANs (10, 20, 30, 40)</li>
+                            <li>Hierarchical design (3-tier)</li>
+                            <li>Static routing configuration</li>
+                            <li>End-to-end connectivity testing</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab01-static-routes.md" class="btn">View Lab Guide</a>
+                </div>
+
+                <!-- Lab 2 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">🏷️</div>
+                        <div class="card-title">Lab 2: Add VLANs</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Builds on Lab 1</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Segment the existing network with VLANs, configure trunk links with 802.1Q tagging,
+                        and implement inter-VLAN routing using SVIs.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Create VLANs on all switches</li>
+                            <li>Configure access & trunk ports</li>
+                            <li>802.1Q tagging implementation</li>
+                            <li>Native VLAN configuration</li>
+                            <li>Inter-VLAN routing with SVIs</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab02-add-vlans.md" class="btn">View Lab Guide</a>
+                </div>
+
+                <!-- Lab 3 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">🌳</div>
+                        <div class="card-title">Lab 3: Add STP</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Builds on Lab 2</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Add redundant links for fault tolerance and configure Spanning Tree Protocol to prevent loops.
+                        Manually configure Root Bridge and implement RSTP.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Add redundant switch links</li>
+                            <li>Configure RSTP (rapid-pvst)</li>
+                            <li>Set Root Bridge priorities</li>
+                            <li>Enable PortFast & BPDU Guard</li>
+                            <li>Test failover scenarios</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab03-add-stp.md" class="btn">View Lab Guide</a>
+                </div>
+
+                <!-- Lab 4 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔄</div>
+                        <div class="card-title">Lab 4: Replace with OSPF</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Builds on Lab 3</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Remove static routes and implement multi-area OSPF for dynamic routing. Configure Areas 0, 10,
+                        and 20 with proper hierarchy.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Remove all static routes</li>
+                            <li>Configure multi-area OSPF</li>
+                            <li>Set Router IDs with loopbacks</li>
+                            <li>Adjust reference bandwidth</li>
+                            <li>Verify neighbor relationships</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab04-replace-with-ospf.md" class="btn">View Lab Guide</a>
+                </div>
+
+                <!-- Lab 5 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">Lab 5: Add EIGRP</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Builds on Lab 4</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Add remote branch running EIGRP and implement route redistribution between OSPF and EIGRP.
+                        Compare routing protocols and optimize with route filtering.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Add remote branch topology</li>
+                            <li>Configure EIGRP routing</li>
+                            <li>Implement redistribution</li>
+                            <li>Configure route filtering</li>
+                            <li>Compare OSPF vs EIGRP</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab05-add-eigrp.md" class="btn">View Lab Guide</a>
+                </div>
+
+                <!-- Lab 6 -->
+                <div class="card lab-card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-title">Lab 6: Advanced Features</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Capstone - Builds on Lab 5</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Complete the enterprise network with HSRP gateway redundancy, DHCP for dynamic addressing,
+                        ACLs for security, and SNMP monitoring. The final comprehensive lab!
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Configure HSRP (First-Hop Redundancy)</li>
+                            <li>Set up DHCP server</li>
+                            <li>Implement ACLs for security</li>
+                            <li>Enable SNMP monitoring</li>
+                            <li>Complete enterprise simulation</li>
+                        </ul>
+                    </div>
+                    <a href="labs/lab06-advanced-features.md" class="btn">View Lab Guide</a>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📋 Lab Architecture Document</h3>
+                <p>For a complete overview of the cumulative lab series design, including topology diagrams,
+                IP addressing scheme, and pedagogical rationale:</p>
+                <a href="CUMULATIVE_LAB_SERIES.md" class="btn">View Lab Series Architecture</a>
+            </div>
+        </div>
+
+        <!-- Interactive Tools Section -->
+        <div class="section">
+            <h2>🖥️ Interactive Tools</h2>
+            <div class="section-description">
+                Browser-based interactive simulators and tools for hands-on learning without software installation.
+            </div>
+
+            <div class="grid">
+                <!-- Interactive Network Simulator -->
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-header">
+                        <div class="card-icon">🌐</div>
+                        <div class="card-title" style="color: white;">Interactive Network Simulator</div>
+                    </div>
+                    <div class="card-meta">
+                        <span style="color: white;"><strong>Browser-Based • No Installation</strong></span>
+                        <span><span class="badge badge-complete">v2.0</span></span>
+                    </div>
+                    <div class="card-description" style="color: white;">
+                        Build, configure, and test virtual networks in your browser! Simplified Packet Tracer alternative
+                        with drag-and-drop topology builder, IP configuration, routing simulation, and ping testing.
+                    </div>
+                    <div class="card-features" style="background: rgba(255,255,255,0.15); color: white;">
+                        <ul>
+                            <li>Drag-and-drop network devices</li>
+                            <li>Configure IP addresses & routing</li>
+                            <li>Distance-Vector protocol simulation</li>
+                            <li>Animated ping visualization</li>
+                            <li>Export/Import topologies (JSON)</li>
+                            <li>Pre-loaded demo scenarios</li>
+                            <li>No software installation required!</li>
+                        </ul>
+                    </div>
+                    <a href="interactive-network-simulator.html" class="btn" style="background: white; color: #667eea;">Launch Simulator</a>
+                    <a href="INTERACTIVE_LAB_README.md" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: white;">View Documentation</a>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>💡 Why Use the Interactive Simulator?</h3>
+                <p><strong>Perfect for:</strong> Remote students, quick concept demonstrations, pre-lab practice, and
+                environments where Cisco Packet Tracer cannot be installed. Works on any device with a modern web browser
+                (desktop, laptop, tablet). No account or login required!</p>
+                <p><strong>Educational Focus:</strong> Simplified interface focuses on core networking concepts:
+                IP addressing, subnetting, routing tables, and connectivity testing. Ideal for reinforcing fundamentals
+                before advancing to full Packet Tracer labs.</p>
+            </div>
+        </div>
+
+        <!-- Handouts & Resources Section -->
+        <div class="section">
+            <h2>📄 Handouts & Resources</h2>
+            <div class="section-description">
+                Supporting documentation including lab handouts, Cisco DevNet access guides, and reference materials.
+            </div>
+
+            <div class="grid">
+                <!-- Lab Handout -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <div class="card-title">Lab Handout</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>PDF Format</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Complete lab guide with device configurations, IP addressing tables, verification commands,
+                        and troubleshooting checklist. Fixed formatting for optimal readability.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Device configuration tables</li>
+                            <li>IP addressing scheme</li>
+                            <li>Verification commands</li>
+                            <li>Troubleshooting checklist</li>
+                        </ul>
+                    </div>
+                    <a href="network-essentials-lab-handout.pdf" class="btn">Download PDF</a>
+                    <a href="network-essentials-lab-handout.md" class="btn btn-secondary">View Markdown</a>
+                </div>
+
+                <!-- DevNet Guide -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">☁️</div>
+                        <div class="card-title">Cisco DevNet Guide</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>PDF Format</strong></span>
+                        <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="card-description">
+                        Comprehensive guide for accessing Cisco DevNet sandboxes. Includes VPN setup for Windows/Mac/Linux,
+                        connection methods, and troubleshooting tips.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>DevNet sandbox types</li>
+                            <li>VPN setup (all platforms)</li>
+                            <li>SSH connection methods</li>
+                            <li>Default credentials</li>
+                            <li>Troubleshooting guide</li>
+                        </ul>
+                    </div>
+                    <a href="cisco-devnet-guide.pdf" class="btn">Download PDF</a>
+                    <a href="cisco-devnet-guide.md" class="btn btn-secondary">View Markdown</a>
+                </div>
+
+                <!-- Status Tracker -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <div class="card-title">Status Tracker</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>Markdown Format</strong></span>
+                        <span><span class="badge badge-complete">Up to Date</span></span>
+                    </div>
+                    <div class="card-description">
+                        Real-time tracking of all presentations, labs, and deliverables. Includes completion status,
+                        multi-agent coordination summary, and session statistics.
+                    </div>
+                    <div class="card-features">
+                        <ul>
+                            <li>Presentation completion status</li>
+                            <li>Lab development progress</li>
+                            <li>Multi-agent coordination log</li>
+                            <li>Session summary statistics</li>
+                        </ul>
+                    </div>
+                    <a href="PRESENTATION_STATUS.md" class="btn">View Status</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start Guide -->
+        <div class="section">
+            <h2>🚀 Quick Start Guide</h2>
+
+            <div class="info-box">
+                <h3>📚 For Students</h3>
+                <p><strong>Week 1:</strong> Watch OSPF presentation → Complete Lab 1 (Static Routes) → Save as lab01-yourname.pkt</p>
+                <p><strong>Week 2:</strong> Watch VLAN presentation → Open Lab 1 file → Follow Lab 2 instructions → Save as lab02-yourname.pkt</p>
+                <p><strong>Week 3:</strong> Watch STP presentation → Open Lab 2 file → Follow Lab 3 instructions → Save as lab03-yourname.pkt</p>
+                <p><strong>Week 4:</strong> Review OSPF presentation → Open Lab 3 file → Follow Lab 4 instructions → Save as lab04-yourname.pkt</p>
+                <p><strong>Week 5:</strong> Watch EIGRP presentation → Open Lab 4 file → Follow Lab 5 instructions → Save as lab05-yourname.pkt</p>
+                <p><strong>Week 6:</strong> Final capstone → Open Lab 5 file → Follow Lab 6 instructions → Save as lab06-yourname-FINAL.pkt</p>
+                <p><strong>Important:</strong> Always open your previous lab file - don't start fresh! The cumulative approach builds your skills progressively.</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>👨‍🏫 For Instructors</h3>
+                <p><strong>Each presentation includes:</strong> Slide-by-slide speaker notes (all 5 protocols complete), real-world examples, teaching tips, and lab exercise suggestions.</p>
+                <p><strong>Each lab includes:</strong> Complete configuration guide, verification commands, troubleshooting scenarios, and reflection questions.</p>
+                <p><strong>Grading support:</strong> Required configurations checklists, expected output samples, and point value suggestions included in each lab guide.</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🔧 Technical Requirements</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Cisco Packet Tracer:</strong> Version 8.0 or later (free download from Cisco NetAcad)</li>
+                    <li><strong>Web Browser:</strong> Modern browser for HTML presentations (Chrome, Firefox, Edge, Safari)</li>
+                    <li><strong>DevNet Access:</strong> Free Cisco DevNet account for sandbox practice (optional but recommended)</li>
+                    <li><strong>PDF Reader:</strong> For viewing handout materials</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div style="font-size: 1.2em; margin-bottom: 15px;">
+                <strong>Network Essentials Course Materials</strong>
+            </div>
+            <div>
+                Prepared by: <strong>EQ6</strong>
+            </div>
+            <div style="margin-top: 10px; opacity: 0.8;">
+                Last Updated: 2025-12-01
+            </div>
+            <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.7;">
+                All presentations, labs, and materials are designed for educational use in networking courses.
+                <br>
+                Contact your instructor for additional resources and support.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
