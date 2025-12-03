@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packet Tracer Lite v3.0 - Interactive Network Lab Library</title>
+    <style>
+        /* ========== GLOBAL RESET & VARIABLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-card: #334155;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #9333ea;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2942 100%);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .app-container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+        }
+
+        /* ========== HEADER / TOOLBAR ========== */
+        .toolbar {
+            background: var(--bg-panel);
+            border-bottom: 2px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .app-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--bg-panel);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.5);
+        }
+
+        .btn-icon {
+            font-size: 1.2em;
+        }
+
+        /* ========== MAIN WORKSPACE ========== */
+        .workspace {
+            display: grid;
+            grid-template-columns: 200px 1fr 320px;
+            height: 100%;
+            gap: 0;
+        }
+
+        /* ========== LEFT PANEL: DEVICE PALETTE ========== */
+        .device-palette {
+            background: var(--bg-panel);
+            border-right: 2px solid var(--border);
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .palette-title {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .device-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .device-item:hover {
+            border-color: var(--accent-cyan);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .device-item:active {
+            cursor: grabbing;
+        }
+
+        .device-icon {
+            font-size: 2.5em;
+            margin-bottom: 6px;
+        }
+
+        .device-name {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        /* ========== CENTER: CANVAS ========== */
+        .canvas-container {
+            background: radial-gradient(ellipse at top, #1a2942 0%, var(--bg-dark) 60%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #network-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 41, 59, 0.95);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .canvas-overlay h2 {
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+        }
+
+        .canvas-overlay p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ========== RIGHT PANEL: CONFIGURATION & INSTRUCTIONS ========== */
+        .config-panel {
+            background: var(--bg-panel);
+            border-left: 2px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-tabs {
+            display: flex;
+            background: var(--bg-dark);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .panel-tab:hover {
+            background: var(--bg-panel);
+        }
+
+        .panel-tab.active {
+            border-bottom-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .panel-content {
+            padding: 16px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Instructions Panel */
+        .instruction-step {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-purple);
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .instruction-step.completed {
+            border-left-color: var(--success);
+            opacity: 0.7;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-number {
+            background: var(--accent-purple);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .step-status {
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .step-commands {
+            background: #0f1729;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: var(--success);
+            margin-top: 8px;
+        }
+
+        .step-commands div {
+            margin: 4px 0;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8em;
+            border-radius: 6px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-card);
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* ========== FOOTER / STATUS BAR ========== */
+        .status-bar {
+            background: var(--bg-panel);
+            border-top: 2px solid var(--border);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* ========== LAB LIBRARY MODAL ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-panel);
+            border: 3px solid var(--accent-cyan);
+            border-radius: 16px;
+            max-width: 900px;
+            max-height: 80vh;
+            width: 90%;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(6, 182, 212, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .lab-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .lab-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lab-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .lab-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .lab-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .lab-badge.beginner {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .lab-badge.intermediate {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .lab-badge.advanced {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .lab-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+        }
+
+        .lab-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .lab-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .lab-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .lab-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .lab-tag {
+            background: rgba(147, 51, 234, 0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            color: var(--accent-purple);
+        }
+
+        .lab-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* ========== SCROLLBAR STYLING ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER TOOLBAR -->
+        <header class="toolbar">
+            <div class="toolbar-left">
+                <div class="app-title">📚 Packet Tracer Lite v3.0</div>
+                <span style="color: var(--text-muted); font-size: 0.85em;">Interactive Network Lab Library</span>
+            </div>
+            <div class="toolbar-right">
+                <button class="btn" id="newTopologyBtn">
+                    <span class="btn-icon">📄</span> New
+                </button>
+                <button class="btn" id="exportBtn">
+                    <span class="btn-icon">💾</span> Export
+                </button>
+                <button class="btn btn-primary" id="labLibraryBtn">
+                    <span class="btn-icon">📚</span> Lab Library
+                </button>
+                <button class="btn" id="helpBtn">
+                    <span class="btn-icon">❓</span> Help
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace">
+            <!-- LEFT: DEVICE PALETTE -->
+            <aside class="device-palette">
+                <div class="palette-title">🔧 Devices</div>
+                <div class="device-item" draggable="true" data-device-type="router">
+                    <div class="device-icon" style="color: var(--accent-cyan);">🔷</div>
+                    <div class="device-name">Router</div>
+                </div>
+                <div class="device-item" draggable="true" data-device-type="l2switch">
+                    <div class="device-icon" style="color: var(--accent-purple);">🔶</div>
+                    <div class="device-name">L2 Switch</div>
+                </div>
+                <div class="device-item" draggable="true" data-device-type="l3switch">
+                    <div class="device-icon" style="color: var(--accent-green);">🔷</div>
+                    <div class="device-name">L3 Switch</div>
+                </div>
+                <div class="device-item" draggable="true" data-device-type="pc">
+                    <div class="device-icon" style="color: var(--accent-green);">💻</div>
+                    <div class="device-name">PC</div>
+                </div>
+                <div class="device-item" draggable="true" data-device-type="server">
+                    <div class="device-icon" style="color: var(--accent-orange);">🖥️</div>
+                    <div class="device-name">Server</div>
+                </div>
+            </aside>
+
+            <!-- CENTER: CANVAS -->
+            <div class="canvas-container">
+                <svg id="network-canvas"></svg>
+                <div class="canvas-overlay" id="welcomeMessage">
+                    <h2>Welcome to Packet Tracer Lite v3.0!</h2>
+                    <p>🎯 Click <strong>Lab Library</strong> to load a pre-built scenario</p>
+                    <p>🖱️ Or drag devices from the left panel to build your own network</p>
+                    <p>📖 Follow step-by-step instructions on the right panel</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: CONFIG PANEL -->
+            <aside class="config-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-tab="instructions">📝 Instructions</div>
+                    <div class="panel-tab" data-tab="config">⚙️ Config</div>
+                    <div class="panel-tab" data-tab="cli">💻 CLI</div>
+                </div>
+                <div class="panel-content">
+                    <!-- INSTRUCTIONS TAB -->
+                    <div id="instructionsTab" class="tab-pane active">
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span><strong>Lab Progress</strong></span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                        <div id="instructionsList">
+                            <p style="color: var(--text-muted); text-align: center; padding: 40px 20px;">
+                                Load a lab from the <strong>Lab Library</strong> to see step-by-step instructions here!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CONFIG TAB -->
+                    <div id="configTab" class="tab-pane">
+                        <p style="color: var(--text-muted);">Device configuration panel (coming soon)</p>
+                    </div>
+
+                    <!-- CLI TAB -->
+                    <div id="cliTab" class="tab-pane">
+                        <p style="color: var(--text-muted);">CLI interface (coming soon)</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- FOOTER STATUS BAR -->
+        <footer class="status-bar">
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span>Ready</span>
+            </div>
+            <div class="status-item">
+                <span>Mode: <strong id="currentMode">Design</strong></span>
+            </div>
+            <div class="status-item">
+                <span>Lab: <strong id="currentLab">None</strong></span>
+            </div>
+            <div class="status-item">
+                <span>Prepared by: EQ6</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- LAB LIBRARY MODAL -->
+    <div class="modal-overlay" id="labLibraryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📚 Lab Library - Choose Your Learning Path</h2>
+                <button class="modal-close" id="closeLabLibrary">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="lab-filters">
+                    <button class="filter-btn active" data-filter="all">All Labs</button>
+                    <button class="filter-btn" data-filter="beginner">🔰 Beginner</button>
+                    <button class="filter-btn" data-filter="intermediate">🎓 Intermediate</button>
+                    <button class="filter-btn" data-filter="advanced">🏆 Advanced</button>
+                </div>
+                <div class="lab-grid" id="labGrid">
+                    <!-- Labs will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== LAB LIBRARY DATA ==========
+        const LAB_LIBRARY = {
+            lab01: {
+                id: "lab01",
+                title: "Lab 1: Basic Routing - Two Networks",
+                difficulty: "beginner",
+                estimatedTime: "20 minutes",
+                icon: "🔰",
+                description: "Learn to configure IP addresses and static routes to connect two separate networks through a router. Perfect introduction to Layer 3 routing.",
+                concepts: ["IP Addressing", "Static Routes", "Gateway Configuration", "Ping Testing"],
+                devices: "1 Router, 2 Switches, 4 PCs",
+                topology: {
+                    devices: [
+                        {id: "R1", type: "router", name: "Router-1", x: 400, y: 200},
+                        {id: "SW1", type: "l2switch", name: "Switch-1", x: 200, y: 350},
+                        {id: "SW2", type: "l2switch", name: "Switch-2", x: 600, y: 350},
+                        {id: "PC1", type: "pc", name: "PC-A", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "PC-B", x: 300, y: 500},
+                        {id: "PC3", type: "pc", name: "PC-C", x: 500, y: 500},
+                        {id: "PC4", type: "pc", name: "PC-D", x: 700, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Configure Router Interface Gi0/0",
+                        description: "Assign IP address 192.168.1.1/24 to the router interface connected to Network 1 (left side).",
+                        commands: ["enable", "configure terminal", "interface GigabitEthernet0/0", "ip address 192.168.1.1 255.255.255.0", "no shutdown", "exit"],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Configure Router Interface Gi0/1",
+                        description: "Assign IP address 192.168.2.1/24 to the router interface connected to Network 2 (right side).",
+                        commands: ["interface GigabitEthernet0/1", "ip address 192.168.2.1 255.255.255.0", "no shutdown", "exit", "end"],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Configure PC-A",
+                        description: "Set IP address 192.168.1.10/24 with gateway 192.168.1.1 on PC-A.",
+                        commands: ["IP: 192.168.1.10", "Mask: 255.255.255.0", "Gateway: 192.168.1.1"],
+                        verification: "ipconfig",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Configure PC-B",
+                        description: "Set IP address 192.168.1.20/24 with gateway 192.168.1.1 on PC-B.",
+                        commands: ["IP: 192.168.1.20", "Mask: 255.255.255.0", "Gateway: 192.168.1.1"],
+                        verification: "ipconfig",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Configure PC-C",
+                        description: "Set IP address 192.168.2.10/24 with gateway 192.168.2.1 on PC-C.",
+                        commands: ["IP: 192.168.2.10", "Mask: 255.255.255.0", "Gateway: 192.168.2.1"],
+                        verification: "ipconfig",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Configure PC-D",
+                        description: "Set IP address 192.168.2.20/24 with gateway 192.168.2.1 on PC-D.",
+                        commands: ["IP: 192.168.2.20", "Mask: 255.255.255.0", "Gateway: 192.168.2.1"],
+                        verification: "ipconfig",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Test Same-Network Connectivity",
+                        description: "Ping from PC-A to PC-B to verify Layer 2 connectivity within Network 1.",
+                        commands: ["ping 192.168.1.20"],
+                        verification: "Successful ping (4 replies)",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Test Cross-Network Connectivity",
+                        description: "Ping from PC-A to PC-C to verify Layer 3 routing between networks.",
+                        commands: ["ping 192.168.2.10"],
+                        verification: "Successful ping (4 replies)",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab02: {
+                id: "lab02",
+                title: "Lab 2: VLAN Configuration & Segmentation",
+                difficulty: "beginner",
+                estimatedTime: "25 minutes",
+                icon: "🔰",
+                description: "Create multiple VLANs on a switch, assign ports to different VLANs, and observe broadcast domain isolation. Essential for understanding network segmentation.",
+                concepts: ["VLANs", "Access Ports", "Broadcast Domains", "Network Isolation"],
+                devices: "1 L2 Switch, 4 PCs",
+                topology: {
+                    devices: [
+                        {id: "SW1", type: "l2switch", name: "Switch-Core", x: 400, y: 250},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 200, y: 400},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 350, y: 400},
+                        {id: "PC3", type: "pc", name: "IT-PC1", x: 450, y: 400},
+                        {id: "PC4", type: "pc", name: "IT-PC2", x: 600, y: 400}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Create VLAN 10 (Sales)",
+                        description: "Create VLAN 10 and name it 'Sales' on the switch.",
+                        commands: ["enable", "configure terminal", "vlan 10", "name Sales", "exit"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Create VLAN 20 (IT)",
+                        description: "Create VLAN 20 and name it 'IT' on the switch.",
+                        commands: ["vlan 20", "name IT", "exit"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Assign Fa0/1 to VLAN 10",
+                        description: "Configure FastEthernet0/1 (Sales-PC1) as an access port in VLAN 10.",
+                        commands: ["interface FastEthernet0/1", "switchport mode access", "switchport access vlan 10", "exit"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Assign Fa0/2 to VLAN 10",
+                        description: "Configure FastEthernet0/2 (Sales-PC2) as an access port in VLAN 10.",
+                        commands: ["interface FastEthernet0/2", "switchport mode access", "switchport access vlan 10", "exit"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Assign Fa0/3 to VLAN 20",
+                        description: "Configure FastEthernet0/3 (IT-PC1) as an access port in VLAN 20.",
+                        commands: ["interface FastEthernet0/3", "switchport mode access", "switchport access vlan 20", "exit"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Assign Fa0/4 to VLAN 20",
+                        description: "Configure FastEthernet0/4 (IT-PC2) as an access port in VLAN 20.",
+                        commands: ["interface FastEthernet0/4", "switchport mode access", "switchport access vlan 20", "exit", "end"],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Configure PCs in VLAN 10",
+                        description: "Set Sales-PC1 to 192.168.10.10/24 and Sales-PC2 to 192.168.10.20/24.",
+                        commands: ["PC1: 192.168.10.10/24", "PC2: 192.168.10.20/24"],
+                        verification: "ipconfig on both PCs",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Configure PCs in VLAN 20",
+                        description: "Set IT-PC1 to 192.168.20.10/24 and IT-PC2 to 192.168.20.20/24.",
+                        commands: ["PC3: 192.168.20.10/24", "PC4: 192.168.20.20/24"],
+                        verification: "ipconfig on both PCs",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Test Same-VLAN Connectivity",
+                        description: "Ping from Sales-PC1 to Sales-PC2. This should work (same VLAN).",
+                        commands: ["ping 192.168.10.20"],
+                        verification: "Successful ping",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Test Cross-VLAN Isolation",
+                        description: "Ping from Sales-PC1 to IT-PC1. This should FAIL (different VLANs, no routing).",
+                        commands: ["ping 192.168.20.10"],
+                        verification: "Ping fails (Request timed out)",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab03: {
+                id: "lab03",
+                title: "Lab 3: OSPF Single-Area Dynamic Routing",
+                difficulty: "intermediate",
+                estimatedTime: "35 minutes",
+                icon: "🎓",
+                description: "Implement OSPF routing protocol across three routers in Area 0. Learn neighbor discovery, LSA flooding, and automatic routing table construction.",
+                concepts: ["OSPF Protocol", "Area 0", "Neighbor Adjacency", "Link-State Routing", "Dynamic Routes"],
+                devices: "3 Routers, 3 Switches, 3 PCs",
+                topology: {
+                    devices: [
+                        {id: "R1", type: "router", name: "Router-West", x: 150, y: 200},
+                        {id: "R2", type: "router", name: "Router-Central", x: 400, y: 200},
+                        {id: "R3", type: "router", name: "Router-East", x: 650, y: 200},
+                        {id: "SW1", type: "l2switch", name: "SW-West", x: 150, y: 350},
+                        {id: "SW2", type: "l2switch", name: "SW-Central", x: 400, y: 350},
+                        {id: "SW3", type: "l2switch", name: "SW-East", x: 650, y: 350},
+                        {id: "PC1", type: "pc", name: "PC-West", x: 150, y: 500},
+                        {id: "PC2", type: "pc", name: "PC-Central", x: 400, y: 500},
+                        {id: "PC3", type: "pc", name: "PC-East", x: 650, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Configure R1 Interfaces",
+                        description: "Configure Router-West with Gi0/0 (10.1.1.1/24 to LAN) and Gi0/1 (10.12.12.1/30 to R2).",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "interface Gi0/0",
+                            "ip address 10.1.1.1 255.255.255.0",
+                            "no shutdown",
+                            "interface Gi0/1",
+                            "ip address 10.12.12.1 255.255.255.252",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Configure R2 Interfaces",
+                        description: "Configure Router-Central with three interfaces for LAN and WAN links.",
+                        commands: [
+                            "configure terminal",
+                            "interface Gi0/0",
+                            "ip address 10.2.2.1 255.255.255.0",
+                            "no shutdown",
+                            "interface Gi0/1",
+                            "ip address 10.12.12.2 255.255.255.252",
+                            "no shutdown",
+                            "interface Gi0/2",
+                            "ip address 10.23.23.1 255.255.255.252",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Configure R3 Interfaces",
+                        description: "Configure Router-East with Gi0/0 (10.3.3.1/24 to LAN) and Gi0/1 (10.23.23.2/30 to R2).",
+                        commands: [
+                            "configure terminal",
+                            "interface Gi0/0",
+                            "ip address 10.3.3.1 255.255.255.0",
+                            "no shutdown",
+                            "interface Gi0/1",
+                            "ip address 10.23.23.2 255.255.255.252",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Enable OSPF on R1",
+                        description: "Configure OSPF process 1 on Router-West and advertise all connected networks into Area 0.",
+                        commands: [
+                            "router ospf 1",
+                            "network 10.1.1.0 0.0.0.255 area 0",
+                            "network 10.12.12.0 0.0.0.3 area 0",
+                            "end"
+                        ],
+                        verification: "show ip ospf",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Enable OSPF on R2",
+                        description: "Configure OSPF process 1 on Router-Central for all networks.",
+                        commands: [
+                            "router ospf 1",
+                            "network 10.2.2.0 0.0.0.255 area 0",
+                            "network 10.12.12.0 0.0.0.3 area 0",
+                            "network 10.23.23.0 0.0.0.3 area 0",
+                            "end"
+                        ],
+                        verification: "show ip ospf neighbor",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Enable OSPF on R3",
+                        description: "Configure OSPF process 1 on Router-East and advertise networks into Area 0.",
+                        commands: [
+                            "router ospf 1",
+                            "network 10.3.3.0 0.0.0.255 area 0",
+                            "network 10.23.23.0 0.0.0.3 area 0",
+                            "end"
+                        ],
+                        verification: "show ip ospf neighbor",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Verify OSPF Neighbors",
+                        description: "Check that all routers have formed OSPF adjacencies (FULL state).",
+                        commands: ["show ip ospf neighbor"],
+                        verification: "All neighbors show FULL/DR or FULL/BDR",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Verify Routing Tables",
+                        description: "Verify that each router has learned routes via OSPF (marked with 'O').",
+                        commands: ["show ip route"],
+                        verification: "Routes with 'O' prefix present",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Configure PCs",
+                        description: "Set PC-West (10.1.1.10/24), PC-Central (10.2.2.10/24), PC-East (10.3.3.10/24) with appropriate gateways.",
+                        commands: [
+                            "PC-West: 10.1.1.10/24, GW 10.1.1.1",
+                            "PC-Central: 10.2.2.10/24, GW 10.2.2.1",
+                            "PC-East: 10.3.3.10/24, GW 10.3.3.1"
+                        ],
+                        verification: "ipconfig on all PCs",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Test End-to-End Connectivity",
+                        description: "Ping from PC-West to PC-East to verify multi-hop OSPF routing.",
+                        commands: ["ping 10.3.3.10"],
+                        verification: "Successful ping with 3-hop path",
+                        completed: false
+                    }
+                ]
+            }
+        };
+
+        // ========== APPLICATION STATE ==========
+        let currentLab = null;
+        let currentLabProgress = 0;
+
+        // ========== EVENT LISTENERS ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lab Library Button
+            document.getElementById('labLibraryBtn').addEventListener('click', openLabLibrary);
+            document.getElementById('closeLabLibrary').addEventListener('click', closeLabLibrary);
+
+            // Panel Tabs
+            document.querySelectorAll('.panel-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Filter Buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => filterLabs(btn.dataset.filter));
+            });
+
+            // Initialize Lab Library
+            renderLabLibrary();
+        });
+
+        // ========== LAB LIBRARY FUNCTIONS ==========
+        function openLabLibrary() {
+            document.getElementById('labLibraryModal').classList.add('active');
+        }
+
+        function closeLabLibrary() {
+            document.getElementById('labLibraryModal').classList.remove('active');
+        }
+
+        function renderLabLibrary(filter = 'all') {
+            const labGrid = document.getElementById('labGrid');
+            labGrid.innerHTML = '';
+
+            Object.values(LAB_LIBRARY).forEach(lab => {
+                if (filter !== 'all' && lab.difficulty !== filter) return;
+
+                const labCard = document.createElement('div');
+                labCard.className = 'lab-card';
+                labCard.innerHTML = `
+                    <div class="lab-card-header">
+                        <span class="lab-badge ${lab.difficulty}">${lab.icon} ${lab.difficulty}</span>
+                    </div>
+                    <div class="lab-title">${lab.title}</div>
+                    <div class="lab-meta">
+                        <div class="lab-meta-item">⏱ ${lab.estimatedTime}</div>
+                        <div class="lab-meta-item">🔧 ${lab.devices}</div>
+                    </div>
+                    <div class="lab-description">${lab.description}</div>
+                    <div class="lab-tags">
+                        ${lab.concepts.map(concept => `<span class="lab-tag">${concept}</span>`).join('')}
+                    </div>
+                    <div class="lab-actions">
+                        <button class="btn btn-primary" onclick="loadLab('${lab.id}')">
+                            🎬 Load Lab
+                        </button>
+                        <button class="btn btn-small">📖 Instructions</button>
+                    </div>
+                `;
+                labGrid.appendChild(labCard);
+            });
+        }
+
+        function filterLabs(filter) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Re-render library with filter
+            renderLabLibrary(filter);
+        }
+
+        function loadLab(labId) {
+            const lab = LAB_LIBRARY[labId];
+            if (!lab) return;
+
+            currentLab = lab;
+            currentLabProgress = 0;
+
+            // Update UI
+            document.getElementById('currentLab').textContent = lab.title;
+            document.getElementById('welcomeMessage').style.display = 'none';
+
+            // Close modal
+            closeLabLibrary();
+
+            // Load instructions
+            renderInstructions(lab);
+
+            // TODO: Load topology onto canvas
+            console.log('Loading lab:', lab.title);
+        }
+
+        function renderInstructions(lab) {
+            const container = document.getElementById('instructionsList');
+            container.innerHTML = '';
+
+            lab.instructions.forEach((instruction, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `instruction-step ${instruction.completed ? 'completed' : ''}`;
+                stepDiv.innerHTML = `
+                    <div class="step-header">
+                        <span class="step-number">Step ${instruction.step}</span>
+                        <span class="step-status">${instruction.completed ? '✅' : '⏸️'}</span>
+                    </div>
+                    <div class="step-title">${instruction.title}</div>
+                    <div class="step-description">${instruction.description}</div>
+                    ${instruction.commands.length > 0 ? `
+                        <div class="step-commands">
+                            ${instruction.commands.map(cmd => `<div>> ${cmd}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="step-actions">
+                        <button class="btn btn-small" onclick="markStepComplete(${index})">
+                            ${instruction.completed ? '✅ Completed' : '✓ Mark Complete'}
+                        </button>
+                        <button class="btn btn-small">💡 Hint</button>
+                    </div>
+                `;
+                container.appendChild(stepDiv);
+            });
+
+            updateProgress();
+        }
+
+        function markStepComplete(stepIndex) {
+            if (!currentLab) return;
+
+            currentLab.instructions[stepIndex].completed = true;
+            renderInstructions(currentLab);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            if (!currentLab) return;
+
+            const totalSteps = currentLab.instructions.length;
+            const completedSteps = currentLab.instructions.filter(i => i.completed).length;
+            const percentage = Math.round((completedSteps / totalSteps) * 100);
+
+            document.getElementById('progressPercent').textContent = percentage + '%';
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.panel-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Update tab panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+
+            const targetTab = {
+                'instructions': 'instructionsTab',
+                'config': 'configTab',
+                'cli': 'cliTab'
+            }[tabName];
+
+            if (targetTab) {
+                document.getElementById(targetTab).classList.add('active');
+            }
+        }
+
+        // ========== PLACEHOLDER FUNCTIONS ==========
+        document.getElementById('newTopologyBtn').addEventListener('click', () => {
+            alert('New Topology feature coming in Phase 2!');
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            alert('Export feature coming in Phase 2!');
+        });
+
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            alert('Help documentation coming soon!');
+        });
+
+        console.log('📚 Packet Tracer Lite v3.0 - Lab Library Edition');
+        console.log('Loaded labs:', Object.keys(LAB_LIBRARY).length);
+    </script>
+</body>
+</html>
