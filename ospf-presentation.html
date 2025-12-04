@@ -548,7 +548,41 @@
             <div class="slide-number">Slide 5</div>
         </div>
 
-        <!-- Slide 6: LSA Flooding Animation -->
+        <!-- Slide 6: DR/BDR Explanation -->
+        <div class="slide">
+            <h2>DR/BDR - Designated Router Election</h2>
+
+            <div class="info-box">
+                <h4>What is DR/BDR?</h4>
+                <p><strong>DR (Designated Router)</strong> and <strong>BDR (Backup Designated Router)</strong> are elected routers on broadcast and non-broadcast multi-access (NBMA) networks that reduce OSPF overhead.</p>
+            </div>
+
+            <h3>Why DR/BDR?</h3>
+            <ul>
+                <li><strong>Problem:</strong> On multi-access networks (Ethernet), every router forming adjacencies with every other router creates n(n-1)/2 adjacencies</li>
+                <li><strong>Solution:</strong> All routers form adjacencies only with the DR and BDR</li>
+                <li><strong>Benefit:</strong> Reduces LSA flooding traffic and database synchronization overhead</li>
+            </ul>
+
+            <h3>Election Process</h3>
+            <ul>
+                <li><strong>Priority:</strong> Router with highest OSPF priority wins (default = 1, range 0-255)</li>
+                <li><strong>Tiebreaker:</strong> Highest Router ID becomes DR, second-highest becomes BDR</li>
+                <li><strong>Priority 0:</strong> Router cannot become DR/BDR (useful for low-power devices)</li>
+                <li><strong>Non-Preemptive:</strong> DR/BDR election only occurs when network comes up or DR/BDR fails</li>
+            </ul>
+
+            <h3>Multicast Addresses</h3>
+            <ul>
+                <li><strong>224.0.0.5 (AllSPFRouters):</strong> All OSPF routers listen</li>
+                <li><strong>224.0.0.6 (AllDRouters):</strong> Only DR and BDR listen</li>
+            </ul>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 6</div>
+        </div>
+
+        <!-- Slide 8: LSA Flooding Animation -->
         <div class="slide">
             <h2>Link-State Advertisement (LSA) Flooding</h2>
 
@@ -567,10 +601,10 @@
             </ul>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 6</div>
+            <div class="slide-number">Slide 7</div>
         </div>
 
-        <!-- Slide 7: OSPF Areas -->
+        <!-- Slide 8: OSPF Areas -->
         <div class="slide">
             <h2>OSPF Areas & Hierarchy</h2>
 
@@ -616,10 +650,10 @@
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 7</div>
+            <div class="slide-number">Slide 8</div>
         </div>
 
-        <!-- Slide 8: DR/BDR Election -->
+        <!-- Slide 9: DR/BDR Election -->
         <div class="slide">
             <h2>Designated Router (DR) / Backup DR</h2>
 
@@ -641,10 +675,10 @@
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 8</div>
+            <div class="slide-number">Slide 9</div>
         </div>
 
-        <!-- Slide 9: OSPF Cost Calculation -->
+        <!-- Slide 10: OSPF Cost Calculation -->
         <div class="slide">
             <h2>OSPF Cost Metric</h2>
 
@@ -695,10 +729,10 @@
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 9</div>
+            <div class="slide-number">Slide 10</div>
         </div>
 
-        <!-- Slide 10: Basic Implementation -->
+        <!-- Slide 11: Basic Implementation -->
         <div class="slide">
             <h2>OSPF Implementation - Basic Configuration</h2>
 
@@ -726,10 +760,10 @@ Router(config-router)# passive-interface GigabitEthernet0/1
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 10</div>
+            <div class="slide-number">Slide 11</div>
         </div>
 
-        <!-- Slide 11: Advanced Configuration -->
+        <!-- Slide 12: Advanced Configuration -->
         <div class="slide">
             <h2>OSPF Implementation - Advanced</h2>
 
@@ -758,10 +792,10 @@ Router(config-router)# default-information originate
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 11</div>
+            <div class="slide-number">Slide 12</div>
         </div>
 
-        <!-- Slide 12: Verification Commands -->
+        <!-- Slide 13: Verification Commands -->
         <div class="slide">
             <h2>OSPF Verification Commands</h2>
 
@@ -792,10 +826,10 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 12</div>
+            <div class="slide-number">Slide 13</div>
         </div>
 
-        <!-- Slide 13: Troubleshooting -->
+        <!-- Slide 14: Troubleshooting -->
         <div class="slide">
             <h2>OSPF Troubleshooting</h2>
 
@@ -823,10 +857,10 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 13</div>
+            <div class="slide-number">Slide 14</div>
         </div>
 
-        <!-- Slide 14: More Troubleshooting -->
+        <!-- Slide 15: More Troubleshooting -->
         <div class="slide">
             <h2>OSPF Troubleshooting (Continued)</h2>
 
@@ -852,10 +886,10 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 14</div>
+            <div class="slide-number">Slide 15</div>
         </div>
 
-        <!-- Slide 15: Best Practices & Warnings -->
+        <!-- Slide 16: Best Practices & Warnings -->
         <div class="slide">
             <h2>OSPF Best Practices</h2>
 
@@ -880,10 +914,10 @@ Router# debug ip ospf hello
             </ul>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 15</div>
+            <div class="slide-number">Slide 16</div>
         </div>
 
-        <!-- Slide 16: OSPF vs Other Protocols -->
+        <!-- Slide 17: OSPF vs Other Protocols -->
         <div class="slide">
             <h2>OSPF vs Other Routing Protocols</h2>
 
@@ -942,10 +976,10 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 16</div>
+            <div class="slide-number">Slide 17</div>
         </div>
 
-        <!-- Slide 17: Quick Reference -->
+        <!-- Slide 18: Quick Reference -->
         <div class="slide">
             <h2>OSPF Quick Reference</h2>
 
@@ -980,10 +1014,10 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 17</div>
+            <div class="slide-number">Slide 18</div>
         </div>
 
-        <!-- Slide 18: Summary -->
+        <!-- Slide 19: Summary -->
         <div class="slide">
             <h2>Summary</h2>
 
@@ -1005,7 +1039,7 @@ Router# debug ip ospf hello
             </div>
 
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="slide-number">Slide 18</div>
+            <div class="slide-number">Slide 19</div>
         </div>
     </div>
 
