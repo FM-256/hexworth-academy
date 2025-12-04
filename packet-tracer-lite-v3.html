@@ -697,12 +697,63 @@
 
                     <!-- CONFIG TAB -->
                     <div id="configTab" class="tab-pane">
-                        <p style="color: var(--text-muted);">Device configuration panel (coming soon)</p>
+                        <div id="configContent">
+                            <div class="config-header" style="padding: 15px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 15px;">
+                                <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">Device Configuration</h3>
+                                <p id="selectedDeviceInfo" style="color: var(--text-muted); font-size: 0.9em;">
+                                    Click a device on the canvas to configure it
+                                </p>
+                            </div>
+
+                            <div id="deviceConfigForm" style="display: none;">
+                                <div class="config-group" style="margin-bottom: 20px;">
+                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Device Name</label>
+                                    <input type="text" id="deviceNameInput" class="config-input" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                </div>
+
+                                <div class="config-group" style="margin-bottom: 20px;">
+                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">IP Address</label>
+                                    <input type="text" id="deviceIpInput" class="config-input" placeholder="192.168.1.1" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                </div>
+
+                                <div class="config-group" style="margin-bottom: 20px;">
+                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Subnet Mask</label>
+                                    <input type="text" id="deviceMaskInput" class="config-input" placeholder="255.255.255.0" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                </div>
+
+                                <div class="config-group" style="margin-bottom: 20px;">
+                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Default Gateway</label>
+                                    <input type="text" id="deviceGatewayInput" class="config-input" placeholder="192.168.1.254" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                </div>
+
+                                <button id="applyConfigBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                                    Apply Configuration
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- CLI TAB -->
                     <div id="cliTab" class="tab-pane">
-                        <p style="color: var(--text-muted);">CLI interface (coming soon)</p>
+                        <div class="cli-header" style="padding: 15px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 15px;">
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">Command Line Interface</h3>
+                            <p id="cliDeviceInfo" style="color: var(--text-muted); font-size: 0.9em;">
+                                Click a device on the canvas to access its CLI
+                            </p>
+                        </div>
+
+                        <div id="cliInterface" style="display: none;">
+                            <div id="cliOutput" style="background: #000; color: #0f0; padding: 15px; border-radius: 6px; height: 400px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9em; margin-bottom: 10px; border: 2px solid var(--accent-cyan);">
+                                <div>Cisco IOS Software, Lite Version 3.0</div>
+                                <div>Type 'help' for available commands</div>
+                                <div style="margin-top: 10px;">Ready.</div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span id="cliPrompt" style="color: var(--accent-cyan); font-family: 'Courier New', monospace; font-weight: bold;">Router&gt;</span>
+                                <input type="text" id="cliInput" placeholder="Enter command..." style="flex: 1; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -1416,6 +1467,12 @@
             // Add drag functionality to move devices
             makeDraggable(deviceGroup);
 
+            // Add click to select device
+            deviceGroup.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectDevice(deviceId);
+            });
+
             console.log(`Added ${type} at (${x}, ${y})`);
         }
 
@@ -1450,6 +1507,166 @@
                 document.removeEventListener('mousemove', drag);
                 document.removeEventListener('mouseup', stopDrag);
             }
+        }
+
+        // ========== DEVICE SELECTION & CONFIGURATION ==========
+        let selectedDevice = null;
+
+        function selectDevice(deviceId) {
+            selectedDevice = devices.find(d => d.id === deviceId);
+            if (!selectedDevice) return;
+
+            // Highlight selected device
+            document.querySelectorAll('#network-canvas g').forEach(g => {
+                const circle = g.querySelector('circle');
+                if (circle) circle.setAttribute('stroke-width', '2');
+            });
+
+            const selectedElement = document.getElementById(deviceId);
+            if (selectedElement) {
+                const circle = selectedElement.querySelector('circle');
+                if (circle) circle.setAttribute('stroke-width', '4');
+            }
+
+            // Update Config panel
+            updateConfigPanel();
+
+            // Update CLI panel
+            updateCLIPanel();
+
+            console.log('Selected device:', selectedDevice.name);
+        }
+
+        function updateConfigPanel() {
+            if (!selectedDevice) return;
+
+            document.getElementById('selectedDeviceInfo').textContent =
+                `Configuring: ${selectedDevice.name} (${selectedDevice.type.toUpperCase()})`;
+
+            document.getElementById('deviceConfigForm').style.display = 'block';
+            document.getElementById('deviceNameInput').value = selectedDevice.name || '';
+            document.getElementById('deviceIpInput').value = selectedDevice.ip || '';
+            document.getElementById('deviceMaskInput').value = selectedDevice.mask || '';
+            document.getElementById('deviceGatewayInput').value = selectedDevice.gateway || '';
+        }
+
+        function updateCLIPanel() {
+            if (!selectedDevice) return;
+
+            document.getElementById('cliDeviceInfo').textContent =
+                `Connected to: ${selectedDevice.name} (${selectedDevice.type.toUpperCase()})`;
+
+            document.getElementById('cliInterface').style.display = 'block';
+            document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
+        }
+
+        // Apply configuration from Config panel
+        document.getElementById('applyConfigBtn').addEventListener('click', () => {
+            if (!selectedDevice) return;
+
+            selectedDevice.name = document.getElementById('deviceNameInput').value;
+            selectedDevice.ip = document.getElementById('deviceIpInput').value;
+            selectedDevice.mask = document.getElementById('deviceMaskInput').value;
+            selectedDevice.gateway = document.getElementById('deviceGatewayInput').value;
+
+            // Update device label on canvas
+            const deviceElement = document.getElementById(selectedDevice.id);
+            if (deviceElement) {
+                const label = deviceElement.querySelector('text[y="45"]');
+                if (label) label.textContent = selectedDevice.name;
+            }
+
+            // Show confirmation
+            const output = document.getElementById('cliOutput');
+            output.innerHTML += `<div style="color: #0f0; margin-top: 10px;">✓ Configuration applied to ${selectedDevice.name}</div>`;
+            output.innerHTML += `<div>  IP: ${selectedDevice.ip}</div>`;
+            output.innerHTML += `<div>  Mask: ${selectedDevice.mask}</div>`;
+            output.innerHTML += `<div>  Gateway: ${selectedDevice.gateway}</div>`;
+            output.scrollTop = output.scrollHeight;
+
+            console.log('Configuration applied:', selectedDevice);
+        });
+
+        // CLI Command Processing
+        document.getElementById('cliInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const input = e.target.value.trim();
+                if (!input) return;
+
+                processCommand(input);
+                e.target.value = '';
+            }
+        });
+
+        function processCommand(cmd) {
+            const output = document.getElementById('cliOutput');
+            const prompt = document.getElementById('cliPrompt').textContent;
+
+            // Echo command
+            output.innerHTML += `<div style="margin-top: 10px;">${prompt} ${cmd}</div>`;
+
+            // Process commands
+            const lowerCmd = cmd.toLowerCase();
+
+            if (lowerCmd === 'help' || lowerCmd === '?') {
+                output.innerHTML += `<div style="color: #0ff;">Available commands:</div>`;
+                output.innerHTML += `<div>  show ip           - Display IP configuration</div>`;
+                output.innerHTML += `<div>  show running      - Display running configuration</div>`;
+                output.innerHTML += `<div>  configure         - Enter configuration mode</div>`;
+                output.innerHTML += `<div>  hostname [name]   - Set device hostname</div>`;
+                output.innerHTML += `<div>  ip address [ip] [mask] - Set IP address</div>`;
+                output.innerHTML += `<div>  clear             - Clear CLI output</div>`;
+                output.innerHTML += `<div>  help or ?         - Show this help</div>`;
+            } else if (lowerCmd === 'show ip') {
+                output.innerHTML += `<div style="color: #ff0;">Interface GigabitEthernet0/0:</div>`;
+                output.innerHTML += `<div>  IP Address: ${selectedDevice.ip || 'Not configured'}</div>`;
+                output.innerHTML += `<div>  Subnet Mask: ${selectedDevice.mask || 'Not configured'}</div>`;
+                output.innerHTML += `<div>  Default Gateway: ${selectedDevice.gateway || 'Not configured'}</div>`;
+            } else if (lowerCmd === 'show running') {
+                output.innerHTML += `<div style="color: #ff0;">Current configuration:</div>`;
+                output.innerHTML += `<div>hostname ${selectedDevice.name}</div>`;
+                output.innerHTML += `<div>interface GigabitEthernet0/0</div>`;
+                output.innerHTML += `<div>  ip address ${selectedDevice.ip || '0.0.0.0'} ${selectedDevice.mask || '0.0.0.0'}</div>`;
+                output.innerHTML += `<div>  no shutdown</div>`;
+            } else if (lowerCmd.startsWith('hostname ')) {
+                const newName = cmd.substring(9).trim();
+                if (newName) {
+                    selectedDevice.name = newName;
+                    const deviceElement = document.getElementById(selectedDevice.id);
+                    if (deviceElement) {
+                        const label = deviceElement.querySelector('text[y="45"]');
+                        if (label) label.textContent = newName;
+                    }
+                    document.getElementById('cliPrompt').textContent = `${newName}>`;
+                    document.getElementById('deviceNameInput').value = newName;
+                    output.innerHTML += `<div style="color: #0f0;">✓ Hostname set to: ${newName}</div>`;
+                }
+            } else if (lowerCmd.startsWith('ip address ')) {
+                const parts = cmd.substring(11).trim().split(/\s+/);
+                if (parts.length >= 2) {
+                    selectedDevice.ip = parts[0];
+                    selectedDevice.mask = parts[1];
+                    document.getElementById('deviceIpInput').value = parts[0];
+                    document.getElementById('deviceMaskInput').value = parts[1];
+                    output.innerHTML += `<div style="color: #0f0;">✓ IP address configured</div>`;
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">Error: Usage: ip address [ip] [mask]</div>`;
+                }
+            } else if (lowerCmd === 'clear') {
+                output.innerHTML = '<div>Cisco IOS Software, Lite Version 3.0</div><div>Type \'help\' for available commands</div><div style="margin-top: 10px;">Ready.</div>';
+            } else if (lowerCmd === 'configure' || lowerCmd === 'conf t') {
+                document.getElementById('cliPrompt').textContent = `${selectedDevice.name}(config)#`;
+                output.innerHTML += `<div style="color: #0ff;">Entering configuration mode...</div>`;
+            } else if (lowerCmd === 'exit' || lowerCmd === 'end') {
+                document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
+                output.innerHTML += `<div style="color: #0ff;">Exiting configuration mode...</div>`;
+            } else {
+                output.innerHTML += `<div style="color: #f00;">% Unrecognized command: "${cmd}"</div>`;
+                output.innerHTML += `<div>Type 'help' or '?' for available commands</div>`;
+            }
+
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
         }
 
         // ========== PLACEHOLDER FUNCTIONS ==========
