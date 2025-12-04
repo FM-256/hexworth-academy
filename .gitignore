@@ -1,154 +1,58 @@
-# Git Ignore File for Network Essentials Project
-# Prevents committing unnecessary or system-generated files
+# Network Essentials - Git Ignore File
 
-# ========== Operating System Files ==========
-# macOS
+# Package files (regenerated automatically)
+*.zip
+package-backups/
+
+# Windows security tags
+*.Identifier
+*.Zone.Identifier
+
+# macOS files
 .DS_Store
 .AppleDouble
 .LSOverride
-._*
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Linux
+# Temporary files
 *~
-.directory
-
-# ========== Editor & IDE Files ==========
-# VSCode
-.vscode/
-*.code-workspace
-
-# JetBrains IDEs (PyCharm, IntelliJ, etc.)
-.idea/
-*.iml
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
-*.swp
-*.swo
-*~
-
-# Emacs
-*~
-\#*\#
-.#*
-
-# ========== Temporary Files ==========
 *.tmp
 *.temp
+*.swp
+*.swo
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Backup files
+*-old.*
+*-backup.*
 *.bak
-*.backup
-*.old
-*.orig
 
-# ========== Log Files ==========
+# Log files
 *.log
-logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# ========== Node.js (if used for any tooling) ==========
+# Node modules (if any JS tools used)
 node_modules/
-npm-debug.log
-package-lock.json (optional, depends on team preference)
-yarn.lock
 
-# ========== Python (if used for any scripting) ==========
+# Python cache (if any Python tools used)
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-ENV/
-.venv
+*.pyc
 
-# ========== Large Binary Files ==========
-# Packet Tracer files can be very large
-# Consider storing these separately (cloud storage, shared drive)
-*.pkt
-*.pkz
+# Test files
+test/
+tests/
+*.test.html
 
-# Large PDF files (optional - comment out if you want to commit PDFs)
-# *.pdf
+# Archive directory
+archive/
 
-# Video files
-*.mp4
-*.avi
-*.mov
-*.mkv
+# Development notes
+TODO.md
+NOTES.md
+SCRATCHPAD.md
 
-# ========== Compressed Archives ==========
-*.zip
-*.tar
-*.tar.gz
-*.rar
-*.7z
-
-# ========== Database Files ==========
-*.sqlite
-*.db
-
-# ========== Build Outputs ==========
-dist/
-build/
-out/
-*.min.js
-*.min.css
-
-# ========== Cache Directories ==========
-.cache/
-.sass-cache/
-.npm/
-
-# ========== Test Coverage ==========
-coverage/
-.nyc_output/
-
-# ========== Project-Specific ==========
-# Exclude personal notes or drafts
-DRAFTS/
-PERSONAL_NOTES.md
-TODO_PRIVATE.md
-
-# Exclude student submissions if storing them here
-submissions/
-student-work/
-
-# Exclude sensitive data
-credentials.txt
-secrets.json
-.env
-
-# ========== Keep These Files (Force Include) ==========
-# Force include important dotfiles
-!.gitignore
-!.gitattributes
-
-# ========== Comments ==========
-# This .gitignore is configured for the Network Essentials project
-#
-# Files that SHOULD be committed:
-# - *.html (presentations, simulator, catalog)
-# - *.md (documentation, guides, labs)
-# - *.css (stylesheets)
-# - *.js (JavaScript for interactive elements)
-# - Small *.pdf files (handouts under 10MB)
-#
-# Files that should NOT be committed:
-# - Large *.pkt Packet Tracer files (use separate storage)
-# - System files (.DS_Store, Thumbs.db)
-# - Editor files (.vscode/, .idea/)
-# - Temporary files (*.tmp, *.bak)
-#
-# Last Updated: 2025-12-02
-# Prepared by: EQ6
+# System files
+Thumbs.db
+desktop.ini
