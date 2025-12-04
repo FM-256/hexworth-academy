@@ -747,12 +747,81 @@
                                         <input type="text" id="deviceGatewayInput" class="config-input" placeholder="192.168.1.254" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
                                     </div>
 
+                                    <div class="config-group" id="dhcpClientGroup" style="margin-bottom: 20px; display: none;">
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="checkbox" id="dhcpClientCheckbox" style="width: 20px; height: 20px; cursor: pointer;">
+                                            <span style="color: var(--text-secondary); font-weight: bold;">🔄 Enable DHCP Client (Auto-configure IP)</span>
+                                        </label>
+                                        <button id="requestDhcpBtn" class="btn" style="width: 100%; margin-top: 10px; background: var(--accent-cyan); color: white; display: none;">
+                                            Request IP from DHCP Server
+                                        </button>
+                                    </div>
+
                                     <div class="config-group" style="margin-bottom: 20px;">
                                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Status</label>
                                         <select id="interfaceStatus" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
                                             <option value="up">Up (no shutdown)</option>
                                             <option value="down">Down (shutdown)</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <!-- DHCP SERVER CONFIGURATION (for server devices only) -->
+                                <div id="dhcpServerConfig" style="display: none; margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px; border: 2px solid var(--accent-purple);">
+                                    <h4 style="color: var(--accent-purple); margin-bottom: 15px;">🌐 DHCP Server Configuration</h4>
+
+                                    <div class="config-group" style="margin-bottom: 15px;">
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="checkbox" id="dhcpServerEnabled" style="width: 20px; height: 20px; cursor: pointer;">
+                                            <span style="color: var(--text-secondary); font-weight: bold;">Enable DHCP Server</span>
+                                        </label>
+                                    </div>
+
+                                    <div id="dhcpPoolConfig" style="display: none;">
+                                        <div class="config-group" style="margin-bottom: 10px;">
+                                            <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">Pool Name</label>
+                                            <input type="text" id="dhcpPoolName" placeholder="default" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                        </div>
+
+                                        <div class="config-group" style="margin-bottom: 10px;">
+                                            <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">Network</label>
+                                            <input type="text" id="dhcpNetwork" placeholder="192.168.1.0" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                        </div>
+
+                                        <div class="config-group" style="margin-bottom: 10px;">
+                                            <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">Subnet Mask</label>
+                                            <input type="text" id="dhcpSubnetMask" placeholder="255.255.255.0" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                        </div>
+
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                            <div class="config-group">
+                                                <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">Start IP</label>
+                                                <input type="text" id="dhcpStartIp" placeholder="192.168.1.10" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                            </div>
+                                            <div class="config-group">
+                                                <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">End IP</label>
+                                                <input type="text" id="dhcpEndIp" placeholder="192.168.1.100" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                            </div>
+                                        </div>
+
+                                        <div class="config-group" style="margin-bottom: 10px;">
+                                            <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">Default Gateway</label>
+                                            <input type="text" id="dhcpGateway" placeholder="192.168.1.1" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                        </div>
+
+                                        <div class="config-group" style="margin-bottom: 10px;">
+                                            <label style="display: block; color: var(--text-secondary); margin-bottom: 5px; font-size: 0.9em;">DNS Server</label>
+                                            <input type="text" id="dhcpDns" placeholder="8.8.8.8" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85em;">
+                                        </div>
+
+                                        <button id="applyDhcpServerBtn" class="btn" style="width: 100%; margin-top: 10px; background: var(--accent-purple); color: white; font-size: 0.9em;">
+                                            Apply DHCP Server Config
+                                        </button>
+
+                                        <div id="dhcpLeaseInfo" style="margin-top: 15px; padding: 10px; background: var(--bg-card); border-radius: 6px; font-size: 0.85em;">
+                                            <strong style="color: var(--accent-green);">Active Leases:</strong>
+                                            <div id="dhcpLeaseList" style="color: var(--text-muted); margin-top: 5px;">No active leases</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1207,6 +1276,32 @@
 
             // Initialize Lab Library
             renderLabLibrary();
+
+            // DHCP Server enable/disable toggle
+            document.getElementById('dhcpServerEnabled').addEventListener('change', (e) => {
+                if (selectedDevice && selectedDevice.dhcpServer) {
+                    selectedDevice.dhcpServer.enabled = e.target.checked;
+                    document.getElementById('dhcpPoolConfig').style.display = e.target.checked ? 'block' : 'none';
+                }
+            });
+
+            // Apply DHCP Server Configuration
+            document.getElementById('applyDhcpServerBtn').addEventListener('click', applyDhcpServerConfig);
+
+            // DHCP Client checkbox toggle
+            document.getElementById('dhcpClientCheckbox').addEventListener('change', (e) => {
+                if (selectedDevice && selectedDevice.interfaces) {
+                    const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
+                    const intf = selectedDevice.interfaces[interfaceIndex];
+                    if (intf) {
+                        intf.dhcpEnabled = e.target.checked;
+                        loadInterfaceConfig(); // Refresh to show/hide IP fields
+                    }
+                }
+            });
+
+            // Request DHCP IP
+            document.getElementById('requestDhcpBtn').addEventListener('click', requestDhcpIp);
         });
 
         // ========== LAB LIBRARY FUNCTIONS ==========
@@ -1638,12 +1733,12 @@
                 }
             } else if (type === 'pc' || type === 'server') {
                 interfaces = [
-                    { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up' }
+                    { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up', dhcpEnabled: false }
                 ];
             }
 
             // Store device data
-            devices.push({
+            const deviceData = {
                 id: deviceId,
                 type: type,
                 x: x,
@@ -1651,7 +1746,25 @@
                 name: `${config.label}${deviceIdCounter}`,
                 interfaces: interfaces,
                 selectedInterface: 0
-            });
+            };
+
+            // Add DHCP server properties for server devices
+            if (type === 'server') {
+                deviceData.dhcpServer = {
+                    enabled: false,
+                    poolName: 'default',
+                    network: '',
+                    mask: '',
+                    startIp: '',
+                    endIp: '',
+                    defaultGateway: '',
+                    dnsServer: '',
+                    leaseTime: 86400, // 24 hours in seconds
+                    leases: []
+                };
+            }
+
+            devices.push(deviceData);
 
             // Add drag functionality to move devices
             makeDraggable(deviceGroup);
@@ -1889,6 +2002,171 @@
             });
         }
 
+        // ========== DHCP PROTOCOL FUNCTIONS ==========
+
+        function applyDhcpServerConfig() {
+            if (!selectedDevice || !selectedDevice.dhcpServer) return;
+
+            const dhcp = selectedDevice.dhcpServer;
+            dhcp.poolName = document.getElementById('dhcpPoolName').value || 'default';
+            dhcp.network = document.getElementById('dhcpNetwork').value;
+            dhcp.mask = document.getElementById('dhcpSubnetMask').value;
+            dhcp.startIp = document.getElementById('dhcpStartIp').value;
+            dhcp.endIp = document.getElementById('dhcpEndIp').value;
+            dhcp.defaultGateway = document.getElementById('dhcpGateway').value;
+            dhcp.dnsServer = document.getElementById('dhcpDns').value;
+
+            const output = document.getElementById('cliOutput');
+            output.innerHTML += `<div style="color: #0f0; margin-top: 10px;">✓ DHCP Server configuration applied</div>`;
+            output.innerHTML += `<div>  Pool: ${dhcp.poolName}</div>`;
+            output.innerHTML += `<div>  Network: ${dhcp.network} ${dhcp.mask}</div>`;
+            output.innerHTML += `<div>  Range: ${dhcp.startIp} - ${dhcp.endIp}</div>`;
+            output.innerHTML += `<div>  Gateway: ${dhcp.defaultGateway}</div>`;
+            output.innerHTML += `<div>  DNS: ${dhcp.dnsServer}</div>`;
+            output.scrollTop = output.scrollHeight;
+
+            console.log('DHCP Server configured:', dhcp);
+        }
+
+        function requestDhcpIp() {
+            if (!selectedDevice || selectedDevice.type !== 'pc') {
+                alert('DHCP client requests are only available for PC devices');
+                return;
+            }
+
+            // Find a DHCP server on the network
+            const dhcpServer = findDhcpServer();
+
+            if (!dhcpServer) {
+                const output = document.getElementById('cliOutput');
+                output.innerHTML += `<div style="color: #f00; margin-top: 10px;">✗ DHCP DISCOVER failed - No DHCP server found on network</div>`;
+                output.scrollTop = output.scrollHeight;
+                return;
+            }
+
+            // Simulate DHCP DORA process
+            simulateDhcpDora(selectedDevice, dhcpServer);
+        }
+
+        function findDhcpServer() {
+            // Find first enabled DHCP server in the network
+            return devices.find(d =>
+                d.type === 'server' &&
+                d.dhcpServer &&
+                d.dhcpServer.enabled &&
+                d.dhcpServer.startIp &&
+                d.dhcpServer.endIp
+            );
+        }
+
+        function simulateDhcpDora(client, server) {
+            const output = document.getElementById('cliOutput');
+            const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
+            const intf = client.interfaces[interfaceIndex];
+
+            if (!intf) return;
+
+            // Allocate IP from pool
+            const newIp = allocateIpFromPool(server, client);
+
+            if (!newIp) {
+                output.innerHTML += `<div style="color: #f00; margin-top: 10px;">✗ DHCP REQUEST failed - No available IPs in pool</div>`;
+                output.scrollTop = output.scrollHeight;
+                return;
+            }
+
+            // Simulate DORA with delays
+            let step = 0;
+            const steps = [
+                { msg: `🔍 DHCP DISCOVER - Broadcasting on network...`, color: '#06b6d4', delay: 500 },
+                { msg: `📨 DHCP OFFER - Server ${server.name} offers ${newIp.ip}`, color: '#10b981', delay: 800 },
+                { msg: `🙋 DHCP REQUEST - Requesting ${newIp.ip} from ${server.name}`, color: '#f59e0b', delay: 800 },
+                { msg: `✓ DHCP ACK - Lease granted by ${server.name}`, color: '#0f0', delay: 500 }
+            ];
+
+            function showNextStep() {
+                if (step < steps.length) {
+                    const s = steps[step];
+                    output.innerHTML += `<div style="color: ${s.color}; margin-top: 10px;">${s.msg}</div>`;
+                    output.scrollTop = output.scrollHeight;
+                    step++;
+                    setTimeout(showNextStep, s.delay);
+                } else {
+                    // Apply configuration
+                    intf.ip = newIp.ip;
+                    intf.mask = server.dhcpServer.mask;
+                    intf.gateway = server.dhcpServer.defaultGateway;
+
+                    output.innerHTML += `<div style="color: #0ff; margin-top: 10px; padding: 10px; background: rgba(6, 182, 212, 0.1); border-radius: 4px;">`;
+                    output.innerHTML += `<strong>📋 IP Configuration Received:</strong><br>`;
+                    output.innerHTML += `  IP Address: ${intf.ip}<br>`;
+                    output.innerHTML += `  Subnet Mask: ${intf.mask}<br>`;
+                    output.innerHTML += `  Default Gateway: ${intf.gateway}<br>`;
+                    output.innerHTML += `  DNS Server: ${server.dhcpServer.dnsServer}<br>`;
+                    output.innerHTML += `  Lease Time: ${(server.dhcpServer.leaseTime / 3600).toFixed(0)} hours`;
+                    output.innerHTML += `</div>`;
+                    output.scrollTop = output.scrollHeight;
+
+                    // Update config panel
+                    loadInterfaceConfig();
+
+                    // Update lease display on server
+                    if (selectedDevice.type === 'server') {
+                        updateDhcpLeaseDisplay();
+                    }
+
+                    console.log(`DHCP lease granted: ${client.name} → ${newIp.ip}`);
+                }
+            }
+
+            output.innerHTML += `<div style="margin-top: 15px; border-top: 2px solid var(--accent-cyan); padding-top: 10px;">`;
+            output.innerHTML += `<strong style="color: #06b6d4;">🌐 DHCP Protocol Exchange (${client.name})</strong>`;
+            output.innerHTML += `</div>`;
+            showNextStep();
+        }
+
+        function allocateIpFromPool(server, client) {
+            const dhcp = server.dhcpServer;
+
+            // Check if client already has a lease
+            const existingLease = dhcp.leases.find(l => l.clientId === client.id);
+            if (existingLease) {
+                // Renew existing lease
+                existingLease.expiry = Date.now() + (dhcp.leaseTime * 1000);
+                return { ip: existingLease.ip };
+            }
+
+            // Parse IP range
+            const startParts = dhcp.startIp.split('.').map(Number);
+            const endParts = dhcp.endIp.split('.').map(Number);
+
+            // Calculate start and end as integers
+            const startNum = (startParts[0] << 24) + (startParts[1] << 16) + (startParts[2] << 8) + startParts[3];
+            const endNum = (endParts[0] << 24) + (endParts[1] << 16) + (endParts[2] << 8) + endParts[3];
+
+            // Get all leased IPs
+            const leasedIps = new Set(dhcp.leases.map(l => l.ip));
+
+            // Find first available IP
+            for (let ipNum = startNum; ipNum <= endNum; ipNum++) {
+                const ip = `${(ipNum >> 24) & 255}.${(ipNum >> 16) & 255}.${(ipNum >> 8) & 255}.${ipNum & 255}`;
+
+                if (!leasedIps.has(ip)) {
+                    // Create new lease
+                    const lease = {
+                        clientId: client.id,
+                        clientName: client.name,
+                        ip: ip,
+                        expiry: Date.now() + (dhcp.leaseTime * 1000)
+                    };
+                    dhcp.leases.push(lease);
+                    return { ip: ip };
+                }
+            }
+
+            return null; // No available IPs
+        }
+
         function updateConfigPanel() {
             if (!selectedDevice || !selectedDevice.interfaces) return;
 
@@ -1911,8 +2189,53 @@
             // Set selected interface
             interfaceSelect.value = selectedDevice.selectedInterface || 0;
 
+            // Show/hide DHCP server config for servers
+            const dhcpServerConfig = document.getElementById('dhcpServerConfig');
+            if (selectedDevice.type === 'server') {
+                dhcpServerConfig.style.display = 'block';
+                loadDhcpServerConfig();
+            } else {
+                dhcpServerConfig.style.display = 'none';
+            }
+
             // Load interface config
             loadInterfaceConfig();
+        }
+
+        function loadDhcpServerConfig() {
+            if (!selectedDevice || !selectedDevice.dhcpServer) return;
+
+            const dhcp = selectedDevice.dhcpServer;
+            document.getElementById('dhcpServerEnabled').checked = dhcp.enabled;
+            document.getElementById('dhcpPoolConfig').style.display = dhcp.enabled ? 'block' : 'none';
+
+            document.getElementById('dhcpPoolName').value = dhcp.poolName || 'default';
+            document.getElementById('dhcpNetwork').value = dhcp.network || '';
+            document.getElementById('dhcpSubnetMask').value = dhcp.mask || '';
+            document.getElementById('dhcpStartIp').value = dhcp.startIp || '';
+            document.getElementById('dhcpEndIp').value = dhcp.endIp || '';
+            document.getElementById('dhcpGateway').value = dhcp.defaultGateway || '';
+            document.getElementById('dhcpDns').value = dhcp.dnsServer || '';
+
+            updateDhcpLeaseDisplay();
+        }
+
+        function updateDhcpLeaseDisplay() {
+            if (!selectedDevice || !selectedDevice.dhcpServer) return;
+
+            const leaseList = document.getElementById('dhcpLeaseList');
+            const leases = selectedDevice.dhcpServer.leases;
+
+            if (leases.length === 0) {
+                leaseList.innerHTML = '<div style="color: var(--text-muted);">No active leases</div>';
+            } else {
+                leaseList.innerHTML = leases.map(lease =>
+                    `<div style="margin-bottom: 5px; padding: 5px; background: var(--bg-panel); border-radius: 4px;">
+                        <strong style="color: var(--accent-cyan);">${lease.clientName}</strong>: ${lease.ip}
+                        <br><span style="font-size: 0.8em; color: var(--text-muted);">Expires: ${new Date(lease.expiry).toLocaleTimeString()}</span>
+                    </div>`
+                ).join('');
+            }
         }
 
         function loadInterfaceConfig() {
@@ -1931,11 +2254,41 @@
 
             // Show/hide gateway field (only for PCs/Servers)
             const gatewayGroup = document.getElementById('gatewayGroup');
+            const dhcpClientGroup = document.getElementById('dhcpClientGroup');
+
             if (selectedDevice.type === 'pc' || selectedDevice.type === 'server') {
                 gatewayGroup.style.display = 'block';
                 document.getElementById('deviceGatewayInput').value = intf.gateway || '';
+
+                // Show DHCP client options for PCs only (servers are DHCP servers)
+                if (selectedDevice.type === 'pc') {
+                    dhcpClientGroup.style.display = 'block';
+                    const dhcpCheckbox = document.getElementById('dhcpClientCheckbox');
+                    dhcpCheckbox.checked = intf.dhcpEnabled || false;
+
+                    // Enable/disable manual IP fields based on DHCP
+                    const ipInput = document.getElementById('deviceIpInput');
+                    const maskInput = document.getElementById('deviceMaskInput');
+                    const gatewayInput = document.getElementById('deviceGatewayInput');
+                    const requestBtn = document.getElementById('requestDhcpBtn');
+
+                    if (intf.dhcpEnabled) {
+                        ipInput.disabled = true;
+                        maskInput.disabled = true;
+                        gatewayInput.disabled = true;
+                        requestBtn.style.display = 'block';
+                    } else {
+                        ipInput.disabled = false;
+                        maskInput.disabled = false;
+                        gatewayInput.disabled = false;
+                        requestBtn.style.display = 'none';
+                    }
+                } else {
+                    dhcpClientGroup.style.display = 'none';
+                }
             } else {
                 gatewayGroup.style.display = 'none';
+                dhcpClientGroup.style.display = 'none';
             }
         }
 
@@ -2023,9 +2376,12 @@
                 output.innerHTML += `<div style="color: #0ff;">Available commands:</div>`;
                 output.innerHTML += `<div>  show ip           - Display IP configuration</div>`;
                 output.innerHTML += `<div>  show running      - Display running configuration</div>`;
+                output.innerHTML += `<div>  show ip dhcp binding - Display DHCP leases (servers)</div>`;
                 output.innerHTML += `<div>  configure         - Enter configuration mode</div>`;
                 output.innerHTML += `<div>  hostname [name]   - Set device hostname</div>`;
                 output.innerHTML += `<div>  ip address [ip] [mask] - Set IP address</div>`;
+                output.innerHTML += `<div>  ip address dhcp   - Enable DHCP client (PCs)</div>`;
+                output.innerHTML += `<div>  ip dhcp pool [name] - Create DHCP pool (servers)</div>`;
                 output.innerHTML += `<div>  clear             - Clear CLI output</div>`;
                 output.innerHTML += `<div>  help or ?         - Show this help</div>`;
             } else if (lowerCmd === 'show ip' || lowerCmd === 'show ip interface brief') {
@@ -2085,6 +2441,62 @@
             } else if (lowerCmd === 'exit' || lowerCmd === 'end') {
                 document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
                 output.innerHTML += `<div style="color: #0ff;">Exiting configuration mode...</div>`;
+            } else if (lowerCmd === 'show ip dhcp binding') {
+                // Show DHCP leases (server only)
+                if (selectedDevice.type === 'server' && selectedDevice.dhcpServer) {
+                    const dhcp = selectedDevice.dhcpServer;
+                    if (!dhcp.enabled) {
+                        output.innerHTML += `<div style="color: #f00;">DHCP server is not enabled</div>`;
+                    } else if (dhcp.leases.length === 0) {
+                        output.innerHTML += `<div style="color: #ff0;">No active DHCP bindings</div>`;
+                    } else {
+                        output.innerHTML += `<div style="color: #ff0;">DHCP Server Bindings:</div>`;
+                        output.innerHTML += `<div>IP Address       Client Name         Expiration</div>`;
+                        output.innerHTML += `<div>---------------------------------------------------------</div>`;
+                        dhcp.leases.forEach(lease => {
+                            const ip = lease.ip.padEnd(16);
+                            const name = lease.clientName.padEnd(19);
+                            const expiry = new Date(lease.expiry).toLocaleString();
+                            output.innerHTML += `<div>${ip} ${name} ${expiry}</div>`;
+                        });
+                        output.innerHTML += `<div style="margin-top: 10px;">Total bindings: ${dhcp.leases.length}</div>`;
+                    }
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">This command is only available on DHCP servers</div>`;
+                }
+            } else if (lowerCmd.startsWith('ip dhcp pool ')) {
+                // Configure DHCP pool (server only)
+                if (selectedDevice.type === 'server' && selectedDevice.dhcpServer) {
+                    const poolName = cmd.substring(13).trim();
+                    if (poolName) {
+                        selectedDevice.dhcpServer.poolName = poolName;
+                        selectedDevice.dhcpServer.enabled = true;
+                        document.getElementById('dhcpServerEnabled').checked = true;
+                        document.getElementById('dhcpPoolName').value = poolName;
+                        document.getElementById('dhcpPoolConfig').style.display = 'block';
+                        output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool "${poolName}" created</div>`;
+                        output.innerHTML += `<div>  Use Config panel to set network range and options</div>`;
+                    } else {
+                        output.innerHTML += `<div style="color: #f00;">Error: Usage: ip dhcp pool [name]</div>`;
+                    }
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">This command is only available on server devices</div>`;
+                }
+            } else if (lowerCmd === 'ip address dhcp') {
+                // Enable DHCP client (PC only)
+                if (selectedDevice.type === 'pc') {
+                    const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
+                    const intf = selectedDevice.interfaces[interfaceIndex];
+                    if (intf) {
+                        intf.dhcpEnabled = true;
+                        document.getElementById('dhcpClientCheckbox').checked = true;
+                        loadInterfaceConfig();
+                        output.innerHTML += `<div style="color: #0f0;">✓ DHCP client enabled on ${intf.name}</div>`;
+                        output.innerHTML += `<div>  Use "Request IP from DHCP Server" button to obtain IP</div>`;
+                    }
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">This command is only available on PC devices</div>`;
+                }
             } else {
                 output.innerHTML += `<div style="color: #f00;">% Unrecognized command: "${cmd}"</div>`;
                 output.innerHTML += `<div>Type 'help' or '?' for available commands</div>`;
