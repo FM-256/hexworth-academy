@@ -1255,8 +1255,97 @@
             // Load instructions
             renderInstructions(lab);
 
-            // TODO: Load topology onto canvas
+            // Load topology onto canvas
+            loadTopology(lab.topology);
+
             console.log('Loading lab:', lab.title);
+        }
+
+        function loadTopology(topology) {
+            if (!topology || !topology.devices) return;
+
+            // Clear existing devices
+            devices = [];
+            deviceIdCounter = 0;
+            canvas.innerHTML = '';
+
+            // Render each device from the lab
+            topology.devices.forEach(deviceData => {
+                const deviceId = deviceData.id;
+
+                // Device type configurations
+                const deviceConfig = {
+                    'router': { icon: '🔷', color: '#06b6d4', label: 'Router' },
+                    'l2switch': { icon: '🔶', color: '#9333ea', label: 'Switch' },
+                    'l3switch': { icon: '🔷', color: '#10b981', label: 'L3-SW' },
+                    'pc': { icon: '💻', color: '#f59e0b', label: 'PC' },
+                    'server': { icon: '🖥️', color: '#ec4899', label: 'Server' }
+                };
+
+                const config = deviceConfig[deviceData.type] || deviceConfig['pc'];
+
+                // Create SVG group for device
+                const deviceGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                deviceGroup.setAttribute('id', deviceId);
+                deviceGroup.setAttribute('transform', `translate(${deviceData.x}, ${deviceData.y})`);
+                deviceGroup.style.cursor = 'move';
+
+                // Create background circle
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', '0');
+                circle.setAttribute('cy', '0');
+                circle.setAttribute('r', '30');
+                circle.setAttribute('fill', config.color);
+                circle.setAttribute('opacity', '0.2');
+                circle.setAttribute('stroke', config.color);
+                circle.setAttribute('stroke-width', '2');
+
+                // Create text icon
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '0');
+                text.setAttribute('y', '0');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'central');
+                text.setAttribute('font-size', '24');
+                text.textContent = config.icon;
+
+                // Create label
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', '0');
+                label.setAttribute('y', '45');
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('font-size', '12');
+                label.setAttribute('fill', '#cbd5e1');
+                label.textContent = deviceData.name;
+
+                deviceGroup.appendChild(circle);
+                deviceGroup.appendChild(text);
+                deviceGroup.appendChild(label);
+                canvas.appendChild(deviceGroup);
+
+                // Store device data
+                devices.push({
+                    id: deviceId,
+                    type: deviceData.type,
+                    x: deviceData.x,
+                    y: deviceData.y,
+                    name: deviceData.name,
+                    ip: deviceData.ip || '',
+                    mask: deviceData.mask || '',
+                    gateway: deviceData.gateway || ''
+                });
+
+                // Add drag functionality to move devices
+                makeDraggable(deviceGroup);
+
+                // Add click to select device
+                deviceGroup.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectDevice(deviceId);
+                });
+            });
+
+            console.log(`Loaded ${topology.devices.length} devices onto canvas`);
         }
 
         function returnHome() {
@@ -1282,6 +1371,12 @@
             // Reset progress
             document.getElementById('progressPercent').textContent = '0%';
             document.getElementById('progressFill').style.width = '0%';
+
+            // Clear canvas
+            devices = [];
+            deviceIdCounter = 0;
+            canvas.innerHTML = '';
+            selectedDevice = null;
 
             console.log('Returned to home screen');
         }
