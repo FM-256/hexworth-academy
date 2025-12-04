@@ -1922,8 +1922,228 @@
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
-            alert('Export feature coming in Phase 2!');
+            exportGradingReport();
         });
+
+        function exportGradingReport() {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            let report = '';
+            let totalPoints = 0;
+            let earnedPoints = 0;
+
+            // Header
+            report += '═══════════════════════════════════════════════════════\n';
+            report += '   PACKET TRACER LITE v3.0 - LAB GRADING REPORT\n';
+            report += '═══════════════════════════════════════════════════════\n\n';
+            report += `Student Name: _______________________________\n`;
+            report += `Date: ${new Date().toLocaleDateString()}\n`;
+            report += `Time: ${new Date().toLocaleTimeString()}\n`;
+
+            if (currentLab) {
+                report += `Lab: ${currentLab.title}\n`;
+                report += `Difficulty: ${currentLab.difficulty.toUpperCase()}\n`;
+            } else {
+                report += `Lab: Custom Topology\n`;
+            }
+
+            report += `\n${'─'.repeat(55)}\n\n`;
+
+            // Lab Instructions Checklist (if lab loaded)
+            if (currentLab && currentLab.instructions) {
+                report += 'SECTION 1: LAB INSTRUCTIONS COMPLETION\n';
+                report += '─'.repeat(55) + '\n\n';
+
+                currentLab.instructions.forEach((instruction, index) => {
+                    const points = 5; // Each instruction worth 5 points
+                    totalPoints += points;
+                    const completed = instruction.completed;
+                    if (completed) earnedPoints += points;
+
+                    report += `Task ${index + 1}: ${instruction.title}\n`;
+                    report += `  Status: ${completed ? '✓ COMPLETED' : '✗ INCOMPLETE'}\n`;
+                    report += `  Points: ${completed ? points : 0}/${points}\n`;
+                    report += `  Description: ${instruction.description}\n`;
+
+                    if (instruction.commands && instruction.commands.length > 0) {
+                        report += `  Required Commands:\n`;
+                        instruction.commands.forEach(cmd => {
+                            report += `    - ${cmd}\n`;
+                        });
+                    }
+                    report += '\n';
+                });
+
+                const instructionPercentage = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+                report += `Instructions Subtotal: ${earnedPoints}/${totalPoints} points (${instructionPercentage}%)\n`;
+                report += '\n' + '─'.repeat(55) + '\n\n';
+            }
+
+            // Device Configuration Checklist
+            report += 'SECTION 2: DEVICE CONFIGURATION VALIDATION\n';
+            report += '─'.repeat(55) + '\n\n';
+
+            let configPoints = 0;
+            let configEarned = 0;
+
+            devices.forEach((device, index) => {
+                report += `Device ${index + 1}: ${device.name} (${device.type.toUpperCase()})\n`;
+
+                // Check each interface
+                let deviceHasConfig = false;
+                device.interfaces.forEach(intf => {
+                    if (intf.ip || intf.status === 'up') {
+                        deviceHasConfig = true;
+                        const intfPoints = 3; // Each configured interface worth 3 points
+                        configPoints += intfPoints;
+
+                        let intfEarned = 0;
+                        report += `  Interface: ${intf.name}\n`;
+
+                        // Check IP configuration
+                        if (intf.ip && intf.ip !== '') {
+                            report += `    ✓ IP Address: ${intf.ip}\n`;
+                            intfEarned += 1;
+                        } else {
+                            report += `    ✗ IP Address: Not configured\n`;
+                        }
+
+                        // Check subnet mask
+                        if (intf.mask && intf.mask !== '') {
+                            report += `    ✓ Subnet Mask: ${intf.mask}\n`;
+                            intfEarned += 1;
+                        } else {
+                            report += `    ✗ Subnet Mask: Not configured\n`;
+                        }
+
+                        // Check status
+                        if (intf.status === 'up') {
+                            report += `    ✓ Status: UP (enabled)\n`;
+                            intfEarned += 1;
+                        } else {
+                            report += `    ✗ Status: DOWN (disabled)\n`;
+                        }
+
+                        // Check gateway for PCs
+                        if (device.type === 'pc' || device.type === 'server') {
+                            if (intf.gateway && intf.gateway !== '') {
+                                report += `    ✓ Default Gateway: ${intf.gateway}\n`;
+                            } else {
+                                report += `    ⚠ Default Gateway: Not configured\n`;
+                            }
+                        }
+
+                        configEarned += intfEarned;
+                        report += `    Points: ${intfEarned}/${intfPoints}\n`;
+                    }
+                });
+
+                if (!deviceHasConfig) {
+                    report += `  ⚠ No interfaces configured\n`;
+                }
+
+                report += '\n';
+            });
+
+            if (devices.length === 0) {
+                report += '⚠ No devices placed on canvas\n\n';
+            }
+
+            const configPercentage = configPoints > 0 ? Math.round((configEarned / configPoints) * 100) : 0;
+            report += `Configuration Subtotal: ${configEarned}/${configPoints} points (${configPercentage}%)\n`;
+            report += '\n' + '─'.repeat(55) + '\n\n';
+
+            // Topology Validation
+            report += 'SECTION 3: TOPOLOGY REQUIREMENTS\n';
+            report += '─'.repeat(55) + '\n\n';
+
+            const topoPoints = 20;
+            let topoEarned = 0;
+
+            // Count device types
+            const routerCount = devices.filter(d => d.type === 'router').length;
+            const switchCount = devices.filter(d => d.type === 'l2switch' || d.type === 'l3switch').length;
+            const hostCount = devices.filter(d => d.type === 'pc' || d.type === 'server').length;
+
+            report += `Device Inventory:\n`;
+            report += `  Routers: ${routerCount}\n`;
+            report += `  Switches: ${switchCount}\n`;
+            report += `  Hosts (PCs/Servers): ${hostCount}\n`;
+            report += `  Total Devices: ${devices.length}\n\n`;
+
+            // Topology scoring
+            if (devices.length > 0) {
+                topoEarned += 5;
+                report += `✓ Devices placed on canvas: +5 points\n`;
+            } else {
+                report += `✗ No devices placed: 0 points\n`;
+            }
+
+            if (routerCount > 0) {
+                topoEarned += 5;
+                report += `✓ Router present: +5 points\n`;
+            }
+
+            if (switchCount > 0) {
+                topoEarned += 5;
+                report += `✓ Switch present: +5 points\n`;
+            }
+
+            if (hostCount >= 2) {
+                topoEarned += 5;
+                report += `✓ Multiple hosts present: +5 points\n`;
+            }
+
+            report += `\nTopology Subtotal: ${topoEarned}/${topoPoints} points\n`;
+            report += '\n' + '─'.repeat(55) + '\n\n';
+
+            // Final Grade
+            const finalTotal = totalPoints + configPoints + topoPoints;
+            const finalEarned = earnedPoints + configEarned + topoEarned;
+            const finalPercentage = finalTotal > 0 ? Math.round((finalEarned / finalTotal) * 100) : 0;
+
+            report += 'FINAL GRADE SUMMARY\n';
+            report += '═'.repeat(55) + '\n\n';
+            report += `Section 1 (Instructions): ${earnedPoints}/${totalPoints} points\n`;
+            report += `Section 2 (Configuration): ${configEarned}/${configPoints} points\n`;
+            report += `Section 3 (Topology): ${topoEarned}/${topoPoints} points\n\n`;
+            report += `TOTAL SCORE: ${finalEarned}/${finalTotal} points (${finalPercentage}%)\n\n`;
+
+            // Letter grade
+            let letterGrade = 'F';
+            if (finalPercentage >= 90) letterGrade = 'A';
+            else if (finalPercentage >= 80) letterGrade = 'B';
+            else if (finalPercentage >= 70) letterGrade = 'C';
+            else if (finalPercentage >= 60) letterGrade = 'D';
+
+            report += `LETTER GRADE: ${letterGrade}\n\n`;
+
+            // Instructor Comments Section
+            report += '─'.repeat(55) + '\n';
+            report += 'INSTRUCTOR COMMENTS:\n';
+            report += '\n\n\n\n';
+            report += '─'.repeat(55) + '\n';
+            report += 'Instructor Signature: _______________  Date: __________\n\n';
+
+            // Footer
+            report += '═'.repeat(55) + '\n';
+            report += 'Generated by Packet Tracer Lite v3.0 - Lab Library Edition\n';
+            report += `Report ID: ${timestamp}\n`;
+            report += '═'.repeat(55) + '\n';
+
+            // Download the report
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Lab_Grade_Report_${timestamp}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log('Grading report exported successfully');
+            console.log(`Final Score: ${finalEarned}/${finalTotal} (${finalPercentage}%) - Grade: ${letterGrade}`);
+        }
 
         document.getElementById('helpBtn').addEventListener('click', () => {
             alert('Help documentation coming soon!');
