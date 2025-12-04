@@ -610,6 +610,9 @@
                 <span style="color: var(--text-muted); font-size: 0.85em;">Interactive Network Lab Library</span>
             </div>
             <div class="toolbar-right">
+                <button class="btn" id="homeBtn" style="display: none;">
+                    <span class="btn-icon">🏠</span> Home
+                </button>
                 <button class="btn" id="newTopologyBtn">
                     <span class="btn-icon">📄</span> New
                 </button>
@@ -1101,6 +1104,9 @@
 
         // ========== EVENT LISTENERS ==========
         document.addEventListener('DOMContentLoaded', () => {
+            // Home Button
+            document.getElementById('homeBtn').addEventListener('click', returnHome);
+
             // Lab Library Button
             document.getElementById('labLibraryBtn').addEventListener('click', openLabLibrary);
             document.getElementById('closeLabLibrary').addEventListener('click', closeLabLibrary);
@@ -1185,6 +1191,10 @@
             document.getElementById('currentLab').textContent = lab.title;
             document.getElementById('welcomeMessage').style.display = 'none';
 
+            // Show Home button, hide Lab Library button
+            document.getElementById('homeBtn').style.display = 'inline-flex';
+            document.getElementById('labLibraryBtn').style.display = 'none';
+
             // Close modal
             closeLabLibrary();
 
@@ -1193,6 +1203,33 @@
 
             // TODO: Load topology onto canvas
             console.log('Loading lab:', lab.title);
+        }
+
+        function returnHome() {
+            // Reset state
+            currentLab = null;
+            currentLabProgress = 0;
+
+            // Update UI
+            document.getElementById('currentLab').textContent = 'None';
+            document.getElementById('welcomeMessage').style.display = 'block';
+
+            // Hide Home button, show Lab Library button
+            document.getElementById('homeBtn').style.display = 'none';
+            document.getElementById('labLibraryBtn').style.display = 'inline-flex';
+
+            // Clear instructions
+            document.getElementById('instructionsList').innerHTML = `
+                <p style="color: var(--text-muted); text-align: center; padding: 40px 20px;">
+                    Load a lab from the <strong>Lab Library</strong> to see step-by-step instructions here!
+                </p>
+            `;
+
+            // Reset progress
+            document.getElementById('progressPercent').textContent = '0%';
+            document.getElementById('progressFill').style.width = '0%';
+
+            console.log('Returned to home screen');
         }
 
         function renderInstructions(lab) {
