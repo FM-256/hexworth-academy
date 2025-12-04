@@ -712,18 +712,35 @@
                                 </div>
 
                                 <div class="config-group" style="margin-bottom: 20px;">
-                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">IP Address</label>
-                                    <input type="text" id="deviceIpInput" class="config-input" placeholder="192.168.1.1" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Interface</label>
+                                    <select id="interfaceSelect" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace; cursor: pointer;">
+                                        <!-- Options populated dynamically -->
+                                    </select>
                                 </div>
 
-                                <div class="config-group" style="margin-bottom: 20px;">
-                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Subnet Mask</label>
-                                    <input type="text" id="deviceMaskInput" class="config-input" placeholder="255.255.255.0" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
-                                </div>
+                                <div id="interfaceConfig">
+                                    <div class="config-group" style="margin-bottom: 20px;">
+                                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">IP Address</label>
+                                        <input type="text" id="deviceIpInput" class="config-input" placeholder="192.168.1.1" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                    </div>
 
-                                <div class="config-group" style="margin-bottom: 20px;">
-                                    <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Default Gateway</label>
-                                    <input type="text" id="deviceGatewayInput" class="config-input" placeholder="192.168.1.254" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                    <div class="config-group" style="margin-bottom: 20px;">
+                                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Subnet Mask</label>
+                                        <input type="text" id="deviceMaskInput" class="config-input" placeholder="255.255.255.0" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                    </div>
+
+                                    <div class="config-group" id="gatewayGroup" style="margin-bottom: 20px; display: none;">
+                                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Default Gateway</label>
+                                        <input type="text" id="deviceGatewayInput" class="config-input" placeholder="192.168.1.254" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                    </div>
+
+                                    <div class="config-group" style="margin-bottom: 20px;">
+                                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: bold;">Status</label>
+                                        <select id="interfaceStatus" style="width: 100%; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                            <option value="up">Up (no shutdown)</option>
+                                            <option value="down">Down (shutdown)</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <button id="applyConfigBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
@@ -1323,6 +1340,35 @@
                 deviceGroup.appendChild(label);
                 canvas.appendChild(deviceGroup);
 
+                // Initialize interfaces based on device type
+                let interfaces = [];
+                if (deviceData.type === 'router') {
+                    interfaces = [
+                        { name: 'GigabitEthernet0/0', ip: '', mask: '', status: 'down' },
+                        { name: 'GigabitEthernet0/1', ip: '', mask: '', status: 'down' },
+                        { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
+                        { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
+                    ];
+                } else if (deviceData.type === 'l2switch' || deviceData.type === 'l3switch') {
+                    interfaces = [
+                        { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
+                        { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
+                        { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                        { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
+                        { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                        { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                        { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
+                    ];
+                    if (deviceData.type === 'l3switch') {
+                        // L3 switches can have IP on VLANs
+                        interfaces.push({ name: 'Vlan1', ip: '', mask: '', status: 'down' });
+                    }
+                } else if (deviceData.type === 'pc' || deviceData.type === 'server') {
+                    interfaces = [
+                        { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up' }
+                    ];
+                }
+
                 // Store device data
                 devices.push({
                     id: deviceId,
@@ -1330,9 +1376,8 @@
                     x: deviceData.x,
                     y: deviceData.y,
                     name: deviceData.name,
-                    ip: deviceData.ip || '',
-                    mask: deviceData.mask || '',
-                    gateway: deviceData.gateway || ''
+                    interfaces: interfaces,
+                    selectedInterface: 0  // Currently selected interface index
                 });
 
                 // Add drag functionality to move devices
@@ -1550,13 +1595,43 @@
             deviceGroup.appendChild(label);
             canvas.appendChild(deviceGroup);
 
+            // Initialize interfaces based on device type
+            let interfaces = [];
+            if (type === 'router') {
+                interfaces = [
+                    { name: 'GigabitEthernet0/0', ip: '', mask: '', status: 'down' },
+                    { name: 'GigabitEthernet0/1', ip: '', mask: '', status: 'down' },
+                    { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
+                    { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
+                ];
+            } else if (type === 'l2switch' || type === 'l3switch') {
+                interfaces = [
+                    { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
+                ];
+                if (type === 'l3switch') {
+                    interfaces.push({ name: 'Vlan1', ip: '', mask: '', status: 'down' });
+                }
+            } else if (type === 'pc' || type === 'server') {
+                interfaces = [
+                    { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up' }
+                ];
+            }
+
             // Store device data
             devices.push({
                 id: deviceId,
                 type: type,
                 x: x,
                 y: y,
-                name: `${config.label}${deviceIdCounter}`
+                name: `${config.label}${deviceIdCounter}`,
+                interfaces: interfaces,
+                selectedInterface: 0
             });
 
             // Add drag functionality to move devices
@@ -1633,17 +1708,57 @@
         }
 
         function updateConfigPanel() {
-            if (!selectedDevice) return;
+            if (!selectedDevice || !selectedDevice.interfaces) return;
 
             document.getElementById('selectedDeviceInfo').textContent =
                 `Configuring: ${selectedDevice.name} (${selectedDevice.type.toUpperCase()})`;
 
             document.getElementById('deviceConfigForm').style.display = 'block';
             document.getElementById('deviceNameInput').value = selectedDevice.name || '';
-            document.getElementById('deviceIpInput').value = selectedDevice.ip || '';
-            document.getElementById('deviceMaskInput').value = selectedDevice.mask || '';
-            document.getElementById('deviceGatewayInput').value = selectedDevice.gateway || '';
+
+            // Populate interface dropdown
+            const interfaceSelect = document.getElementById('interfaceSelect');
+            interfaceSelect.innerHTML = '';
+            selectedDevice.interfaces.forEach((intf, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${intf.name} ${intf.status === 'up' ? '(UP)' : '(DOWN)'}`;
+                interfaceSelect.appendChild(option);
+            });
+
+            // Set selected interface
+            interfaceSelect.value = selectedDevice.selectedInterface || 0;
+
+            // Load interface config
+            loadInterfaceConfig();
         }
+
+        function loadInterfaceConfig() {
+            if (!selectedDevice) return;
+
+            const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
+            const intf = selectedDevice.interfaces[interfaceIndex];
+            if (!intf) return;
+
+            selectedDevice.selectedInterface = interfaceIndex;
+
+            // Update form fields based on interface
+            document.getElementById('deviceIpInput').value = intf.ip || '';
+            document.getElementById('deviceMaskInput').value = intf.mask || '';
+            document.getElementById('interfaceStatus').value = intf.status || 'down';
+
+            // Show/hide gateway field (only for PCs/Servers)
+            const gatewayGroup = document.getElementById('gatewayGroup');
+            if (selectedDevice.type === 'pc' || selectedDevice.type === 'server') {
+                gatewayGroup.style.display = 'block';
+                document.getElementById('deviceGatewayInput').value = intf.gateway || '';
+            } else {
+                gatewayGroup.style.display = 'none';
+            }
+        }
+
+        // Interface selector change handler
+        document.getElementById('interfaceSelect').addEventListener('change', loadInterfaceConfig);
 
         function updateCLIPanel() {
             if (!selectedDevice) return;
@@ -1657,12 +1772,24 @@
 
         // Apply configuration from Config panel
         document.getElementById('applyConfigBtn').addEventListener('click', () => {
-            if (!selectedDevice) return;
+            if (!selectedDevice || !selectedDevice.interfaces) return;
 
+            // Update device name
             selectedDevice.name = document.getElementById('deviceNameInput').value;
-            selectedDevice.ip = document.getElementById('deviceIpInput').value;
-            selectedDevice.mask = document.getElementById('deviceMaskInput').value;
-            selectedDevice.gateway = document.getElementById('deviceGatewayInput').value;
+
+            // Update selected interface configuration
+            const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
+            const intf = selectedDevice.interfaces[interfaceIndex];
+            if (intf) {
+                intf.ip = document.getElementById('deviceIpInput').value;
+                intf.mask = document.getElementById('deviceMaskInput').value;
+                intf.status = document.getElementById('interfaceStatus').value;
+
+                // Only update gateway for PCs/Servers
+                if (selectedDevice.type === 'pc' || selectedDevice.type === 'server') {
+                    intf.gateway = document.getElementById('deviceGatewayInput').value;
+                }
+            }
 
             // Update device label on canvas
             const deviceElement = document.getElementById(selectedDevice.id);
@@ -1671,12 +1798,19 @@
                 if (label) label.textContent = selectedDevice.name;
             }
 
+            // Update interface dropdown to show new status
+            updateConfigPanel();
+
             // Show confirmation
             const output = document.getElementById('cliOutput');
             output.innerHTML += `<div style="color: #0f0; margin-top: 10px;">✓ Configuration applied to ${selectedDevice.name}</div>`;
-            output.innerHTML += `<div>  IP: ${selectedDevice.ip}</div>`;
-            output.innerHTML += `<div>  Mask: ${selectedDevice.mask}</div>`;
-            output.innerHTML += `<div>  Gateway: ${selectedDevice.gateway}</div>`;
+            output.innerHTML += `<div>  Interface: ${intf.name}</div>`;
+            output.innerHTML += `<div>  IP: ${intf.ip || 'Not configured'}</div>`;
+            output.innerHTML += `<div>  Mask: ${intf.mask || 'Not configured'}</div>`;
+            output.innerHTML += `<div>  Status: ${intf.status}</div>`;
+            if (intf.gateway) {
+                output.innerHTML += `<div>  Gateway: ${intf.gateway}</div>`;
+            }
             output.scrollTop = output.scrollHeight;
 
             console.log('Configuration applied:', selectedDevice);
@@ -1712,17 +1846,31 @@
                 output.innerHTML += `<div>  ip address [ip] [mask] - Set IP address</div>`;
                 output.innerHTML += `<div>  clear             - Clear CLI output</div>`;
                 output.innerHTML += `<div>  help or ?         - Show this help</div>`;
-            } else if (lowerCmd === 'show ip') {
-                output.innerHTML += `<div style="color: #ff0;">Interface GigabitEthernet0/0:</div>`;
-                output.innerHTML += `<div>  IP Address: ${selectedDevice.ip || 'Not configured'}</div>`;
-                output.innerHTML += `<div>  Subnet Mask: ${selectedDevice.mask || 'Not configured'}</div>`;
-                output.innerHTML += `<div>  Default Gateway: ${selectedDevice.gateway || 'Not configured'}</div>`;
-            } else if (lowerCmd === 'show running') {
+            } else if (lowerCmd === 'show ip' || lowerCmd === 'show ip interface brief') {
+                output.innerHTML += `<div style="color: #ff0;">Interface Status Table:</div>`;
+                output.innerHTML += `<div>Interface          IP-Address      Status    Protocol</div>`;
+                selectedDevice.interfaces.forEach(intf => {
+                    const intfName = intf.name.padEnd(18);
+                    const ip = (intf.ip || 'unassigned').padEnd(15);
+                    const status = intf.status === 'up' ? 'up  ' : 'down';
+                    const protocol = intf.status === 'up' ? 'up' : 'down';
+                    output.innerHTML += `<div>${intfName} ${ip} ${status}   ${protocol}</div>`;
+                });
+            } else if (lowerCmd === 'show running' || lowerCmd === 'show run') {
                 output.innerHTML += `<div style="color: #ff0;">Current configuration:</div>`;
                 output.innerHTML += `<div>hostname ${selectedDevice.name}</div>`;
-                output.innerHTML += `<div>interface GigabitEthernet0/0</div>`;
-                output.innerHTML += `<div>  ip address ${selectedDevice.ip || '0.0.0.0'} ${selectedDevice.mask || '0.0.0.0'}</div>`;
-                output.innerHTML += `<div>  no shutdown</div>`;
+                output.innerHTML += `<div>!</div>`;
+                selectedDevice.interfaces.forEach(intf => {
+                    output.innerHTML += `<div>interface ${intf.name}</div>`;
+                    if (intf.ip) {
+                        output.innerHTML += `<div>  ip address ${intf.ip} ${intf.mask || '255.255.255.0'}</div>`;
+                    }
+                    if (intf.gateway) {
+                        output.innerHTML += `<div>  ip default-gateway ${intf.gateway}</div>`;
+                    }
+                    output.innerHTML += `<div>  ${intf.status === 'up' ? 'no shutdown' : 'shutdown'}</div>`;
+                    output.innerHTML += `<div>!</div>`;
+                });
             } else if (lowerCmd.startsWith('hostname ')) {
                 const newName = cmd.substring(9).trim();
                 if (newName) {
