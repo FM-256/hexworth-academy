@@ -1798,22 +1798,25 @@
                     </div>
 
                     <h3>Phase 1: Core Labs (Current)</h3>
-                    <p>The current version includes 3 foundational labs:</p>
+                    <p>The current version includes 7 foundational labs:</p>
                     <ul>
                         <li><strong>Lab 1: Basic Routing</strong> - Two-network routing with static routes</li>
                         <li><strong>Lab 2: VLAN Configuration</strong> - Switch VLANs, access ports, and trunk ports</li>
                         <li><strong>Lab 3: OSPF Routing</strong> - Dynamic routing with OSPF configuration</li>
+                        <li><strong>Lab 4: Inter-VLAN Routing</strong> - L3 switch routing with SVIs</li>
+                        <li><strong>Lab 5: OSPF Multi-Area</strong> - Advanced OSPF with multiple areas</li>
+                        <li><strong>Lab 6: Access Control Lists (ACLs)</strong> - Standard and extended ACLs for security</li>
+                        <li><strong>Lab 7: VLAN Trunking (802.1Q)</strong> - Trunk configuration and native VLAN security</li>
                     </ul>
 
                     <h3>Phase 2: Coming Soon</h3>
                     <p>Future updates will include additional labs covering:</p>
                     <ul>
-                        <li><strong>Inter-VLAN Routing:</strong> Router-on-a-stick and L3 switch routing</li>
-                        <li><strong>Access Control Lists (ACLs):</strong> Standard and extended ACLs for security</li>
-                        <li><strong>Multi-Area OSPF:</strong> Advanced OSPF with multiple areas</li>
                         <li><strong>EIGRP Routing:</strong> Enhanced Interior Gateway Routing Protocol</li>
                         <li><strong>NAT/PAT Configuration:</strong> Network address translation</li>
+                        <li><strong>DHCP Server Configuration:</strong> Dynamic host configuration</li>
                         <li><strong>WAN Technologies:</strong> PPP, Frame Relay concepts</li>
+                        <li><strong>Port Security & Etherchannel:</strong> Advanced switching features</li>
                     </ul>
 
                     <h3>Browser Requirements</h3>
@@ -2227,6 +2230,851 @@
                         description: "Ping from PC-West to PC-East to verify multi-hop OSPF routing.",
                         commands: ["ping 10.3.3.10"],
                         verification: "Successful ping with 3-hop path",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab04: {
+                id: "lab04",
+                title: "Lab 4: Inter-VLAN Routing",
+                difficulty: "intermediate",
+                estimatedTime: "30 minutes",
+                icon: "🎓",
+                description: "Configure a Layer 3 switch to route between VLANs using SVIs (Switch Virtual Interfaces). Learn the difference between L2 and L3 switching.",
+                concepts: ["Layer 3 Switching", "SVIs", "Inter-VLAN Routing", "IP Routing", "VLAN Segmentation"],
+                devices: "1 L3 Switch, 3 PCs, 1 Server",
+                topology: {
+                    devices: [
+                        {id: "L3SW1", type: "l3switch", name: "CoreSwitch", x: 400, y: 200},
+                        {id: "PC1", type: "pc", name: "PC-Sales", x: 200, y: 350},
+                        {id: "PC2", type: "pc", name: "PC-Engineering", x: 400, y: 350},
+                        {id: "PC3", type: "pc", name: "PC-Servers", x: 600, y: 350},
+                        {id: "PC4", type: "pc", name: "PC-Sales2", x: 200, y: 500},
+                        {id: "SRV1", type: "server", name: "FileServer", x: 400, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Introduction and Topology Overview",
+                        description: "In this lab, you'll configure a Layer 3 switch to route between VLANs. Unlike traditional routing with a router, L3 switches use Switch Virtual Interfaces (SVIs) to provide default gateways for each VLAN. Observe the topology: One L3 switch connected to 6 end devices. Each device belongs to a different VLAN (Sales=VLAN 10, Engineering=VLAN 20, Servers=VLAN 30).",
+                        commands: [],
+                        verification: "Review the topology and understand the VLAN design",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Access CoreSwitch Configuration Mode",
+                        description: "Enter privileged EXEC mode, then global configuration mode on the CoreSwitch.",
+                        commands: [
+                            "enable",
+                            "configure terminal"
+                        ],
+                        verification: "Prompt shows CoreSwitch(config)#",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Create VLANs",
+                        description: "Create three VLANs for network segmentation: VLAN 10 (Sales), VLAN 20 (Engineering), and VLAN 30 (Servers).",
+                        commands: [
+                            "vlan 10",
+                            "name Sales",
+                            "vlan 20",
+                            "name Engineering",
+                            "vlan 30",
+                            "name Servers",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Configure Access Ports for VLAN 10 (Sales)",
+                        description: "Assign Gi0/1 and Gi0/5 to VLAN 10 for Sales PCs. These ports will operate in access mode.",
+                        commands: [
+                            "interface range GigabitEthernet0/1 , GigabitEthernet0/5",
+                            "switchport mode access",
+                            "switchport access vlan 10",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Configure Access Ports for VLAN 20 (Engineering)",
+                        description: "Assign Gi0/2 to VLAN 20 for the Engineering PC.",
+                        commands: [
+                            "interface GigabitEthernet0/2",
+                            "switchport mode access",
+                            "switchport access vlan 20",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Configure Access Ports for VLAN 30 (Servers)",
+                        description: "Assign Gi0/3 and Gi0/4 to VLAN 30 for the Server subnet.",
+                        commands: [
+                            "interface range GigabitEthernet0/3-4",
+                            "switchport mode access",
+                            "switchport access vlan 30",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Verify VLAN Configuration",
+                        description: "Verify that all VLANs have been created and interfaces are correctly assigned to their respective VLANs.",
+                        commands: ["show vlan brief"],
+                        verification: "VLANs 10, 20, and 30 with correct interfaces assigned",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Enable IP Routing on L3 Switch",
+                        description: "This command enables Layer 3 routing functionality. Without this, the switch cannot route between VLANs! This is the critical command that transforms an L2 switch into an L3 switch.",
+                        commands: [
+                            "ip routing"
+                        ],
+                        verification: "show ip route (should show routing table)",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Create SVI for VLAN 10",
+                        description: "Create SVI (Switch Virtual Interface) for VLAN 10. This IP becomes the default gateway for Sales devices (192.168.10.1).",
+                        commands: [
+                            "interface vlan 10",
+                            "ip address 192.168.10.1 255.255.255.0",
+                            "description Gateway for Sales VLAN",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Create SVI for VLAN 20",
+                        description: "Create SVI for VLAN 20 - Engineering gateway (192.168.20.1).",
+                        commands: [
+                            "interface vlan 20",
+                            "ip address 192.168.20.1 255.255.255.0",
+                            "description Gateway for Engineering VLAN",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 11,
+                        title: "Create SVI for VLAN 30",
+                        description: "Create SVI for VLAN 30 - Server gateway (192.168.30.1).",
+                        commands: [
+                            "interface vlan 30",
+                            "ip address 192.168.30.1 255.255.255.0",
+                            "description Gateway for Servers VLAN",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 12,
+                        title: "Verify SVI Configuration",
+                        description: "Verify that all three VLAN interfaces (Vlan10, Vlan20, Vlan30) show as 'up' with correct IP addresses.",
+                        commands: ["show ip interface brief"],
+                        verification: "All VLAN interfaces up with correct IPs",
+                        completed: false
+                    },
+                    {
+                        step: 13,
+                        title: "Configure End Devices",
+                        description: "Configure IP addresses and gateways on all end devices: PC-Sales (192.168.10.10/24, GW 192.168.10.1), PC-Sales2 (192.168.10.20/24, GW 192.168.10.1), PC-Engineering (192.168.20.10/24, GW 192.168.20.1), PC-Servers (192.168.30.10/24, GW 192.168.30.1), FileServer (192.168.30.100/24, GW 192.168.30.1).",
+                        commands: [
+                            "PC-Sales: 192.168.10.10/24, GW 192.168.10.1",
+                            "PC-Sales2: 192.168.10.20/24, GW 192.168.10.1",
+                            "PC-Engineering: 192.168.20.10/24, GW 192.168.20.1",
+                            "PC-Servers: 192.168.30.10/24, GW 192.168.30.1",
+                            "FileServer: 192.168.30.100/24, GW 192.168.30.1"
+                        ],
+                        verification: "ipconfig on all devices",
+                        completed: false
+                    },
+                    {
+                        step: 14,
+                        title: "Test Inter-VLAN Connectivity",
+                        description: "From PC-Sales (192.168.10.10), ping PC-Engineering (192.168.20.10) and FileServer (192.168.30.100). All pings should succeed! Inter-VLAN routing is working - devices in different VLANs can now communicate through the L3 switch.",
+                        commands: [
+                            "ping 192.168.20.10",
+                            "ping 192.168.30.100"
+                        ],
+                        verification: "All pings successful - Inter-VLAN routing works!",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab05: {
+                id: "lab05",
+                title: "Lab 5: OSPF Multi-Area",
+                difficulty: "advanced",
+                estimatedTime: "40 minutes",
+                icon: "🎓",
+                category: "routing",
+                description: "Configure multi-area OSPF with Areas 0, 1, and 2, understanding area types and LSA flooding",
+                concepts: ["Multi-Area OSPF", "Area 0 Backbone", "ABR Configuration", "LSA Types", "OSPF Neighbors", "Inter-Area Routing"],
+                devices: "3 Routers, 2 PCs",
+                topology: {
+                    devices: [
+                        {id: "R1", type: "router", name: "ABR-West", x: 200, y: 250},
+                        {id: "R2", type: "router", name: "ABR-Core", x: 400, y: 150},
+                        {id: "R3", type: "router", name: "ABR-East", x: 600, y: 250},
+                        {id: "PC1", type: "pc", name: "PC-West", x: 100, y: 400},
+                        {id: "PC2", type: "pc", name: "PC-East", x: 700, y: 400}
+                    ],
+                    connections: [
+                        {from: "R1", fromPort: "Gi0/0", to: "R2", toPort: "Gi0/0", color: "red", label: "Area 0"},
+                        {from: "R2", fromPort: "Gi0/1", to: "R3", toPort: "Gi0/0", color: "red", label: "Area 0"},
+                        {from: "R1", fromPort: "Gi0/1", to: "PC1", toPort: "Ethernet0", color: "green", label: "Area 1"},
+                        {from: "R3", fromPort: "Gi0/1", to: "PC2", toPort: "Ethernet0", color: "orange", label: "Area 2"}
+                    ]
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Introduction to Multi-Area OSPF",
+                        description: "Multi-area OSPF reduces routing table size and LSA flooding. Area 0 (backbone) is mandatory, and all other areas must connect to it through an ABR (Area Border Router). In this lab, we have three areas: Area 0 (backbone connecting ABR-West, ABR-Core, ABR-East), Area 1 (West branch), and Area 2 (East branch).",
+                        commands: [],
+                        verification: "Review the topology and understand the area design",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Configure ABR-West Loopback (Router ID)",
+                        description: "Loopback interfaces provide stable Router IDs that don't go down. Configure loopback 0 on ABR-West with IP 1.1.1.1/32.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "interface loopback 0",
+                            "ip address 1.1.1.1 255.255.255.255",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Configure ABR-West Interfaces",
+                        description: "Configure Gi0/0 (10.1.1.1/30 to ABR-Core) and Gi0/1 (10.2.1.1/24 to PC-West).",
+                        commands: [
+                            "interface GigabitEthernet0/0",
+                            "ip address 10.1.1.1 255.255.255.252",
+                            "no shutdown",
+                            "exit",
+                            "interface GigabitEthernet0/1",
+                            "ip address 10.2.1.1 255.255.255.0",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Configure OSPF on ABR-West",
+                        description: "Configure OSPF process 1 with router-id 1.1.1.1. Add Gi0/0 (10.1.1.0/30) to Area 0 and Gi0/1 (10.2.1.0/24) to Area 1. Area 0 is the backbone. Area 1 is for the West branch.",
+                        commands: [
+                            "router ospf 1",
+                            "router-id 1.1.1.1",
+                            "network 10.1.1.0 0.0.0.3 area 0",
+                            "network 10.2.1.0 0.0.0.255 area 1",
+                            "exit"
+                        ],
+                        verification: "show ip protocols",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Configure ABR-Core Loopback",
+                        description: "Configure loopback 0 on ABR-Core with IP 2.2.2.2/32 for stable Router ID.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "interface loopback 0",
+                            "ip address 2.2.2.2 255.255.255.255",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Configure ABR-Core Interfaces",
+                        description: "Configure Gi0/0 (10.1.1.2/30 to ABR-West) and Gi0/1 (10.1.2.1/30 to ABR-East). Both interfaces are in Area 0.",
+                        commands: [
+                            "interface GigabitEthernet0/0",
+                            "ip address 10.1.1.2 255.255.255.252",
+                            "no shutdown",
+                            "exit",
+                            "interface GigabitEthernet0/1",
+                            "ip address 10.1.2.1 255.255.255.252",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Configure OSPF on ABR-Core",
+                        description: "Configure OSPF process 1 with router-id 2.2.2.2. Both interfaces belong to Area 0. ABR-Core is a pure backbone router.",
+                        commands: [
+                            "router ospf 1",
+                            "router-id 2.2.2.2",
+                            "network 10.1.1.0 0.0.0.3 area 0",
+                            "network 10.1.2.0 0.0.0.3 area 0",
+                            "exit"
+                        ],
+                        verification: "show ip protocols",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Configure ABR-East Loopback",
+                        description: "Configure loopback 0 on ABR-East with IP 3.3.3.3/32 for stable Router ID.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "interface loopback 0",
+                            "ip address 3.3.3.3 255.255.255.255",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Configure ABR-East Interfaces",
+                        description: "Configure Gi0/0 (10.1.2.2/30 to ABR-Core) and Gi0/1 (10.3.1.1/24 to PC-East).",
+                        commands: [
+                            "interface GigabitEthernet0/0",
+                            "ip address 10.1.2.2 255.255.255.252",
+                            "no shutdown",
+                            "exit",
+                            "interface GigabitEthernet0/1",
+                            "ip address 10.3.1.1 255.255.255.0",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Configure OSPF on ABR-East",
+                        description: "Configure OSPF process 1 with router-id 3.3.3.3. Add Gi0/0 (10.1.2.0/30) to Area 0 and Gi0/1 (10.3.1.0/24) to Area 2. ABR-East connects Area 0 and Area 2.",
+                        commands: [
+                            "router ospf 1",
+                            "router-id 3.3.3.3",
+                            "network 10.1.2.0 0.0.0.3 area 0",
+                            "network 10.3.1.0 0.0.0.255 area 2",
+                            "exit"
+                        ],
+                        verification: "show ip protocols",
+                        completed: false
+                    },
+                    {
+                        step: 11,
+                        title: "Verify OSPF Neighbors",
+                        description: "Check OSPF neighbor relationships on all routers. Each router should see its neighbors. ABRs show neighbors in multiple areas.",
+                        commands: ["show ip ospf neighbor"],
+                        verification: "All neighbors show FULL state with correct Router IDs",
+                        completed: false
+                    },
+                    {
+                        step: 12,
+                        title: "Verify OSPF Database",
+                        description: "Examine the OSPF Link State Database. Notice different LSA types: Type 1 (Router LSA), Type 2 (Network LSA), Type 3 (Summary LSA for inter-area routes).",
+                        commands: ["show ip ospf database"],
+                        verification: "LSA types 1, 2, and 3 visible in database",
+                        completed: false
+                    },
+                    {
+                        step: 13,
+                        title: "Examine Routing Table",
+                        description: "View OSPF routes in the routing table. Routes learned via OSPF are marked with 'O' (intra-area) or 'O IA' (inter-area routes from other areas).",
+                        commands: ["show ip route ospf"],
+                        verification: "OSPF routes present with O and O IA designations",
+                        completed: false
+                    },
+                    {
+                        step: 14,
+                        title: "Verify ABR Status",
+                        description: "Check OSPF process details. ABR-West and ABR-East should show as ABRs (Area Border Routers) because they connect multiple areas.",
+                        commands: ["show ip ospf"],
+                        verification: "ABR-West and ABR-East display as Area Border Routers",
+                        completed: false
+                    },
+                    {
+                        step: 15,
+                        title: "Configure PC IP Addresses",
+                        description: "Configure PC-West with IP 10.2.1.10/24 and gateway 10.2.1.1. Configure PC-East with IP 10.3.1.10/24 and gateway 10.3.1.1.",
+                        commands: [
+                            "PC-West: 10.2.1.10/24, GW 10.2.1.1",
+                            "PC-East: 10.3.1.10/24, GW 10.3.1.1"
+                        ],
+                        verification: "ipconfig on both PCs shows correct IPs and gateways",
+                        completed: false
+                    },
+                    {
+                        step: 16,
+                        title: "Test End-to-End Connectivity",
+                        description: "Ping from PC-West (10.2.1.10) to PC-East (10.3.1.10). Traffic routes through Area 0 backbone! PC-West (Area 1) → ABR-West → Area 0 (ABR-Core) → ABR-East → PC-East (Area 2).",
+                        commands: ["ping 10.3.1.10"],
+                        verification: "Successful ping - Multi-area OSPF routing works!",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab06: {
+                id: "lab06",
+                title: "Lab 6: Access Control Lists (ACLs)",
+                difficulty: "advanced",
+                estimatedTime: "35 minutes",
+                icon: "🔒",
+                category: "security",
+                description: "Configure standard and extended ACLs to control network traffic and enhance security",
+                concepts: ["Standard ACLs", "Extended ACLs", "Access Control", "Traffic Filtering", "Security Policies", "Implicit Deny"],
+                devices: "2 Routers, 2 PCs, 1 Server",
+                topology: {
+                    devices: [
+                        {id: "R1", type: "router", name: "Gateway-Router", x: 400, y: 200},
+                        {id: "PC1", type: "pc", name: "PC-User1", x: 200, y: 350},
+                        {id: "PC2", type: "pc", name: "PC-User2", x: 300, y: 350},
+                        {id: "SRV1", type: "server", name: "WebServer", x: 500, y: 350},
+                        {id: "R2", type: "router", name: "ISP-Router", x: 600, y: 200}
+                    ],
+                    connections: [
+                        {from: "R1", fromPort: "Gi0/0", to: "PC1", toPort: "Ethernet0", color: "cyan", label: "LAN"},
+                        {from: "R1", fromPort: "Gi0/0", to: "PC2", toPort: "Ethernet0", color: "cyan", label: "LAN"},
+                        {from: "R1", fromPort: "Gi0/1", to: "SRV1", toPort: "Ethernet0", color: "green", label: "DMZ"},
+                        {from: "R1", fromPort: "Gi0/2", to: "R2", toPort: "Gi0/0", color: "red", label: "WAN"}
+                    ]
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Introduction to ACLs",
+                        description: "ACLs filter traffic based on IP addresses, protocols, and ports. They're essential for network security. Standard ACLs (1-99) filter by source IP only. Extended ACLs (100-199) filter by source/destination IP, protocol, and port. Remember: there's an implicit deny at the end of every ACL!",
+                        commands: [],
+                        verification: "Review the topology and understand ACL concepts",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Configure Gateway-Router Interfaces",
+                        description: "Configure the three interfaces on Gateway-Router: Gi0/0 for LAN (Internal users), Gi0/1 for DMZ (Servers), and Gi0/2 for WAN (Internet connection).",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "hostname Gateway-Router",
+                            "interface GigabitEthernet0/0",
+                            "ip address 192.168.10.1 255.255.255.0",
+                            "description LAN-Internal",
+                            "no shutdown",
+                            "exit",
+                            "interface GigabitEthernet0/1",
+                            "ip address 192.168.20.1 255.255.255.0",
+                            "description DMZ-Servers",
+                            "no shutdown",
+                            "exit",
+                            "interface GigabitEthernet0/2",
+                            "ip address 203.0.113.1 255.255.255.252",
+                            "description WAN-Internet",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Configure ISP-Router Interface",
+                        description: "Configure the WAN interface on ISP-Router to complete the Internet connection.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "interface GigabitEthernet0/0",
+                            "ip address 203.0.113.2 255.255.255.252",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show ip interface brief on ISP-Router",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Test Baseline Connectivity",
+                        description: "Before applying ACLs, verify that connectivity works. Configure PCs and server, then test pings. PC-User1: 192.168.10.10/24, PC-User2: 192.168.10.20/24, WebServer: 192.168.20.10/24. All gateways point to their respective router interfaces.",
+                        commands: [
+                            "PC-User1: 192.168.10.10/24, GW 192.168.10.1",
+                            "PC-User2: 192.168.10.20/24, GW 192.168.10.1",
+                            "WebServer: 192.168.20.10/24, GW 192.168.20.1"
+                        ],
+                        verification: "Ping from PC-User1 to WebServer (192.168.20.10) - should succeed",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Create Standard ACL (Block PC-User2)",
+                        description: "Create standard ACL 10 to block PC-User2 (192.168.10.20) from accessing the DMZ, but allow all other traffic. IMPORTANT: Add 'permit any' to avoid the implicit deny blocking everyone else!",
+                        commands: [
+                            "access-list 10 deny host 192.168.10.20",
+                            "access-list 10 permit any"
+                        ],
+                        verification: "show access-lists",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Apply Standard ACL Outbound on Gi0/1",
+                        description: "Apply ACL 10 outbound on the DMZ interface (Gi0/1). This prevents PC-User2 from reaching the WebServer while allowing PC-User1 access. Standard ACLs should be placed close to the destination.",
+                        commands: [
+                            "interface GigabitEthernet0/1",
+                            "ip access-group 10 out",
+                            "exit"
+                        ],
+                        verification: "show ip interface GigabitEthernet0/1",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Verify Standard ACL",
+                        description: "Test the ACL: Ping from PC-User1 to WebServer should succeed. Ping from PC-User2 to WebServer should fail (blocked by ACL 10).",
+                        commands: [
+                            "From PC-User1: ping 192.168.20.10 (SUCCESS)",
+                            "From PC-User2: ping 192.168.20.10 (FAIL - blocked)"
+                        ],
+                        verification: "PC-User1 can reach WebServer, PC-User2 cannot",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Create Extended ACL (Protocol/Port Filtering)",
+                        description: "Create extended ACL 100 to allow HTTP (80) and HTTPS (443) to WebServer, allow ICMP everywhere, but block Telnet (23). This demonstrates protocol and port-based filtering.",
+                        commands: [
+                            "access-list 100 permit tcp any host 192.168.20.10 eq 80",
+                            "access-list 100 permit tcp any host 192.168.20.10 eq 443",
+                            "access-list 100 permit icmp any any",
+                            "access-list 100 deny tcp any any eq 23",
+                            "access-list 100 permit ip any any"
+                        ],
+                        verification: "show access-lists 100",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Apply Extended ACL Inbound on Gi0/0",
+                        description: "Apply ACL 100 inbound on the LAN interface (Gi0/0) to filter traffic from internal users. Extended ACLs should be placed close to the source.",
+                        commands: [
+                            "interface GigabitEthernet0/0",
+                            "ip access-group 100 in",
+                            "exit"
+                        ],
+                        verification: "show ip interface GigabitEthernet0/0",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Remove Standard ACL (for Testing)",
+                        description: "Temporarily remove the standard ACL from Gi0/1 so we can test the extended ACL in isolation without conflicts.",
+                        commands: [
+                            "interface GigabitEthernet0/1",
+                            "no ip access-group 10 out",
+                            "exit"
+                        ],
+                        verification: "show ip interface GigabitEthernet0/1 - no ACL applied",
+                        completed: false
+                    },
+                    {
+                        step: 11,
+                        title: "Test Extended ACL - ICMP",
+                        description: "Test that ICMP (ping) is still allowed. Ping from PC-User1 to WebServer should succeed because ACL 100 permits ICMP.",
+                        commands: [
+                            "ping 192.168.20.10"
+                        ],
+                        verification: "Ping successful - ICMP permitted by ACL 100",
+                        completed: false
+                    },
+                    {
+                        step: 12,
+                        title: "Test Extended ACL - HTTP vs Telnet",
+                        description: "In a real network, HTTP connections (port 80) to WebServer would succeed, while Telnet (port 23) would be blocked. ACL 100 allows HTTP/HTTPS to the server but denies Telnet everywhere.",
+                        commands: [
+                            "HTTP to 192.168.20.10:80 would succeed",
+                            "Telnet to any device on port 23 would fail"
+                        ],
+                        verification: "Understand protocol-specific filtering",
+                        completed: false
+                    },
+                    {
+                        step: 13,
+                        title: "View ACL Statistics",
+                        description: "Use 'show access-lists' to view all configured ACLs and their match counters. Each line shows how many packets matched that rule. This helps troubleshoot ACL effectiveness.",
+                        commands: [
+                            "show access-lists"
+                        ],
+                        verification: "See ACLs 10 and 100 with match counters showing packet hits",
+                        completed: false
+                    },
+                    {
+                        step: 14,
+                        title: "View Applied ACLs on Interfaces",
+                        description: "Use 'show ip interface' to see which ACLs are applied to which interfaces and in which direction (in/out). This is crucial for verifying ACL placement.",
+                        commands: [
+                            "show ip interface GigabitEthernet0/0",
+                            "show ip interface GigabitEthernet0/1"
+                        ],
+                        verification: "Gi0/0 shows ACL 100 inbound, Gi0/1 shows no ACL (we removed ACL 10)",
+                        completed: false
+                    },
+                    {
+                        step: 15,
+                        title: "ACL Best Practices Summary",
+                        description: "Key takeaways: (1) Standard ACLs close to destination, Extended ACLs close to source. (2) Always add explicit 'permit any' to avoid implicit deny blocking everything. (3) Process top-to-bottom, first match wins. (4) Use 'show access-lists' to verify rules. (5) Test thoroughly before deploying in production!",
+                        commands: [],
+                        verification: "Understand ACL design principles and best practices",
+                        completed: false
+                    }
+                ]
+            },
+
+            lab07: {
+                id: "lab07",
+                title: "Lab 7: VLAN Trunking (802.1Q)",
+                difficulty: "intermediate",
+                estimatedTime: "30 minutes",
+                icon: "🎓",
+                category: "switching",
+                description: "Configure 802.1Q trunks between switches to carry multiple VLANs, including native VLAN configuration",
+                concepts: ["802.1Q Trunking", "Native VLAN", "VLAN Tagging", "Trunk Ports", "VLAN Security"],
+                devices: "2 L2 Switches, 4 PCs",
+                topology: {
+                    devices: [
+                        {id: "SW1", type: "l2switch", name: "CoreSwitch", x: 300, y: 200},
+                        {id: "SW2", type: "l2switch", name: "DistroSwitch", x: 500, y: 200},
+                        {id: "PC1", type: "pc", name: "PC-VLAN10-A", x: 200, y: 350},
+                        {id: "PC2", type: "pc", name: "PC-VLAN20-A", x: 300, y: 350},
+                        {id: "PC3", type: "pc", name: "PC-VLAN10-B", x: 500, y: 350},
+                        {id: "PC4", type: "pc", name: "PC-VLAN20-B", x: 600, y: 350}
+                    ],
+                    connections: [
+                        {from: "SW1", fromPort: "Gi0/1", to: "SW2", toPort: "Gi0/1", color: "purple", label: "Trunk"},
+                        {from: "SW1", fromPort: "Gi0/2", to: "PC1", toPort: "Ethernet0", color: "cyan", label: "VLAN 10"},
+                        {from: "SW1", fromPort: "Gi0/3", to: "PC2", toPort: "Ethernet0", color: "green", label: "VLAN 20"},
+                        {from: "SW2", fromPort: "Gi0/2", to: "PC3", toPort: "Ethernet0", color: "cyan", label: "VLAN 10"},
+                        {from: "SW2", fromPort: "Gi0/3", to: "PC4", toPort: "Ethernet0", color: "green", label: "VLAN 20"}
+                    ]
+                },
+                instructions: [
+                    {
+                        step: 1,
+                        title: "Introduction to VLAN Trunking",
+                        description: "Trunk ports carry traffic for multiple VLANs using 802.1Q tagging. This allows switches to extend VLANs across the network. In this lab, you'll configure trunk links between two switches to carry VLAN 10 (Sales) and VLAN 20 (Engineering) traffic. You'll also configure a native VLAN for security purposes.",
+                        commands: [],
+                        verification: "Review the topology and understand trunk link concept",
+                        completed: false
+                    },
+                    {
+                        step: 2,
+                        title: "Configure VLANs on CoreSwitch",
+                        description: "Create VLANs 10, 20, and 99 (native VLAN for security). VLAN 10 will be used for Sales, VLAN 20 for Engineering, and VLAN 99 as an unused native VLAN to prevent VLAN hopping attacks.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "hostname CoreSwitch",
+                            "vlan 10",
+                            "name Sales",
+                            "vlan 20",
+                            "name Engineering",
+                            "vlan 99",
+                            "name Native",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 3,
+                        title: "Configure CoreSwitch Access Ports",
+                        description: "Configure Gi0/2 as an access port in VLAN 10 and Gi0/3 as an access port in VLAN 20. Access ports carry traffic for only one VLAN and send untagged frames.",
+                        commands: [
+                            "interface GigabitEthernet0/2",
+                            "switchport mode access",
+                            "switchport access vlan 10",
+                            "no shutdown",
+                            "interface GigabitEthernet0/3",
+                            "switchport mode access",
+                            "switchport access vlan 20",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 4,
+                        title: "Configure CoreSwitch Trunk Port",
+                        description: "Configure Gi0/1 as trunk. Native VLAN 99 (untagged). Only VLANs 10, 20, 99 allowed. The native VLAN carries untagged traffic - using VLAN 99 (an unused VLAN) prevents VLAN hopping attacks. The 'allowed vlan' command restricts which VLANs can traverse the trunk.",
+                        commands: [
+                            "interface GigabitEthernet0/1",
+                            "switchport mode trunk",
+                            "switchport trunk native vlan 99",
+                            "switchport trunk allowed vlan 10,20,99",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show interfaces trunk",
+                        completed: false
+                    },
+                    {
+                        step: 5,
+                        title: "Configure VLANs on DistroSwitch",
+                        description: "VLANs must exist on both switches for trunk to work properly. Create the same VLANs (10, 20, 99) on DistroSwitch with identical names.",
+                        commands: [
+                            "enable",
+                            "configure terminal",
+                            "hostname DistroSwitch",
+                            "vlan 10",
+                            "name Sales",
+                            "vlan 20",
+                            "name Engineering",
+                            "vlan 99",
+                            "name Native",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 6,
+                        title: "Configure DistroSwitch Access Ports",
+                        description: "Configure access ports on DistroSwitch: Gi0/2 for VLAN 10 and Gi0/3 for VLAN 20. These ports will connect to end devices in their respective VLANs.",
+                        commands: [
+                            "interface GigabitEthernet0/2",
+                            "switchport mode access",
+                            "switchport access vlan 10",
+                            "no shutdown",
+                            "interface GigabitEthernet0/3",
+                            "switchport mode access",
+                            "switchport access vlan 20",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show vlan brief",
+                        completed: false
+                    },
+                    {
+                        step: 7,
+                        title: "Configure DistroSwitch Trunk Port",
+                        description: "Both ends of trunk must have matching native VLAN! Configure Gi0/1 with the same trunk settings: native VLAN 99, allowed VLANs 10,20,99. Native VLAN mismatch is a common misconfiguration that causes connectivity issues.",
+                        commands: [
+                            "interface GigabitEthernet0/1",
+                            "switchport mode trunk",
+                            "switchport trunk native vlan 99",
+                            "switchport trunk allowed vlan 10,20,99",
+                            "no shutdown",
+                            "exit"
+                        ],
+                        verification: "show interfaces trunk",
+                        completed: false
+                    },
+                    {
+                        step: 8,
+                        title: "Verify Trunk Status",
+                        description: "Verify that Gi0/1 is operating as a trunk port. The output should show: Mode: on, Encapsulation: 802.1Q, Native VLAN: 99, and Status: trunking.",
+                        commands: [
+                            "show interfaces trunk"
+                        ],
+                        verification: "Gi0/1 should show as trunk, Mode: on, Encapsulation: 802.1Q, Native VLAN: 99",
+                        completed: false
+                    },
+                    {
+                        step: 9,
+                        title: "Verify VLANs on Trunk",
+                        description: "Check the switchport configuration for the trunk interface. Verify that only VLANs 10, 20, and 99 are allowed on the trunk, and that the native VLAN is 99.",
+                        commands: [
+                            "show interfaces GigabitEthernet0/1 switchport"
+                        ],
+                        verification: "Trunking VLANs Allowed: 10, 20, 99. Native VLAN: 99",
+                        completed: false
+                    },
+                    {
+                        step: 10,
+                        title: "Check VLAN Database",
+                        description: "Verify that VLANs 10, 20, and 99 exist in the VLAN database and that access ports are correctly assigned to their respective VLANs.",
+                        commands: [
+                            "show vlan brief"
+                        ],
+                        verification: "VLANs 10, 20, 99 exist. Access ports assigned correctly",
+                        completed: false
+                    },
+                    {
+                        step: 11,
+                        title: "Test VLAN 10 Connectivity",
+                        description: "Configure IP addresses on VLAN 10 PCs and test connectivity across the trunk. PC-VLAN10-A: 192.168.10.10/24, Gateway: 192.168.10.1. PC-VLAN10-B: 192.168.10.20/24, Gateway: 192.168.10.1. Then ping from PC-VLAN10-A (192.168.10.10) to PC-VLAN10-B (192.168.10.20). SUCCESS across trunk!",
+                        commands: [
+                            "PC-VLAN10-A: IP 192.168.10.10/24, GW 192.168.10.1",
+                            "PC-VLAN10-B: IP 192.168.10.20/24, GW 192.168.10.1",
+                            "ping 192.168.10.20"
+                        ],
+                        verification: "Ping successful - VLAN 10 traffic crosses trunk",
+                        completed: false
+                    },
+                    {
+                        step: 12,
+                        title: "Test VLAN 20 Connectivity",
+                        description: "Configure IP addresses on VLAN 20 PCs and test connectivity. PC-VLAN20-A: 192.168.20.10/24, Gateway: 192.168.20.1. PC-VLAN20-B: 192.168.20.20/24, Gateway: 192.168.20.1. Then ping from PC-VLAN20-A (192.168.20.10) to PC-VLAN20-B (192.168.20.20). SUCCESS across trunk!",
+                        commands: [
+                            "PC-VLAN20-A: IP 192.168.20.10/24, GW 192.168.20.1",
+                            "PC-VLAN20-B: IP 192.168.20.20/24, GW 192.168.20.1",
+                            "ping 192.168.20.20"
+                        ],
+                        verification: "Ping successful - VLAN 20 traffic crosses trunk",
+                        completed: false
+                    },
+                    {
+                        step: 13,
+                        title: "Test VLAN Isolation",
+                        description: "Verify that VLANs remain isolated even though they traverse the same trunk link. Ping from PC-VLAN10-A (192.168.10.10) to PC-VLAN20-A (192.168.20.10). FAIL - different VLANs cannot communicate without Layer 3 routing! The trunk carries both VLANs but maintains complete isolation.",
+                        commands: [
+                            "ping 192.168.20.10"
+                        ],
+                        verification: "Ping fails - VLANs are isolated (Layer 2 boundary)",
+                        completed: false
+                    },
+                    {
+                        step: 14,
+                        title: "Native VLAN Security Note",
+                        description: "Native VLAN carries untagged traffic. Best practice: Use unused VLAN (like 99) as native to prevent VLAN hopping attacks. Never use VLAN 1 as native! VLAN hopping attacks exploit native VLAN behavior to gain unauthorized access to other VLANs. By using an unused VLAN as native and not assigning any ports to it, you eliminate this attack vector. Key takeaways: (1) Both trunk ends must have matching native VLAN, (2) Use non-default unused VLAN as native, (3) Don't assign any access ports to native VLAN, (4) Restrict allowed VLANs on trunks to only what's needed.",
+                        commands: [],
+                        verification: "Understand native VLAN security best practices",
                         completed: false
                     }
                 ]
