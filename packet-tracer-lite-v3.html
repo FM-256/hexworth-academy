@@ -1311,9 +1311,154 @@
             }
         }
 
+        // ========== DEVICE PLACEMENT & TOPOLOGY BUILDER ==========
+        let devices = [];
+        let deviceIdCounter = 0;
+        const canvas = document.getElementById('network-canvas');
+        let draggedDeviceType = null;
+
+        // Setup drag events for device palette items
+        document.querySelectorAll('.device-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedDeviceType = item.getAttribute('data-device-type');
+                e.dataTransfer.effectAllowed = 'copy';
+            });
+
+            item.addEventListener('dragend', () => {
+                draggedDeviceType = null;
+            });
+        });
+
+        // Setup drop zone on canvas
+        const canvasContainer = document.querySelector('.canvas-container');
+
+        canvasContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        canvasContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+
+            if (!draggedDeviceType) return;
+
+            // Get drop position relative to canvas container
+            const rect = canvasContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Add device to canvas
+            addDeviceToCanvas(draggedDeviceType, x, y);
+        });
+
+        function addDeviceToCanvas(type, x, y) {
+            const deviceId = `device-${deviceIdCounter++}`;
+
+            // Device type configurations
+            const deviceConfig = {
+                'router': { icon: '🔷', color: '#06b6d4', label: 'Router' },
+                'l2switch': { icon: '🔶', color: '#9333ea', label: 'Switch' },
+                'l3switch': { icon: '🔷', color: '#10b981', label: 'L3-SW' },
+                'pc': { icon: '💻', color: '#f59e0b', label: 'PC' },
+                'server': { icon: '🖥️', color: '#ec4899', label: 'Server' }
+            };
+
+            const config = deviceConfig[type] || deviceConfig['pc'];
+
+            // Create SVG group for device
+            const deviceGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            deviceGroup.setAttribute('id', deviceId);
+            deviceGroup.setAttribute('transform', `translate(${x}, ${y})`);
+            deviceGroup.style.cursor = 'move';
+
+            // Create background circle
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', '0');
+            circle.setAttribute('cy', '0');
+            circle.setAttribute('r', '30');
+            circle.setAttribute('fill', config.color);
+            circle.setAttribute('opacity', '0.2');
+            circle.setAttribute('stroke', config.color);
+            circle.setAttribute('stroke-width', '2');
+
+            // Create text icon
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', '0');
+            text.setAttribute('y', '0');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dominant-baseline', 'central');
+            text.setAttribute('font-size', '24');
+            text.textContent = config.icon;
+
+            // Create label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', '0');
+            label.setAttribute('y', '45');
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '12');
+            label.setAttribute('fill', '#cbd5e1');
+            label.textContent = `${config.label}${deviceIdCounter}`;
+
+            deviceGroup.appendChild(circle);
+            deviceGroup.appendChild(text);
+            deviceGroup.appendChild(label);
+            canvas.appendChild(deviceGroup);
+
+            // Store device data
+            devices.push({
+                id: deviceId,
+                type: type,
+                x: x,
+                y: y,
+                name: `${config.label}${deviceIdCounter}`
+            });
+
+            // Add drag functionality to move devices
+            makeDraggable(deviceGroup);
+
+            console.log(`Added ${type} at (${x}, ${y})`);
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let startX, startY, currentTransform;
+
+            element.addEventListener('mousedown', startDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                const transform = element.getAttribute('transform');
+                const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                currentTransform = match ? { x: parseFloat(match[1]), y: parseFloat(match[2]) } : { x: 0, y: 0 };
+                startX = e.clientX;
+                startY = e.clientY;
+
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', stopDrag);
+                e.stopPropagation();
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                element.setAttribute('transform', `translate(${currentTransform.x + dx}, ${currentTransform.y + dy})`);
+            }
+
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+            }
+        }
+
         // ========== PLACEHOLDER FUNCTIONS ==========
         document.getElementById('newTopologyBtn').addEventListener('click', () => {
-            alert('New Topology feature coming in Phase 2!');
+            // Clear all devices
+            devices = [];
+            deviceIdCounter = 0;
+            canvas.innerHTML = '';
+            console.log('Canvas cleared - ready for new topology');
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
