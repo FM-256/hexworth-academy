@@ -619,6 +619,19 @@
                 <button class="btn" id="newTopologyBtn">
                     <span class="btn-icon">📄</span> New
                 </button>
+                <button class="btn" id="connectBtn">
+                    <span class="btn-icon">🔗</span> Connect
+                </button>
+                <select id="connectionColor" style="padding: 8px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
+                    <option value="#06b6d4" style="background: #06b6d4; color: white;">🔵 Cyan (LAN)</option>
+                    <option value="#10b981" style="background: #10b981; color: white;">🟢 Green (Subnet 1)</option>
+                    <option value="#f59e0b" style="background: #f59e0b; color: white;">🟠 Orange (Subnet 2)</option>
+                    <option value="#ef4444" style="background: #ef4444; color: white;">🔴 Red (WAN)</option>
+                    <option value="#9333ea" style="background: #9333ea; color: white;">🟣 Purple (DMZ)</option>
+                    <option value="#ec4899" style="background: #ec4899; color: white;">🔴 Pink (Management)</option>
+                    <option value="#6366f1" style="background: #6366f1; color: white;">🔵 Indigo (Backup)</option>
+                    <option value="#ffffff" style="background: #ffffff; color: black;">⚪ White (Default)</option>
+                </select>
                 <button class="btn" id="exportBtn">
                     <span class="btn-icon">💾</span> Export
                 </button>
@@ -1505,8 +1518,14 @@
         // ========== DEVICE PLACEMENT & TOPOLOGY BUILDER ==========
         let devices = [];
         let deviceIdCounter = 0;
+        let connections = [];
+        let connectionIdCounter = 0;
         const canvas = document.getElementById('network-canvas');
         let draggedDeviceType = null;
+
+        // Connection mode
+        let connectionMode = false;
+        let connectionStart = null;
 
         // Setup drag events for device palette items
         document.querySelectorAll('.device-item').forEach(item => {
@@ -1669,7 +1688,21 @@
                 if (!isDragging) return;
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
-                element.setAttribute('transform', `translate(${currentTransform.x + dx}, ${currentTransform.y + dy})`);
+                const newX = currentTransform.x + dx;
+                const newY = currentTransform.y + dy;
+
+                element.setAttribute('transform', `translate(${newX}, ${newY})`);
+
+                // Update device position in data
+                const deviceId = element.getAttribute('id');
+                const device = devices.find(d => d.id === deviceId);
+                if (device) {
+                    device.x = newX;
+                    device.y = newY;
+                }
+
+                // Update connected lines
+                updateAllConnections();
             }
 
             function stopDrag() {
@@ -1698,6 +1731,12 @@
                 if (circle) circle.setAttribute('stroke-width', '4');
             }
 
+            // Handle connection mode
+            if (connectionMode) {
+                handleConnectionClick(deviceId);
+                return;
+            }
+
             // Update Config panel
             updateConfigPanel();
 
@@ -1705,6 +1744,149 @@
             updateCLIPanel();
 
             console.log('Selected device:', selectedDevice.name);
+        }
+
+        // ========== CONNECTION/LINK SYSTEM ==========
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            connectionMode = !connectionMode;
+            const btn = document.getElementById('connectBtn');
+
+            if (connectionMode) {
+                btn.style.background = 'var(--accent-green)';
+                btn.style.color = 'white';
+                connectionStart = null;
+                console.log('Connection mode: ENABLED - Click two devices to connect them');
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+                connectionStart = null;
+                console.log('Connection mode: DISABLED');
+            }
+        });
+
+        function handleConnectionClick(deviceId) {
+            if (!connectionStart) {
+                // First device clicked
+                connectionStart = deviceId;
+                const device = devices.find(d => d.id === deviceId);
+                console.log(`Connection start: ${device.name}`);
+
+                // Highlight first device
+                const element = document.getElementById(deviceId);
+                if (element) {
+                    const circle = element.querySelector('circle');
+                    if (circle) {
+                        circle.setAttribute('stroke-width', '6');
+                        circle.setAttribute('stroke-dasharray', '5,5');
+                    }
+                }
+            } else {
+                // Second device clicked - create connection
+                if (connectionStart === deviceId) {
+                    console.log('Cannot connect device to itself');
+                    return;
+                }
+
+                const device1 = devices.find(d => d.id === connectionStart);
+                const device2 = devices.find(d => d.id === deviceId);
+
+                createConnection(connectionStart, deviceId);
+                console.log(`Connected: ${device1.name} ↔ ${device2.name}`);
+
+                // Reset highlighting
+                document.querySelectorAll('#network-canvas g circle').forEach(circle => {
+                    circle.setAttribute('stroke-width', '2');
+                    circle.setAttribute('stroke-dasharray', 'none');
+                });
+
+                connectionStart = null;
+            }
+        }
+
+        function createConnection(device1Id, device2Id) {
+            const connectionId = `connection-${connectionIdCounter++}`;
+            const color = document.getElementById('connectionColor').value;
+
+            const device1 = devices.find(d => d.id === device1Id);
+            const device2 = devices.find(d => d.id === device2Id);
+
+            if (!device1 || !device2) return;
+
+            // Store connection data
+            connections.push({
+                id: connectionId,
+                device1: device1Id,
+                device2: device2Id,
+                color: color
+            });
+
+            // Draw the connection
+            drawConnection(connectionId, device1, device2, color);
+        }
+
+        function drawConnection(connectionId, device1, device2, color) {
+            // Create SVG line
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('id', connectionId);
+            line.setAttribute('x1', device1.x);
+            line.setAttribute('y1', device1.y);
+            line.setAttribute('x2', device2.x);
+            line.setAttribute('y2', device2.y);
+            line.setAttribute('stroke', color);
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('opacity', '0.7');
+            line.style.cursor = 'pointer';
+
+            // Add to canvas (insert before devices so lines appear behind)
+            canvas.insertBefore(line, canvas.firstChild);
+
+            // Add click handler to delete connection
+            line.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    e.stopPropagation();
+                    deleteConnection(connectionId);
+                }
+            });
+
+            // Add hover effect
+            line.addEventListener('mouseenter', () => {
+                line.setAttribute('stroke-width', '5');
+                line.setAttribute('opacity', '1');
+            });
+
+            line.addEventListener('mouseleave', () => {
+                line.setAttribute('stroke-width', '3');
+                line.setAttribute('opacity', '0.7');
+            });
+        }
+
+        function deleteConnection(connectionId) {
+            // Remove from connections array
+            connections = connections.filter(c => c.id !== connectionId);
+
+            // Remove from canvas
+            const line = document.getElementById(connectionId);
+            if (line) line.remove();
+
+            console.log(`Connection ${connectionId} deleted`);
+        }
+
+        function updateAllConnections() {
+            // Redraw all connections with updated device positions
+            connections.forEach(conn => {
+                const device1 = devices.find(d => d.id === conn.device1);
+                const device2 = devices.find(d => d.id === conn.device2);
+
+                if (device1 && device2) {
+                    const line = document.getElementById(conn.id);
+                    if (line) {
+                        line.setAttribute('x1', device1.x);
+                        line.setAttribute('y1', device1.y);
+                        line.setAttribute('x2', device2.x);
+                        line.setAttribute('y2', device2.y);
+                    }
+                }
+            });
         }
 
         function updateConfigPanel() {
@@ -1914,9 +2096,11 @@
 
         // ========== PLACEHOLDER FUNCTIONS ==========
         document.getElementById('newTopologyBtn').addEventListener('click', () => {
-            // Clear all devices
+            // Clear all devices and connections
             devices = [];
             deviceIdCounter = 0;
+            connections = [];
+            connectionIdCounter = 0;
             canvas.innerHTML = '';
             console.log('Canvas cleared - ready for new topology');
         });
