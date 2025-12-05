@@ -572,6 +572,428 @@
             gap: 10px;
         }
 
+        /* ========== TROUBLESHOOTING SYSTEM ========== */
+        .ts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .ts-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .ts-card:hover {
+            border-color: var(--accent-orange);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .ts-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .ts-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ts-badge.beginner {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .ts-badge.intermediate {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .ts-badge.advanced {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .ts-status {
+            font-size: 1.5em;
+        }
+
+        .ts-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .ts-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .ts-description {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .ts-stats {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85em;
+        }
+
+        .ts-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+        }
+
+        /* Troubleshooting Mode UI */
+        .ts-mode-active .config-panel {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .ts-mode-indicator {
+            background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            border-bottom: 2px solid var(--accent-orange);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ts-panel-section {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .ts-panel-section h3 {
+            color: var(--accent-orange);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ts-problem-description {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 14px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .ts-tools-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .ts-tool-btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .ts-tool-btn:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .ts-hints-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ts-hint-btn {
+            background: var(--bg-panel);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ts-hint-btn:not(.locked):hover {
+            border-color: var(--accent-purple);
+            background: rgba(147, 51, 234, 0.1);
+        }
+
+        .ts-hint-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--bg-dark);
+        }
+
+        .ts-hint-btn.used {
+            border-color: var(--accent-purple);
+            background: rgba(147, 51, 234, 0.15);
+        }
+
+        .ts-hint-btn.solution {
+            background: linear-gradient(135deg, var(--accent-red), #dc2626);
+            border: none;
+            color: white;
+        }
+
+        .ts-hint-btn.solution:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .ts-hint-content {
+            display: none;
+            background: rgba(147, 51, 234, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .ts-hint-content.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ts-solution-content {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .ts-solution-content.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .ts-solution-explanation {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .ts-solution-commands {
+            background: #0f1729;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: var(--success);
+            margin-bottom: 12px;
+        }
+
+        .ts-solution-commands div {
+            margin: 4px 0;
+        }
+
+        .ts-solution-why {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .ts-progress-tracker {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ts-progress-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            border-left: 4px solid var(--border);
+        }
+
+        .ts-progress-item.completed {
+            border-left-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .ts-progress-item.in-progress {
+            border-left-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .ts-progress-icon {
+            font-size: 1.2em;
+        }
+
+        .ts-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .ts-test-btn {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            border: none;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .ts-test-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .ts-result {
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .ts-result.visible {
+            display: block;
+        }
+
+        .ts-result.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+        }
+
+        .ts-result.partial {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--warning);
+        }
+
+        .ts-result.failed {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+        }
+
+        .ts-result-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ts-result-message {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .ts-score {
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .ts-score-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .ts-score-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .ts-skills {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .ts-skills h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .ts-skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .ts-skill-tag {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75em;
+        }
+
         /* ========== ANIMATIONS ========== */
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -981,6 +1403,9 @@
                 <button class="btn btn-primary" id="labLibraryBtn">
                     <span class="btn-icon">📚</span> Lab Library
                 </button>
+                <button class="btn" id="troubleshootBtn" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c); border: none; font-weight: bold;">
+                    <span class="btn-icon">🔧</span> Troubleshoot
+                </button>
                 <button class="btn" id="helpBtn">
                     <span class="btn-icon">❓</span> Help
                 </button>
@@ -1237,6 +1662,133 @@
                     <!-- Labs will be populated by JavaScript -->
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- TROUBLESHOOTING MODAL -->
+    <div class="modal-overlay" id="troubleshootModal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c);">
+                <h2 class="modal-title">🔧 Troubleshooting Scenarios - Fix Broken Networks</h2>
+                <button class="modal-close" id="closeTroubleshoot">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 1.2em; color: var(--text-secondary);">
+                        <strong id="tsCompletionCount">0/10</strong> scenarios completed
+                    </div>
+                </div>
+                <div class="lab-filters" id="tsFilters">
+                    <button class="filter-btn active" data-filter="all">All Scenarios</button>
+                    <button class="filter-btn" data-filter="beginner">🔰 Beginner</button>
+                    <button class="filter-btn" data-filter="intermediate">🎓 Intermediate</button>
+                    <button class="filter-btn" data-filter="advanced">🏆 Advanced</button>
+                </div>
+                <div class="ts-grid" id="tsGrid">
+                    <!-- Scenarios will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TROUBLESHOOTING MODE PANEL (Hidden by default, shown when scenario loaded) -->
+    <div id="troubleshootingPanel" style="display: none;">
+        <div class="ts-mode-indicator">
+            <span>🔧 TROUBLESHOOTING MODE</span>
+            <button class="btn btn-small" id="exitTroubleshootingBtn" style="background: rgba(255,255,255,0.2); border: none; color: white;">Exit</button>
+        </div>
+
+        <div class="panel-content">
+            <!-- Problem Description -->
+            <div class="ts-panel-section">
+                <h3>📋 Problem Description</h3>
+                <div class="ts-problem-description" id="tsProblemDescription">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Diagnostic Tools -->
+            <div class="ts-panel-section">
+                <h3>🛠️ Diagnostic Tools</h3>
+                <div class="ts-tools-grid" id="tsToolsGrid">
+                    <button class="ts-tool-btn" onclick="simulateCommand('show vlan brief')">show vlan brief</button>
+                    <button class="ts-tool-btn" onclick="simulateCommand('show interfaces status')">show interfaces status</button>
+                    <button class="ts-tool-btn" onclick="simulateCommand('show ip interface brief')">show ip interface brief</button>
+                    <button class="ts-tool-btn" onclick="simulateCommand('show running-config')">show running-config</button>
+                    <button class="ts-tool-btn" onclick="simulateCommand('ping [destination]')">ping [destination]</button>
+                    <button class="ts-tool-btn" onclick="simulateCommand('show ip route')">show ip route</button>
+                </div>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="ts-panel-section">
+                <h3>📊 Progress Tracker</h3>
+                <div class="ts-progress-tracker">
+                    <div class="ts-progress-item completed">
+                        <span class="ts-progress-icon">✅</span>
+                        <span>Identified symptom</span>
+                    </div>
+                    <div class="ts-progress-item" id="tsProgressDiagnose">
+                        <span class="ts-progress-icon">⏳</span>
+                        <span>Diagnosing root cause</span>
+                    </div>
+                    <div class="ts-progress-item" id="tsProgressFix">
+                        <span class="ts-progress-icon">⬜</span>
+                        <span>Applied fix</span>
+                    </div>
+                    <div class="ts-progress-item" id="tsProgressVerify">
+                        <span class="ts-progress-icon">⬜</span>
+                        <span>Verified solution</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progressive Hints -->
+            <div class="ts-panel-section">
+                <h3>💡 Progressive Hints</h3>
+                <div class="ts-hints-container">
+                    <div>
+                        <button class="ts-hint-btn" id="hint1Btn" onclick="revealHint(1)">
+                            <span>🔍 Hint 1: General Guidance</span>
+                            <span>▼</span>
+                        </button>
+                        <div class="ts-hint-content" id="hint1Content"></div>
+                    </div>
+                    <div>
+                        <button class="ts-hint-btn locked" id="hint2Btn" onclick="revealHint(2)">
+                            <span>🔍 Hint 2: Specific Location</span>
+                            <span>🔒</span>
+                        </button>
+                        <div class="ts-hint-content" id="hint2Content"></div>
+                    </div>
+                    <div>
+                        <button class="ts-hint-btn locked" id="hint3Btn" onclick="revealHint(3)">
+                            <span>🔍 Hint 3: Exact Problem</span>
+                            <span>🔒</span>
+                        </button>
+                        <div class="ts-hint-content" id="hint3Content"></div>
+                    </div>
+                    <div>
+                        <button class="ts-hint-btn solution" id="solutionBtn" onclick="revealSolution()">
+                            <span>⚠️ Show Complete Solution</span>
+                            <span>⚠️</span>
+                        </button>
+                        <div class="ts-solution-content" id="solutionContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions and Results -->
+            <div class="ts-actions">
+                <button class="ts-test-btn" id="testFixBtn" onclick="testFix()">
+                    🧪 Test Fix
+                </button>
+                <button class="btn" onclick="resetScenario()">
+                    🔄 Reset Scenario
+                </button>
+            </div>
+
+            <div id="tsResultContainer"></div>
         </div>
     </div>
 
@@ -3081,9 +3633,760 @@
             }
         };
 
+        // ========== TROUBLESHOOTING SCENARIOS LIBRARY ==========
+        const TROUBLESHOOTING_SCENARIOS = {
+            'ts-01-interface-down': {
+                id: 'ts-01-interface-down',
+                title: 'Interface Shutdown Mystery',
+                difficulty: 'beginner',
+                estimatedTime: '10 min',
+                description: 'PC1 cannot ping Router1, but the cabling looks correct. What\'s wrong?',
+
+                // Broken topology - router interface is shut down
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 300,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {
+                                    ip: '192.168.1.1',
+                                    mask: '255.255.255.0',
+                                    shutdown: true  // THE PROBLEM!
+                                }
+                            },
+                            config: [
+                                'hostname Router1',
+                                'interface GigabitEthernet0/0',
+                                ' ip address 192.168.1.1 255.255.255.0',
+                                ' shutdown'  // Explicitly shutdown
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 200,
+                            ip: '192.168.1.10',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1'
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/0'}
+                    ]
+                },
+
+                // Progressive hints
+                hints: [
+                    {
+                        level: 1,
+                        text: "Check the router's interface status using show commands. What does 'administratively down' mean?"
+                    },
+                    {
+                        level: 2,
+                        text: "Use 'show ip interface brief' on Router1. Look at the Status column for Gi0/0."
+                    },
+                    {
+                        level: 3,
+                        text: "Interface Gi0/0 shows 'administratively down' - it has been manually disabled with the 'shutdown' command."
+                    }
+                ],
+
+                // Solution
+                solution: {
+                    explanation: "The interface was administratively disabled using the 'shutdown' command. This is a common issue when routers are first configured - interfaces are shut down by default for security.",
+                    commands: [
+                        "enable",
+                        "configure terminal",
+                        "interface GigabitEthernet0/0",
+                        "no shutdown",
+                        "end"
+                    ],
+                    why: "The 'no shutdown' command enables a disabled interface. You'll see the interface status change from 'administratively down' to 'up/up' when successful."
+                },
+
+                // Verification test
+                verification: {
+                    checks: [
+                        {
+                            type: 'interface-status',
+                            device: 'router1',
+                            interface: 'Gi0/0',
+                            expectedStatus: 'up',
+                            expectedProtocol: 'up',
+                            message: 'Router1 Gi0/0 must be up/up'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'pc1',
+                            to: '192.168.1.1',
+                            expectedSuccess: true,
+                            message: 'PC1 must be able to ping Router1'
+                        }
+                    ]
+                },
+
+                // Learning objectives
+                skills: [
+                    'Interface troubleshooting',
+                    'show ip interface brief',
+                    'Administrative vs operational state',
+                    'no shutdown command'
+                ]
+            },
+            'ts-02-wrong-vlan': {
+                id: 'ts-02-wrong-vlan',
+                title: 'Wrong VLAN Assignment',
+                difficulty: 'beginner',
+                estimatedTime: '15 min',
+                description: 'PC1 and PC2 are both supposed to be in VLAN 10, but they cannot ping each other even though they\'re on the same switch.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'switch1',
+                            type: 'switch',
+                            name: 'Switch1',
+                            x: 300,
+                            y: 200,
+                            vlans: {
+                                '10': {name: 'Sales', ports: ['Fa0/1']},
+                                '20': {name: 'Engineering', ports: ['Fa0/2']}  // ← PC2 wrongly assigned here
+                            },
+                            config: [
+                                'hostname Switch1',
+                                'vlan 10',
+                                ' name Sales',
+                                'vlan 20',
+                                ' name Engineering',
+                                'interface FastEthernet0/1',
+                                ' switchport mode access',
+                                ' switchport access vlan 10',
+                                'interface FastEthernet0/2',
+                                ' switchport mode access',
+                                ' switchport access vlan 20'  // ← THE PROBLEM! Should be VLAN 10
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 100,
+                            ip: '192.168.10.10',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.10.1',
+                            vlan: 10
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2',
+                            x: 100,
+                            y: 300,
+                            ip: '192.168.10.20',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.10.1',
+                            vlan: 20  // ← Wrong VLAN!
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'pc2', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/2'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "VLANs create separate broadcast domains. Check which VLAN each port is assigned to using 'show vlan brief'."
+                    },
+                    {
+                        level: 2,
+                        text: "Look at the output of 'show vlan brief' on Switch1. Compare the VLAN assignments for Fa0/1 and Fa0/2. Are both ports in VLAN 10?"
+                    },
+                    {
+                        level: 3,
+                        text: "Port Fa0/2 (connected to PC2) is assigned to VLAN 20, but PC2 needs to be in VLAN 10 to communicate with PC1. This is a common configuration error."
+                    }
+                ],
+
+                solution: {
+                    explanation: "PC2's switch port was incorrectly configured in VLAN 20 instead of VLAN 10. VLANs isolate traffic - devices in different VLANs cannot communicate without a router. Since both PCs should be in the same sales department (VLAN 10), we need to reassign the port.",
+                    commands: [
+                        "enable",
+                        "configure terminal",
+                        "interface FastEthernet0/2",
+                        "switchport access vlan 10",
+                        "end"
+                    ],
+                    why: "The 'switchport access vlan 10' command moves the port from VLAN 20 to VLAN 10. Now both PCs are in the same broadcast domain and can communicate. You can verify with 'show vlan brief' - you'll see Fa0/2 listed under VLAN 10 instead of VLAN 20."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'vlan-membership',
+                            device: 'switch1',
+                            interface: 'Fa0/2',
+                            expectedVlan: 10,
+                            message: 'Switch1 Fa0/2 must be in VLAN 10'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'pc1',
+                            to: '192.168.10.20',
+                            expectedSuccess: true,
+                            message: 'PC1 must be able to ping PC2'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'VLAN troubleshooting',
+                    'show vlan brief',
+                    'Switchport access vlan command',
+                    'Understanding broadcast domains'
+                ]
+            },
+
+            'ts-03-missing-gateway': {
+                id: 'ts-03-missing-gateway',
+                title: 'Missing Default Gateway',
+                difficulty: 'beginner',
+                estimatedTime: '15 min',
+                description: 'PC1 can ping the router (192.168.1.1) but cannot reach remote networks. The router can reach everything fine.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 300,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {ip: '192.168.1.1', mask: '255.255.255.0'},
+                                'Gi0/1': {ip: '10.0.0.1', mask: '255.255.255.0'}
+                            },
+                            routes: [
+                                {network: '192.168.1.0', mask: '255.255.255.0', interface: 'Gi0/0'},
+                                {network: '10.0.0.0', mask: '255.255.255.0', interface: 'Gi0/1'}
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 200,
+                            ip: '192.168.1.10',
+                            mask: '255.255.255.0',
+                            gateway: ''  // THE PROBLEM! No gateway configured
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2',
+                            x: 500,
+                            y: 200,
+                            ip: '10.0.0.10',
+                            mask: '255.255.255.0',
+                            gateway: '10.0.0.1'
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/0'},
+                        {from: 'pc2', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/1'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "PCs need a default gateway to reach networks beyond their local subnet. Check PC1's IP configuration - is the gateway set?"
+                    },
+                    {
+                        level: 2,
+                        text: "Use 'ipconfig' or check PC1's network settings. The default gateway field should contain the router's IP address (192.168.1.1), but what do you see?"
+                    },
+                    {
+                        level: 3,
+                        text: "PC1 has no default gateway configured! Without a gateway, the PC doesn't know where to send packets destined for other networks. It can only communicate on its local subnet (192.168.1.0/24)."
+                    }
+                ],
+
+                solution: {
+                    explanation: "PC1 is missing its default gateway configuration. The default gateway is the router's IP address on the local network - it tells the PC where to send packets when the destination is on a different network. Without it, PC1 can only reach devices on 192.168.1.0/24.",
+                    commands: [
+                        "# On PC1, configure the default gateway:",
+                        "IP Configuration:",
+                        "  IP Address: 192.168.1.10",
+                        "  Subnet Mask: 255.255.255.0",
+                        "  Default Gateway: 192.168.1.1"
+                    ],
+                    why: "The default gateway points to the router (192.168.1.1). Now when PC1 needs to reach 10.0.0.10, it knows to send the packet to the router, which will forward it to the correct network. This is like knowing which door to use to leave a building."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'gateway-config',
+                            device: 'pc1',
+                            expectedGateway: '192.168.1.1',
+                            message: 'PC1 must have default gateway 192.168.1.1'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'pc1',
+                            to: '10.0.0.10',
+                            expectedSuccess: true,
+                            message: 'PC1 must be able to ping PC2 on remote network'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'Default gateway concept',
+                    'IP configuration troubleshooting',
+                    'Understanding routing basics',
+                    'Local vs remote network distinction'
+                ]
+            },
+
+            'ts-04-trunk-mismatch': {
+                id: 'ts-04-trunk-mismatch',
+                title: 'Trunk Native VLAN Mismatch',
+                difficulty: 'intermediate',
+                estimatedTime: '20 min',
+                description: 'VLANs work locally on each switch, but devices in VLAN 10 on Switch1 cannot reach VLAN 10 devices on Switch2. The trunk link appears to be up.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'switch1',
+                            type: 'l2switch',
+                            name: 'Switch1',
+                            x: 200,
+                            y: 200,
+                            vlans: {
+                                '10': {name: 'Sales', ports: ['Fa0/1']},
+                                '20': {name: 'Engineering', ports: ['Fa0/2']}
+                            },
+                            trunks: {
+                                'Fa0/24': {
+                                    mode: 'trunk',
+                                    nativeVlan: 1,
+                                    allowedVlans: '1-4094'
+                                }
+                            },
+                            config: [
+                                'interface FastEthernet0/24',
+                                ' switchport mode trunk',
+                                ' switchport trunk native vlan 1'
+                            ]
+                        },
+                        {
+                            id: 'switch2',
+                            type: 'l2switch',
+                            name: 'Switch2',
+                            x: 400,
+                            y: 200,
+                            vlans: {
+                                '10': {name: 'Sales', ports: ['Fa0/1']},
+                                '20': {name: 'Engineering', ports: ['Fa0/2']}
+                            },
+                            trunks: {
+                                'Fa0/24': {
+                                    mode: 'trunk',
+                                    nativeVlan: 99,
+                                    allowedVlans: '1-4094'
+                                }
+                            },
+                            config: [
+                                'interface FastEthernet0/24',
+                                ' switchport mode trunk',
+                                ' switchport trunk native vlan 99'
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1-SW1',
+                            x: 100,
+                            y: 150,
+                            ip: '192.168.10.10',
+                            mask: '255.255.255.0'
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2-SW2',
+                            x: 500,
+                            y: 150,
+                            ip: '192.168.10.20',
+                            mask: '255.255.255.0'
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'pc2', to: 'switch2', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'switch1', to: 'switch2', fromPort: 'Fa0/24', toPort: 'Fa0/24'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "Trunk links carry multiple VLANs between switches. Check the trunk configuration on both switches using 'show interfaces trunk'. Pay special attention to the native VLAN."
+                    },
+                    {
+                        level: 2,
+                        text: "Compare 'show interfaces trunk' output on Switch1 and Switch2. Look at the 'Native vlan' line. Are they the same on both sides? Cisco switches issue warnings when native VLANs don't match."
+                    },
+                    {
+                        level: 3,
+                        text: "Switch1's Fa0/24 has native VLAN 1, but Switch2's Fa0/24 has native VLAN 99. This mismatch causes Layer 2 connectivity issues. Native VLAN must match on both ends of a trunk!"
+                    }
+                ],
+
+                solution: {
+                    explanation: "Native VLAN mismatch on trunk ports causes traffic to be placed in the wrong VLAN. The native VLAN is the VLAN for untagged frames on a trunk - if it doesn't match on both sides, frames can end up in different VLANs. Best practice: Use the same native VLAN on both trunk ends (often VLAN 1 or a dedicated unused VLAN like 999).",
+                    commands: [
+                        "# On Switch2:",
+                        "enable",
+                        "configure terminal",
+                        "interface FastEthernet0/24",
+                        "switchport trunk native vlan 1",
+                        "end",
+                        "",
+                        "# Alternative: Change Switch1 to match Switch2:",
+                        "# switchport trunk native vlan 99"
+                    ],
+                    why: "Matching the native VLAN ensures untagged frames are handled consistently on both switches. You can verify the fix with 'show interfaces trunk' - both switches should now show the same native VLAN. You may also see Cisco's native VLAN mismatch warning disappear from the logs."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'trunk-native-vlan',
+                            device: 'switch1',
+                            interface: 'Fa0/24',
+                            expectedNativeVlan: 1,
+                            message: 'Switch1 Fa0/24 native VLAN must match Switch2'
+                        },
+                        {
+                            type: 'trunk-native-vlan',
+                            device: 'switch2',
+                            interface: 'Fa0/24',
+                            expectedNativeVlan: 1,
+                            message: 'Switch2 Fa0/24 native VLAN must match Switch1'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'pc1',
+                            to: '192.168.10.20',
+                            expectedSuccess: true,
+                            message: 'PC1 on Switch1 must reach PC2 on Switch2'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'Trunk troubleshooting',
+                    'Native VLAN concept',
+                    'show interfaces trunk',
+                    'VLAN tagging (802.1Q)',
+                    'Inter-switch connectivity'
+                ]
+            },
+
+            'ts-05-acl-blocking': {
+                id: 'ts-05-acl-blocking',
+                title: 'ACL Blocking Legitimate Traffic',
+                difficulty: 'intermediate',
+                estimatedTime: '25 min',
+                description: 'PC1 can ping the router but cannot access the web server on 10.0.0.50. The server is working fine - other devices can reach it.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 300,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {
+                                    ip: '192.168.1.1',
+                                    mask: '255.255.255.0',
+                                    aclIn: 'BLOCK_PC1'  // THE PROBLEM!
+                                },
+                                'Gi0/1': {
+                                    ip: '10.0.0.1',
+                                    mask: '255.255.255.0'
+                                }
+                            },
+                            acls: {
+                                'BLOCK_PC1': {
+                                    type: 'extended',
+                                    entries: [
+                                        {seq: 10, action: 'deny', protocol: 'tcp', source: '192.168.1.10', dest: '10.0.0.50', port: 80},
+                                        {seq: 20, action: 'permit', protocol: 'ip', source: 'any', dest: 'any'}
+                                    ]
+                                }
+                            },
+                            config: [
+                                'ip access-list extended BLOCK_PC1',
+                                ' 10 deny tcp host 192.168.1.10 host 10.0.0.50 eq 80',
+                                ' 20 permit ip any any',
+                                'interface GigabitEthernet0/0',
+                                ' ip access-group BLOCK_PC1 in'
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 200,
+                            ip: '192.168.1.10',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1'
+                        },
+                        {
+                            id: 'server',
+                            type: 'server',
+                            name: 'WebServer',
+                            x: 500,
+                            y: 200,
+                            ip: '10.0.0.50',
+                            mask: '255.255.255.0',
+                            gateway: '10.0.0.1',
+                            services: ['HTTP']
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/0'},
+                        {from: 'server', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/1'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "Access Control Lists (ACLs) can block specific traffic. Check if there are any ACLs applied to the router's interfaces using 'show ip access-lists' and 'show ip interface Gi0/0'."
+                    },
+                    {
+                        level: 2,
+                        text: "Look at 'show ip access-lists BLOCK_PC1'. The first entry (line 10) is a 'deny' statement. What traffic does it match? Check the source IP, destination IP, protocol, and port number."
+                    },
+                    {
+                        level: 3,
+                        text: "ACL entry 10 denies TCP traffic from 192.168.1.10 (PC1) to 10.0.0.50 (WebServer) on port 80 (HTTP). This is blocking PC1's web access. The ACL was likely created for testing and left in place accidentally."
+                    }
+                ],
+
+                solution: {
+                    explanation: "An extended ACL named 'BLOCK_PC1' is applied inbound on interface Gi0/0, denying HTTP traffic from PC1 to the web server. ACLs process entries top-to-bottom and stop at the first match - so line 10's 'deny' statement blocks the traffic before line 20's 'permit any any' can allow it. We need to remove or modify the ACL.",
+                    commands: [
+                        "# Option 1: Remove the deny statement",
+                        "enable",
+                        "configure terminal",
+                        "ip access-list extended BLOCK_PC1",
+                        "no 10",
+                        "end",
+                        "",
+                        "# Option 2: Remove the entire ACL from the interface",
+                        "configure terminal",
+                        "interface GigabitEthernet0/0",
+                        "no ip access-group BLOCK_PC1 in",
+                        "end"
+                    ],
+                    why: "Removing line 10 allows PC1's HTTP traffic to match line 20 (permit ip any any) instead. ACLs are powerful security tools, but incorrect entries can block legitimate traffic. Always test ACLs carefully and document their purpose. Use 'show access-lists' to verify the change."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'acl-check',
+                            device: 'router1',
+                            acl: 'BLOCK_PC1',
+                            shouldNotContain: 'deny tcp host 192.168.1.10',
+                            message: 'ACL must not block PC1 HTTP traffic'
+                        },
+                        {
+                            type: 'http-access',
+                            from: 'pc1',
+                            to: '10.0.0.50',
+                            port: 80,
+                            expectedSuccess: true,
+                            message: 'PC1 must be able to access WebServer on port 80'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'ACL troubleshooting',
+                    'Extended ACL syntax',
+                    'show ip access-lists',
+                    'ACL processing order',
+                    'Inbound vs outbound ACLs'
+                ]
+            },
+
+            'ts-06-duplicate-ip': {
+                id: 'ts-06-duplicate-ip',
+                title: 'Duplicate IP Address Conflict',
+                difficulty: 'beginner',
+                estimatedTime: '15 min',
+                description: 'PC1 has intermittent connectivity issues - sometimes it can ping the router, sometimes it cannot. PC2 and PC3 work fine.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 300,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {ip: '192.168.1.1', mask: '255.255.255.0'}
+                            }
+                        },
+                        {
+                            id: 'switch1',
+                            type: 'switch',
+                            name: 'Switch1',
+                            x: 300,
+                            y: 300
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 400,
+                            ip: '192.168.1.10',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1'
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2',
+                            x: 300,
+                            y: 400,
+                            ip: '192.168.1.10',  // THE PROBLEM! Same as PC1
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1'
+                        },
+                        {
+                            id: 'pc3',
+                            type: 'pc',
+                            name: 'PC3',
+                            x: 500,
+                            y: 400,
+                            ip: '192.168.1.30',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1'
+                        }
+                    ],
+                    connections: [
+                        {from: 'router1', to: 'switch1', fromPort: 'Gi0/0', toPort: 'Fa0/24'},
+                        {from: 'pc1', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'pc2', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/2'},
+                        {from: 'pc3', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/3'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "Intermittent connectivity often indicates a Layer 2 issue like duplicate IP addresses or MAC address conflicts. Check the IP addresses of all devices on the network."
+                    },
+                    {
+                        level: 2,
+                        text: "Compare the IP configurations of PC1, PC2, and PC3. Do you notice anything unusual? Remember, each device on a network must have a unique IP address."
+                    },
+                    {
+                        level: 3,
+                        text: "PC1 and PC2 both have IP address 192.168.1.10! This creates an IP conflict. When the router sends traffic to 192.168.1.10, it doesn't know which PC should receive it. The switch's ARP table gets confused, causing intermittent connectivity."
+                    }
+                ],
+
+                solution: {
+                    explanation: "Duplicate IP addresses cause unpredictable network behavior. Both PCs respond to ARP requests for 192.168.1.10, so the router's ARP table alternates between PC1's and PC2's MAC addresses. This is like two people having the same phone number - calls randomly reach one or the other. Most operating systems will display a 'duplicate IP address' warning when this occurs.",
+                    commands: [
+                        "# On PC2, change the IP address:",
+                        "IP Configuration:",
+                        "  IP Address: 192.168.1.20",
+                        "  Subnet Mask: 255.255.255.0",
+                        "  Default Gateway: 192.168.1.1",
+                        "",
+                        "# Now each device has a unique IP:",
+                        "# PC1: 192.168.1.10",
+                        "# PC2: 192.168.1.20",
+                        "# PC3: 192.168.1.30"
+                    ],
+                    why: "Assigning PC2 a unique IP address (192.168.1.20) resolves the conflict. Now the router can maintain accurate ARP entries, and traffic reaches the correct destination every time. To prevent this issue: use DHCP for automatic IP assignment, or maintain an IP address spreadsheet when using static IPs."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'ip-unique',
+                            devices: ['pc1', 'pc2', 'pc3'],
+                            message: 'All PCs must have unique IP addresses'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'router1',
+                            to: '192.168.1.10',
+                            expectedSuccess: true,
+                            consistent: true,
+                            message: 'Router must consistently reach PC1 (192.168.1.10)'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'router1',
+                            to: '192.168.1.20',
+                            expectedSuccess: true,
+                            message: 'Router must reach PC2 at new IP (192.168.1.20)'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'IP address conflict detection',
+                    'ARP table troubleshooting',
+                    'IP addressing best practices',
+                    'Intermittent issue diagnosis',
+                    'Static IP management'
+                ]
+            }
+        };
+
         // ========== APPLICATION STATE ==========
         let currentLab = null;
         let currentLabProgress = 0;
+
+        // Troubleshooting state
+        let currentTSScenario = null;
+        let tsHintsUsed = [];
+        let tsSolutionViewed = false;
+        let tsStartTime = null;
+        let tsProgress = {
+            symptomIdentified: true,
+            diagnosing: true,
+            fixApplied: false,
+            verified: false
+        };
 
         // ========== EVENT LISTENERS ==========
         document.addEventListener('DOMContentLoaded', () => {
@@ -3093,6 +4396,16 @@
             // Lab Library Button
             document.getElementById('labLibraryBtn').addEventListener('click', openLabLibrary);
             document.getElementById('closeLabLibrary').addEventListener('click', closeLabLibrary);
+
+            // Troubleshooting Button
+            document.getElementById('troubleshootBtn').addEventListener('click', openTroubleshootModal);
+            document.getElementById('closeTroubleshoot').addEventListener('click', closeTroubleshootModal);
+            document.getElementById('exitTroubleshootingBtn').addEventListener('click', exitTroubleshooting);
+
+            // Troubleshooting Filter Buttons
+            document.querySelectorAll('#tsFilters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => filterTSScenarios(btn.dataset.filter));
+            });
 
             // Panel Tabs
             document.querySelectorAll('.panel-tab').forEach(tab => {
@@ -3106,6 +4419,10 @@
 
             // Initialize Lab Library
             renderLabLibrary();
+
+            // Initialize Troubleshooting System
+            renderTroubleshootingScenarios();
+            loadTSProgress();
 
             // DHCP Server enable/disable toggle
             document.getElementById('dhcpServerEnabled').addEventListener('change', (e) => {
@@ -3363,6 +4680,377 @@
 
             console.log('Returned to home screen');
         }
+
+        // ========== TROUBLESHOOTING SYSTEM FUNCTIONS ==========
+
+        function openTroubleshootModal() {
+            document.getElementById('troubleshootModal').classList.add('active');
+            updateTSCompletionCount();
+        }
+
+        function closeTroubleshootModal() {
+            document.getElementById('troubleshootModal').classList.remove('active');
+        }
+
+        function renderTroubleshootingScenarios(filter = 'all') {
+            const grid = document.getElementById('tsGrid');
+            grid.innerHTML = '';
+
+            const tsProgress = getTSProgress();
+
+            Object.values(TROUBLESHOOTING_SCENARIOS).forEach(scenario => {
+                if (filter !== 'all' && scenario.difficulty !== filter) return;
+
+                const progress = tsProgress[scenario.id] || {};
+                const isCompleted = progress.completed || false;
+                const score = progress.bestScore || 0;
+                const isPerfect = score === 100;
+
+                const card = document.createElement('div');
+                card.className = 'ts-card';
+                card.innerHTML = `
+                    <div class="ts-card-header">
+                        <span class="ts-badge ${scenario.difficulty}">${scenario.difficulty}</span>
+                        <span class="ts-status">${isPerfect ? '⭐' : isCompleted ? '✅' : ''}</span>
+                    </div>
+                    <div class="ts-title">${scenario.title}</div>
+                    <div class="ts-meta">
+                        <div>⏱ ${scenario.estimatedTime}</div>
+                    </div>
+                    <div class="ts-description">${scenario.description}</div>
+                    <div class="ts-stats">
+                        ${isCompleted ? `
+                            <div class="ts-stat">
+                                <span>🏆</span>
+                                <span>Best: ${score} pts</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                card.addEventListener('click', () => loadTSScenario(scenario.id));
+                grid.appendChild(card);
+            });
+        }
+
+        function filterTSScenarios(filter) {
+            // Update active filter button
+            document.querySelectorAll('#tsFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Re-render scenarios with filter
+            renderTroubleshootingScenarios(filter);
+        }
+
+        function loadTSScenario(scenarioId) {
+            const scenario = TROUBLESHOOTING_SCENARIOS[scenarioId];
+            if (!scenario) return;
+
+            currentTSScenario = scenario;
+            tsHintsUsed = [];
+            tsSolutionViewed = false;
+            tsStartTime = Date.now();
+            tsProgress = {
+                symptomIdentified: true,
+                diagnosing: true,
+                fixApplied: false,
+                verified: false
+            };
+
+            // Close modal
+            closeTroubleshootModal();
+
+            // Hide welcome message
+            document.getElementById('welcomeMessage').style.display = 'none';
+
+            // Load topology
+            loadTopology(scenario.topology);
+
+            // Show troubleshooting panel instead of normal config panel
+            document.querySelector('.config-panel').style.display = 'none';
+            document.getElementById('troubleshootingPanel').style.display = 'block';
+            document.querySelector('.app-container').classList.add('ts-mode-active');
+
+            // Populate troubleshooting UI
+            document.getElementById('tsProblemDescription').textContent = scenario.description;
+
+            // Setup hints
+            document.getElementById('hint1Content').textContent = scenario.hints[0].text;
+            document.getElementById('hint2Content').textContent = scenario.hints[1].text;
+            document.getElementById('hint3Content').textContent = scenario.hints[2].text;
+
+            // Setup solution
+            const solutionDiv = document.getElementById('solutionContent');
+            solutionDiv.innerHTML = `
+                <div class="ts-solution-explanation">${scenario.solution.explanation}</div>
+                <div class="ts-solution-commands">
+                    ${scenario.solution.commands.map(cmd => `<div>${cmd}</div>`).join('')}
+                </div>
+                <div class="ts-solution-why">${scenario.solution.why}</div>
+            `;
+
+            // Reset hint buttons
+            resetHintButtons();
+
+            // Clear results
+            document.getElementById('tsResultContainer').innerHTML = '';
+
+            console.log('Loaded troubleshooting scenario:', scenario.title);
+        }
+
+        function resetHintButtons() {
+            document.getElementById('hint1Btn').classList.remove('locked', 'used');
+            document.getElementById('hint1Btn').querySelector('span:last-child').textContent = '▼';
+            document.getElementById('hint1Content').classList.remove('visible');
+
+            document.getElementById('hint2Btn').classList.add('locked');
+            document.getElementById('hint2Btn').classList.remove('used');
+            document.getElementById('hint2Btn').querySelector('span:last-child').textContent = '🔒';
+            document.getElementById('hint2Content').classList.remove('visible');
+
+            document.getElementById('hint3Btn').classList.add('locked');
+            document.getElementById('hint3Btn').classList.remove('used');
+            document.getElementById('hint3Btn').querySelector('span:last-child').textContent = '🔒';
+            document.getElementById('hint3Content').classList.remove('visible');
+
+            document.getElementById('solutionContent').classList.remove('visible');
+        }
+
+        function revealHint(level) {
+            const btn = document.getElementById(`hint${level}Btn`);
+            const content = document.getElementById(`hint${level}Content`);
+
+            // Check if locked
+            if (btn.classList.contains('locked')) {
+                return;
+            }
+
+            // Toggle visibility
+            if (content.classList.contains('visible')) {
+                content.classList.remove('visible');
+                btn.querySelector('span:last-child').textContent = '▼';
+            } else {
+                content.classList.add('visible');
+                btn.querySelector('span:last-child').textContent = '▲';
+                btn.classList.add('used');
+
+                // Track that this hint was used
+                if (!tsHintsUsed.includes(level)) {
+                    tsHintsUsed.push(level);
+                }
+
+                // Unlock next hint
+                if (level < 3) {
+                    const nextBtn = document.getElementById(`hint${level + 1}Btn`);
+                    nextBtn.classList.remove('locked');
+                    nextBtn.querySelector('span:last-child').textContent = '▼';
+                }
+
+                // Update progress
+                updateTSProgressTracker();
+            }
+        }
+
+        function revealSolution() {
+            const solutionContent = document.getElementById('solutionContent');
+
+            if (solutionContent.classList.contains('visible')) {
+                solutionContent.classList.remove('visible');
+            } else {
+                solutionContent.classList.add('visible');
+                tsSolutionViewed = true;
+
+                // Update progress
+                tsProgress.fixApplied = true;
+                updateTSProgressTracker();
+            }
+        }
+
+        function updateTSProgressTracker() {
+            // Diagnose - changes when hints are used
+            const diagnoseEl = document.getElementById('tsProgressDiagnose');
+            if (tsHintsUsed.length > 0 || tsSolutionViewed) {
+                diagnoseEl.classList.add('in-progress');
+                diagnoseEl.querySelector('.ts-progress-icon').textContent = '🔍';
+            }
+
+            // Fix Applied - changes when solution viewed
+            const fixEl = document.getElementById('tsProgressFix');
+            if (tsProgress.fixApplied) {
+                fixEl.classList.add('in-progress');
+                fixEl.querySelector('.ts-progress-icon').textContent = '🔧';
+            }
+
+            // Verified - changes when test passes
+            const verifyEl = document.getElementById('tsProgressVerify');
+            if (tsProgress.verified) {
+                verifyEl.classList.add('completed');
+                verifyEl.querySelector('.ts-progress-icon').textContent = '✅';
+            }
+        }
+
+        function simulateCommand(command) {
+            // Simple simulation - just show an alert
+            alert(`Simulating command: ${command}\n\nIn a real troubleshooting scenario, this would execute the command on the selected device and show the output.`);
+        }
+
+        function testFix() {
+            if (!currentTSScenario) return;
+
+            const resultContainer = document.getElementById('tsResultContainer');
+            const verification = currentTSScenario.verification;
+
+            // Simulate verification checks
+            // In this proof-of-concept, we'll assume the user has fixed it if they've viewed hints or solution
+            const fixedCorrectly = tsHintsUsed.length > 0 || tsSolutionViewed;
+
+            // Calculate score
+            let score = 100;
+            if (tsSolutionViewed) {
+                score = 40;
+            } else if (tsHintsUsed.includes(3)) {
+                score = 40;
+            } else if (tsHintsUsed.includes(2)) {
+                score = 60;
+            } else if (tsHintsUsed.includes(1)) {
+                score = 80;
+            }
+
+            // Check time bonus
+            const timeElapsed = (Date.now() - tsStartTime) / 1000 / 60; // minutes
+            const estimatedMinutes = parseInt(currentTSScenario.estimatedTime);
+            if (timeElapsed < estimatedMinutes && score > 40) {
+                score += 10;
+                score = Math.min(100, score);
+            }
+
+            if (fixedCorrectly) {
+                // Success!
+                tsProgress.fixApplied = true;
+                tsProgress.verified = true;
+                updateTSProgressTracker();
+
+                resultContainer.innerHTML = `
+                    <div class="ts-result success visible">
+                        <div class="ts-result-header">
+                            <span>✅</span>
+                            <span>Great job! Issue resolved</span>
+                        </div>
+                        <div class="ts-result-message">
+                            The interface is now up and connectivity has been restored. You successfully identified and fixed the issue!
+                        </div>
+                        <div class="ts-score">
+                            <div class="ts-score-number">${score}</div>
+                            <div class="ts-score-label">Points</div>
+                        </div>
+                        <div class="ts-skills">
+                            <h4>Skills Practiced:</h4>
+                            <div class="ts-skills-list">
+                                ${currentTSScenario.skills.map(skill => `<span class="ts-skill-tag">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Save progress
+                saveTSProgress(currentTSScenario.id, score);
+                updateTSCompletionCount();
+            } else {
+                // Not fixed yet
+                resultContainer.innerHTML = `
+                    <div class="ts-result failed visible">
+                        <div class="ts-result-header">
+                            <span>❌</span>
+                            <span>Issue still present</span>
+                        </div>
+                        <div class="ts-result-message">
+                            The problem hasn't been resolved yet. Try using the diagnostic tools and hints to identify the root cause. Remember to check the interface status!
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function resetScenario() {
+            if (!currentTSScenario) return;
+
+            if (confirm('Are you sure you want to reset this scenario? All progress will be lost.')) {
+                loadTSScenario(currentTSScenario.id);
+            }
+        }
+
+        function exitTroubleshooting() {
+            // Confirm if scenario is in progress
+            if (currentTSScenario && !tsProgress.verified) {
+                if (!confirm('Are you sure you want to exit? Your progress will not be saved.')) {
+                    return;
+                }
+            }
+
+            // Hide troubleshooting panel
+            document.getElementById('troubleshootingPanel').style.display = 'none';
+            document.querySelector('.config-panel').style.display = 'flex';
+            document.querySelector('.app-container').classList.remove('ts-mode-active');
+
+            // Reset state
+            currentTSScenario = null;
+            tsHintsUsed = [];
+            tsSolutionViewed = false;
+            tsStartTime = null;
+
+            // Show welcome message
+            document.getElementById('welcomeMessage').style.display = 'block';
+
+            // Clear canvas
+            devices = [];
+            canvas.innerHTML = '';
+
+            // Open modal again
+            openTroubleshootModal();
+        }
+
+        function getTSProgress() {
+            const stored = localStorage.getItem('ts_progress');
+            return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveTSProgress(scenarioId, score) {
+            const progress = getTSProgress();
+
+            if (!progress[scenarioId]) {
+                progress[scenarioId] = {
+                    completed: true,
+                    bestScore: score,
+                    attempts: 1,
+                    lastAttempt: Date.now()
+                };
+            } else {
+                progress[scenarioId].bestScore = Math.max(progress[scenarioId].bestScore, score);
+                progress[scenarioId].attempts += 1;
+                progress[scenarioId].lastAttempt = Date.now();
+            }
+
+            localStorage.setItem('ts_progress', JSON.stringify(progress));
+        }
+
+        function loadTSProgress() {
+            // This is called on page load to restore any saved progress
+            const progress = getTSProgress();
+            console.log('Loaded troubleshooting progress:', Object.keys(progress).length, 'scenarios');
+        }
+
+        function updateTSCompletionCount() {
+            const progress = getTSProgress();
+            const total = Object.keys(TROUBLESHOOTING_SCENARIOS).length;
+            const completed = Object.keys(progress).filter(id => progress[id].completed).length;
+
+            document.getElementById('tsCompletionCount').textContent = `${completed}/${total}`;
+        }
+
+        // ========== END TROUBLESHOOTING FUNCTIONS ==========
 
         function renderInstructions(lab) {
             const container = document.getElementById('instructionsList');
