@@ -1184,6 +1184,7 @@ Subnet Mask          Wildcard Mask        CIDR
                     <strong>Wildcard: 0.0.0.255</strong><br>
                     Matches: /24 network (256 addresses)<br>
                     Subnet Mask: 255.255.255.0<br>
+                    CIDR Notation: /24<br>
                     Example: 192.168.1.0 matches 192.168.1.0 - 192.168.1.255
                 </div>
             </div>
@@ -2265,25 +2266,50 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 return;
             }
 
-            // Calculate subnet mask (inverse)
-            const subnetParts = wildcardParts.map(part => 255 - parseInt(part));
+            // Calculate subnet mask (inverse of wildcard)
+            const wildcardInts = wildcardParts.map(part => parseInt(part));
+            const subnetParts = wildcardInts.map(part => 255 - part);
             const subnetMask = subnetParts.join('.');
 
-            // Calculate CIDR prefix
+            // Calculate CIDR prefix (count 1s in SUBNET mask, not wildcard)
             let cidr = 0;
             subnetParts.forEach(part => {
                 cidr += (part.toString(2).match(/1/g) || []).length;
             });
 
-            // Calculate number of addresses
+            // Calculate number of addresses (count 1s in WILDCARD mask)
             let wildcardBits = 0;
-            wildcardParts.forEach(part => {
-                const num = parseInt(part);
-                for (let i = 0; i < 8; i++) {
-                    if ((num >> i) & 1) wildcardBits++;
-                }
+            wildcardInts.forEach(part => {
+                wildcardBits += (part.toString(2).match(/1/g) || []).length;
             });
             const addresses = Math.pow(2, wildcardBits);
+
+            // Calculate proper IP range based on wildcard
+            function calculateRange(baseIP, wildcardInts) {
+                const base = baseIP.split('.').map(p => parseInt(p));
+                const start = [...base];
+                const end = [...base];
+
+                for (let i = 0; i < 4; i++) {
+                    start[i] = base[i] & (255 - wildcardInts[i]); // Zero out wildcard bits
+                    end[i] = start[i] | wildcardInts[i]; // Set wildcard bits to 1
+                }
+
+                return {
+                    start: start.join('.'),
+                    end: end.join('.')
+                };
+            }
+
+            // Use appropriate base IP for demonstration
+            let baseIP = '192.168.1.0';
+            if (wildcardInts[0] > 0) {
+                baseIP = '10.0.0.0'; // Use Class A base for first octet wildcards
+            } else if (wildcardInts[1] > 0) {
+                baseIP = '172.16.0.0'; // Use Class B base for second octet wildcards
+            }
+
+            const range = calculateRange(baseIP, wildcardInts);
 
             let meaning = '';
             if (input === '0.0.0.0') {
@@ -2291,13 +2317,15 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
             } else if (input === '0.0.0.255') {
                 meaning = '/24 network (256 addresses)';
             } else if (input === '0.0.3.255') {
-                meaning = '/22 network (1024 addresses)';
+                meaning = '/22 network (1,024 addresses)';
             } else if (input === '0.0.255.255') {
-                meaning = '/16 network (65536 addresses)';
+                meaning = '/16 network (65,536 addresses)';
+            } else if (input === '0.255.255.255') {
+                meaning = '/8 network (16,777,216 addresses)';
             } else if (input === '255.255.255.255') {
                 meaning = 'Any address (match all)';
             } else {
-                meaning = `/${cidr} network (${addresses} addresses)`;
+                meaning = `/${cidr} network (${addresses.toLocaleString()} addresses)`;
             }
 
             result.innerHTML = `
@@ -2305,7 +2333,7 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 Matches: ${meaning}<br>
                 Subnet Mask: ${subnetMask}<br>
                 CIDR Notation: /${cidr}<br>
-                Example: 192.168.1.0 matches 192.168.1.0 - 192.168.1.${addresses - 1}
+                Example: ${baseIP} matches ${range.start} - ${range.end}
             `;
         }
 
