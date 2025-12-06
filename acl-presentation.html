@@ -2271,11 +2271,21 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
             const subnetParts = wildcardInts.map(part => 255 - part);
             const subnetMask = subnetParts.join('.');
 
-            // Calculate CIDR prefix (count 1s in SUBNET mask, not wildcard)
+            // Calculate CIDR prefix
+            // Check if subnet mask is contiguous (valid for CIDR)
+            const subnetBinary = subnetParts.map(p => p.toString(2).padStart(8, '0')).join('');
+            const isContiguous = /^1*0*$/.test(subnetBinary);
+
             let cidr = 0;
-            subnetParts.forEach(part => {
-                cidr += (part.toString(2).match(/1/g) || []).length;
-            });
+            if (isContiguous) {
+                // Count leading 1s in subnet mask
+                for (let bit of subnetBinary) {
+                    if (bit === '1') cidr++;
+                    else break;
+                }
+            } else {
+                cidr = 'N/A'; // Non-contiguous mask (not valid CIDR)
+            }
 
             // Calculate number of addresses (count 1s in WILDCARD mask)
             let wildcardBits = 0;
@@ -2328,11 +2338,13 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 meaning = `/${cidr} network (${addresses.toLocaleString()} addresses)`;
             }
 
+            const cidrDisplay = cidr === 'N/A' ? 'N/A (non-contiguous mask)' : `/${cidr}`;
+
             result.innerHTML = `
                 <strong>Wildcard: ${input}</strong><br>
                 Matches: ${meaning}<br>
                 Subnet Mask: ${subnetMask}<br>
-                CIDR Notation: /${cidr}<br>
+                CIDR Notation: ${cidrDisplay}<br>
                 Example: ${baseIP} matches ${range.start} - ${range.end}
             `;
         }
