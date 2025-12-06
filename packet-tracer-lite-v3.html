@@ -4369,6 +4369,671 @@
                     'Intermittent issue diagnosis',
                     'Static IP management'
                 ]
+            },
+
+            'ts-07-ospf-adjacency': {
+                id: 'ts-07-ospf-adjacency',
+                title: 'OSPF Adjacency Failure',
+                difficulty: 'advanced',
+                estimatedTime: '30 min',
+                description: 'Router1 and Router2 should be OSPF neighbors, but "show ip ospf neighbor" shows no neighbors. The physical connection is up and interfaces have IP addresses.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 200,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {
+                                    ip: '10.1.1.1',
+                                    mask: '255.255.255.0',
+                                    ospf: {
+                                        processId: 1,
+                                        area: 0,
+                                        network: '10.1.1.0'
+                                    }
+                                },
+                                'Lo0': {
+                                    ip: '1.1.1.1',
+                                    mask: '255.255.255.255',
+                                    ospf: {processId: 1, area: 0}
+                                }
+                            },
+                            ospf: {
+                                processId: 1,
+                                routerId: '1.1.1.1',
+                                networks: [
+                                    {network: '10.1.1.0', wildcard: '0.0.0.255', area: 0},
+                                    {network: '1.1.1.1', wildcard: '0.0.0.0', area: 0}
+                                ]
+                            },
+                            config: [
+                                'router ospf 1',
+                                ' router-id 1.1.1.1',
+                                ' network 10.1.1.0 0.0.0.255 area 0',
+                                ' network 1.1.1.1 0.0.0.0 area 0'
+                            ]
+                        },
+                        {
+                            id: 'router2',
+                            type: 'router',
+                            name: 'Router2',
+                            x: 400,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {
+                                    ip: '10.1.1.2',
+                                    mask: '255.255.255.0',
+                                    ospf: {
+                                        processId: 1,
+                                        area: 1,
+                                        network: '10.1.1.0'
+                                    }
+                                },
+                                'Lo0': {
+                                    ip: '2.2.2.2',
+                                    mask: '255.255.255.255',
+                                    ospf: {processId: 1, area: 1}
+                                }
+                            },
+                            ospf: {
+                                processId: 1,
+                                routerId: '2.2.2.2',
+                                networks: [
+                                    {network: '10.1.1.0', wildcard: '0.0.0.255', area: 1},
+                                    {network: '2.2.2.2', wildcard: '0.0.0.0', area: 1}
+                                ]
+                            },
+                            config: [
+                                'router ospf 1',
+                                ' router-id 2.2.2.2',
+                                ' network 10.1.1.0 0.0.0.255 area 1',
+                                ' network 2.2.2.2 0.0.0.0 area 1'
+                            ]
+                        }
+                    ],
+                    connections: [
+                        {from: 'router1', to: 'router2', fromPort: 'Gi0/0', toPort: 'Gi0/0'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "OSPF routers must agree on several parameters to form adjacencies. Check 'show ip ospf interface' on both routers. Pay attention to the area ID, hello/dead timers, and network type."
+                    },
+                    {
+                        level: 2,
+                        text: "Compare the OSPF area assignments on Router1's Gi0/0 and Router2's Gi0/0 using 'show ip ospf interface Gi0/0'. OSPF neighbors must be in the same area to form adjacencies (unless one is an ABR)."
+                    },
+                    {
+                        level: 3,
+                        text: "Router1's Gi0/0 is in OSPF area 0, but Router2's Gi0/0 is in OSPF area 1. This area mismatch prevents the adjacency from forming. Both interfaces on the 10.1.1.0/24 network must be in the same area."
+                    }
+                ],
+
+                solution: {
+                    explanation: "OSPF area mismatch is one of the most common reasons adjacencies fail to form. OSPF neighbors on the same network segment must be in the same area. Router2's network statement incorrectly placed the 10.1.1.0 network in area 1 instead of area 0. This is often a typo during initial configuration.",
+                    commands: [
+                        "# On Router2:",
+                        "enable",
+                        "configure terminal",
+                        "router ospf 1",
+                        "no network 10.1.1.0 0.0.0.255 area 1",
+                        "network 10.1.1.0 0.0.0.255 area 0",
+                        "end",
+                        "",
+                        "# Verify adjacency formed:",
+                        "show ip ospf neighbor",
+                        "# You should see Router1 (1.1.1.1) in FULL state"
+                    ],
+                    why: "After correcting the area to 0, both routers will exchange OSPF Hello packets that match (same area, same hello/dead timers). The adjacency will progress through states: DOWN → INIT → 2WAY → EXSTART → EXCHANGE → LOADING → FULL. Use 'show ip ospf neighbor' to verify the FULL state, which means they're successfully exchanging routing information."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'ospf-area',
+                            device: 'router2',
+                            network: '10.1.1.0',
+                            expectedArea: 0,
+                            message: 'Router2 network 10.1.1.0 must be in OSPF area 0'
+                        },
+                        {
+                            type: 'ospf-neighbor',
+                            device: 'router1',
+                            expectedNeighbor: '2.2.2.2',
+                            expectedState: 'FULL',
+                            message: 'Router1 must have Router2 as FULL neighbor'
+                        },
+                        {
+                            type: 'ospf-neighbor',
+                            device: 'router2',
+                            expectedNeighbor: '1.1.1.1',
+                            expectedState: 'FULL',
+                            message: 'Router2 must have Router1 as FULL neighbor'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'OSPF troubleshooting',
+                    'show ip ospf neighbor',
+                    'show ip ospf interface',
+                    'OSPF area concept',
+                    'Adjacency states (2WAY, EXSTART, FULL)',
+                    'Network statement syntax'
+                ]
+            },
+
+            'ts-08-routing-loop': {
+                id: 'ts-08-routing-loop',
+                title: 'Routing Loop Detection',
+                difficulty: 'advanced',
+                estimatedTime: '30 min',
+                description: 'Network is extremely slow and ping shows very high hop counts. Traceroute shows packets bouncing between routers. Something is causing a routing loop.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1',
+                            x: 200,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {ip: '10.1.1.1', mask: '255.255.255.0'},
+                                'Gi0/1': {ip: '10.1.12.1', mask: '255.255.255.0'}
+                            },
+                            staticRoutes: [
+                                {
+                                    network: '10.2.2.0',
+                                    mask: '255.255.255.0',
+                                    nextHop: '10.1.12.2'  // → Router2
+                                },
+                                {
+                                    network: '192.168.100.0',
+                                    mask: '255.255.255.0',
+                                    nextHop: '10.1.12.2'  // ← THE PROBLEM! Creates loop
+                                }
+                            ],
+                            config: [
+                                'interface Gi0/0',
+                                ' ip address 10.1.1.1 255.255.255.0',
+                                'interface Gi0/1',
+                                ' ip address 10.1.12.1 255.255.255.0',
+                                'ip route 10.2.2.0 255.255.255.0 10.1.12.2',
+                                'ip route 192.168.100.0 255.255.255.0 10.1.12.2'  // ← Wrong!
+                            ]
+                        },
+                        {
+                            id: 'router2',
+                            type: 'router',
+                            name: 'Router2',
+                            x: 400,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {ip: '10.2.2.1', mask: '255.255.255.0'},
+                                'Gi0/1': {ip: '10.1.12.2', mask: '255.255.255.0'}
+                            },
+                            staticRoutes: [
+                                {
+                                    network: '10.1.1.0',
+                                    mask: '255.255.255.0',
+                                    nextHop: '10.1.12.1'  // → Router1
+                                },
+                                {
+                                    network: '192.168.100.0',
+                                    mask: '255.255.255.0',
+                                    nextHop: '10.1.12.1'  // → Router1 (causes loop!)
+                                }
+                            ],
+                            config: [
+                                'interface Gi0/0',
+                                ' ip address 10.2.2.1 255.255.255.0',
+                                'interface Gi0/1',
+                                ' ip address 10.1.12.2 255.255.255.0',
+                                'ip route 10.1.1.0 255.255.255.0 10.1.12.1',
+                                'ip route 192.168.100.0 255.255.255.0 10.1.12.1'
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 200,
+                            ip: '10.1.1.10',
+                            mask: '255.255.255.0',
+                            gateway: '10.1.1.1'
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'router1', fromPort: 'NIC', toPort: 'Gi0/0'},
+                        {from: 'router1', to: 'router2', fromPort: 'Gi0/1', toPort: 'Gi0/1'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "Routing loops occur when packets endlessly circulate between routers. Use 'show ip route' on both routers to examine the routing tables. Look for the route to 192.168.100.0 - where does each router think it should send packets?"
+                    },
+                    {
+                        level: 2,
+                        text: "Check 'show ip route 192.168.100.0' on both routers. Router1 points to Router2 (10.1.12.2), and Router2 points back to Router1 (10.1.12.1). This creates a loop! Packets for 192.168.100.0 bounce between routers until TTL expires."
+                    },
+                    {
+                        level: 3,
+                        text: "Both routers have static routes for 192.168.100.0/24 pointing to each other. Router1 says 'send to Router2' and Router2 says 'send to Router1' - classic routing loop. The 192.168.100.0 network doesn't actually exist or is misconfigured. One (or both) routes need to be removed."
+                    }
+                ],
+
+                solution: {
+                    explanation: "A routing loop was created by incorrect static routes. Both routers think the other router is the path to 192.168.100.0/24, so packets bounce back and forth until the TTL (Time To Live) reaches zero. This is often caused by misconfigured static routes, routing protocol issues, or network topology changes that weren't updated in the routing configuration.",
+                    commands: [
+                        "# Option 1: Remove the route from Router1",
+                        "# (if 192.168.100.0 is actually connected to Router2)",
+                        "Router1(config)# no ip route 192.168.100.0 255.255.255.0 10.1.12.2",
+                        "",
+                        "# Option 2: Remove the route from Router2",
+                        "# (if 192.168.100.0 is actually connected to Router1)",
+                        "Router2(config)# no ip route 192.168.100.0 255.255.255.0 10.1.12.1",
+                        "",
+                        "# Option 3: If network doesn't exist, remove both routes",
+                        "",
+                        "# Verify with:",
+                        "show ip route 192.168.100.0",
+                        "# Should only appear on the router where it's actually connected"
+                    ],
+                    why: "Removing the incorrect static route(s) breaks the loop. In production networks, routing loops are prevented by: using dynamic routing protocols (OSPF/EIGRP have loop prevention), careful static route planning, route summarization, and administrative distance manipulation. Always verify routes with 'traceroute' after making changes."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'no-routing-loop',
+                            network: '192.168.100.0',
+                            devices: ['router1', 'router2'],
+                            message: 'Routing loop for 192.168.100.0 must be resolved'
+                        },
+                        {
+                            type: 'traceroute',
+                            from: 'pc1',
+                            to: '10.2.2.10',
+                            maxHops: 5,
+                            expectedSuccess: true,
+                            message: 'Traceroute should complete without loops'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'Routing loop identification',
+                    'show ip route analysis',
+                    'Traceroute interpretation',
+                    'TTL concept',
+                    'Static route troubleshooting',
+                    'Routing table verification'
+                ]
+            },
+
+            'ts-09-dhcp-exhausted': {
+                id: 'ts-09-dhcp-exhausted',
+                title: 'DHCP Pool Exhausted',
+                difficulty: 'intermediate',
+                estimatedTime: '25 min',
+                description: 'New PC4 cannot obtain an IP address via DHCP. It stays at 169.254.x.x (APIPA). PC1, PC2, and PC3 have valid DHCP addresses. The DHCP server is running.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'router1',
+                            type: 'router',
+                            name: 'Router1-DHCP',
+                            x: 300,
+                            y: 200,
+                            interfaces: {
+                                'Gi0/0': {
+                                    ip: '192.168.1.1',
+                                    mask: '255.255.255.0',
+                                    dhcpServer: true
+                                }
+                            },
+                            dhcp: {
+                                poolName: 'LAN_POOL',
+                                network: '192.168.1.0',
+                                mask: '255.255.255.0',
+                                defaultRouter: '192.168.1.1',
+                                dnsServer: '8.8.8.8',
+                                start: '192.168.1.10',
+                                end: '192.168.1.12',
+                                assigned: [
+                                    {ip: '192.168.1.10', mac: 'AA:BB:CC:DD:EE:01', device: 'PC1'},
+                                    {ip: '192.168.1.11', mac: 'AA:BB:CC:DD:EE:02', device: 'PC2'},
+                                    {ip: '192.168.1.12', mac: 'AA:BB:CC:DD:EE:03', device: 'PC3'}
+                                ]
+                            },
+                            config: [
+                                'ip dhcp pool LAN_POOL',
+                                ' network 192.168.1.0 255.255.255.0',
+                                ' default-router 192.168.1.1',
+                                ' dns-server 8.8.8.8',
+                                'ip dhcp excluded-address 192.168.1.1 192.168.1.9',
+                                'ip dhcp excluded-address 192.168.1.13 192.168.1.254'
+                            ]
+                        },
+                        {
+                            id: 'switch1',
+                            type: 'switch',
+                            name: 'Switch1',
+                            x: 300,
+                            y: 300
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 400,
+                            ip: '192.168.1.10',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1',
+                            dhcp: true
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2',
+                            x: 200,
+                            y: 400,
+                            ip: '192.168.1.11',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1',
+                            dhcp: true
+                        },
+                        {
+                            id: 'pc3',
+                            type: 'pc',
+                            name: 'PC3',
+                            x: 400,
+                            y: 400,
+                            ip: '192.168.1.12',
+                            mask: '255.255.255.0',
+                            gateway: '192.168.1.1',
+                            dhcp: true
+                        },
+                        {
+                            id: 'pc4',
+                            type: 'pc',
+                            name: 'PC4',
+                            x: 500,
+                            y: 400,
+                            ip: '169.254.100.50',
+                            mask: '255.255.0.0',
+                            gateway: '',
+                            dhcp: true
+                        }
+                    ],
+                    connections: [
+                        {from: 'router1', to: 'switch1', fromPort: 'Gi0/0', toPort: 'Fa0/24'},
+                        {from: 'pc1', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'pc2', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/2'},
+                        {from: 'pc3', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/3'},
+                        {from: 'pc4', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/4'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "When a PC shows 169.254.x.x (APIPA), it means DHCP failed. Check the DHCP server's available addresses using 'show ip dhcp binding' and 'show ip dhcp pool'. How many addresses are in the pool vs how many are assigned?"
+                    },
+                    {
+                        level: 2,
+                        text: "Use 'show ip dhcp pool LAN_POOL' on the router. Look at the pool utilization - how many addresses are available vs in use? Also check 'show ip dhcp excluded-address' to see which addresses are intentionally excluded from assignment."
+                    },
+                    {
+                        level: 3,
+                        text: "The DHCP pool only has 3 available addresses (192.168.1.10-12), and all 3 are already assigned to PC1, PC2, and PC3. The 'ip dhcp excluded-address' command is excluding .1-.9 and .13-.254, leaving only 3 usable addresses. PC4 has no address to receive!"
+                    }
+                ],
+
+                solution: {
+                    explanation: "DHCP pool exhaustion occurs when all available addresses in the pool are assigned or reserved. The excluded-address range was too aggressive - it blocked .13-.254, leaving only 3 addresses (.10, .11, .12). When PC4 requested an address, none were available, so it fell back to APIPA (Automatic Private IP Addressing). This is common in networks that grow beyond initial planning.",
+                    commands: [
+                        "# On Router1 (DHCP Server):",
+                        "enable",
+                        "configure terminal",
+                        "no ip dhcp excluded-address 192.168.1.13 192.168.1.254",
+                        "ip dhcp excluded-address 192.168.1.240 192.168.1.254",
+                        "# Now .10-.239 are available (230 addresses)",
+                        "end",
+                        "",
+                        "# On PC4:",
+                        "# Release and renew DHCP:",
+                        "ipconfig /release",
+                        "ipconfig /renew",
+                        "",
+                        "# Verify on router:",
+                        "show ip dhcp binding",
+                        "# PC4 should now have an address like 192.168.1.13"
+                    ],
+                    why: "By changing the excluded range from .13-.254 to .240-.254, we freed up addresses .13-.239 (227 additional addresses). Now PC4 can receive an address from the pool. Best practices: Plan DHCP pools with 20-30% overhead, monitor pool utilization, set appropriate lease times, and use DHCP reservations for servers/printers instead of excluding large ranges."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'dhcp-pool-available',
+                            device: 'router1',
+                            pool: 'LAN_POOL',
+                            minAvailable: 10,
+                            message: 'DHCP pool must have at least 10 available addresses'
+                        },
+                        {
+                            type: 'dhcp-address',
+                            device: 'pc4',
+                            expectedRange: '192.168.1.13-192.168.1.239',
+                            message: 'PC4 must receive valid DHCP address (not APIPA)'
+                        },
+                        {
+                            type: 'gateway-reachable',
+                            device: 'pc4',
+                            gateway: '192.168.1.1',
+                            message: 'PC4 must be able to reach gateway'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'DHCP troubleshooting',
+                    'show ip dhcp binding',
+                    'show ip dhcp pool',
+                    'APIPA concept (169.254.x.x)',
+                    'DHCP excluded-address',
+                    'Pool capacity planning',
+                    'ipconfig /release and /renew'
+                ]
+            },
+
+            'ts-10-stp-blocking': {
+                id: 'ts-10-stp-blocking',
+                title: 'Spanning Tree Blocking Expected Port',
+                difficulty: 'advanced',
+                estimatedTime: '35 min',
+                description: 'PC1 cannot reach PC2 even though they are in the same VLAN and on directly connected switches. Physical links are up. STP may be blocking the wrong port.',
+
+                topology: {
+                    devices: [
+                        {
+                            id: 'switch1',
+                            type: 'switch',
+                            name: 'Switch1',
+                            x: 200,
+                            y: 200,
+                            priority: 32768,  // Default priority
+                            vlans: {
+                                '10': {name: 'Data', ports: ['Fa0/1']}
+                            },
+                            stp: {
+                                rootBridge: false,
+                                rootPort: 'Fa0/24',
+                                designatedPorts: ['Fa0/1'],
+                                blockedPorts: ['Fa0/23']  // Blocking uplink to Switch3!
+                            },
+                            config: [
+                                'spanning-tree mode pvst',
+                                'spanning-tree vlan 10 priority 32768'
+                            ]
+                        },
+                        {
+                            id: 'switch2',
+                            type: 'switch',
+                            name: 'Switch2',
+                            x: 400,
+                            y: 200,
+                            priority: 32768,
+                            vlans: {
+                                '10': {name: 'Data', ports: ['Fa0/1']}
+                            },
+                            stp: {
+                                rootBridge: false,
+                                rootPort: 'Fa0/24',
+                                designatedPorts: ['Fa0/1'],
+                                blockedPorts: []
+                            },
+                            config: [
+                                'spanning-tree mode pvst',
+                                'spanning-tree vlan 10 priority 32768'
+                            ]
+                        },
+                        {
+                            id: 'switch3',
+                            type: 'switch',
+                            name: 'Switch3',
+                            x: 300,
+                            y: 100,
+                            priority: 8192,  // ← THE PROBLEM! Too low, becomes root unintentionally
+                            vlans: {
+                                '10': {name: 'Data', ports: []}
+                            },
+                            stp: {
+                                rootBridge: true,  // Became root due to low priority!
+                                rootPort: null,
+                                designatedPorts: ['Fa0/1', 'Fa0/2'],
+                                blockedPorts: []
+                            },
+                            config: [
+                                'spanning-tree mode pvst',
+                                'spanning-tree vlan 10 priority 8192'  // ← TOO LOW!
+                            ]
+                        },
+                        {
+                            id: 'pc1',
+                            type: 'pc',
+                            name: 'PC1',
+                            x: 100,
+                            y: 300,
+                            ip: '192.168.10.10',
+                            mask: '255.255.255.0',
+                            vlan: 10
+                        },
+                        {
+                            id: 'pc2',
+                            type: 'pc',
+                            name: 'PC2',
+                            x: 500,
+                            y: 300,
+                            ip: '192.168.10.20',
+                            mask: '255.255.255.0',
+                            vlan: 10
+                        }
+                    ],
+                    connections: [
+                        {from: 'pc1', to: 'switch1', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'pc2', to: 'switch2', fromPort: 'NIC', toPort: 'Fa0/1'},
+                        {from: 'switch1', to: 'switch3', fromPort: 'Fa0/23', toPort: 'Fa0/1'},
+                        {from: 'switch2', to: 'switch3', fromPort: 'Fa0/24', toPort: 'Fa0/2'},
+                        {from: 'switch1', to: 'switch2', fromPort: 'Fa0/24', toPort: 'Fa0/23'}
+                    ]
+                },
+
+                hints: [
+                    {
+                        level: 1,
+                        text: "Spanning Tree Protocol (STP) blocks redundant paths to prevent loops. Check which ports are blocked using 'show spanning-tree vlan 10'. Also identify which switch is the root bridge - is it the intended one?"
+                    },
+                    {
+                        level: 2,
+                        text: "Use 'show spanning-tree vlan 10' on all switches. Look at the root bridge (lowest Bridge ID). Switch3 has priority 8192 while Switch1 and Switch2 have 32768 - Switch3 became root! This may not be the optimal design if Switch3 is an access layer switch."
+                    },
+                    {
+                        level: 3,
+                        text: "Switch3 is the root bridge due to its priority of 8192 (lower wins). This causes Switch1's port Fa0/23 to be in blocking state, cutting off PC1 from PC2. Switch3 was probably configured with lower priority for testing and never changed back. The intended root should likely be Switch1 or Switch2 (distribution layer)."
+                    }
+                ],
+
+                solution: {
+                    explanation: "STP selects the root bridge based on the lowest Bridge ID (priority + MAC address). Switch3's priority of 8192 is much lower than the default 32768, making it the root bridge. This forced Switch1's uplink (Fa0/23) into blocking state to prevent a loop. The topology suggests Switch3 is an access layer switch and shouldn't be root. Proper STP design places the root bridge at the distribution or core layer.",
+                    commands: [
+                        "# Option 1: Raise Switch3's priority back to default",
+                        "Switch3(config)# spanning-tree vlan 10 priority 32768",
+                        "",
+                        "# Option 2: Make Switch1 the root intentionally",
+                        "Switch1(config)# spanning-tree vlan 10 priority 4096",
+                        "",
+                        "# Option 3: Use root primary macro (sets priority to 24576)",
+                        "Switch1(config)# spanning-tree vlan 10 root primary",
+                        "",
+                        "# Verify the fix:",
+                        "show spanning-tree vlan 10",
+                        "# Check that Switch1 is now root and all necessary ports are forwarding",
+                        "",
+                        "# Monitor port states:",
+                        "show spanning-tree vlan 10 | include Fa0"
+                    ],
+                    why: "By correcting Switch3's priority to 32768 (or making Switch1 the root with priority 4096), the STP topology recalculates. Switch1 or Switch2 becomes root, and all inter-switch links enter forwarding state in the optimal configuration. STP best practices: Use 'root primary' and 'root secondary' macros, plan your root bridge location, document STP priorities, and monitor with 'show spanning-tree summary'."
+                },
+
+                verification: {
+                    checks: [
+                        {
+                            type: 'stp-root',
+                            vlan: 10,
+                            expectedRoot: ['switch1', 'switch2'],
+                            notRoot: 'switch3',
+                            message: 'Switch3 should NOT be STP root for VLAN 10'
+                        },
+                        {
+                            type: 'port-state',
+                            device: 'switch1',
+                            interface: 'Fa0/23',
+                            expectedState: 'forwarding',
+                            message: 'Switch1 Fa0/23 must be in forwarding state'
+                        },
+                        {
+                            type: 'ping',
+                            from: 'pc1',
+                            to: '192.168.10.20',
+                            expectedSuccess: true,
+                            message: 'PC1 must be able to ping PC2'
+                        }
+                    ]
+                },
+
+                skills: [
+                    'Spanning Tree Protocol (STP) troubleshooting',
+                    'show spanning-tree vlan',
+                    'Root bridge selection',
+                    'Bridge ID concept (priority + MAC)',
+                    'Port states (forwarding/blocking)',
+                    'STP topology design',
+                    'Root primary/secondary configuration'
+                ]
             }
         };
 
