@@ -2295,14 +2295,14 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
             const addresses = Math.pow(2, wildcardBits);
 
             // Calculate proper IP range based on wildcard
-            function calculateRange(baseIP, wildcardInts) {
-                const base = baseIP.split('.').map(p => parseInt(p));
-                const start = [...base];
-                const end = [...base];
+            function calculateRange(wildcardInts) {
+                // Start at 0.0.0.0 and calculate range
+                const start = [0, 0, 0, 0];
+                const end = [0, 0, 0, 0];
 
                 for (let i = 0; i < 4; i++) {
-                    start[i] = base[i] & (255 - wildcardInts[i]); // Zero out wildcard bits
-                    end[i] = start[i] | wildcardInts[i]; // Set wildcard bits to 1
+                    start[i] = 0; // Minimum value
+                    end[i] = wildcardInts[i]; // Maximum value based on wildcard
                 }
 
                 return {
@@ -2311,15 +2311,21 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 };
             }
 
-            // Use appropriate base IP for demonstration
+            // Use appropriate base IP for demonstration (non-zero example)
             let baseIP = '192.168.1.0';
-            if (wildcardInts[0] > 0) {
-                baseIP = '10.0.0.0'; // Use Class A base for first octet wildcards
-            } else if (wildcardInts[1] > 0) {
-                baseIP = '172.16.0.0'; // Use Class B base for second octet wildcards
+            let exampleStart = baseIP.split('.').map(p => parseInt(p));
+            let exampleEnd = [...exampleStart];
+
+            // Calculate example range
+            for (let i = 0; i < 4; i++) {
+                exampleStart[i] = exampleStart[i] & (255 - wildcardInts[i]); // Zero out wildcard bits
+                exampleEnd[i] = exampleStart[i] | wildcardInts[i]; // Set wildcard bits to 1
             }
 
-            const range = calculateRange(baseIP, wildcardInts);
+            const exampleRange = {
+                start: exampleStart.join('.'),
+                end: exampleEnd.join('.')
+            };
 
             let meaning = '';
             if (input === '0.0.0.0') {
@@ -2334,6 +2340,8 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 meaning = '/8 network (16,777,216 addresses)';
             } else if (input === '255.255.255.255') {
                 meaning = 'Any address (match all)';
+            } else if (cidr === 'N/A') {
+                meaning = `Non-contiguous mask (${addresses.toLocaleString()} addresses)`;
             } else {
                 meaning = `/${cidr} network (${addresses.toLocaleString()} addresses)`;
             }
@@ -2345,7 +2353,7 @@ Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
                 Matches: ${meaning}<br>
                 Subnet Mask: ${subnetMask}<br>
                 CIDR Notation: ${cidrDisplay}<br>
-                Example: ${baseIP} matches ${range.start} - ${range.end}
+                Example: ${baseIP} matches ${exampleRange.start} - ${exampleRange.end}
             `;
         }
 
