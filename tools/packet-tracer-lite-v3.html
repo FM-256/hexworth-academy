@@ -6613,6 +6613,12 @@
 
             // Load the appropriate topology
             if (topologyToLoad) {
+                // BUGFIX: If saved state has devices but no/empty connections,
+                // merge the device configs with the current lab's default connections
+                if (!topologyToLoad.connections || topologyToLoad.connections.length === 0) {
+                    console.log('Saved state has no connections - merging with default topology connections');
+                    topologyToLoad.connections = lab.topology.connections || [];
+                }
                 loadTopology(topologyToLoad);
             } else {
                 // Fall back to the lab's default topology
