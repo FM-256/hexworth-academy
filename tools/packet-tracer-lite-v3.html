@@ -7949,7 +7949,29 @@
                 `Connected to: ${selectedDevice.name} (${selectedDevice.type.toUpperCase()})`;
 
             document.getElementById('cliInterface').style.display = 'block';
-            document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
+
+            // Reset CLI state when switching devices
+            // These variables are declared later but accessible due to script scope
+            if (typeof cliMode !== 'undefined') {
+                cliMode = 'user';
+                currentInterface = null;
+                currentRouterProcess = null;
+                currentVlan = null;
+                currentAcl = null;
+            }
+
+            // Update prompt with correct device name and mode
+            const promptEl = document.getElementById('cliPrompt');
+            if (promptEl) {
+                promptEl.textContent = `${selectedDevice.name}>`;
+            }
+
+            // Add device switch notification to CLI output
+            const output = document.getElementById('cliOutput');
+            if (output) {
+                output.innerHTML += `<div style="color: var(--accent-cyan); border-top: 1px solid var(--border-color); margin-top: 5px; padding-top: 5px;">--- Connected to ${selectedDevice.name} ---</div>`;
+                output.scrollTop = output.scrollHeight;
+            }
         }
 
         // Apply configuration from Config panel
