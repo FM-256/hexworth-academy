@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Control Lists (ACLs)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #1e3c72;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2a5298;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #2a5298;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        ul, ol {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #1e3c72;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h4 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+
+        .info-box p, .info-box li {
+            color: #0c5460;
+            font-size: 1.1em;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .warning-box p, .warning-box li {
+            color: #856404;
+            font-size: 1.1em;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .danger-box p, .danger-box li {
+            color: #721c24;
+            font-size: 1.1em;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .success-box p, .success-box li {
+            color: #155724;
+            font-size: 1.1em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.1em;
+        }
+
+        th {
+            background: #2a5298;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-box {
+            border: 2px solid #2a5298;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Packet Filtering Animation */
+        .packet-filter-demo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            height: 300px;
+            position: relative;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .device {
+            width: 100px;
+            height: 100px;
+            background: #2a5298;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .firewall {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .packet {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .packet-permit {
+            background: #28a745;
+            animation: packetPermit 4s infinite;
+        }
+
+        .packet-deny {
+            background: #dc3545;
+            animation: packetDeny 4s infinite;
+        }
+
+        @keyframes packetPermit {
+            0% {
+                left: 10%;
+                top: 50%;
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            15% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            45% {
+                left: 45%;
+                top: 50%;
+            }
+            55% {
+                left: 55%;
+                top: 50%;
+            }
+            85% {
+                left: 85%;
+                opacity: 1;
+            }
+            100% {
+                left: 85%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes packetDeny {
+            0%, 50% {
+                left: 10%;
+                top: 50%;
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            65% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            95% {
+                left: 45%;
+                top: 50%;
+                opacity: 1;
+            }
+            100% {
+                left: 45%;
+                opacity: 0;
+                transform: scale(0.3);
+            }
+        }
+
+        /* Wildcard Calculator */
+        .calculator-box {
+            background: #f8f9fa;
+            border: 2px solid #2a5298;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .calculator-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .calculator-input input {
+            padding: 10px;
+            font-size: 1.1em;
+            border: 2px solid #2a5298;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        .calculator-input button {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
+        .calculator-result {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            min-height: 80px;
+        }
+
+        /* Wildcard Visualization */
+        .wildcard-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .wildcard-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .wildcard-label {
+            width: 120px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .wildcard-bits {
+            display: flex;
+            gap: 5px;
+        }
+
+        .wildcard-bit {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .bit-match {
+            background: #28a745;
+            color: white;
+        }
+
+        .bit-ignore {
+            background: #ffc107;
+            color: #333;
+        }
+
+        /* ACL Processing Flow */
+        .acl-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .acl-entry {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .acl-entry:hover {
+            background: #e7f3ff;
+            transform: translateX(10px);
+        }
+
+        .acl-number {
+            width: 40px;
+            height: 40px;
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .acl-rule {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .acl-action-permit {
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .acl-action-deny {
+            padding: 8px 15px;
+            background: #dc3545;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Network Diagram */
+        .network-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px 0;
+            height: 300px;
+            position: relative;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .network-cloud {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .router {
+            width: 120px;
+            height: 120px;
+            background: #17a2b8;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .interface-label {
+            position: absolute;
+            background: #2a5298;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .acl-label {
+            position: absolute;
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 2em;
+            color: #2a5298;
+        }
+
+        /* Decision Tree */
+        .decision-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .decision-node {
+            padding: 15px 30px;
+            border: 3px solid #2a5298;
+            border-radius: 10px;
+            background: white;
+            font-weight: bold;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .decision-node-permit {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .decision-node-deny {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .decision-arrow {
+            font-size: 2em;
+            color: #2a5298;
+        }
+
+        /* Syntax Highlight */
+        .syntax-keyword {
+            color: #66d9ef;
+        }
+
+        .syntax-number {
+            color: #ae81ff;
+        }
+
+        .syntax-string {
+            color: #e6db74;
+        }
+
+        .syntax-comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        /* Interactive Examples */
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .example-box h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .example-box p {
+            color: white;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <a href="../catalog.html" style="position: fixed; top: 20px; right: 20px; background: rgba(6, 182, 212, 0.9); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(6, 182, 212, 1)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(6, 182, 212, 0.9)'; this.style.transform='translateY(0)'">
+        Back to Catalog
+    </a>
+
+    <div class="presentation">
+        <!-- SLIDE 1: Title -->
+        <div class="slide active">
+            <h1>Access Control Lists (ACLs)</h1>
+            <p class="subtitle">Network Traffic Filtering for Security and Control</p>
+            <div style="text-align: center; margin-top: 80px;">
+                <h3>Network Essentials Course - Lab 6</h3>
+                <p style="font-size: 1.5em; margin-top: 40px;">Master ACL Configuration for CCNA Certification</p>
+                <div style="margin-top: 60px; font-size: 1.2em; color: #666;">
+                    <p>Standard, Extended, and Named ACLs</p>
+                    <p>Wildcard Masking and Placement</p>
+                    <p>Real-World Security Implementation</p>
+                </div>
+            </div>
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 1 of 20</div>
+        </div>
+
+        <!-- SLIDE 2: What are ACLs? -->
+        <div class="slide">
+            <h2>What are Access Control Lists (ACLs)?</h2>
+
+            <h3>Definition and Purpose</h3>
+            <p>An <strong>Access Control List (ACL)</strong> is a set of rules configured on a router or switch that controls network traffic by permitting or denying packets based on specific criteria.</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Core Functions</h3>
+                    <ul>
+                        <li><strong>Packet Filtering:</strong> Inspect packets based on criteria</li>
+                        <li><strong>Security Enforcement:</strong> Block unauthorized access</li>
+                        <li><strong>Traffic Control:</strong> Manage network flow</li>
+                        <li><strong>Bandwidth Management:</strong> Prioritize traffic types</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>Filter Criteria</h3>
+                    <ul>
+                        <li>Source IP address</li>
+                        <li>Destination IP address</li>
+                        <li>Protocol (TCP, UDP, ICMP)</li>
+                        <li>Port numbers</li>
+                        <li>ICMP message types</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="packet-filter-demo">
+                <div class="device">Source<br>Host</div>
+                <div class="firewall">ACL<br>Filter</div>
+                <div class="device">Destination<br>Host</div>
+                <div class="packet packet-permit">PERMIT</div>
+                <div class="packet packet-deny">DENY</div>
+            </div>
+
+            <div class="info-box">
+                <h4>ACL as a Traffic Cop</h4>
+                <p>Think of ACLs as a security guard checking IDs at a building entrance. The guard has a list of rules: who can enter, who cannot, and under what conditions.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 2 of 20</div>
+        </div>
+
+        <!-- SLIDE 3: Why Use ACLs? -->
+        <div class="slide">
+            <h2>Why Use Access Control Lists?</h2>
+
+            <h3>Security Benefits</h3>
+            <div class="success-box">
+                <h4>1. Block Unauthorized Access</h4>
+                <ul>
+                    <li>Prevent external hosts from accessing internal networks</li>
+                    <li>Restrict access to sensitive servers (HR, Finance, Database)</li>
+                    <li>Block malicious traffic at network perimeter</li>
+                    <li>Implement network segmentation policies</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>2. Traffic Control and Management</h4>
+                <ul>
+                    <li>Permit or deny specific traffic types (HTTP, FTP, SSH)</li>
+                    <li>Allow internal users to access internet while blocking inbound traffic</li>
+                    <li>Control routing update propagation</li>
+                    <li>Filter ICMP messages to prevent network reconnaissance</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>3. Quality of Service (QoS) Support</h4>
+                <ul>
+                    <li>Identify and prioritize business-critical traffic</li>
+                    <li>Mark packets for QoS policies</li>
+                    <li>Reserve bandwidth for voice and video applications</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>4. NAT Translation Control</h4>
+                <ul>
+                    <li>Define which traffic should be translated by NAT</li>
+                    <li>Specify inside/outside addresses for translation</li>
+                    <li>Control access to public IP addresses</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Defense in Depth</h4>
+                <p>ACLs are a critical layer in the defense-in-depth security strategy, complementing firewalls, intrusion prevention systems, and endpoint security.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 3 of 20</div>
+        </div>
+
+        <!-- SLIDE 4: How ACLs Work -->
+        <div class="slide">
+            <h2>How ACLs Work: Processing Logic</h2>
+
+            <h3>Four Critical Rules</h3>
+
+            <div class="acl-flow">
+                <div class="acl-entry">
+                    <div class="acl-number">1</div>
+                    <div class="acl-rule">Top-to-Bottom Processing</div>
+                </div>
+                <div style="text-align: center; font-size: 2em; color: #2a5298;">↓</div>
+                <div class="acl-entry">
+                    <div class="acl-number">2</div>
+                    <div class="acl-rule">First Match Wins</div>
+                </div>
+                <div style="text-align: center; font-size: 2em; color: #2a5298;">↓</div>
+                <div class="acl-entry">
+                    <div class="acl-number">3</div>
+                    <div class="acl-rule">Implicit Deny All at End</div>
+                </div>
+                <div style="text-align: center; font-size: 2em; color: #2a5298;">↓</div>
+                <div class="acl-entry">
+                    <div class="acl-number">4</div>
+                    <div class="acl-rule">Applied Inbound or Outbound</div>
+                </div>
+            </div>
+
+            <h3>Processing Example</h3>
+            <div class="code-block">
+<span class="syntax-comment">! ACL 100 - Filter web traffic</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp host 192.168.1.10 any eq 80
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp 192.168.1.0 0.0.0.255 any eq 80
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> ip any any
+
+<span class="syntax-comment">! Packet from 192.168.1.10 to 203.0.113.5:80</span>
+<span class="syntax-comment">! ✓ Matches line 1 → PERMIT (processing stops)</span>
+
+<span class="syntax-comment">! Packet from 192.168.1.20 to 203.0.113.5:80</span>
+<span class="syntax-comment">! ✓ Matches line 2 → DENY (processing stops)</span>
+
+<span class="syntax-comment">! Packet from 192.168.1.30 to 203.0.113.5:443</span>
+<span class="syntax-comment">! ✓ Matches line 3 → PERMIT (processing stops)</span>
+            </div>
+
+            <div class="danger-box">
+                <h4>Implicit Deny All</h4>
+                <p>Every ACL has an invisible <code>deny ip any any</code> at the end. If no rule matches, the packet is dropped. Always include an explicit permit statement for traffic you want to allow.</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>Order Matters!</h4>
+                <p>Placing a general rule before a specific rule makes the specific rule unreachable. Always put specific rules first, general rules last.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 4 of 20</div>
+        </div>
+
+        <!-- SLIDE 5: Standard ACLs -->
+        <div class="slide">
+            <h2>Standard ACLs</h2>
+
+            <h3>Overview</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Characteristics</h3>
+                    <ul>
+                        <li><strong>Filter Criterion:</strong> Source IP only</li>
+                        <li><strong>Number Range:</strong> 1-99 and 1300-1999</li>
+                        <li><strong>Syntax:</strong> Simple, easy to configure</li>
+                        <li><strong>Placement:</strong> Close to destination</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>Use Cases</h3>
+                    <ul>
+                        <li>Block entire networks or subnets</li>
+                        <li>Restrict management access to routers</li>
+                        <li>Control VTY line access (SSH/Telnet)</li>
+                        <li>Simple traffic filtering scenarios</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Standard ACL Syntax</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Basic Syntax</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">[1-99 | 1300-1999]</span> {<span class="syntax-keyword">permit</span>|<span class="syntax-keyword">deny</span>} <span class="syntax-string">[source]</span> <span class="syntax-string">[wildcard-mask]</span>
+
+<span class="syntax-comment">! Examples</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">10</span> <span class="syntax-keyword">permit</span> host 192.168.1.10
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">10</span> <span class="syntax-keyword">deny</span> 192.168.1.0 0.0.0.255
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">10</span> <span class="syntax-keyword">permit</span> any
+
+<span class="syntax-comment">! Special Keywords</span>
+host 192.168.1.10     <span class="syntax-comment">→ Single host (wildcard 0.0.0.0)</span>
+any                   <span class="syntax-comment">→ All addresses (wildcard 255.255.255.255)</span>
+            </div>
+
+            <div class="info-box">
+                <h4>Why Place Close to Destination?</h4>
+                <p>Standard ACLs filter based only on source IP. If placed too close to the source, they might block legitimate traffic to other destinations. Place them close to the destination to minimize unintended blocking.</p>
+            </div>
+
+            <h3>Configuration Example</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Block 10.1.1.0/24 from accessing 172.16.1.0/24</span>
+<span class="syntax-comment">! Configure on router closest to 172.16.1.0/24</span>
+
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">1</span> <span class="syntax-keyword">deny</span> 10.1.1.0 0.0.0.255
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">1</span> <span class="syntax-keyword">permit</span> any
+
+<span class="syntax-comment">! Apply to interface inbound (traffic entering from 10.1.1.0)</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">1</span> <span class="syntax-keyword">in</span>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 5 of 20</div>
+        </div>
+
+        <!-- SLIDE 6: Standard ACL Syntax Details -->
+        <div class="slide">
+            <h2>Standard ACL Syntax and Examples</h2>
+
+            <h3>Complete Syntax Breakdown</h3>
+            <div class="code-block">
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">[number]</span> {<span class="syntax-keyword">permit</span>|<span class="syntax-keyword">deny</span>} <span class="syntax-string">[source]</span> <span class="syntax-string">[wildcard-mask]</span>
+
+<span class="syntax-comment">┌─────────────────────────────────────────────────────────┐</span>
+<span class="syntax-comment">│ [number]         : 1-99 or 1300-1999                    │</span>
+<span class="syntax-comment">│ {permit|deny}    : Allow or block traffic              │</span>
+<span class="syntax-comment">│ [source]         : Source IP address                    │</span>
+<span class="syntax-comment">│ [wildcard-mask]  : Inverse subnet mask (optional)       │</span>
+<span class="syntax-comment">└─────────────────────────────────────────────────────────┘</span>
+            </div>
+
+            <h3>Practical Examples</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Configuration</th>
+                        <th>Meaning</th>
+                    </tr>
+                    <tr>
+                        <td><code>access-list 1 permit host 192.168.1.10</code></td>
+                        <td>Permit only host 192.168.1.10</td>
+                    </tr>
+                    <tr>
+                        <td><code>access-list 1 deny 192.168.1.0 0.0.0.255</code></td>
+                        <td>Deny entire 192.168.1.0/24 network</td>
+                    </tr>
+                    <tr>
+                        <td><code>access-list 1 permit any</code></td>
+                        <td>Permit all other traffic</td>
+                    </tr>
+                    <tr>
+                        <td><code>access-list 10 deny 10.0.0.0 0.255.255.255</code></td>
+                        <td>Deny entire 10.0.0.0/8 network</td>
+                    </tr>
+                    <tr>
+                        <td><code>access-list 10 permit 172.16.0.0 0.0.255.255</code></td>
+                        <td>Permit 172.16.0.0/16 network</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Placement Best Practice</h3>
+            <div class="network-diagram">
+                <div class="device" style="position: absolute; left: 5%;">Source<br>10.1.1.0/24</div>
+                <div class="router" style="position: absolute; left: 30%;">Router<br>A</div>
+                <div class="router" style="position: absolute; left: 55%;">Router<br>B</div>
+                <div class="device" style="position: absolute; left: 85%;">Destination<br>172.16.1.0/24</div>
+                <div class="acl-label" style="top: 60%; left: 48%;">Standard ACL<br>(Close to Dest)</div>
+                <div class="arrow" style="left: 15%; top: 45%;">→</div>
+                <div class="arrow" style="left: 40%; top: 45%;">→</div>
+                <div class="arrow" style="left: 67%; top: 45%;">→</div>
+            </div>
+
+            <div class="warning-box">
+                <h4>Common Mistake: Wrong Placement</h4>
+                <p>Placing standard ACL close to source blocks all traffic from that source to ANY destination. Place near destination to control access to specific resources only.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 6 of 20</div>
+        </div>
+
+        <!-- SLIDE 7: Wildcard Masks Explained -->
+        <div class="slide">
+            <h2>Wildcard Masks Explained</h2>
+
+            <h3>What is a Wildcard Mask?</h3>
+            <p>A <strong>wildcard mask</strong> is the <em>inverse</em> of a subnet mask. It tells the router which bits to check (0) and which bits to ignore (1) when matching IP addresses.</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Subnet Mask Logic</h3>
+                    <ul>
+                        <li><strong>1 = Network bit</strong> (must match)</li>
+                        <li><strong>0 = Host bit</strong> (can vary)</li>
+                        <li>Example: 255.255.255.0</li>
+                        <li>Binary: 11111111.11111111.11111111.00000000</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>Wildcard Mask Logic</h3>
+                    <ul>
+                        <li><strong>0 = Must match</strong> (check this bit)</li>
+                        <li><strong>1 = Ignore</strong> (don't care)</li>
+                        <li>Example: 0.0.0.255</li>
+                        <li>Binary: 00000000.00000000.00000000.11111111</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Conversion Formula</h3>
+            <div class="code-block">
+Wildcard Mask = 255.255.255.255 - Subnet Mask
+
+Examples:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Subnet Mask          Wildcard Mask        CIDR
+255.255.255.255  →   0.0.0.0              /32  (Single host)
+255.255.255.0    →   0.0.0.255            /24  (256 addresses)
+255.255.252.0    →   0.0.3.255            /22  (1024 addresses)
+255.255.0.0      →   0.0.255.255          /16  (65536 addresses)
+255.0.0.0        →   0.255.255.255        /8   (16.7M addresses)
+            </div>
+
+            <h3>Common Wildcard Patterns</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Wildcard Mask</th>
+                        <th>Binary</th>
+                        <th>Meaning</th>
+                    </tr>
+                    <tr>
+                        <td>0.0.0.0</td>
+                        <td>00000000.00000000.00000000.00000000</td>
+                        <td>Match exact host (all bits must match)</td>
+                    </tr>
+                    <tr>
+                        <td>0.0.0.255</td>
+                        <td>00000000.00000000.00000000.11111111</td>
+                        <td>Match /24 network (ignore last octet)</td>
+                    </tr>
+                    <tr>
+                        <td>0.0.3.255</td>
+                        <td>00000000.00000000.00000011.11111111</td>
+                        <td>Match /22 network (ignore last 10 bits)</td>
+                    </tr>
+                    <tr>
+                        <td>255.255.255.255</td>
+                        <td>11111111.11111111.11111111.11111111</td>
+                        <td>Match any address (ignore all bits)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h4>Memory Tip</h4>
+                <p><strong>0 = Obey (must match)</strong> | <strong>1 = Ignore (don't care)</strong></p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 7 of 20</div>
+        </div>
+
+        <!-- SLIDE 8: Wildcard Examples with Calculator -->
+        <div class="slide">
+            <h2>Wildcard Mask Examples</h2>
+
+            <h3>Visual Wildcard Matching</h3>
+            <div class="wildcard-visual">
+                <div class="wildcard-row">
+                    <div class="wildcard-label">IP Address:</div>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">1</div>
+                        <div class="wildcard-bit bit-match">1</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">1</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">1</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">1</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">1</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                        <div class="wildcard-bit bit-ignore">X</div>
+                    </div>
+                </div>
+                <div class="wildcard-row">
+                    <div class="wildcard-label">Wildcard Mask:</div>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                        <div class="wildcard-bit bit-match">0</div>
+                    </div>
+                    <span style="margin: 0 10px;">.</span>
+                    <div class="wildcard-bits">
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                        <div class="wildcard-bit bit-ignore">1</div>
+                    </div>
+                </div>
+                <div class="wildcard-row">
+                    <div class="wildcard-label">Result:</div>
+                    <p style="color: #28a745; font-weight: bold; font-size: 1.2em;">192.168.1.0 - 192.168.1.255 (256 addresses)</p>
+                </div>
+            </div>
+
+            <h3>Interactive Wildcard Calculator</h3>
+            <div class="calculator-box">
+                <div class="calculator-input">
+                    <input type="text" id="wildcardInput" placeholder="Enter wildcard mask (e.g., 0.0.0.255)" value="0.0.0.255">
+                    <button onclick="calculateWildcard()">Calculate</button>
+                </div>
+                <div class="calculator-result" id="wildcardResult">
+                    <strong>Wildcard: 0.0.0.255</strong><br>
+                    Matches: /24 network (256 addresses)<br>
+                    Subnet Mask: 255.255.255.0<br>
+                    CIDR Notation: /24<br>
+                    Example: 192.168.1.0 matches 192.168.1.0 - 192.168.1.255
+                </div>
+            </div>
+
+            <h3>Common Scenarios</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>ACL Configuration</th>
+                    </tr>
+                    <tr>
+                        <td>Match /24 network</td>
+                        <td><code>access-list 1 permit 192.168.1.0 0.0.0.255</code></td>
+                    </tr>
+                    <tr>
+                        <td>Match /22 network</td>
+                        <td><code>access-list 1 permit 10.1.0.0 0.0.3.255</code></td>
+                    </tr>
+                    <tr>
+                        <td>Match single host</td>
+                        <td><code>access-list 1 permit 172.16.1.50 0.0.0.0</code><br>or <code>access-list 1 permit host 172.16.1.50</code></td>
+                    </tr>
+                    <tr>
+                        <td>Match any address</td>
+                        <td><code>access-list 1 permit 0.0.0.0 255.255.255.255</code><br>or <code>access-list 1 permit any</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 8 of 20</div>
+        </div>
+
+        <!-- SLIDE 9: Extended ACLs -->
+        <div class="slide">
+            <h2>Extended ACLs</h2>
+
+            <h3>Overview and Capabilities</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Characteristics</h3>
+                    <ul>
+                        <li><strong>Number Range:</strong> 100-199, 2000-2699</li>
+                        <li><strong>Filter Criteria:</strong> Source, destination, protocol, port</li>
+                        <li><strong>Granular Control:</strong> Layer 3 and Layer 4</li>
+                        <li><strong>Placement:</strong> Close to source</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>What Extended ACLs Can Filter</h3>
+                    <ul>
+                        <li>Source AND destination IP</li>
+                        <li>Protocol (TCP, UDP, ICMP, IP, etc.)</li>
+                        <li>TCP/UDP port numbers</li>
+                        <li>ICMP message types</li>
+                        <li>TCP flags (SYN, ACK, FIN, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Extended vs. Standard ACLs</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Standard ACL</th>
+                        <th>Extended ACL</th>
+                    </tr>
+                    <tr>
+                        <td>Number Range</td>
+                        <td>1-99, 1300-1999</td>
+                        <td>100-199, 2000-2699</td>
+                    </tr>
+                    <tr>
+                        <td>Filter Criteria</td>
+                        <td>Source IP only</td>
+                        <td>Source, destination, protocol, port</td>
+                    </tr>
+                    <tr>
+                        <td>Granularity</td>
+                        <td>Coarse (all traffic from source)</td>
+                        <td>Fine-grained (specific protocols/ports)</td>
+                    </tr>
+                    <tr>
+                        <td>Placement</td>
+                        <td>Close to destination</td>
+                        <td>Close to source</td>
+                    </tr>
+                    <tr>
+                        <td>Use Case</td>
+                        <td>Block entire networks</td>
+                        <td>Block specific services (HTTP, SSH)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h4>Why Place Extended ACLs Close to Source?</h4>
+                <p>Extended ACLs are more specific, so they can filter unwanted traffic early in the path. This conserves bandwidth and router resources by preventing unwanted packets from traversing the network.</p>
+            </div>
+
+            <div class="success-box">
+                <h4>Power of Extended ACLs</h4>
+                <p>Extended ACLs provide surgical precision: permit HTTP (port 80) from a specific host to a specific server, while denying all other traffic from that host.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 9 of 20</div>
+        </div>
+
+        <!-- SLIDE 10: Extended ACL Syntax -->
+        <div class="slide">
+            <h2>Extended ACL Syntax</h2>
+
+            <h3>Basic Syntax</h3>
+            <div class="code-block">
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">[100-199 | 2000-2699]</span> {<span class="syntax-keyword">permit</span>|<span class="syntax-keyword">deny</span>} <span class="syntax-string">[protocol]</span>
+    <span class="syntax-string">[source source-wildcard]</span>
+    <span class="syntax-string">[destination destination-wildcard]</span>
+    <span class="syntax-string">[port-specification]</span>
+
+<span class="syntax-comment">┌────────────────────────────────────────────────────────┐</span>
+<span class="syntax-comment">│ [protocol]      : ip, tcp, udp, icmp, eigrp, ospf...  │</span>
+<span class="syntax-comment">│ [source]        : Source IP and wildcard              │</span>
+<span class="syntax-comment">│ [destination]   : Destination IP and wildcard         │</span>
+<span class="syntax-comment">│ [port-spec]     : eq, gt, lt, range, neq              │</span>
+<span class="syntax-comment">└────────────────────────────────────────────────────────┘</span>
+            </div>
+
+            <h3>Port Specification Operators</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><code>eq</code></td>
+                        <td>Equal to (single port)</td>
+                        <td><code>eq 80</code> (HTTP)</td>
+                    </tr>
+                    <tr>
+                        <td><code>gt</code></td>
+                        <td>Greater than</td>
+                        <td><code>gt 1023</code> (ports above 1023)</td>
+                    </tr>
+                    <tr>
+                        <td><code>lt</code></td>
+                        <td>Less than</td>
+                        <td><code>lt 1024</code> (well-known ports)</td>
+                    </tr>
+                    <tr>
+                        <td><code>neq</code></td>
+                        <td>Not equal to</td>
+                        <td><code>neq 22</code> (not SSH)</td>
+                    </tr>
+                    <tr>
+                        <td><code>range</code></td>
+                        <td>Range of ports</td>
+                        <td><code>range 20 21</code> (FTP)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Practical Examples</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Permit HTTP from any source to web server 203.0.113.10</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 80
+
+<span class="syntax-comment">! Deny Telnet from 192.168.1.0/24 to any destination</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp 192.168.1.0 0.0.0.255 any eq 23
+
+<span class="syntax-comment">! Permit HTTPS from host 10.1.1.50 to any destination</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp host 10.1.1.50 any eq 443
+
+<span class="syntax-comment">! Deny ICMP ping from any to 172.16.0.0/16</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> icmp any 172.16.0.0 0.0.255.255 echo
+
+<span class="syntax-comment">! Permit SSH from admin subnet to router management interface</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp 10.10.10.0 0.0.0.255 host 192.168.1.1 eq 22
+
+<span class="syntax-comment">! Permit DNS (TCP and UDP port 53)</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp any any eq 53
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> udp any any eq 53
+
+<span class="syntax-comment">! Permit FTP (ports 20-21)</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> tcp any any range 20 21
+
+<span class="syntax-comment">! Permit all other IP traffic</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> ip any any
+            </div>
+
+            <div class="warning-box">
+                <h4>Don't Forget the Permit Statement!</h4>
+                <p>Extended ACLs also have an implicit <code>deny ip any any</code> at the end. Always add an explicit permit statement for traffic you want to allow, or use specific deny statements followed by <code>permit ip any any</code>.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 10 of 20</div>
+        </div>
+
+        <!-- SLIDE 11: Named ACLs -->
+        <div class="slide">
+            <h2>Named ACLs</h2>
+
+            <h3>Advantages of Named ACLs</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Benefits</h3>
+                    <ul>
+                        <li><strong>Descriptive Names:</strong> Use meaningful names instead of numbers</li>
+                        <li><strong>Easier Management:</strong> Understand ACL purpose at a glance</li>
+                        <li><strong>Entry Modification:</strong> Insert, delete specific entries</li>
+                        <li><strong>Resequencing:</strong> Change entry order without recreating</li>
+                        <li><strong>Both Types:</strong> Standard or extended</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>When to Use Named ACLs</h3>
+                    <ul>
+                        <li>Complex configurations with many entries</li>
+                        <li>Need to modify ACL entries frequently</li>
+                        <li>Want clear documentation through naming</li>
+                        <li>Large enterprise networks</li>
+                        <li>Running out of numbered ACL ranges</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Named Standard ACL Syntax</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Named Standard ACL</span>
+Router(config)# <span class="syntax-keyword">ip access-list standard</span> <span class="syntax-string">BLOCK_ADMIN_SUBNET</span>
+Router(config-std-nacl)# <span class="syntax-keyword">deny</span> 192.168.10.0 0.0.0.255
+Router(config-std-nacl)# <span class="syntax-keyword">permit</span> any
+Router(config-std-nacl)# <span class="syntax-keyword">exit</span>
+
+<span class="syntax-comment">! Apply to interface</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/1
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> BLOCK_ADMIN_SUBNET <span class="syntax-keyword">in</span>
+            </div>
+
+            <h3>Named Extended ACL Syntax</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Named Extended ACL</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> <span class="syntax-string">WEB_SERVER_FILTER</span>
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 80
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 443
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip any host 203.0.113.10
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+Router(config-ext-nacl)# <span class="syntax-keyword">exit</span>
+
+<span class="syntax-comment">! Apply to interface</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> WEB_SERVER_FILTER <span class="syntax-keyword">in</span>
+            </div>
+
+            <h3>Entry Management</h3>
+            <div class="code-block">
+<span class="syntax-comment">! View ACL with sequence numbers</span>
+Router# <span class="syntax-keyword">show ip access-lists</span> WEB_SERVER_FILTER
+Extended IP access list WEB_SERVER_FILTER
+    10 permit tcp any host 203.0.113.10 eq www
+    20 permit tcp any host 203.0.113.10 eq 443
+    30 deny ip any host 203.0.113.10
+    40 permit ip any any
+
+<span class="syntax-comment">! Delete specific entry</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> WEB_SERVER_FILTER
+Router(config-ext-nacl)# <span class="syntax-keyword">no</span> 30
+
+<span class="syntax-comment">! Insert entry at specific sequence number</span>
+Router(config-ext-nacl)# <span class="syntax-number">25</span> <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 8080
+            </div>
+
+            <div class="success-box">
+                <h4>Best Practice: Use Named ACLs in Production</h4>
+                <p>Named ACLs make configurations self-documenting. Use names like BRANCH_OFFICE_FILTER, DMZ_ACCESS, MGMT_VLAN_CONTROL for clarity.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 11 of 20</div>
+        </div>
+
+        <!-- SLIDE 12: ACL Placement Rules -->
+        <div class="slide">
+            <h2>ACL Placement Rules</h2>
+
+            <h3>The Golden Rules</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box" style="background: #28a745; color: white;">
+                    <h3 style="color: white;">Standard ACLs</h3>
+                    <h4 style="color: white; font-size: 2em;">Place Close to DESTINATION</h4>
+                    <p style="color: white;">Why? They filter based only on source IP. Placing too close to source blocks traffic to ALL destinations, not just the intended one.</p>
+                </div>
+                <div class="comparison-box" style="background: #dc3545; color: white;">
+                    <h3 style="color: white;">Extended ACLs</h3>
+                    <h4 style="color: white; font-size: 2em;">Place Close to SOURCE</h4>
+                    <p style="color: white;">Why? They can filter specific protocols/ports. Placing close to source prevents unwanted traffic from consuming network bandwidth.</p>
+                </div>
+            </div>
+
+            <h3>Visual Placement Example</h3>
+            <div class="network-diagram" style="height: 350px;">
+                <div class="device" style="position: absolute; left: 5%; top: 30%;">Source<br>Network<br>10.1.1.0/24</div>
+                <div class="router" style="position: absolute; left: 28%; top: 35%;">Router<br>A</div>
+                <div class="network-cloud" style="position: absolute; left: 42%; top: 15%; width: 100px; height: 100px;">Internet</div>
+                <div class="router" style="position: absolute; left: 63%; top: 35%;">Router<br>B</div>
+                <div class="device" style="position: absolute; left: 85%; top: 30%;">Destination<br>Server<br>172.16.1.10</div>
+
+                <div class="acl-label" style="top: 65%; left: 20%; background: #dc3545;">Extended ACL<br>(at source)</div>
+                <div class="acl-label" style="top: 65%; left: 70%; background: #28a745;">Standard ACL<br>(at destination)</div>
+
+                <div class="arrow" style="left: 15%; top: 40%;">→</div>
+                <div class="arrow" style="left: 35%; top: 40%;">→</div>
+                <div class="arrow" style="left: 53%; top: 40%;">→</div>
+                <div class="arrow" style="left: 73%; top: 40%;">→</div>
+            </div>
+
+            <h3>Why Placement Matters</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Wrong Placement</th>
+                        <th>Consequence</th>
+                    </tr>
+                    <tr>
+                        <td>Standard ACL at source</td>
+                        <td>Blocks ALL traffic from source to ANY destination (over-filtering)</td>
+                    </tr>
+                    <tr>
+                        <td>Extended ACL at destination</td>
+                        <td>Unwanted traffic consumes bandwidth across network (inefficient)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h4>Memory Technique</h4>
+                <p><strong>Standard = Stupid, place at Destination (SAD)</strong><br>
+                <strong>Extended = Smart, place at Source (ESS)</strong></p>
+            </div>
+
+            <div class="danger-box">
+                <h4>Common Mistake Example</h4>
+                <p>Placing a standard ACL denying 10.1.1.0/24 on Router A's interface (close to source) will block that network from reaching ANY destination, including legitimate servers on other networks.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 12 of 20</div>
+        </div>
+
+        <!-- SLIDE 13: Applying ACLs to Interfaces -->
+        <div class="slide">
+            <h2>Applying ACLs to Interfaces</h2>
+
+            <h3>Interface Direction: Inbound vs Outbound</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h3>Inbound (IN)</h3>
+                    <ul>
+                        <li><strong>When:</strong> Packet arrives at interface</li>
+                        <li><strong>Before:</strong> Routing decision</li>
+                        <li><strong>Use Case:</strong> Filter traffic entering router</li>
+                        <li><strong>Example:</strong> Block traffic from untrusted network</li>
+                    </ul>
+                </div>
+                <div class="comparison-box">
+                    <h3>Outbound (OUT)</h3>
+                    <ul>
+                        <li><strong>When:</strong> Packet exits interface</li>
+                        <li><strong>After:</strong> Routing decision</li>
+                        <li><strong>Use Case:</strong> Filter traffic leaving router</li>
+                        <li><strong>Example:</strong> Control access to protected network</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Application Syntax</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Apply ACL to interface</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">{ACL-number | ACL-name}</span> {<span class="syntax-keyword">in</span>|<span class="syntax-keyword">out</span>}
+
+<span class="syntax-comment">! Examples</span>
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">10</span> <span class="syntax-keyword">in</span>
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">100</span> <span class="syntax-keyword">out</span>
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> WEB_FILTER <span class="syntax-keyword">in</span>
+            </div>
+
+            <h3>Configuration Rules</h3>
+            <div class="info-box">
+                <h4>One ACL Per Protocol, Per Direction, Per Interface</h4>
+                <ul>
+                    <li>One <strong>inbound</strong> IPv4 ACL per interface</li>
+                    <li>One <strong>outbound</strong> IPv4 ACL per interface</li>
+                    <li>Separate ACLs for IPv4 and IPv6</li>
+                    <li>Cannot apply two ACLs in the same direction on same interface</li>
+                </ul>
+            </div>
+
+            <h3>Complete Configuration Example</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Block 192.168.10.0/24 from accessing web server 203.0.113.50</span>
+<span class="syntax-comment">! Use extended ACL close to source</span>
+
+<span class="syntax-comment">! Step 1: Create extended ACL</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp 192.168.10.0 0.0.0.255 host 203.0.113.50 eq 80
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp 192.168.10.0 0.0.0.255 host 203.0.113.50 eq 443
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> ip any any
+
+<span class="syntax-comment">! Step 2: Apply to interface inbound (traffic from 192.168.10.0)</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="syntax-keyword">description</span> Connection to 192.168.10.0 network
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">100</span> <span class="syntax-keyword">in</span>
+Router(config-if)# <span class="syntax-keyword">exit</span>
+
+<span class="syntax-comment">! Step 3: Verify configuration</span>
+Router# <span class="syntax-keyword">show ip interface</span> GigabitEthernet0/0
+Router# <span class="syntax-keyword">show access-lists</span> <span class="syntax-number">100</span>
+            </div>
+
+            <div class="warning-box">
+                <h4>Replacing an ACL</h4>
+                <p>Applying a new ACL to an interface automatically replaces the old one in that direction. The old ACL is removed from the interface but still exists in the configuration.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 13 of 20</div>
+        </div>
+
+        <!-- SLIDE 14: Common ACL Scenarios -->
+        <div class="slide">
+            <h2>Common ACL Scenarios</h2>
+
+            <h3>Real-World Use Cases</h3>
+
+            <div class="example-grid">
+                <div class="example-box">
+                    <h4>1. Block Specific Host</h4>
+                    <p><strong>Scenario:</strong> Block host 192.168.1.100 from accessing any network resources</p>
+                </div>
+                <div class="example-box">
+                    <h4>2. Permit Subnet Access</h4>
+                    <p><strong>Scenario:</strong> Allow 10.1.1.0/24 to access file server, deny all others</p>
+                </div>
+                <div class="example-box">
+                    <h4>3. Deny Remote Management</h4>
+                    <p><strong>Scenario:</strong> Block Telnet/SSH from internet to router</p>
+                </div>
+                <div class="example-box">
+                    <h4>4. Permit HTTP/HTTPS Only</h4>
+                    <p><strong>Scenario:</strong> Allow only web traffic to DMZ server</p>
+                </div>
+            </div>
+
+            <h3>Configuration Examples</h3>
+
+            <div class="code-block">
+<span class="syntax-comment">! Scenario 1: Block specific host (Standard ACL)</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">1</span> <span class="syntax-keyword">deny</span> host 192.168.1.100
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">1</span> <span class="syntax-keyword">permit</span> any
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/1
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">1</span> <span class="syntax-keyword">in</span>
+
+<span class="syntax-comment">! Scenario 2: Permit subnet to file server (Extended ACL)</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">110</span> <span class="syntax-keyword">permit</span> ip 10.1.1.0 0.0.0.255 host 172.16.1.50
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">110</span> <span class="syntax-keyword">deny</span> ip any host 172.16.1.50
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">110</span> <span class="syntax-keyword">permit</span> ip any any
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">110</span> <span class="syntax-keyword">in</span>
+
+<span class="syntax-comment">! Scenario 3: Block Telnet/SSH from internet (Extended ACL)</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">120</span> <span class="syntax-keyword">deny</span> tcp any any eq 23
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">120</span> <span class="syntax-keyword">deny</span> tcp any any eq 22
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">120</span> <span class="syntax-keyword">permit</span> ip any any
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/2
+Router(config-if)# <span class="syntax-keyword">description</span> Internet connection
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> <span class="syntax-number">120</span> <span class="syntax-keyword">in</span>
+
+<span class="syntax-comment">! Scenario 4: Permit HTTP/HTTPS only to DMZ server (Extended ACL)</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> DMZ_WEB_SERVER
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 80
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 443
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip any host 203.0.113.10
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+Router(config-ext-nacl)# <span class="syntax-keyword">exit</span>
+Router(config)# <span class="syntax-keyword">interface</span> GigabitEthernet0/3
+Router(config-if)# <span class="syntax-keyword">ip access-group</span> DMZ_WEB_SERVER <span class="syntax-keyword">in</span>
+            </div>
+
+            <h3>Bonus: Block ICMP Ping</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Block ping to network 172.16.0.0/16</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">130</span> <span class="syntax-keyword">deny</span> icmp any 172.16.0.0 0.0.255.255 echo
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">130</span> <span class="syntax-keyword">permit</span> ip any any
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 14 of 20</div>
+        </div>
+
+        <!-- SLIDE 15: ACL Processing Order -->
+        <div class="slide">
+            <h2>ACL Processing Order</h2>
+
+            <h3>Sequential Processing Logic</h3>
+            <div class="decision-tree">
+                <div class="decision-node">Packet arrives</div>
+                <div class="decision-arrow">↓</div>
+                <div class="decision-node">Check first ACL entry</div>
+                <div class="decision-arrow">↓</div>
+                <div class="decision-node">Match found?</div>
+                <div style="display: flex; gap: 50px; align-items: center;">
+                    <div style="text-align: center;">
+                        <div class="decision-arrow">YES ✓</div>
+                        <div class="decision-node-permit">PERMIT or DENY<br>(Stop processing)</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="decision-arrow">NO ✗</div>
+                        <div class="decision-node">Check next entry</div>
+                    </div>
+                </div>
+                <div class="decision-arrow">↓</div>
+                <div class="decision-node-deny">No match found<br>Implicit DENY ALL</div>
+            </div>
+
+            <h3>Order Importance Example</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #dc3545;">
+                    <h3 style="color: #dc3545;">Wrong Order (Broken)</h3>
+                    <div class="code-block" style="font-size: 0.95em;">
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> ip any any
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp any host 203.0.113.10 eq 80
+
+<span class="syntax-comment">! Problem: Line 1 permits ALL traffic.</span>
+<span class="syntax-comment">! Line 2 NEVER executes (unreachable).</span>
+<span class="syntax-comment">! Result: HTTP to 203.0.113.10 is PERMITTED.</span>
+                    </div>
+                </div>
+                <div class="comparison-box" style="border-color: #28a745;">
+                    <h3 style="color: #28a745;">Correct Order</h3>
+                    <div class="code-block" style="font-size: 0.95em;">
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp any host 203.0.113.10 eq 80
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">permit</span> ip any any
+
+<span class="syntax-comment">! Specific rule first: Deny HTTP to server.</span>
+<span class="syntax-comment">! General rule last: Permit all other traffic.</span>
+<span class="syntax-comment">! Result: HTTP to 203.0.113.10 is DENIED.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h4>Critical Rule: Specific Before General</h4>
+                <ul>
+                    <li>Place specific rules (host, single protocol) at the TOP</li>
+                    <li>Place general rules (any, permit all) at the BOTTOM</li>
+                    <li>Once a match is found, processing STOPS immediately</li>
+                    <li>Entries below a matching rule are NEVER evaluated</li>
+                </ul>
+            </div>
+
+            <h3>Implicit Deny All</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Every ACL ends with an invisible implicit deny</span>
+<span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp any host 203.0.113.10 eq 80
+<span class="syntax-comment">! Implicit: deny ip any any (automatically added)</span>
+
+<span class="syntax-comment">! Without an explicit permit, ALL non-matching traffic is dropped!</span>
+<span class="syntax-comment">! Best practice: Always end with "permit ip any any" if needed</span>
+            </div>
+
+            <div class="info-box">
+                <h4>Why Implicit Deny Exists</h4>
+                <p>Security-first design: If you forget to explicitly allow traffic, the default is to deny it. This prevents accidental exposure of networks.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 15 of 20</div>
+        </div>
+
+        <!-- SLIDE 16: Troubleshooting ACLs -->
+        <div class="slide">
+            <h2>Troubleshooting ACLs</h2>
+
+            <h3>Verification Commands</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Show all ACLs</span>
+Router# <span class="syntax-keyword">show access-lists</span>
+
+<span class="syntax-comment">! Show specific ACL</span>
+Router# <span class="syntax-keyword">show access-lists</span> <span class="syntax-number">100</span>
+Router# <span class="syntax-keyword">show ip access-lists</span> WEB_FILTER
+
+<span class="syntax-comment">! Show ACL applied to interface</span>
+Router# <span class="syntax-keyword">show ip interface</span> GigabitEthernet0/0
+
+<span class="syntax-comment">! Sample output</span>
+GigabitEthernet0/0 is up, line protocol is up
+  Internet address is 192.168.1.1/24
+  Outgoing access list is not set
+  <strong>Inbound access list is 100</strong>
+
+<span class="syntax-comment">! Show ACL statistics (match counts)</span>
+Router# <span class="syntax-keyword">show access-lists</span>
+Extended IP access list 100
+    10 deny tcp any host 203.0.113.10 eq www <strong>(5 matches)</strong>
+    20 permit ip any any <strong>(1523 matches)</strong>
+            </div>
+
+            <h3>Common ACL Mistakes</h3>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Mistake</th>
+                        <th>Symptom</th>
+                        <th>Solution</th>
+                    </tr>
+                    <tr>
+                        <td>Wrong direction (in/out)</td>
+                        <td>ACL doesn't filter expected traffic</td>
+                        <td>Review packet flow, apply correct direction</td>
+                    </tr>
+                    <tr>
+                        <td>Implicit deny blocking traffic</td>
+                        <td>All traffic dropped</td>
+                        <td>Add explicit permit statement</td>
+                    </tr>
+                    <tr>
+                        <td>Wrong entry order</td>
+                        <td>Specific rules never matched</td>
+                        <td>Place specific rules before general rules</td>
+                    </tr>
+                    <tr>
+                        <td>Incorrect wildcard mask</td>
+                        <td>Wrong hosts matched</td>
+                        <td>Recalculate wildcard (255.255.255.255 - subnet mask)</td>
+                    </tr>
+                    <tr>
+                        <td>ACL not applied to interface</td>
+                        <td>No filtering occurs</td>
+                        <td>Use <code>ip access-group</code> command</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Testing Methodology</h3>
+            <div class="info-box">
+                <h4>Step-by-Step ACL Testing</h4>
+                <ol>
+                    <li><strong>Verify ACL exists:</strong> <code>show access-lists</code></li>
+                    <li><strong>Check ACL content:</strong> Ensure entries are correct and ordered properly</li>
+                    <li><strong>Verify interface application:</strong> <code>show ip interface [interface]</code></li>
+                    <li><strong>Check direction:</strong> Confirm in/out matches packet flow</li>
+                    <li><strong>Test with traffic:</strong> Send packets and check match counters</li>
+                    <li><strong>Use logging:</strong> Add <code>log</code> keyword to ACL entries for debugging</li>
+                </ol>
+            </div>
+
+            <h3>Debugging ACL Matches</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Add logging to ACL entry</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp any host 203.0.113.10 eq 80 <strong>log</strong>
+
+<span class="syntax-comment">! View logs</span>
+Router# <span class="syntax-keyword">show logging</span>
+%SEC-6-IPACCESSLOGP: list 100 denied tcp 192.168.1.50(52341) -> 203.0.113.10(80)
+
+<span class="syntax-comment">! Clear ACL counters for fresh testing</span>
+Router# <span class="syntax-keyword">clear access-list counters</span> <span class="syntax-number">100</span>
+            </div>
+
+            <div class="warning-box">
+                <h4>Performance Note</h4>
+                <p>The <code>log</code> keyword generates syslog messages for every matched packet, which can impact router performance. Use sparingly and only for troubleshooting.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 16 of 20</div>
+        </div>
+
+        <!-- SLIDE 17: ACL Best Practices -->
+        <div class="slide">
+            <h2>ACL Best Practices</h2>
+
+            <h3>Configuration Guidelines</h3>
+
+            <div class="success-box">
+                <h4>1. Document ACL Purpose</h4>
+                <ul>
+                    <li>Use named ACLs with descriptive names</li>
+                    <li>Add remark statements to explain purpose</li>
+                    <li>Maintain external documentation with change history</li>
+                </ul>
+                <div class="code-block" style="font-size: 0.95em;">
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> BLOCK_MALICIOUS_TRAFFIC
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Block known attack sources from threat feed
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 203.0.113.0 0.0.0.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit all other traffic
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>2. Use Named ACLs When Possible</h4>
+                <ul>
+                    <li>Self-documenting configurations</li>
+                    <li>Easier to modify specific entries</li>
+                    <li>Support for sequence number reordering</li>
+                    <li>Better for team collaboration</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>3. Apply Closest to Traffic Source (Extended ACLs)</h4>
+                <ul>
+                    <li>Conserves bandwidth by dropping packets early</li>
+                    <li>Reduces load on downstream routers</li>
+                    <li>Faster convergence during network changes</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>4. Test Before Production Deployment</h4>
+                <ul>
+                    <li>Configure ACL but don't apply to interface immediately</li>
+                    <li>Review with <code>show access-lists</code></li>
+                    <li>Test on lab equipment or non-production interfaces</li>
+                    <li>Have rollback plan ready (remove ACL command prepared)</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>5. Regular Audits and Reviews</h4>
+                <ul>
+                    <li>Review ACLs quarterly for outdated rules</li>
+                    <li>Check for unused ACLs (<code>show ip access-lists</code> with zero matches)</li>
+                    <li>Verify ACL still matches business requirements</li>
+                    <li>Remove obsolete entries to improve performance</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>6. Use Remarks for Inline Documentation</h4>
+                <ul>
+                    <li>Explain why each rule exists</li>
+                    <li>Reference ticket numbers or change requests</li>
+                    <li>Note business justification</li>
+                </ul>
+            </div>
+
+            <h3>Security Best Practices</h3>
+            <div class="warning-box">
+                <h4>Defense in Depth</h4>
+                <ul>
+                    <li>ACLs are ONE layer of security, not the only layer</li>
+                    <li>Combine with firewalls, IPS/IDS, endpoint protection</li>
+                    <li>Apply ACLs at network perimeter and internal boundaries</li>
+                    <li>Filter both inbound and outbound traffic where appropriate</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Principle of Least Privilege</h4>
+                <p>Deny by default, permit only what's necessary. Start with <code>deny ip any any</code> mentality, then explicitly permit required traffic.</p>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 17 of 20</div>
+        </div>
+
+        <!-- SLIDE 18: Real-World Examples -->
+        <div class="slide">
+            <h2>Real-World ACL Examples</h2>
+
+            <h3>1. Branch Office Security</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Branch office with 3 departments</span>
+<span class="syntax-comment">! - Sales: 10.10.10.0/24 (full internet access)</span>
+<span class="syntax-comment">! - HR: 10.10.20.0/24 (no internet, internal only)</span>
+<span class="syntax-comment">! - Guest WiFi: 10.10.99.0/24 (internet only, no internal access)</span>
+
+<span class="syntax-comment">! HR Department - Block internet access</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> HR_POLICY
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit internal networks
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip 10.10.20.0 0.0.0.255 10.0.0.0 0.255.255.255
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Deny internet access
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.10.20.0 0.0.0.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">exit</span>
+
+<span class="syntax-comment">! Guest WiFi - Internet only, block internal</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> GUEST_POLICY
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Deny access to internal networks
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.10.99.0 0.0.0.255 10.0.0.0 0.255.255.255
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.10.99.0 0.0.0.255 172.16.0.0 0.15.255.255
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.10.99.0 0.0.0.255 192.168.0.0 0.0.255.255
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit internet access
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip 10.10.99.0 0.0.0.255 any
+            </div>
+
+            <h3>2. DMZ Access Control</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Web server in DMZ (203.0.113.10)</span>
+<span class="syntax-comment">! - Allow HTTP/HTTPS from internet</span>
+<span class="syntax-comment">! - Allow SSH from admin network only (10.1.1.0/24)</span>
+<span class="syntax-comment">! - Deny all other access</span>
+
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> DMZ_WEB_SERVER
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit HTTP and HTTPS from any source
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 80
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any host 203.0.113.10 eq 443
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit SSH from admin network only
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp 10.1.1.0 0.0.0.255 host 203.0.113.10 eq 22
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Deny all other access to DMZ server
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip any host 203.0.113.10
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit all other traffic
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+            </div>
+
+            <h3>3. Management Plane Protection</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Restrict router management access</span>
+<span class="syntax-comment">! - Only admin network 10.1.1.0/24 can SSH to router</span>
+<span class="syntax-comment">! - Block all other management protocols</span>
+
+<span class="syntax-comment">! Apply to VTY lines (SSH/Telnet access)</span>
+Router(config)# <span class="syntax-keyword">ip access-list standard</span> ADMIN_ACCESS
+Router(config-std-nacl)# <span class="syntax-keyword">remark</span> Permit admin network
+Router(config-std-nacl)# <span class="syntax-keyword">permit</span> 10.1.1.0 0.0.0.255
+Router(config-std-nacl)# <span class="syntax-keyword">exit</span>
+
+Router(config)# <span class="syntax-keyword">line vty 0 15</span>
+Router(config-line)# <span class="syntax-keyword">access-class</span> ADMIN_ACCESS <span class="syntax-keyword">in</span>
+Router(config-line)# <span class="syntax-keyword">transport input ssh</span>
+Router(config-line)# <span class="syntax-keyword">exit</span>
+            </div>
+
+            <h3>4. Internet Edge Filtering</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Scenario: Router connected to internet</span>
+<span class="syntax-comment">! - Block common attack traffic inbound</span>
+<span class="syntax-comment">! - Block RFC 1918 private addresses from internet</span>
+
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> INTERNET_INBOUND
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Block RFC 1918 private addresses
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.0.0.0 0.255.255.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 172.16.0.0 0.15.255.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 192.168.0.0 0.0.255.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Block loopback and multicast
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 127.0.0.0 0.255.255.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 224.0.0.0 15.255.255.255 any
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit established connections
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any any established
+Router(config-ext-nacl)# <span class="syntax-keyword">remark</span> Permit specific services
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any any eq 80
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any any eq 443
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 18 of 20</div>
+        </div>
+
+        <!-- SLIDE 19: Advanced ACL Features -->
+        <div class="slide">
+            <h2>Advanced ACL Features</h2>
+
+            <h3>1. Time-Based ACLs</h3>
+            <p>Control when ACL rules are active based on time of day or day of week.</p>
+            <div class="code-block">
+<span class="syntax-comment">! Define time range</span>
+Router(config)# <span class="syntax-keyword">time-range</span> BUSINESS_HOURS
+Router(config-time-range)# <span class="syntax-keyword">periodic</span> weekdays 08:00 to 18:00
+
+<span class="syntax-comment">! Apply time range to ACL</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> SOCIAL_MEDIA_BLOCK
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> tcp any any eq 443 <strong>time-range BUSINESS_HOURS</strong>
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+            </div>
+
+            <h3>2. Reflexive ACLs</h3>
+            <p>Automatically create temporary return traffic rules for established connections.</p>
+            <div class="code-block">
+<span class="syntax-comment">! Outbound ACL - Create reflexive entries</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> OUTBOUND
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any any <strong>reflect TCP_TRAFFIC</strong>
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> udp any any <strong>reflect UDP_TRAFFIC</strong>
+
+<span class="syntax-comment">! Inbound ACL - Evaluate reflexive entries</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> INBOUND
+Router(config-ext-nacl)# <strong>evaluate TCP_TRAFFIC</strong>
+Router(config-ext-nacl)# <strong>evaluate UDP_TRAFFIC</strong>
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip any any
+            </div>
+
+            <h3>3. Object Groups</h3>
+            <p>Group multiple IP addresses, protocols, or ports for easier management.</p>
+            <div class="code-block">
+<span class="syntax-comment">! Create network object group</span>
+Router(config)# <span class="syntax-keyword">object-group network</span> WEB_SERVERS
+Router(config-network-group)# host 203.0.113.10
+Router(config-network-group)# host 203.0.113.11
+Router(config-network-group)# host 203.0.113.12
+
+<span class="syntax-comment">! Create service object group</span>
+Router(config)# <span class="syntax-keyword">object-group service</span> WEB_SERVICES
+Router(config-service-group)# tcp eq 80
+Router(config-service-group)# tcp eq 443
+Router(config-service-group)# tcp eq 8080
+
+<span class="syntax-comment">! Use object groups in ACL</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> WEB_ACCESS
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp any <strong>object-group WEB_SERVERS</strong> <strong>object-group WEB_SERVICES</strong>
+            </div>
+
+            <h3>4. Log Keyword for Monitoring</h3>
+            <p>Generate syslog messages when ACL entries match packets.</p>
+            <div class="code-block">
+<span class="syntax-comment">! Log denied traffic for security monitoring</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> ip any any <strong>log</strong>
+
+<span class="syntax-comment">! Log with interval (reduce log volume)</span>
+Router(config)# <span class="syntax-keyword">access-list</span> <span class="syntax-number">100</span> <span class="syntax-keyword">deny</span> tcp any any eq 23 <strong>log-input</strong>
+
+<span class="syntax-comment">! View logged events</span>
+Router# <span class="syntax-keyword">show logging</span>
+%SEC-6-IPACCESSLOGDP: list 100 denied tcp 192.168.1.50(52341) -> 203.0.113.10(23)
+            </div>
+
+            <div class="warning-box">
+                <h4>Performance Considerations</h4>
+                <ul>
+                    <li><strong>Logging:</strong> CPU-intensive, use sparingly in production</li>
+                    <li><strong>Reflexive ACLs:</strong> Maintain state, consume memory</li>
+                    <li><strong>Object Groups:</strong> Easier management but slight performance overhead</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>When to Use Advanced Features</h4>
+                <ul>
+                    <li><strong>Time-based:</strong> Control access during specific hours (school networks, parental controls)</li>
+                    <li><strong>Reflexive:</strong> Stateful filtering without full firewall</li>
+                    <li><strong>Object Groups:</strong> Managing large ACLs with many similar entries</li>
+                    <li><strong>Logging:</strong> Security monitoring, compliance auditing, troubleshooting</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 19 of 20</div>
+        </div>
+
+        <!-- SLIDE 20: Summary & Lab Exercises -->
+        <div class="slide">
+            <h2>Summary and Lab Exercises</h2>
+
+            <h3>Key Concepts Recap</h3>
+            <ul>
+                <li><strong>ACLs</strong> filter traffic based on criteria (source, destination, protocol, port)</li>
+                <li><strong>Standard ACLs:</strong> Filter by source IP only, place close to destination (1-99, 1300-1999)</li>
+                <li><strong>Extended ACLs:</strong> Filter by source, destination, protocol, port; place close to source (100-199, 2000-2699)</li>
+                <li><strong>Named ACLs:</strong> Use descriptive names for easier management</li>
+                <li><strong>Wildcard masks:</strong> Inverse of subnet masks (0=match, 1=ignore)</li>
+                <li><strong>Processing:</strong> Top-to-bottom, first match wins, implicit deny all at end</li>
+                <li><strong>Application:</strong> One ACL per protocol, per direction, per interface</li>
+                <li><strong>Placement matters:</strong> Standard near destination, Extended near source</li>
+            </ul>
+
+            <h3>Lab 6 Exercises</h3>
+
+            <div class="example-grid">
+                <div class="example-box">
+                    <h4>Exercise 1: Basic Standard ACL</h4>
+                    <p><strong>Task:</strong> Block network 192.168.10.0/24 from accessing 172.16.1.0/24</p>
+                    <p><strong>Skills:</strong> Standard ACL creation, interface application, placement</p>
+                </div>
+                <div class="example-box">
+                    <h4>Exercise 2: Web Server Protection</h4>
+                    <p><strong>Task:</strong> Allow only HTTP/HTTPS to web server, deny all else</p>
+                    <p><strong>Skills:</strong> Extended ACL, port filtering, permit/deny logic</p>
+                </div>
+                <div class="example-box">
+                    <h4>Exercise 3: Named ACL Management</h4>
+                    <p><strong>Task:</strong> Create named ACL, modify entries, resequence</p>
+                    <p><strong>Skills:</strong> Named ACLs, entry insertion/deletion, remarks</p>
+                </div>
+                <div class="example-box">
+                    <h4>Exercise 4: Complex Scenario</h4>
+                    <p><strong>Task:</strong> DMZ with multiple servers, different access policies per server</p>
+                    <p><strong>Skills:</strong> Multiple ACLs, layered security, troubleshooting</p>
+                </div>
+            </div>
+
+            <h3>Practice Configurations</h3>
+            <div class="code-block">
+<span class="syntax-comment">! Lab Task: Configure ACL to:</span>
+<span class="syntax-comment">! 1. Permit HTTP from 10.1.1.0/24 to 203.0.113.50</span>
+<span class="syntax-comment">! 2. Deny all traffic from 10.1.1.0/24 to 203.0.113.50</span>
+<span class="syntax-comment">! 3. Permit all other traffic</span>
+
+<span class="syntax-comment">! Your configuration here:</span>
+Router(config)# <span class="syntax-keyword">ip access-list extended</span> LAB6_EXERCISE
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> tcp 10.1.1.0 0.0.0.255 host 203.0.113.50 eq 80
+Router(config-ext-nacl)# <span class="syntax-keyword">deny</span> ip 10.1.1.0 0.0.0.255 host 203.0.113.50
+Router(config-ext-nacl)# <span class="syntax-keyword">permit</span> ip any any
+            </div>
+
+            <h3>CCNA Exam Tips</h3>
+            <div class="warning-box">
+                <h4>What You Must Know for CCNA</h4>
+                <ul>
+                    <li>Difference between standard and extended ACLs</li>
+                    <li>ACL number ranges (1-99, 100-199, 1300-1999, 2000-2699)</li>
+                    <li>Wildcard mask calculation and usage</li>
+                    <li>ACL placement rules (standard vs extended)</li>
+                    <li>Implicit deny all at end of every ACL</li>
+                    <li>Verification commands (<code>show access-lists</code>, <code>show ip interface</code>)</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>You're Ready When You Can...</h4>
+                <ul>
+                    <li>Configure standard and extended ACLs from memory</li>
+                    <li>Calculate wildcard masks without a calculator</li>
+                    <li>Determine correct ACL placement in a network diagram</li>
+                    <li>Troubleshoot ACL misconfigurations</li>
+                    <li>Explain ACL processing order and implicit deny</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: EQ6</div>
+            <div class="slide-number">Slide 20 of 20</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            if (n >= slides.length) {
+                currentSlide = slides.length - 1;
+            } else if (n < 0) {
+                currentSlide = 0;
+            } else {
+                currentSlide = n;
+            }
+
+            slides[currentSlide].classList.add('active');
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Wildcard calculator function
+        function calculateWildcard() {
+            const input = document.getElementById('wildcardInput').value;
+            const result = document.getElementById('wildcardResult');
+
+            const wildcardParts = input.split('.');
+            if (wildcardParts.length !== 4) {
+                result.innerHTML = '<strong style="color: #dc3545;">Invalid format. Use format: 0.0.0.255</strong>';
+                return;
+            }
+
+            // Calculate subnet mask (inverse of wildcard)
+            const wildcardInts = wildcardParts.map(part => parseInt(part));
+            const subnetParts = wildcardInts.map(part => 255 - part);
+            const subnetMask = subnetParts.join('.');
+
+            // Calculate CIDR prefix
+            // Check if subnet mask is contiguous (valid for CIDR)
+            const subnetBinary = subnetParts.map(p => p.toString(2).padStart(8, '0')).join('');
+            const isContiguous = /^1*0*$/.test(subnetBinary);
+
+            let cidr = 0;
+            if (isContiguous) {
+                // Count leading 1s in subnet mask
+                for (let bit of subnetBinary) {
+                    if (bit === '1') cidr++;
+                    else break;
+                }
+            } else {
+                cidr = 'N/A'; // Non-contiguous mask (not valid CIDR)
+            }
+
+            // Calculate number of addresses (count 1s in WILDCARD mask)
+            let wildcardBits = 0;
+            wildcardInts.forEach(part => {
+                wildcardBits += (part.toString(2).match(/1/g) || []).length;
+            });
+            const addresses = Math.pow(2, wildcardBits);
+
+            // Calculate proper IP range based on wildcard
+            function calculateRange(wildcardInts) {
+                // Start at 0.0.0.0 and calculate range
+                const start = [0, 0, 0, 0];
+                const end = [0, 0, 0, 0];
+
+                for (let i = 0; i < 4; i++) {
+                    start[i] = 0; // Minimum value
+                    end[i] = wildcardInts[i]; // Maximum value based on wildcard
+                }
+
+                return {
+                    start: start.join('.'),
+                    end: end.join('.')
+                };
+            }
+
+            // Use appropriate base IP for demonstration (non-zero example)
+            let baseIP = '192.168.1.0';
+            let exampleStart = baseIP.split('.').map(p => parseInt(p));
+            let exampleEnd = [...exampleStart];
+
+            // Calculate example range
+            for (let i = 0; i < 4; i++) {
+                exampleStart[i] = exampleStart[i] & (255 - wildcardInts[i]); // Zero out wildcard bits
+                exampleEnd[i] = exampleStart[i] | wildcardInts[i]; // Set wildcard bits to 1
+            }
+
+            const exampleRange = {
+                start: exampleStart.join('.'),
+                end: exampleEnd.join('.')
+            };
+
+            let meaning = '';
+            if (input === '0.0.0.0') {
+                meaning = 'Single host (exact match)';
+            } else if (input === '0.0.0.255') {
+                meaning = '/24 network (256 addresses)';
+            } else if (input === '0.0.3.255') {
+                meaning = '/22 network (1,024 addresses)';
+            } else if (input === '0.0.255.255') {
+                meaning = '/16 network (65,536 addresses)';
+            } else if (input === '0.255.255.255') {
+                meaning = '/8 network (16,777,216 addresses)';
+            } else if (input === '255.255.255.255') {
+                meaning = 'Any address (match all)';
+            } else if (cidr === 'N/A') {
+                meaning = `Non-contiguous mask (${addresses.toLocaleString()} addresses)`;
+            } else {
+                meaning = `/${cidr} network (${addresses.toLocaleString()} addresses)`;
+            }
+
+            const cidrDisplay = cidr === 'N/A' ? 'N/A (non-contiguous mask)' : `/${cidr}`;
+
+            // Create human-readable range description
+            let rangeDesc = '';
+            if (input === '0.0.0.0') {
+                rangeDesc = `Matches only ${baseIP} (exact match)`;
+            } else if (input === '255.255.255.255') {
+                rangeDesc = 'Matches ALL IP addresses (0.0.0.0 - 255.255.255.255)';
+            } else {
+                rangeDesc = `Range: ${exampleRange.start} to ${exampleRange.end} (all IPs matching pattern)`;
+            }
+
+            result.innerHTML = `
+                <strong>Wildcard: ${input}</strong><br>
+                Matches: ${meaning}<br>
+                Subnet Mask Equivalent: ${subnetMask}<br>
+                CIDR Notation: ${cidrDisplay}<br>
+                ${rangeDesc}
+            `;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

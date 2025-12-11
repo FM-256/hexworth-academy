@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+	<title>ProcessControl</title>
+	<style>
+		html {
+			height:100%;
+		}
+		body {
+			background-color:#FFF;
+			margin:0;
+			height:100%;
+		}
+	
+/* Hexworth Academy - House of Logic Branding (Ubuntu-inspired) */
+.hexworth-wrapper {
+    font-family: "Ubuntu", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c001e 0%, #3d0a2e 50%, #2c001e 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+.hexworth-header {
+    background: linear-gradient(135deg, #2c001e 0%, #772953 50%, #5e2750 100%);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(119, 41, 83, 0.4);
+}
+.hexworth-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+}
+.hexworth-logo-icon { font-size: 28px; }
+.hexworth-logo-text { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+.hexworth-badge {
+    background: linear-gradient(135deg, #0e8a7d, #0d9488);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #84c547;
+    box-shadow: 0 0 10px rgba(132, 197, 71, 0.3);
+}
+.hexworth-content { display: flex; justify-content: center; padding: 20px; }
+.hexworth-footer {
+    background: rgba(44, 0, 30, 0.9);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    border-top: 1px solid #772953;
+}
+.hexworth-footer a { color: #0e8a7d; text-decoration: none; }
+.hexworth-footer a:hover { color: #84c547; }
+
+	
+/* Hexworth Academy - House of Forge Branding */
+.hexworth-wrapper {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0805 0%, #1c1208 50%, #0a0805 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+	</style>
+	<!-- copy these lines to your document head: -->
+
+	<meta name="viewport" content="user-scalable=yes, width=800" />
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro&subset=latin' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:600&subset=latin' rel='stylesheet' type='text/css'>
+	
+	<title>The Title</title>
+	<meta name="description" content=""
+	<meta name="keywords" content="" />	
+		<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z91PVQTWCZ"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	
+	  gtag('config', 'G-Z91PVQTWCZ');
+	</script>
+	<style>
+	body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .control-panel {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            margin-bottom: 20px;
+        }
+
+        .control-panel h2 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            color: #f44336;
+        }
+
+        .control-panel label {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .control-panel input[type="number"], 
+        .control-panel input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            font-size: 16px;
+        }
+
+        .control-panel button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .control-panel button:hover {
+            background-color: #d32f2f;
+        }
+
+        .status-indicator {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .temperature-display {
+            margin-top: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .oven-room {
+            width: 150px;
+            height: 150px;
+            margin-top: 20px;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .rate-indicator {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Layout adjustments to fit the graph */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #rateChangeChart {
+            width: 400px;
+            height: 300px;
+        }
+
+    
+/* Hexworth Academy - House of Forge Branding */
+.hexworth-wrapper {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0805 0%, #1c1208 50%, #0a0805 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+	</style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<!-- end copy -->
+  </head>
+  <body>
+<div class="hexworth-wrapper">
+    <header class="hexworth-header" style="background: linear-gradient(135deg, #1c1208 0%, #78350f 50%, #b45309 100%); box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);">
+        <a href="../../../catalog.html?theme=academy" class="hexworth-logo" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <span class="hexworth-logo-icon" style="font-size: 28px;">🏰</span>
+            <span class="hexworth-logo-text" style="font-size: 18px; font-weight: 600; letter-spacing: 1px;">Hexworth Academy</span>
+        </a>
+        <span class="hexworth-badge" style="background: linear-gradient(135deg, #1a1a1a, #333333); color: #ff6b35; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid #ff6b35;">🔨 House of Forge</span>
+    </header>
+    <div class="hexworth-content" style="display: flex; justify-content: center; padding: 20px;">
+
+<!-- copy these lines to your document: -->
+
+	<div id="processcontrol_hype_container" class="HYPE_document" style="margin:auto;position:relative;width:100%;height:100%;overflow:hidden;">
+		<script type="text/javascript" charset="utf-8" src="ProcessControl.hyperesources/processcontrol_hype_generated_script.js?58622"></script>
+	</div>
+
+	<!-- end copy -->
+	
+
+
+	<!-- text content for search engines: -->
+
+	<div style="display:none" aria-hidden=true>
+
+		<div>Open Loop Control</div>
+		<div></div>
+		<div>Washing Machine Control
+Start
+
+Water Temperature: ColdWarmHot
+
+Wash Time (minutes): 
+
+Status: Off
+Time Remaining: 0 minutes
+
+</div>
+		<div>Open loop control systems are the simplest type of control. In these systems, the control action is independent of the actual output or the process variable. There is no feedback from the output to adjust the input. The system operates on a set of predefined instructions without any consideration for how the system is actually performing.
+
+A common example is a washing machine that runs for a preset time regardless of the cleanliness of the clothes.
+
+The advantages of an open loop control are its simplicity, low cost, and easy implementation. The disadvantage is lack of feedback which can lead to inaccuracies and inefficiencies, especially if the process conditions change.</div>
+		<div>Proportional control is a type of closed loop control where the control action is proportional to the error, which is the difference between the desired setpoint and the actual process variable. The controller applies a correction that is proportional to this error.
+
+A common example is a heating system, if the room temperature is lower than the setpoint, the controller increases the heat output proportionally to how far the temperature is from the setpoint.
+
+Proportional control's advantages are that it is simple to implement and provides smooth control, reducing the error over time. The disadvantage is that proportional control alone may not eliminate error completely, and it might even result in steady-state error.</div>
+		<div>Proportional Control</div>
+		<div>Oven Temperature Control
+Current Temperature (°F): 
+
+Desired Temperature (°F): 
+
+Proportional Gain (Kp): 
+
+Start Control Reset Temperature70°F
+
+Oven
+Rate of Change: 0
+</div>
+		<div>Principles of Modern Communication
+</div>
+		<div>Next</div>
+		<div>Restart</div>
+		<div>Back</div>
+		<div>Process Control</div>
+		<div>This work is licensed with a
+ Creative Commons Attribution 4.0 International LicenseEndFragment</div>
+		<div>Closed loop control systems, also known as feedback control systems, use feedback from the output to influence the input. This feedback loop allows the system to adjust its operation in real-time to maintain the desired output or process variable.
+
+A common example is a thermostat controlling the temperature in a room. The thermostat measures the temperature (feedback) and adjusts the heating or cooling system accordingly.
+
+The advantages of a closed loop control are that it is more accurate and responsive to changes in the process leading to better performance and stability. The disadvantage is that closed loop controls are more complex and typically more expensive than open loop systems.</div>
+		<div>Thermostat Control
+Mode: CoolingHeating
+
+Current Temperature (°F): 
+
+Desired Temperature (°F): 
+
+Power On--°F
+Fan Motor: Off
+
+</div>
+		<div>Closed Loop Control</div>
+		<div>Close</div>
+		<div>PID Control</div>
+		<div>Proportional (P) Control
+
+Provides an immediate response to the error.The output is proportional to the magnitude of the error.Larger errors result in stronger corrective actions.High proportional gain can cause system instability if not tuned properly.</div>
+		<div>Close </div>
+		<div>Close </div>
+		<div>Integral (I) Control
+
+Accumlates error over time.Adjusts the output to eliminate any residual steady-state error.Ensures that even small errors are corrected over time for long-term precision.Can increase the system's response time leading to slower reaction to changes.</div>
+		<div>Proportional-Integral Derivative (PID) control is an advanced form of closed loop control that combines three elements: Proportional (P) Control, Integral (I) Control, and Derivative (D) Control. PID control is widely used in industrial processes like temperature control, flow control, and pressure control.
+
+Its advantages are that it provides precise and stable control, is capable of eliminating steady-state errors and responds effectively to changes in the system. Its disvantage is the initial setup and programming require exertise, and the cost an be higher than simpler control systems.</div>
+		<div>PID Control Panel
+Current Pressure (PSI): 
+Desired Pressure (PSI): 
+
+Proportional Gain (Kp): 
+
+Integral Gain (Ki): 
+
+Derivative Gain (Kd): 
+
+Start PID Control Reset Pressure500 PSI
+
+Flap Angle: 0°
+Rate of Change: 0
+</div>
+		<div>Derivative (D) Control
+
+Predicts future error based on the rate of change of the error.The ouput is proportional to the rate at which the error is changing.Helps to dampen the system response, reducing overshoot and oscillations.Can be sensitive to noice since it responds to rapid changes in error.</div>
+		<div>Closed Loop Controls</div>
+		<div>Process control is a fundamental concept in automation and industrial systems, focusing on the regulation of various processes to achieve desired outcomes. This emates introduces the key concepts such as open and closed loop control systems, which determine whether a system responds to feedback. Explore proportional control, where outputs are adjusted based on system error, and the more advanced PID (Proportional-Integral-Derivative) controllers that fine-tune system performance. Programmable Logic Controllers (PLCs), are widely used in industry for automating and controlling processes in real time.</div>
+		<div>Proportional Controls</div>
+		<div>Introduction</div>
+		<div>Open Loop Controls</div>
+		<div>PID Controls</div>
+		<div>Programmable Logic Controllers</div>
+		<div>Communication ports connect to other PLCs, computers, or networks. These ports enable data exchange between systems, allowing for more complex control and monitoring scenarios.</div>
+		<div>The power supply provides the necessary electrical power to the PLC system, ensuring that the CPU, memory, and I/O modules operate correctly.</div>
+		<div>The central processing unit (CPU) is the brain of the PLC. It executes the control program stored in the memory, processes input signals, and sends commands to output devices. The CPU also performs diagnostics and ensures the system operates correctly.</div>
+		<div>A Programmable Logic Controller (PLC) is a specialized industrial computer used for automating control processes in manufacturing, production lines, and other industrial settings. PLCs are designed to operate in harsh environments, where they control machinery, processes, and systems by executing programmed instructions. They are highly reliable and are essential in modern industrial automation.</div>
+		<div>PLCs</div>
+		<div>Input/Output (I/O) Modules connect the PLC to external devices, such as sensors, actuators, switches, and motors. Input modules receive signals from devices like sensors, while output modules send control signals to actuators and other devices. Digital I/O: Handles on/off signals, like those from switches or relays. Analog I/O: Handles variable signals, like those from temperature sensors or flow meters.</div>
+		<div>Memory in a PLC stores the control program, operational data, and the status of input and output devices. There are two types of memory: ROM (Read-Only Memory): Used to store the PLC’s firmware and the control program. RAM (Random Access Memory): Used for storing temporary data and status information during operation.</div>
+		<div>click on each area to learn more</div>
+		<div>Process Controls
+</div>
+		<div>Menu</div>
+
+	</div>
+
+	<!-- end text content: -->
+    </div>
+    <footer class="hexworth-footer" style="background: rgba(28, 18, 8, 0.9); color: rgba(255,255,255,0.7); text-align: center; padding: 12px; font-size: 12px;">
+        <p>Educational content powered by <a href="https://www.myemates.com" target="_blank" style="color: #ff6b35; text-decoration: none;">myEMATES</a> |
+        NSF Grant #DUE 1601612 |
+        <a href="../../../catalog.html" style="color: #ff6b35; text-decoration: none;">← Back to Catalog</a></p>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head><br>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z91PVQTWCZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z91PVQTWCZ');
+</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" /><br>
+	<meta name="keyword" content="input, circuit, logic, truth, set, reset, state" />
+		<meta name="description" content="The EMATE illustrates latches and flip-flops, the sequence circuits for binary information. " />
+	<title>latches</title>
+	<style>
+		html {
+			height:100%;
+		}
+		body {
+			background-color:#FFF;
+			margin:0;
+			height:100%;
+		}
+	
+/* Hexworth Academy - House of Logic Branding (Ubuntu-inspired) */
+.hexworth-wrapper {
+    font-family: "Ubuntu", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c001e 0%, #3d0a2e 50%, #2c001e 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+.hexworth-header {
+    background: linear-gradient(135deg, #2c001e 0%, #772953 50%, #5e2750 100%);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(119, 41, 83, 0.4);
+}
+.hexworth-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+}
+.hexworth-logo-icon { font-size: 28px; }
+.hexworth-logo-text { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+.hexworth-badge {
+    background: linear-gradient(135deg, #0e8a7d, #0d9488);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #84c547;
+    box-shadow: 0 0 10px rgba(132, 197, 71, 0.3);
+}
+.hexworth-content { display: flex; justify-content: center; padding: 20px; }
+.hexworth-footer {
+    background: rgba(44, 0, 30, 0.9);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    border-top: 1px solid #772953;
+}
+.hexworth-footer a { color: #0e8a7d; text-decoration: none; }
+.hexworth-footer a:hover { color: #84c547; }
+
+	</style>
+	<!-- copy these lines to your document head: -->
+
+	<meta name="viewport" content="user-scalable=yes, width=700" />
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:600&subset=latin' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro&subset=latin' rel='stylesheet' type='text/css'>
+
+	<!-- end copy -->
+  </head>
+  <body>
+<div class="hexworth-wrapper">
+    <header class="hexworth-header">
+        <a href="../../../catalog.html?theme=academy" class="hexworth-logo">
+            <span class="hexworth-logo-icon">🏰</span>
+            <span class="hexworth-logo-text">Hexworth Academy</span>
+        </a>
+        <span class="hexworth-badge">🧠 House of Logic</span>
+    </header>
+    <div class="hexworth-content">
+
+<!-- copy these lines to your document: -->
+
+	<div id="latches_hype_container" class="HYPE_document" style="margin:auto;position:relative;width:700px;height:550px;overflow:hidden;">
+		<script type="text/javascript" charset="utf-8" src="latches.hyperesources/latches_hype_generated_script.js?15667"></script>
+	</div>
+
+	<!-- end copy -->
+	
+
+
+	<!-- text content for search engines: -->
+
+	<div style="display:none" aria-hidden=true>
+
+		<div>Latches and Flip-Flops</div>
+		<div>1/6</div>
+		<div></div>
+		<div>This material was developed with funding from the
+National Science Foundation under Grant # DUE 1601612
+</div>
+		<div>Next</div>
+		<div>Restart</div>
+		<div>Back</div>
+		<div>0</div>
+		<div>R</div>
+		<div>1</div>
+		<div>S</div>
+		<div>
+</div>
+		<div>Q</div>
+		<div>Q</div>
+		<div>RESET
+0 or OFF
+</div>
+		<div>3/6</div>
+		<div>Click switches on and off</div>
+		<div>SET
+1 or ON
+</div>
+		<div>1
+</div>
+		<div>0
+</div>
+		<div>Not allowed</div>
+		<div>Not legal for both latches to be turned on</div>
+		<div>RS Latch</div>
+		<div></div>
+		<div>INPUTS</div>
+		<div>OUTPUT</div>
+		<div>Latches and Flip Flops</div>
+		<div>No change</div>
+		<div>The truth table illustrates the operation of the RS Latch. The RS Latch is called a bi-state device due to the fact that it can be switched into one of two possible states SET or RESET.</div>
+		<div></div>
+		<div>4/6</div>
+		<div>The RS Latch is constructed of cross-connected NOR gates as shown above. The Q output can start in either state ON (1) or OFF (0). If a 1 is applied to the R input the Q output will go LOW or (0) and stay in that state even if the 1 on the R input is removes. If a 1 is applied to the S input the Q output will switch to 1 even after the 1 is removed from the S input. Applying 1’s to both the R and S input is not allowed and represents an illegal input in which the output cannot be predicted.</div>
+		<div>5/6</div>
+		<div>The RS (Rest-Set) Latch can also be controlled with LOW or 0 inputs rather than 1’s. In this case the LOW inputs will change or latch the device into the new state. Applying 0’s to both the R and S inputs is not allowed.</div>
+		<div></div>
+		<div>R</div>
+		<div>S</div>
+		<div>Inverted RS Latch</div>
+		<div>The Inverted RS Latch is constructed of cross-connected NAND gates as show below. The Q output can start in either state ON (1) or OFF (0). If a 0 is applied to the R input the Q output will go LOW or (0) and stay in that state even if the 0 on the R input is removes. If a 0 is applied to the S input the Q output will switch to 1 even after the 0 is removed from the S input. Applying 0’s to both the R and S input is not allowed and represents an illegal input in which the output cannot be predicted.</div>
+		<div></div>
+		<div>6/6</div>
+		<div>CK</div>
+		<div>Clocked</div>
+		<div>Just like logic gates form the basic elements for combination logic circuits. Latches and flip-flops are the basic building boxes used to create storage and sequence circuits for binary information. A single latch or flip flop can store one bit of data. The main difference between the latches and flip flops is that a latch checks input continuously and changes the output whenever there is a change in input. Flip-flops use a special type of input called a clock or trigger. A change in this input is required to change or trigger the output state of the flip-flop.</div>
+		<div>2/6</div>
+
+	</div>
+
+	<!-- end text content: -->
+
+    </div>
+    <footer class="hexworth-footer">
+        <p>Educational content powered by <a href="https://www.myemates.com" target="_blank">myEMATES</a> |
+        NSF Grant #DUE 1601612 |
+        <a href="../../../catalog.html">← Back to Catalog</a></p>
+    </footer>
+</div>
+</body>
+</html>
