@@ -1,11 +1,10 @@
 {
-  "version": "7.4.0",
+  "version": "7.5.0",
   "releaseDate": "2025-12-12",
   "releaseNotes": [
-    "Restructured folder layout for cleaner user experience",
-    "Single entry point: index.html (no more multiple files in root)",
-    "All resources organized under resources/ directory",
-    "Previous v7.3.0 content preserved and accessible"
+    "Added Magic vs Matrix theme fork for first-time users",
+    "New 'Switch Reality' button to change themes anytime",
+    "Theme preference persists across sessions via localStorage"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
