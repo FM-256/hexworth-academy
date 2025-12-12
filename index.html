@@ -1943,9 +1943,227 @@
                 padding: 15px;
             }
         }
+
+        /* ========================================
+           Theme Fork - Magic vs Matrix Choice
+           ======================================== */
+        .theme-fork-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .theme-fork-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .theme-fork-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        .theme-fork-title {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .theme-fork-subtitle {
+            font-size: 1.2em;
+            color: #888;
+            margin-bottom: 50px;
+        }
+
+        .theme-fork-choices {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-choice {
+            width: 280px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-choice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Magic Theme Choice */
+        .theme-choice.magic {
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 100%);
+            border: 2px solid #6b21a8;
+            box-shadow: 0 0 30px rgba(107, 33, 168, 0.3);
+        }
+
+        .theme-choice.magic:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 50px rgba(107, 33, 168, 0.5);
+            border-color: #9333ea;
+        }
+
+        .theme-choice.magic::before {
+            background: radial-gradient(circle at center, rgba(147, 51, 234, 0.2) 0%, transparent 70%);
+        }
+
+        .theme-choice.magic:hover::before {
+            opacity: 1;
+        }
+
+        /* Matrix Theme Choice */
+        .theme-choice.matrix {
+            background: linear-gradient(135deg, #001a00 0%, #003300 100%);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+        }
+
+        .theme-choice.matrix:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 50px rgba(0, 255, 0, 0.4);
+            border-color: #00ff00;
+        }
+
+        .theme-choice.matrix::before {
+            background: radial-gradient(circle at center, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+        }
+
+        .theme-choice.matrix:hover::before {
+            opacity: 1;
+        }
+
+        .theme-choice-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .theme-choice-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .theme-choice.magic .theme-choice-title {
+            color: #c084fc;
+        }
+
+        .theme-choice.matrix .theme-choice-title {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+
+        .theme-choice-tagline {
+            font-size: 0.95em;
+            color: #999;
+            font-style: italic;
+        }
+
+        .theme-choice.matrix .theme-choice-tagline {
+            font-family: 'Courier New', monospace;
+            color: #00aa00;
+        }
+
+        /* Theme switch button in header */
+        .theme-switch-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-switch-btn:hover {
+            background: rgba(50,50,50,0.9);
+            border-color: #666;
+            transform: scale(1.05);
+        }
+
+        .theme-switch-btn.hidden {
+            display: none;
+        }
+
+        /* Responsive for theme fork */
+        @media (max-width: 700px) {
+            .theme-fork-choices {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .theme-choice {
+                width: 260px;
+            }
+
+            .theme-fork-title {
+                font-size: 1.8em;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Theme Fork - Magic vs Matrix Initial Choice -->
+    <div class="theme-fork-overlay hidden" id="themeFork">
+        <div class="theme-fork-container">
+            <h1 class="theme-fork-title">Choose Your Reality</h1>
+            <p class="theme-fork-subtitle">Two paths lie before you. Which will you take?</p>
+
+            <div class="theme-fork-choices">
+                <div class="theme-choice magic" onclick="chooseMagicPath()">
+                    <span class="theme-choice-icon">🏰</span>
+                    <div class="theme-choice-title">Magic</div>
+                    <div class="theme-choice-tagline">"Where Muggles Become Masters of Technology"</div>
+                </div>
+
+                <div class="theme-choice matrix" onclick="chooseMatrixPath()">
+                    <span class="theme-choice-icon">💊</span>
+                    <div class="theme-choice-title">Matrix</div>
+                    <div class="theme-choice-tagline">"See how deep the rabbit hole goes"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Switch Button (shown after choice is made) -->
+    <button class="theme-switch-btn hidden" id="themeSwitchBtn" onclick="showThemeFork()">
+        <span id="themeSwitchIcon">🔄</span>
+        <span>Switch Reality</span>
+    </button>
+
     <!-- Hexworth Academy Entry Portal -->
     <div class="portal-overlay" id="hexworthPortal">
         <!-- Magical floating particles -->
@@ -7984,8 +8202,12 @@
             const house = selectedHouse || 'web';
 
             // Save to localStorage
+            localStorage.setItem('hexworthTheme', 'magic');
             localStorage.setItem('hexworthHouse', house);
             localStorage.setItem('hexworthMode', 'themed');
+
+            // Show switch button
+            document.getElementById('themeSwitchBtn').classList.remove('hidden');
 
             // Apply theme and close portal
             applyHouseTheme(house);
@@ -7993,8 +8215,12 @@
         }
 
         function enterClassicMode() {
+            localStorage.setItem('hexworthTheme', 'magic');
             localStorage.setItem('hexworthMode', 'classic');
             localStorage.removeItem('hexworthHouse');
+
+            // Show switch button
+            document.getElementById('themeSwitchBtn').classList.remove('hidden');
 
             // Apply classic theme
             document.body.classList.add('house-classic');
@@ -8039,6 +8265,57 @@
         }
 
         // ========================================
+        // Theme Fork - Magic vs Matrix
+        // ========================================
+
+        function showThemeFork() {
+            // Hide everything else
+            document.getElementById('hexworthPortal').classList.add('hidden');
+            document.getElementById('themeSwitchBtn').classList.add('hidden');
+
+            // Clear any existing theme
+            document.body.className = '';
+
+            // Show the theme fork
+            const themeFork = document.getElementById('themeFork');
+            themeFork.classList.remove('hidden');
+        }
+
+        function hideThemeFork() {
+            const themeFork = document.getElementById('themeFork');
+            themeFork.classList.add('hidden');
+
+            // Show the switch button
+            document.getElementById('themeSwitchBtn').classList.remove('hidden');
+        }
+
+        function chooseMagicPath() {
+            localStorage.setItem('hexworthTheme', 'magic');
+            hideThemeFork();
+
+            // Show the Hexworth Academy portal
+            const portal = document.getElementById('hexworthPortal');
+            portal.classList.remove('hidden', 'fade-out');
+            showEntryOptions();
+        }
+
+        function chooseMatrixPath() {
+            localStorage.setItem('hexworthTheme', 'matrix');
+            localStorage.setItem('hexworthMode', 'network');
+            hideThemeFork();
+
+            // Apply Matrix/Network theme directly
+            document.body.classList.add('theme-network');
+            document.getElementById('catalogTitle').textContent = 'The Network';
+            document.getElementById('catalogSubtitle').textContent = 'See how deep the rabbit hole goes';
+            document.getElementById('houseCrestDisplay').classList.add('hidden');
+            document.getElementById('hexworthPortal').classList.add('hidden');
+
+            // Show the switch button
+            document.getElementById('themeSwitchBtn').classList.remove('hidden');
+        }
+
+        // ========================================
         // Initialize
         // ========================================
 
@@ -8062,31 +8339,45 @@
             const urlTheme = urlParams.get('theme');
 
             if (urlTheme === 'network') {
-                // Matrix/Network theme - skip portal, apply cyber theme
+                // Matrix/Network theme via URL
+                localStorage.setItem('hexworthTheme', 'matrix');
+                localStorage.setItem('hexworthMode', 'network');
                 document.getElementById('hexworthPortal').classList.add('hidden');
                 document.body.classList.add('theme-network');
                 document.getElementById('catalogTitle').textContent = 'The Network';
                 document.getElementById('catalogSubtitle').textContent = 'See how deep the rabbit hole goes';
                 document.getElementById('houseCrestDisplay').classList.add('hidden');
-
-                // Save preference
-                localStorage.setItem('hexworthMode', 'network');
+                document.getElementById('themeSwitchBtn').classList.remove('hidden');
                 return;
             }
 
             if (urlTheme === 'academy') {
-                // Coming from landing page - clear any network preference, show portal
+                // Magic/Academy theme via URL - show portal
+                localStorage.setItem('hexworthTheme', 'magic');
                 localStorage.removeItem('hexworthMode');
                 localStorage.removeItem('hexworthHouse');
-                // Portal will show by default (no return, let it fall through)
+                document.getElementById('themeSwitchBtn').classList.remove('hidden');
+                return; // Portal shows by default
+            }
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('hexworthTheme');
+
+            if (!savedTheme) {
+                // First time user - show the theme fork
+                document.getElementById('hexworthPortal').classList.add('hidden');
+                document.getElementById('themeFork').classList.remove('hidden');
                 return;
             }
+
+            // Returning user - show switch button
+            document.getElementById('themeSwitchBtn').classList.remove('hidden');
 
             const savedMode = localStorage.getItem('hexworthMode');
             const savedHouse = localStorage.getItem('hexworthHouse');
 
-            if (savedMode === 'network') {
-                // Returning user with Network theme
+            if (savedMode === 'network' || savedTheme === 'matrix') {
+                // Returning user with Matrix/Network theme
                 document.getElementById('hexworthPortal').classList.add('hidden');
                 document.body.classList.add('theme-network');
                 document.getElementById('catalogTitle').textContent = 'The Network';
@@ -8104,7 +8395,7 @@
                 document.getElementById('hexworthPortal').classList.add('hidden');
                 applyHouseTheme(savedHouse);
             }
-            // else: show portal (default behavior)
+            // else: show portal (default behavior for Magic theme without house)
         }
 
         document.addEventListener('DOMContentLoaded', initHexworthAcademy);
