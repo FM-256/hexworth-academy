@@ -1,11 +1,12 @@
 {
-  "version": "7.2.4",
-  "releaseDate": "2025-12-11",
+  "version": "7.3.0",
+  "releaseDate": "2025-12-12",
   "releaseNotes": [
-    "Enhanced update system with auto-download",
-    "New 'Download Now?' confirmation modal with release notes",
-    "Toast notification shows instructions after download starts",
-    "Cancel option to defer update"
+    "New interactive applets: RAID Visualizer, HTTP Status Codes, PowerShell Playground",
+    "Added Web Server Comparison, Backup Strategy Planner tools",
+    "New Browser Security Hardening and Home Network Security guides",
+    "Added Log Management Visualizer and SMB File Sharing Guide",
+    "Multiple bug fixes and content updates"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
