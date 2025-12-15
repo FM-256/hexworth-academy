@@ -7493,7 +7493,7 @@
             }
             // ========== EXIT / END ==========
             else if (lowerCmd === 'exit') {
-                if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan') {
+                if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan' || cliMode === 'config-dhcp' || cliMode === 'config-acl') {
                     cliMode = 'config';
                     currentInterface = null;
                 } else if (cliMode === 'config') {
@@ -7692,7 +7692,9 @@
             }
             // ========== IP DHCP ==========
             else if (lowerCmd.startsWith('ip dhcp pool ')) {
-                output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool configured</div>`;
+                cliMode = 'config-dhcp';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool configured - entering DHCP config mode</div>`;
             }
             else if (lowerCmd.startsWith('ip dhcp excluded-address ')) {
                 output.innerHTML += `<div style="color: #0f0;">✓ DHCP exclusion set</div>`;
@@ -7729,9 +7731,20 @@
                 currentInterface = 'Loopback0';
                 updateCLIPrompt(promptEl, selectedDevice.name);
             }
-            // ========== NETWORK COMMAND OUTSIDE ROUTER MODE ==========
-            else if (lowerCmd.startsWith('network ') && cliMode !== 'config-router') {
-                output.innerHTML += `<div style="color: #f00;">% Invalid input - 'network' requires router configuration mode</div>`;
+            // ========== NETWORK COMMAND IN DHCP MODE ==========
+            else if (lowerCmd.startsWith('network ') && cliMode === 'config-dhcp') {
+                const parts = cmd.substring(8).trim().split(/\s+/);
+                if (parts.length >= 2) {
+                    output.innerHTML += `<div style="color: #0f0;">✓ DHCP network ${parts[0]} ${parts[1]}</div>`;
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;subnet-mask&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 192.168.10.0 255.255.255.0</div>`;
+                }
+            }
+            // ========== NETWORK COMMAND OUTSIDE ROUTER/DHCP MODE ==========
+            else if (lowerCmd.startsWith('network ') && cliMode !== 'config-router' && cliMode !== 'config-dhcp') {
+                output.innerHTML += `<div style="color: #f00;">% Invalid input - 'network' requires router or DHCP configuration mode</div>`;
                 output.innerHTML += `<div style="color: #ff0;">  Hint: For a default route, use:</div>`;
                 output.innerHTML += `<div style="color: #0ff;">        ip route 0.0.0.0 0.0.0.0 &lt;next-hop-ip&gt;</div>`;
                 output.innerHTML += `<div style="color: #ff0;">  Hint: For OSPF, first enter:</div>`;
@@ -7740,6 +7753,9 @@
                 output.innerHTML += `<div style="color: #ff0;">  Hint: For EIGRP, first enter:</div>`;
                 output.innerHTML += `<div style="color: #0ff;">        router eigrp 100</div>`;
                 output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;wildcard&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For DHCP pool, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        ip dhcp pool &lt;name&gt;</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;subnet-mask&gt;</div>`;
             }
             // ========== UNKNOWN ==========
             else {
