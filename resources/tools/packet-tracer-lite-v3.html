@@ -2305,6 +2305,39 @@
                             </div>
                         </div>
 
+                        <!-- DHCP Commands -->
+                        <div class="command-category" data-category="dhcp">
+                            <h3>🔹 DHCP Commands</h3>
+                            <div class="command-item" data-keywords="ip dhcp pool create server dynamic">
+                                <div class="command-syntax">ip dhcp pool [name]</div>
+                                <div class="command-description">Create a DHCP pool and enter DHCP configuration mode</div>
+                            </div>
+                            <div class="command-item" data-keywords="network dhcp pool subnet range">
+                                <div class="command-syntax">network [ip] [subnet-mask]</div>
+                                <div class="command-description">Define the network for DHCP pool (in dhcp-config mode). Example: network 192.168.10.0 255.255.255.0</div>
+                            </div>
+                            <div class="command-item" data-keywords="default-router gateway dhcp">
+                                <div class="command-syntax">default-router [ip]</div>
+                                <div class="command-description">Set the default gateway for DHCP clients</div>
+                            </div>
+                            <div class="command-item" data-keywords="dns-server dhcp nameserver">
+                                <div class="command-syntax">dns-server [ip]</div>
+                                <div class="command-description">Set the DNS server for DHCP clients</div>
+                            </div>
+                            <div class="command-item" data-keywords="ip dhcp excluded-address reserve">
+                                <div class="command-syntax">ip dhcp excluded-address [start] [end]</div>
+                                <div class="command-description">Exclude IP addresses from the DHCP pool</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip dhcp binding leases">
+                                <div class="command-syntax">show ip dhcp binding</div>
+                                <div class="command-description">Display current DHCP address bindings/leases</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip dhcp pool statistics">
+                                <div class="command-syntax">show ip dhcp pool</div>
+                                <div class="command-description">Display DHCP pool information and statistics</div>
+                            </div>
+                        </div>
+
                         <!-- Hostname & Security -->
                         <div class="command-category" data-category="basic">
                             <h3>🔹 Device Configuration</h3>
@@ -7464,6 +7497,11 @@
                 output.innerHTML += `<div>  ip route [net] [mask] [next-hop]</div>`;
                 output.innerHTML += `<div>  router ospf [id] / router eigrp [as]</div>`;
                 output.innerHTML += `<div>  network [ip] [wildcard] area [id]</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">DHCP:</div>`;
+                output.innerHTML += `<div>  ip dhcp pool [name]    Create DHCP pool</div>`;
+                output.innerHTML += `<div>  network [ip] [mask]    DHCP network (in dhcp-config)</div>`;
+                output.innerHTML += `<div>  default-router [ip]    DHCP gateway</div>`;
+                output.innerHTML += `<div>  dns-server [ip]        DHCP DNS server</div>`;
                 output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Show Commands:</div>`;
                 output.innerHTML += `<div>  show ip int brief, show run, show vlan brief</div>`;
                 output.innerHTML += `<div>  show ip route, show span, show ip ospf neighbor</div>`;
