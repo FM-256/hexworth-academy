@@ -6104,7 +6104,7 @@
                     </div>
                     <div class="step-description">${instruction.description}</div>
                     <div class="step-commands">
-                        ${instruction.commands.map(cmd => `<code>${cmd}</code>`).join('')}
+                        ${instruction.commands.map(cmd => `<div class="step-cmd"><code>${cmd}</code></div>`).join('')}
                     </div>
                 `;
 
@@ -7904,6 +7904,40 @@
             } else if (lowerCmd.includes('eigrp')) {
                 output.innerHTML += `<div style="color: #ff0;">EIGRP Neighbors:</div>`;
                 output.innerHTML += `<div style="color: #0f0;">(Simulated)</div>`;
+            } else if (lowerCmd.includes('dhcp binding')) {
+                output.innerHTML += `<div style="color: #ff0;">IP Address      Client-ID/         Lease expiration        Type</div>`;
+                output.innerHTML += `<div style="color: #ff0;">                Hardware address</div>`;
+                if (device.config?.dhcp?.bindings) {
+                    device.config.dhcp.bindings.forEach(b => {
+                        output.innerHTML += `<div>${b.ip.padEnd(16)}${b.mac.padEnd(19)}${b.expiration || 'Infinite'}</div>`;
+                    });
+                } else {
+                    output.innerHTML += `<div style="color: #0ff;">192.168.10.11   0100.5079.6668.01  Mar 15 2024 10:30 AM    Automatic</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">192.168.10.12   0100.5079.6668.02  Mar 15 2024 10:32 AM    Automatic</div>`;
+                }
+            } else if (lowerCmd.includes('dhcp pool')) {
+                output.innerHTML += `<div style="color: #ff0;">Pool SALES :</div>`;
+                output.innerHTML += `<div> Utilization mark (high/low)    : 100 / 0</div>`;
+                output.innerHTML += `<div> Subnet size (first/next)       : 0 / 0</div>`;
+                output.innerHTML += `<div> Total addresses                : 254</div>`;
+                output.innerHTML += `<div> Leased addresses               : 2</div>`;
+                output.innerHTML += `<div> Pending event                  : none</div>`;
+                output.innerHTML += `<div> 1 subnet is currently in the pool :</div>`;
+                output.innerHTML += `<div> Current index      IP address range            Leased addresses</div>`;
+                output.innerHTML += `<div> 192.168.10.13      192.168.10.1 - 192.168.10.254    2</div>`;
+            } else if (lowerCmd.includes('snmp')) {
+                output.innerHTML += `<div style="color: #ff0;">SNMP Configuration:</div>`;
+                if (device.config?.snmp) {
+                    output.innerHTML += `<div>Community: ${device.config.snmp.community || 'public'} (${device.config.snmp.access || 'RO'})</div>`;
+                    if (device.config.snmp.location) output.innerHTML += `<div>Location: ${device.config.snmp.location}</div>`;
+                    if (device.config.snmp.contact) output.innerHTML += `<div>Contact: ${device.config.snmp.contact}</div>`;
+                } else {
+                    output.innerHTML += `<div>Chassis: ${device.name}</div>`;
+                    output.innerHTML += `<div>Community: public (RO), private (RW)</div>`;
+                    output.innerHTML += `<div>Location: HQ-Datacenter</div>`;
+                    output.innerHTML += `<div>Contact: admin@company.com</div>`;
+                }
+                output.innerHTML += `<div style="color: #0f0;">SNMP agent enabled</div>`;
             } else {
                 output.innerHTML += `<div style="color: #f00;">% Invalid show command</div>`;
             }

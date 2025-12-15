@@ -1,10 +1,11 @@
 {
-  "version": "7.5.1",
+  "version": "7.5.2",
   "releaseDate": "2025-12-15",
   "releaseNotes": [
-    "Fixed: 'network' command shows helpful hints when used outside router config mode",
-    "Fixed: 'network' command in OSPF mode now shows syntax help when 'area' is missing",
-    "Improved CLI error messages guide students to correct syntax"
+    "Added: 'show ip dhcp binding' command displays DHCP lease information",
+    "Added: 'show ip dhcp pool' command displays pool statistics",
+    "Added: 'show snmp' command displays SNMP configuration",
+    "Fixed: Lab step commands now display on separate lines instead of concatenated"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
