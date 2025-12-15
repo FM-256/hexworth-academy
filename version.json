@@ -1,11 +1,10 @@
 {
-  "version": "7.5.2",
+  "version": "7.5.3",
   "releaseDate": "2025-12-15",
   "releaseNotes": [
-    "Added: 'show ip dhcp binding' command displays DHCP lease information",
-    "Added: 'show ip dhcp pool' command displays pool statistics",
-    "Added: 'show snmp' command displays SNMP configuration",
-    "Fixed: Lab step commands now display on separate lines instead of concatenated"
+    "Added: Command Reference button (📕) next to CLI input for quick command lookups",
+    "Fixed: 'Switch Reality' button moved to top-left to prevent overlap with House Crest",
+    "Fixed: 'Back to Catalog' button now correctly navigates from Packet Tracer Lite"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
