@@ -1,10 +1,10 @@
 {
-  "version": "7.5.0",
-  "releaseDate": "2025-12-12",
+  "version": "7.5.1",
+  "releaseDate": "2025-12-15",
   "releaseNotes": [
-    "Added Magic vs Matrix theme fork for first-time users",
-    "New 'Switch Reality' button to change themes anytime",
-    "Theme preference persists across sessions via localStorage"
+    "Fixed: 'network' command shows helpful hints when used outside router config mode",
+    "Fixed: 'network' command in OSPF mode now shows syntax help when 'area' is missing",
+    "Improved CLI error messages guide students to correct syntax"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
