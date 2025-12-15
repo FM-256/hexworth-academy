@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Packet Tracer Lite v3.0 - Interactive Network Lab Library</title>
+    <title>Packet Tracer Lite v3.5 - Interactive Network Lab Library</title>
     <style>
         /* ========== GLOBAL RESET & VARIABLES ========== */
         * {
@@ -110,6 +110,33 @@
 
         .btn-icon {
             font-size: 1.2em;
+        }
+
+        .btn.delete-mode-active {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            border-color: #ef4444 !important;
+            animation: pulse-delete 1.5s infinite;
+        }
+
+        @keyframes pulse-delete {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+
+        .canvas-delete-mode {
+            cursor: crosshair !important;
+        }
+
+        .canvas-delete-mode line:hover {
+            stroke: #ef4444 !important;
+            stroke-width: 6px !important;
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+        }
+
+        .canvas-delete-mode g:hover circle {
+            stroke: #ef4444 !important;
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
         }
 
         /* ========== MAIN WORKSPACE ========== */
@@ -570,6 +597,109 @@
         .lab-actions {
             display: flex;
             gap: 10px;
+        }
+
+        /* ========== CUMULATIVE LABS SYSTEM ========== */
+        .cumulative-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cumulative-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cumulative-card:hover {
+            border-color: #10b981;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            transform: translateX(5px);
+        }
+
+        .cumulative-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .cumulative-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border);
+        }
+
+        .cumulative-num {
+            font-size: 2em;
+            font-weight: bold;
+            color: #10b981;
+            text-align: center;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .cumulative-card.locked .cumulative-num {
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .cumulative-info h3 {
+            font-size: 1.15em;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .cumulative-info p {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .cumulative-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .cumulative-tag {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+
+        .cumulative-meta {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+
+        .cumulative-meta .time {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .cumulative-meta .devices {
+            color: var(--text-secondary);
+        }
+
+        .cumulative-arrow {
+            font-size: 1.5em;
+            color: #10b981;
+        }
+
+        .cumulative-card.locked .cumulative-arrow {
+            color: var(--text-muted);
         }
 
         /* ========== TROUBLESHOOTING SYSTEM ========== */
@@ -1371,7 +1501,7 @@
         <!-- HEADER TOOLBAR -->
         <header class="toolbar">
             <div class="toolbar-left">
-                <div class="app-title">📚 Packet Tracer Lite v3.0</div>
+                <div class="app-title">📚 Packet Tracer Lite v3.5</div>
                 <span style="color: var(--text-muted); font-size: 0.85em;">Interactive Network Lab Library</span>
             </div>
             <div class="toolbar-right">
@@ -1387,6 +1517,9 @@
                 <button class="btn" id="connectBtn">
                     <span class="btn-icon">🔗</span> Connect
                 </button>
+                <button class="btn" id="deleteModeBtn" title="Toggle delete mode - click connections or devices to remove them">
+                    <span class="btn-icon">🗑️</span> Delete
+                </button>
                 <select id="connectionColor" style="padding: 8px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
                     <option value="#06b6d4" style="background: #06b6d4; color: white;">🔵 Cyan (LAN)</option>
                     <option value="#10b981" style="background: #10b981; color: white;">🟢 Green (Subnet 1)</option>
@@ -1400,11 +1533,18 @@
                 <button class="btn" id="exportBtn">
                     <span class="btn-icon">💾</span> Export
                 </button>
+                <button class="btn" id="importBtn" title="Import a previously exported topology JSON file">
+                    <span class="btn-icon">📂</span> Import
+                </button>
+                <input type="file" id="importFileInput" accept=".json" style="display: none;">
                 <button class="btn btn-primary" id="labLibraryBtn">
                     <span class="btn-icon">📚</span> Lab Library
                 </button>
                 <button class="btn" id="troubleshootBtn" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c); border: none; font-weight: bold;">
                     <span class="btn-icon">🔧</span> Troubleshoot
+                </button>
+                <button class="btn" id="cumulativeLabsBtn" style="background: linear-gradient(135deg, #10b981, #059669); border: none; font-weight: bold;">
+                    <span class="btn-icon">🏗️</span> Cumulative Labs
                 </button>
                 <button class="btn" id="helpBtn">
                     <span class="btn-icon">❓</span> Help
@@ -1443,7 +1583,7 @@
             <div class="canvas-container">
                 <svg id="network-canvas"></svg>
                 <div class="canvas-overlay" id="welcomeMessage">
-                    <h2>Welcome to Packet Tracer Lite v3.0!</h2>
+                    <h2>Welcome to Packet Tracer Lite v3.5!</h2>
                     <p>🎯 Click <strong>Lab Library</strong> to load a pre-built scenario</p>
                     <p>🖱️ Or drag devices from the left panel to build your own network</p>
                     <p>📖 Follow step-by-step instructions on the right panel</p>
@@ -1611,7 +1751,7 @@
 
                         <div id="cliInterface" style="display: none;">
                             <div id="cliOutput" style="background: #000; color: #0f0; padding: 15px; border-radius: 6px; height: 400px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9em; margin-bottom: 10px; border: 2px solid var(--accent-cyan);">
-                                <div>Cisco IOS Software, Lite Version 3.0</div>
+                                <div>Cisco IOS Software, Lite Version 3.5</div>
                                 <div>Type 'help' for available commands</div>
                                 <div style="margin-top: 10px;">Ready.</div>
                             </div>
@@ -1686,6 +1826,37 @@
                 </div>
                 <div class="ts-grid" id="tsGrid">
                     <!-- Scenarios will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUMULATIVE LABS MODAL -->
+    <div class="modal-overlay" id="cumulativeLabsModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <h2 class="modal-title">🏗️ Cumulative Lab Series - Build an Enterprise Network</h2>
+                <button class="modal-close" id="closeCumulativeLabs">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                        <strong style="color: #10b981;">Progressive Learning:</strong> Each lab builds on the previous one!
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.9em;">
+                        Start with Lab 1 and work your way up. By Lab 6, you'll have a complete enterprise network.
+                    </p>
+                    <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button id="unlockAllLabsBtn" style="padding: 6px 12px; font-size: 0.75em; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.5); color: #a78bfa; border-radius: 5px; cursor: pointer;" title="Unlock all labs for testing (Ctrl+Shift+U)">
+                            🔓 Unlock All
+                        </button>
+                        <button id="resetLabProgressBtn" style="padding: 6px 12px; font-size: 0.75em; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); color: #f87171; border-radius: 5px; cursor: pointer;" title="Reset all progress and lock labs">
+                            🔄 Reset Progress
+                        </button>
+                    </div>
+                </div>
+                <div class="cumulative-grid" id="cumulativeLabsGrid">
+                    <!-- Labs will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -1817,7 +1988,7 @@
                 <!-- QUICK START SECTION -->
                 <div class="help-section active" id="quickstart">
                     <h2>🚀 Quick Start Guide</h2>
-                    <p>Welcome to Packet Tracer Lite v3.0! This guide will help you get started in 5-10 minutes.</p>
+                    <p>Welcome to Packet Tracer Lite v3.5! This guide will help you get started in 5-10 minutes.</p>
 
                     <h3><span class="step-number">1</span>Open the Lab Library</h3>
                     <p>Click the <strong>Lab Library</strong> button in the top toolbar to view available lab scenarios.</p>
@@ -1925,6 +2096,30 @@
 
                     <div class="help-note">
                         <strong>📝 Note:</strong> All progress is saved in your browser's localStorage. Clearing browser data will reset your progress.
+                    </div>
+
+                    <h3>Toolbar Buttons</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>🔗 Connect</h4>
+                            <p>Click to toggle connection mode. Click two devices to create a connection between them.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🗑️ Delete</h4>
+                            <p>Toggle delete mode. Click connections to remove them, or click devices to delete them and their connections.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>📄 New</h4>
+                            <p>Clear the canvas and start a new topology from scratch.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>💾 Export</h4>
+                            <p>Export your current topology as JSON for backup or sharing.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>📂 Import</h4>
+                            <p>Import a previously exported JSON file to restore your topology and continue where you left off.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -2039,8 +2234,8 @@
                                 <div class="command-description">Enable OSPF routing and enter OSPF configuration mode</div>
                             </div>
                             <div class="command-item" data-keywords="network advertise area ospf">
-                                <div class="command-syntax">network [network] [wildcard] area [area-id]</div>
-                                <div class="command-description">Advertise a network in OSPF with wildcard mask and area ID</div>
+                                <div class="command-syntax">network [ip] [wildcard] area [area-id]</div>
+                                <div class="command-description">Advertise a network in OSPF (must be in router config mode). Example: network 0.0.0.0 255.255.255.255 area 0</div>
                             </div>
                             <div class="command-item" data-keywords="router-id rid identifier ospf">
                                 <div class="command-syntax">router-id [id]</div>
@@ -2060,12 +2255,37 @@
                             </div>
                         </div>
 
+                        <!-- EIGRP Commands -->
+                        <div class="command-category" data-category="eigrp">
+                            <h3>🔹 EIGRP Commands</h3>
+                            <div class="command-item" data-keywords="router eigrp enable start as autonomous">
+                                <div class="command-syntax">router eigrp [as-number]</div>
+                                <div class="command-description">Enable EIGRP routing and enter EIGRP configuration mode</div>
+                            </div>
+                            <div class="command-item" data-keywords="network advertise eigrp wildcard">
+                                <div class="command-syntax">network [ip] [wildcard]</div>
+                                <div class="command-description">Advertise a network in EIGRP (must be in router config mode). Example: network 10.0.0.0 0.255.255.255</div>
+                            </div>
+                            <div class="command-item" data-keywords="no auto-summary eigrp classless">
+                                <div class="command-syntax">no auto-summary</div>
+                                <div class="command-description">Disable automatic summarization for classless routing</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip eigrp neighbors adjacency">
+                                <div class="command-syntax">show ip eigrp neighbors</div>
+                                <div class="command-description">Display EIGRP neighbor relationships</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip eigrp topology routes">
+                                <div class="command-syntax">show ip eigrp topology</div>
+                                <div class="command-description">Display EIGRP topology table with successor and feasible successor routes</div>
+                            </div>
+                        </div>
+
                         <!-- Routing Commands -->
                         <div class="command-category" data-category="routing">
                             <h3>🔹 Routing Commands</h3>
-                            <div class="command-item" data-keywords="ip route static next-hop gateway">
+                            <div class="command-item" data-keywords="ip route static next-hop gateway default">
                                 <div class="command-syntax">ip route [dest] [mask] [next-hop]</div>
-                                <div class="command-description">Configure a static route to a destination network</div>
+                                <div class="command-description">Configure a static route. For default route: ip route 0.0.0.0 0.0.0.0 [next-hop]</div>
                             </div>
                             <div class="command-item" data-keywords="show ip route table routing">
                                 <div class="command-syntax">show ip route</div>
@@ -2139,6 +2359,11 @@
                             <p style="margin-top: 10px; font-size: 0.9em;">Activate focused buttons or tabs</p>
                         </div>
                     </div>
+
+                    <h3>Canvas Shortcuts</h3>
+                    <ul>
+                        <li><span class="keyboard-shortcut">Ctrl</span> + <span class="keyboard-shortcut">Click</span> on connection - Delete connection (alternative to Delete mode)</li>
+                    </ul>
 
                     <h3>Browser Shortcuts (Still Available)</h3>
                     <ul>
@@ -2313,7 +2538,7 @@
                     <div style="text-align: center; margin: 30px 0;">
                         <h3 style="font-size: 2em; color: #2a5298;">
                             Packet Tracer Lite
-                            <span class="version-badge">v3.0</span>
+                            <span class="version-badge">v3.5</span>
                         </h3>
                         <p style="color: #6c757d; margin-top: 10px;">Interactive Network Lab Library Edition</p>
                     </div>
@@ -5037,6 +5262,246 @@
             }
         };
 
+        // ========== CUMULATIVE LABS DATA ==========
+        const CUMULATIVE_LABS = {
+            cumlab01: {
+                id: "cumlab01",
+                num: 1,
+                title: "Static Routes Foundation",
+                subtitle: "Build the base enterprise network with IP addressing and static routing",
+                estimatedTime: "45 min",
+                deviceCount: "1 Router, 6 Switches, 4 PCs, 2 Servers",
+                concepts: ["IP Addressing", "Static Routes", "Default Gateway", "Ping Testing"],
+                buildsOn: null,
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 350, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 650, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Configure Edge Router WAN Interface", description: "Assign IP 203.0.113.2/30 to Gi0/0 (WAN link)", commands: ["enable", "conf t", "int Gi0/0", "ip address 203.0.113.2 255.255.255.252", "no shut"], completed: false},
+                    {step: 2, title: "Configure Edge Router LAN Interface", description: "Assign IP 10.0.0.1/30 to Gi0/1 (Core link)", commands: ["int Gi0/1", "ip address 10.0.0.1 255.255.255.252", "no shut", "exit"], completed: false},
+                    {step: 3, title: "Configure Core-SW1 Uplink", description: "Assign IP 10.0.0.2/30 to the uplink to Edge Router", commands: ["int Gi0/1", "no switchport", "ip address 10.0.0.2 255.255.255.252", "no shut"], completed: false},
+                    {step: 4, title: "Create VLAN 10 Interface on Core-SW1", description: "Create SVI for Sales VLAN (192.168.10.1/24)", commands: ["int vlan 10", "ip address 192.168.10.1 255.255.255.0", "no shut"], completed: false},
+                    {step: 5, title: "Configure Sales PCs", description: "Set Sales-PC1 to 192.168.10.10/24, gateway 192.168.10.1", commands: ["IP: 192.168.10.10", "Mask: 255.255.255.0", "GW: 192.168.10.1"], completed: false},
+                    {step: 6, title: "Add Static Route on Edge Router", description: "Route to internal networks via Core-SW1", commands: ["ip route 192.168.0.0 255.255.0.0 10.0.0.2"], completed: false},
+                    {step: 7, title: "Add Default Route on Core-SW1", description: "Point default traffic to Edge Router", commands: ["ip route 0.0.0.0 0.0.0.0 10.0.0.1"], completed: false},
+                    {step: 8, title: "Test Connectivity", description: "Ping from Sales-PC1 to 203.0.113.2 (Edge Router WAN)", commands: ["ping 203.0.113.2"], completed: false}
+                ]
+            },
+            cumlab02: {
+                id: "cumlab02",
+                num: 2,
+                title: "VLANs and Trunking",
+                subtitle: "Segment the network into VLANs with 802.1Q trunking",
+                estimatedTime: "40 min",
+                deviceCount: "1 Router, 6 Switches, 4 PCs, 2 Servers",
+                concepts: ["VLANs", "802.1Q Trunking", "Access Ports", "Native VLAN"],
+                buildsOn: "cumlab01",
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 350, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 650, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Create VLANs on Access-SW1", description: "Create VLAN 10 (Sales), VLAN 20 (Engineering), VLAN 30 (Servers)", commands: ["vlan 10", "name Sales", "vlan 20", "name Engineering", "vlan 30", "name Servers", "exit"], completed: false},
+                    {step: 2, title: "Assign Access Ports to VLAN 10", description: "Configure Fa0/1-2 as access ports in VLAN 10 for Sales PCs", commands: ["int range Fa0/1-2", "switchport mode access", "switchport access vlan 10", "exit"], completed: false},
+                    {step: 3, title: "Configure Trunk to Core Switch", description: "Configure Gi0/1 as 802.1Q trunk with native VLAN 99", commands: ["int Gi0/1", "switchport trunk encapsulation dot1q", "switchport mode trunk", "switchport trunk native vlan 99", "exit"], completed: false},
+                    {step: 4, title: "Create VLANs on Core-SW1", description: "Create matching VLANs on Core switch", commands: ["vlan 10", "name Sales", "vlan 20", "name Engineering", "vlan 30", "name Servers", "vlan 99", "name Native", "exit"], completed: false},
+                    {step: 5, title: "Configure Trunk on Core-SW1", description: "Configure trunk port facing Access-SW1", commands: ["int Gi0/2", "switchport trunk encapsulation dot1q", "switchport mode trunk", "switchport trunk native vlan 99", "exit"], completed: false},
+                    {step: 6, title: "Create SVIs for Inter-VLAN Routing", description: "Create VLAN interfaces for routing between VLANs", commands: ["int vlan 10", "ip address 192.168.10.1 255.255.255.0", "int vlan 20", "ip address 192.168.20.1 255.255.255.0", "int vlan 30", "ip address 192.168.30.1 255.255.255.0"], completed: false},
+                    {step: 7, title: "Verify VLAN Configuration", description: "Check VLAN assignments and trunk status", commands: ["show vlan brief", "show interfaces trunk"], completed: false},
+                    {step: 8, title: "Test Inter-VLAN Routing", description: "Ping from Sales-PC1 (VLAN 10) to Eng-PC1 (VLAN 20)", commands: ["ping 192.168.20.10"], completed: false}
+                ]
+            },
+            cumlab03: {
+                id: "cumlab03",
+                num: 3,
+                title: "Spanning Tree Protocol",
+                subtitle: "Add redundant links and configure STP for loop prevention",
+                estimatedTime: "35 min",
+                deviceCount: "1 Router, 6 Switches, 4 PCs, 2 Servers",
+                concepts: ["STP/RSTP", "Root Bridge", "PortFast", "BPDU Guard"],
+                buildsOn: "cumlab02",
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 350, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 650, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Enable Rapid PVST+", description: "Configure all switches to use Rapid Spanning Tree", commands: ["spanning-tree mode rapid-pvst"], completed: false},
+                    {step: 2, title: "Configure Core-SW1 as Root for VLANs 10,20", description: "Set priority to make Core-SW1 root bridge for Sales and Engineering VLANs", commands: ["spanning-tree vlan 10 root primary", "spanning-tree vlan 20 root primary"], completed: false},
+                    {step: 3, title: "Configure Core-SW2 as Root for VLAN 30", description: "Set priority to make Core-SW2 root bridge for Servers VLAN", commands: ["spanning-tree vlan 30 root primary"], completed: false},
+                    {step: 4, title: "Configure Secondary Root Bridges", description: "Set backup root bridges for redundancy", commands: ["spanning-tree vlan 10 root secondary", "spanning-tree vlan 20 root secondary"], completed: false},
+                    {step: 5, title: "Enable PortFast on Access Ports", description: "Configure PortFast on end-user ports for faster convergence", commands: ["int range Fa0/1-10", "spanning-tree portfast", "exit"], completed: false},
+                    {step: 6, title: "Enable BPDU Guard", description: "Protect PortFast ports from rogue switches", commands: ["int range Fa0/1-10", "spanning-tree bpduguard enable", "exit"], completed: false},
+                    {step: 7, title: "Verify STP Configuration", description: "Check root bridge and port states", commands: ["show spanning-tree summary", "show spanning-tree vlan 10"], completed: false},
+                    {step: 8, title: "Test Redundancy", description: "Simulate link failure and verify convergence", commands: ["int Gi0/1", "shutdown", "show spanning-tree"], completed: false}
+                ]
+            },
+            cumlab04: {
+                id: "cumlab04",
+                num: 4,
+                title: "OSPF Dynamic Routing",
+                subtitle: "Replace static routes with OSPF for automatic failover",
+                estimatedTime: "50 min",
+                deviceCount: "1 Router, 6 Switches, 4 PCs, 2 Servers",
+                concepts: ["OSPF Areas", "Router ID", "Cost", "Passive Interfaces"],
+                buildsOn: "cumlab03",
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 350, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 650, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Remove Static Routes", description: "Clear existing static routes from Edge Router", commands: ["no ip route 192.168.0.0 255.255.0.0 10.0.0.2"], completed: false},
+                    {step: 2, title: "Configure Loopback for Router ID", description: "Create loopback interface for stable OSPF Router ID", commands: ["int Loopback0", "ip address 1.1.1.1 255.255.255.255", "exit"], completed: false},
+                    {step: 3, title: "Enable OSPF on Edge Router", description: "Configure OSPF process and advertise networks in Area 0", commands: ["router ospf 1", "router-id 1.1.1.1", "network 10.0.0.0 0.0.0.3 area 0", "network 203.0.113.0 0.0.0.3 area 0"], completed: false},
+                    {step: 4, title: "Set Reference Bandwidth", description: "Adjust OSPF cost calculation for modern link speeds", commands: ["auto-cost reference-bandwidth 10000"], completed: false},
+                    {step: 5, title: "Configure Passive Interface", description: "Don't send OSPF hellos out WAN interface", commands: ["passive-interface Gi0/0", "exit"], completed: false},
+                    {step: 6, title: "Enable OSPF on Core-SW1", description: "Configure OSPF with networks in Area 0", commands: ["router ospf 1", "router-id 2.2.2.2", "network 10.0.0.0 0.0.0.3 area 0", "network 192.168.10.0 0.0.0.255 area 0", "network 192.168.20.0 0.0.0.255 area 0"], completed: false},
+                    {step: 7, title: "Verify OSPF Neighbors", description: "Confirm OSPF adjacency is established", commands: ["show ip ospf neighbor"], completed: false},
+                    {step: 8, title: "Verify OSPF Routes", description: "Check routing table for OSPF-learned routes (O)", commands: ["show ip route ospf"], completed: false}
+                ]
+            },
+            cumlab05: {
+                id: "cumlab05",
+                num: 5,
+                title: "EIGRP and Redistribution",
+                subtitle: "Add a remote branch with EIGRP and configure redistribution",
+                estimatedTime: "55 min",
+                deviceCount: "2 Routers, 7 Switches, 6 PCs, 2 Servers",
+                concepts: ["EIGRP", "Route Redistribution", "Administrative Distance", "Route Filtering"],
+                buildsOn: "cumlab04",
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Remote-R1", type: "router", name: "Remote-Router", x: 700, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Remote-SW1", type: "l2switch", name: "Remote-SW", x: 800, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 300, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 600, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 650, y: 500},
+                        {id: "Remote-PC1", type: "pc", name: "Remote-PC1", x: 750, y: 350},
+                        {id: "Remote-PC2", type: "pc", name: "Remote-PC2", x: 850, y: 350}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Configure WAN Link to Remote Site", description: "Add new interface on Edge Router for remote branch", commands: ["int Gi0/2", "ip address 10.10.10.1 255.255.255.252", "no shut", "exit"], completed: false},
+                    {step: 2, title: "Configure Remote Router WAN Interface", description: "Configure remote router's connection to headquarters", commands: ["int Gi0/0", "ip address 10.10.10.2 255.255.255.252", "no shut", "exit"], completed: false},
+                    {step: 3, title: "Configure Remote LAN", description: "Set up remote branch LAN network", commands: ["int Gi0/1", "ip address 192.168.50.1 255.255.255.0", "no shut", "exit"], completed: false},
+                    {step: 4, title: "Enable EIGRP on Remote Router", description: "Configure EIGRP AS 100 for remote branch", commands: ["router eigrp 100", "network 10.10.10.0 0.0.0.3", "network 192.168.50.0 0.0.0.255", "no auto-summary", "exit"], completed: false},
+                    {step: 5, title: "Enable EIGRP on Edge Router", description: "Configure EIGRP AS 100 for WAN link", commands: ["router eigrp 100", "network 10.10.10.0 0.0.0.3", "no auto-summary", "exit"], completed: false},
+                    {step: 6, title: "Configure OSPF to EIGRP Redistribution", description: "Redistribute OSPF routes into EIGRP", commands: ["router eigrp 100", "redistribute ospf 1 metric 10000 100 255 1 1500", "exit"], completed: false},
+                    {step: 7, title: "Configure EIGRP to OSPF Redistribution", description: "Redistribute EIGRP routes into OSPF", commands: ["router ospf 1", "redistribute eigrp 100 subnets", "exit"], completed: false},
+                    {step: 8, title: "Verify Redistribution", description: "Check that routes from both protocols appear", commands: ["show ip route", "show ip eigrp neighbors"], completed: false}
+                ]
+            },
+            cumlab06: {
+                id: "cumlab06",
+                num: 6,
+                title: "Advanced Features Capstone",
+                subtitle: "Complete enterprise network with HSRP, DHCP, ACLs, and SNMP",
+                estimatedTime: "60 min",
+                deviceCount: "2 Routers, 7 Switches, 6 PCs, 2 Servers",
+                concepts: ["HSRP", "DHCP", "Access Control Lists", "SNMP Monitoring"],
+                buildsOn: "cumlab05",
+                topology: {
+                    devices: [
+                        {id: "Edge-R1", type: "router", name: "Edge-Router", x: 400, y: 80},
+                        {id: "Remote-R1", type: "router", name: "Remote-Router", x: 700, y: 80},
+                        {id: "Core-SW1", type: "l3switch", name: "Core-SW1", x: 250, y: 200},
+                        {id: "Core-SW2", type: "l3switch", name: "Core-SW2", x: 550, y: 200},
+                        {id: "Remote-SW1", type: "l2switch", name: "Remote-SW", x: 800, y: 200},
+                        {id: "Access-SW1", type: "l2switch", name: "Access-SW1", x: 150, y: 350},
+                        {id: "Access-SW2", type: "l2switch", name: "Access-SW2", x: 300, y: 350},
+                        {id: "Access-SW3", type: "l2switch", name: "Access-SW3", x: 450, y: 350},
+                        {id: "Access-SW4", type: "l2switch", name: "Access-SW4", x: 600, y: 350},
+                        {id: "PC1", type: "pc", name: "Sales-PC1", x: 100, y: 500},
+                        {id: "PC2", type: "pc", name: "Sales-PC2", x: 200, y: 500},
+                        {id: "PC3", type: "pc", name: "Eng-PC1", x: 350, y: 500},
+                        {id: "PC4", type: "pc", name: "Eng-PC2", x: 450, y: 500},
+                        {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
+                        {id: "SRV2", type: "server", name: "DB-Server", x: 650, y: 500},
+                        {id: "Remote-PC1", type: "pc", name: "Remote-PC1", x: 750, y: 350},
+                        {id: "Remote-PC2", type: "pc", name: "Remote-PC2", x: 850, y: 350}
+                    ],
+                    connections: []
+                },
+                instructions: [
+                    {step: 1, title: "Configure HSRP on Core-SW1", description: "Set up HSRP group 10 for VLAN 10 gateway redundancy", commands: ["int vlan 10", "standby 10 ip 192.168.10.254", "standby 10 priority 110", "standby 10 preempt", "exit"], completed: false},
+                    {step: 2, title: "Configure HSRP on Core-SW2", description: "Configure backup HSRP router for VLAN 10", commands: ["int vlan 10", "standby 10 ip 192.168.10.254", "standby 10 priority 100", "exit"], completed: false},
+                    {step: 3, title: "Configure DHCP Pool", description: "Create DHCP pool for Sales VLAN on Edge Router", commands: ["ip dhcp pool SALES", "network 192.168.10.0 255.255.255.0", "default-router 192.168.10.254", "dns-server 8.8.8.8", "exit"], completed: false},
+                    {step: 4, title: "Exclude DHCP Addresses", description: "Reserve addresses for network infrastructure", commands: ["ip dhcp excluded-address 192.168.10.1 192.168.10.10"], completed: false},
+                    {step: 5, title: "Create Security ACL", description: "Block Telnet but allow SSH and HTTP", commands: ["ip access-list extended SECURE-ACCESS", "deny tcp any any eq 23", "permit tcp any any eq 22", "permit tcp any any eq 80", "permit tcp any any eq 443", "permit ip any any", "exit"], completed: false},
+                    {step: 6, title: "Apply ACL to Interface", description: "Apply the security ACL to the WAN interface", commands: ["int Gi0/0", "ip access-group SECURE-ACCESS in", "exit"], completed: false},
+                    {step: 7, title: "Configure SNMP", description: "Enable SNMP for network monitoring", commands: ["snmp-server community public RO", "snmp-server community private RW", "snmp-server location HQ-Datacenter", "snmp-server contact admin@company.com"], completed: false},
+                    {step: 8, title: "Verify Complete Configuration", description: "Test all features: HSRP failover, DHCP, ACL filtering, SNMP", commands: ["show standby brief", "show ip dhcp binding", "show access-lists", "show snmp"], completed: false}
+                ]
+            }
+        };
+
         // ========== APPLICATION STATE ==========
         let currentLab = null;
         let currentLabProgress = 0;
@@ -5062,6 +5527,12 @@
             document.getElementById('labLibraryBtn').addEventListener('click', openLabLibrary);
             document.getElementById('closeLabLibrary').addEventListener('click', closeLabLibrary);
 
+            // Cumulative Labs Button
+            document.getElementById('cumulativeLabsBtn').addEventListener('click', openCumulativeLabs);
+            document.getElementById('closeCumulativeLabs').addEventListener('click', closeCumulativeLabsModal);
+            document.getElementById('unlockAllLabsBtn').addEventListener('click', unlockAllCumulativeLabs);
+            document.getElementById('resetLabProgressBtn').addEventListener('click', resetCumulativeLabProgress);
+
             // Troubleshooting Button
             document.getElementById('troubleshootBtn').addEventListener('click', openTroubleshootModal);
             document.getElementById('closeTroubleshoot').addEventListener('click', closeTroubleshootModal);
@@ -5084,6 +5555,9 @@
 
             // Initialize Lab Library
             renderLabLibrary();
+
+            // Initialize Cumulative Labs
+            renderCumulativeLabs();
 
             // Initialize Troubleshooting System
             renderTroubleshootingScenarios();
@@ -5201,9 +5675,11 @@
         function loadTopology(topology) {
             if (!topology || !topology.devices) return;
 
-            // Clear existing devices
+            // Clear existing devices and connections
             devices = [];
+            connections = [];
             deviceIdCounter = 0;
+            connectionIdCounter = 0;
             canvas.innerHTML = '';
 
             // Render each device from the lab
@@ -5260,45 +5736,62 @@
                 deviceGroup.appendChild(label);
                 canvas.appendChild(deviceGroup);
 
-                // Initialize interfaces based on device type
+                // Use imported interfaces if available, otherwise generate defaults
                 let interfaces = [];
-                if (deviceData.type === 'router') {
-                    interfaces = [
-                        { name: 'GigabitEthernet0/0', ip: '', mask: '', status: 'down' },
-                        { name: 'GigabitEthernet0/1', ip: '', mask: '', status: 'down' },
-                        { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
-                        { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
-                    ];
-                } else if (deviceData.type === 'l2switch' || deviceData.type === 'l3switch') {
-                    interfaces = [
-                        { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
-                        { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
-                        { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
-                        { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
-                        { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
-                        { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
-                        { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
-                    ];
-                    if (deviceData.type === 'l3switch') {
-                        // L3 switches can have IP on VLANs
-                        interfaces.push({ name: 'Vlan1', ip: '', mask: '', status: 'down' });
+                if (deviceData.interfaces && deviceData.interfaces.length > 0) {
+                    // Use the imported interface data (preserves IP addresses, VLANs, etc.)
+                    interfaces = deviceData.interfaces;
+                } else {
+                    // Generate default interfaces based on device type
+                    if (deviceData.type === 'router') {
+                        interfaces = [
+                            { name: 'GigabitEthernet0/0', ip: '', mask: '', status: 'down' },
+                            { name: 'GigabitEthernet0/1', ip: '', mask: '', status: 'down' },
+                            { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
+                            { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
+                        ];
+                    } else if (deviceData.type === 'l2switch' || deviceData.type === 'l3switch') {
+                        interfaces = [
+                            { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                            { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                            { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
+                        ];
+                        if (deviceData.type === 'l3switch') {
+                            interfaces.push({ name: 'Vlan1', ip: '', mask: '', status: 'down' });
+                        }
+                    } else if (deviceData.type === 'pc' || deviceData.type === 'server') {
+                        interfaces = [
+                            { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up' }
+                        ];
                     }
-                } else if (deviceData.type === 'pc' || deviceData.type === 'server') {
-                    interfaces = [
-                        { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up' }
-                    ];
                 }
 
-                // Store device data
-                devices.push({
+                // Store device data (including saved config from cumulative labs)
+                const deviceObj = {
                     id: deviceId,
                     type: deviceData.type,
                     x: deviceData.x,
                     y: deviceData.y,
                     name: deviceData.name,
                     interfaces: interfaces,
-                    selectedInterface: 0  // Currently selected interface index
-                });
+                    selectedInterface: deviceData.selectedInterface || 0
+                };
+
+                // Restore config object if present (VLANs, routes, OSPF, EIGRP, ACLs)
+                if (deviceData.config) {
+                    deviceObj.config = deviceData.config;
+                }
+
+                // Restore DHCP server config if present
+                if (deviceData.dhcpServer) {
+                    deviceObj.dhcpServer = deviceData.dhcpServer;
+                }
+
+                devices.push(deviceObj);
 
                 // Add drag functionality to move devices
                 makeDraggable(deviceGroup);
@@ -5309,6 +5802,31 @@
                     selectDevice(deviceId);
                 });
             });
+
+            // Load connections if present
+            if (topology.connections && topology.connections.length > 0) {
+                topology.connections.forEach(connData => {
+                    const device1 = devices.find(d => d.id === connData.device1);
+                    const device2 = devices.find(d => d.id === connData.device2);
+
+                    if (device1 && device2) {
+                        const connectionId = connData.id || `conn-${connectionIdCounter++}`;
+                        const color = connData.color || '#ffffff';
+
+                        // Store connection data
+                        connections.push({
+                            id: connectionId,
+                            device1: connData.device1,
+                            device2: connData.device2,
+                            color: color
+                        });
+
+                        // Draw the connection line
+                        drawConnection(connectionId, device1, device2, color);
+                    }
+                });
+                console.log(`Loaded ${topology.connections.length} connections`);
+            }
 
             console.log(`Loaded ${topology.devices.length} devices onto canvas`);
         }
@@ -5322,9 +5840,10 @@
             document.getElementById('currentLab').textContent = 'None';
             document.getElementById('welcomeMessage').style.display = 'block';
 
-            // Hide Home button, show Lab Library button
+            // Hide Home button, show Lab Library and Cumulative Labs buttons
             document.getElementById('homeBtn').style.display = 'none';
             document.getElementById('labLibraryBtn').style.display = 'inline-flex';
+            document.getElementById('cumulativeLabsBtn').style.display = 'inline-flex';
 
             // Clear instructions
             document.getElementById('instructionsList').innerHTML = `
@@ -5344,6 +5863,287 @@
             selectedDevice = null;
 
             console.log('Returned to home screen');
+        }
+
+        // ========== CUMULATIVE LABS FUNCTIONS ==========
+
+        function openCumulativeLabs() {
+            document.getElementById('cumulativeLabsModal').classList.add('active');
+        }
+
+        function closeCumulativeLabsModal() {
+            document.getElementById('cumulativeLabsModal').classList.remove('active');
+        }
+
+        function renderCumulativeLabs() {
+            const grid = document.getElementById('cumulativeLabsGrid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            // Get progress from localStorage
+            const progress = getCumulativeLabProgress();
+
+            Object.values(CUMULATIVE_LABS).forEach((lab, index) => {
+                // Lab is unlocked if it's the first one, or previous lab is completed
+                const isUnlocked = index === 0 || progress[Object.keys(CUMULATIVE_LABS)[index - 1]]?.completed;
+                const isCompleted = progress[lab.id]?.completed || false;
+
+                const card = document.createElement('div');
+                card.className = `cumulative-card ${!isUnlocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`;
+
+                card.innerHTML = `
+                    <div class="cumulative-num">${isCompleted ? '✓' : lab.num}</div>
+                    <div class="cumulative-info">
+                        <h3>${lab.title}</h3>
+                        <p>${lab.subtitle}</p>
+                        <div class="cumulative-tags">
+                            ${lab.concepts.map(c => `<span class="cumulative-tag">${c}</span>`).join('')}
+                        </div>
+                        <div class="cumulative-meta">
+                            <span class="time">⏱️ ${lab.estimatedTime}</span>
+                            <span class="devices">🖥️ ${lab.deviceCount}</span>
+                        </div>
+                    </div>
+                    <div class="cumulative-arrow">
+                        ${isUnlocked ? (isCompleted ? '✅' : '➡️') : '🔒'}
+                    </div>
+                `;
+
+                if (isUnlocked) {
+                    card.addEventListener('click', () => loadCumulativeLab(lab.id));
+                    card.style.cursor = 'pointer';
+                }
+
+                grid.appendChild(card);
+            });
+        }
+
+        function getCumulativeLabProgress() {
+            try {
+                return JSON.parse(localStorage.getItem('cumulativeLabProgress') || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function saveCumulativeLabProgress(labId, data) {
+            const progress = getCumulativeLabProgress();
+            progress[labId] = { ...progress[labId], ...data };
+            localStorage.setItem('cumulativeLabProgress', JSON.stringify(progress));
+        }
+
+        function saveStepProgress(labId, stepIndex, completed) {
+            const progress = getCumulativeLabProgress();
+            if (!progress[labId]) {
+                progress[labId] = {};
+            }
+            if (!progress[labId].steps) {
+                progress[labId].steps = {};
+            }
+            progress[labId].steps[stepIndex] = completed;
+            localStorage.setItem('cumulativeLabProgress', JSON.stringify(progress));
+        }
+
+        function loadStepProgress(labId) {
+            const progress = getCumulativeLabProgress();
+            return progress[labId]?.steps || {};
+        }
+
+        // Save current topology state (devices, connections, interfaces, configs) for cumulative labs
+        function saveCumulativeTopologyState(labId) {
+            const state = {
+                devices: devices.map(d => ({
+                    id: d.id,
+                    type: d.type,
+                    name: d.name,
+                    x: d.x,
+                    y: d.y,
+                    interfaces: d.interfaces || [],
+                    config: d.config || null,
+                    dhcpServer: d.dhcpServer || null,
+                    selectedInterface: d.selectedInterface || 0
+                })),
+                connections: connections.map(c => ({
+                    id: c.id,
+                    device1: c.device1,
+                    device2: c.device2,
+                    color: c.color
+                }))
+            };
+
+            const progress = getCumulativeLabProgress();
+            if (!progress[labId]) {
+                progress[labId] = {};
+            }
+            progress[labId].topologyState = state;
+            localStorage.setItem('cumulativeLabProgress', JSON.stringify(progress));
+            console.log(`Saved topology state for ${labId}: ${state.devices.length} devices, ${state.connections.length} connections`);
+        }
+
+        // Load saved topology state for a cumulative lab
+        function loadCumulativeTopologyState(labId) {
+            const progress = getCumulativeLabProgress();
+            return progress[labId]?.topologyState || null;
+        }
+
+        function loadCumulativeLab(labId) {
+            const lab = CUMULATIVE_LABS[labId];
+            if (!lab) return;
+
+            // Restore step progress from localStorage
+            const savedSteps = loadStepProgress(labId);
+            lab.instructions.forEach((instruction, index) => {
+                instruction.completed = savedSteps[index] === true;
+            });
+
+            currentLab = lab;
+            currentLabProgress = 0;
+
+            // Update UI
+            document.getElementById('currentLab').textContent = `📚 ${lab.title}`;
+            document.getElementById('welcomeMessage').style.display = 'none';
+
+            // Show Home button, hide other buttons
+            document.getElementById('homeBtn').style.display = 'inline-flex';
+            document.getElementById('labLibraryBtn').style.display = 'none';
+            document.getElementById('cumulativeLabsBtn').style.display = 'none';
+
+            // Close modal
+            closeCumulativeLabsModal();
+
+            // Load instructions with cumulative-specific header
+            renderCumulativeInstructions(lab);
+
+            // Determine which topology state to load
+            let topologyToLoad = null;
+
+            // First, check if THIS lab has a saved state (user returning to continue)
+            const thisLabState = loadCumulativeTopologyState(labId);
+            if (thisLabState && thisLabState.devices && thisLabState.devices.length > 0) {
+                topologyToLoad = thisLabState;
+                console.log(`Restoring saved state for ${labId}`);
+            }
+            // If this lab builds on a previous lab, try to load that lab's state
+            else if (lab.buildsOn) {
+                const previousLabState = loadCumulativeTopologyState(lab.buildsOn);
+                if (previousLabState && previousLabState.devices && previousLabState.devices.length > 0) {
+                    topologyToLoad = previousLabState;
+                    console.log(`Loading state from previous lab: ${lab.buildsOn}`);
+                }
+            }
+
+            // Load the appropriate topology
+            if (topologyToLoad) {
+                loadTopology(topologyToLoad);
+            } else {
+                // Fall back to the lab's default topology
+                loadTopology(lab.topology);
+            }
+
+            console.log('Loading cumulative lab:', lab.title);
+        }
+
+        function renderCumulativeInstructions(lab) {
+            const instructionsList = document.getElementById('instructionsList');
+            instructionsList.innerHTML = '';
+
+            // Add header with lab series info
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'lab-header';
+            headerDiv.style.cssText = 'background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;';
+            headerDiv.innerHTML = `
+                <div style="font-size: 0.8em; opacity: 0.9; margin-bottom: 5px;">CUMULATIVE LAB ${lab.num} of 6</div>
+                <div style="font-size: 1.1em; font-weight: bold;">${lab.title}</div>
+                ${lab.buildsOn ? `<div style="font-size: 0.75em; margin-top: 8px; opacity: 0.85;">⬆️ Builds on: ${CUMULATIVE_LABS[lab.buildsOn]?.title || lab.buildsOn}</div>` : ''}
+            `;
+            instructionsList.appendChild(headerDiv);
+
+            // Render each step
+            lab.instructions.forEach((instruction, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `instruction-step ${instruction.completed ? 'completed' : ''}`;
+                stepDiv.innerHTML = `
+                    <div class="step-header">
+                        <span class="step-number">${index + 1}</span>
+                        <span class="step-title">${instruction.title}</span>
+                        <span class="step-status">${instruction.completed ? '✓' : ''}</span>
+                    </div>
+                    <div class="step-description">${instruction.description}</div>
+                    <div class="step-commands">
+                        ${instruction.commands.map(cmd => `<code>${cmd}</code>`).join('')}
+                    </div>
+                `;
+
+                // Click to mark as completed
+                stepDiv.addEventListener('click', () => {
+                    instruction.completed = !instruction.completed;
+                    stepDiv.classList.toggle('completed', instruction.completed);
+                    stepDiv.querySelector('.step-status').textContent = instruction.completed ? '✓' : '';
+
+                    // Save step progress to localStorage
+                    saveStepProgress(lab.id, index, instruction.completed);
+
+                    // Check if all steps completed
+                    checkCumulativeLabCompletion(lab);
+                });
+
+                instructionsList.appendChild(stepDiv);
+            });
+        }
+
+        function checkCumulativeLabCompletion(lab) {
+            const allCompleted = lab.instructions.every(i => i.completed);
+
+            if (allCompleted) {
+                // Save the current topology state so it carries over to the next lab
+                saveCumulativeTopologyState(lab.id);
+
+                saveCumulativeLabProgress(lab.id, { completed: true, completedAt: new Date().toISOString() });
+
+                // Show completion message
+                setTimeout(() => {
+                    const nextLabId = getNextCumulativeLab(lab.id);
+                    const message = nextLabId
+                        ? `🎉 Congratulations! You've completed "${lab.title}"!\n\nYour network configuration has been saved.\nNext up: ${CUMULATIVE_LABS[nextLabId]?.title}\n\nYour connections and settings will carry over!`
+                        : `🏆 Outstanding! You've completed the entire Cumulative Lab Series!\n\nYou've built a complete enterprise network from the ground up!`;
+
+                    alert(message);
+                    renderCumulativeLabs(); // Refresh to show new unlock state
+                }, 100);
+            }
+        }
+
+        function getNextCumulativeLab(currentLabId) {
+            const labIds = Object.keys(CUMULATIVE_LABS);
+            const currentIndex = labIds.indexOf(currentLabId);
+            return currentIndex < labIds.length - 1 ? labIds[currentIndex + 1] : null;
+        }
+
+        // ========== CUMULATIVE LABS UNLOCK/RESET FUNCTIONS ==========
+
+        function unlockAllCumulativeLabs() {
+            const progress = getCumulativeLabProgress();
+            Object.keys(CUMULATIVE_LABS).forEach(labId => {
+                progress[labId] = { ...progress[labId], completed: true, unlockedAt: new Date().toISOString() };
+            });
+            localStorage.setItem('cumulativeLabProgress', JSON.stringify(progress));
+            renderCumulativeLabs();
+            console.log('🔓 All cumulative labs unlocked!');
+        }
+
+        function resetCumulativeLabProgress() {
+            if (confirm('Are you sure you want to reset all cumulative lab progress? This will lock all labs except Lab 1.')) {
+                localStorage.removeItem('cumulativeLabProgress');
+                // Also reset in-memory instruction states
+                Object.values(CUMULATIVE_LABS).forEach(lab => {
+                    lab.instructions.forEach(instruction => {
+                        instruction.completed = false;
+                    });
+                });
+                renderCumulativeLabs();
+                console.log('🔄 Cumulative lab progress reset!');
+            }
         }
 
         // ========== TROUBLESHOOTING SYSTEM FUNCTIONS ==========
@@ -5805,6 +6605,9 @@
         let connectionMode = false;
         let connectionStart = null;
 
+        // Delete mode
+        let deleteMode = false;
+
         // Setup drag events for device palette items
         document.querySelectorAll('.device-item').forEach(item => {
             item.addEventListener('dragstart', (e) => {
@@ -6012,6 +6815,14 @@
         let selectedDevice = null;
 
         function selectDevice(deviceId) {
+            // Handle delete mode - delete device and return
+            if (deleteMode) {
+                if (confirm('Delete this device and all its connections?')) {
+                    deleteDevice(deviceId);
+                }
+                return;
+            }
+
             selectedDevice = devices.find(d => d.id === deviceId);
             if (!selectedDevice) return;
 
@@ -6059,6 +6870,70 @@
                 console.log('Connection mode: DISABLED');
             }
         });
+
+        // ========== DELETE MODE SYSTEM ==========
+        document.getElementById('deleteModeBtn').addEventListener('click', () => {
+            deleteMode = !deleteMode;
+            const btn = document.getElementById('deleteModeBtn');
+            const canvasContainer = document.querySelector('.canvas-container');
+
+            // Turn off connection mode if delete mode is activated
+            if (deleteMode && connectionMode) {
+                connectionMode = false;
+                const connectBtn = document.getElementById('connectBtn');
+                connectBtn.style.background = '';
+                connectBtn.style.color = '';
+                connectionStart = null;
+            }
+
+            if (deleteMode) {
+                btn.classList.add('delete-mode-active');
+                canvasContainer.classList.add('canvas-delete-mode');
+                console.log('Delete mode: ENABLED - Click connections or devices to remove them');
+            } else {
+                btn.classList.remove('delete-mode-active');
+                canvasContainer.classList.remove('canvas-delete-mode');
+                console.log('Delete mode: DISABLED');
+            }
+        });
+
+        function handleDeleteClick(targetId, targetType) {
+            if (!deleteMode) return false;
+
+            if (targetType === 'connection') {
+                deleteConnection(targetId);
+                return true;
+            } else if (targetType === 'device') {
+                deleteDevice(targetId);
+                return true;
+            }
+            return false;
+        }
+
+        function deleteDevice(deviceId) {
+            // Remove all connections to this device first
+            const deviceConnections = connections.filter(c => c.device1 === deviceId || c.device2 === deviceId);
+            deviceConnections.forEach(conn => {
+                const line = document.getElementById(conn.id);
+                if (line) line.remove();
+            });
+            connections = connections.filter(c => c.device1 !== deviceId && c.device2 !== deviceId);
+
+            // Remove device from array
+            devices = devices.filter(d => d.id !== deviceId);
+
+            // Remove device from canvas
+            const element = document.getElementById(deviceId);
+            if (element) element.remove();
+
+            // Clear selection if this was selected
+            if (selectedDevice && selectedDevice.id === deviceId) {
+                selectedDevice = null;
+                document.getElementById('configPanel').style.display = 'none';
+            }
+
+            console.log(`Device ${deviceId} and its connections deleted`);
+        }
 
         function handleConnectionClick(deviceId) {
             if (!connectionStart) {
@@ -6118,6 +6993,11 @@
 
             // Draw the connection
             drawConnection(connectionId, device1, device2, color);
+
+            // Auto-save topology state for cumulative labs
+            if (currentLab && currentLab.id && currentLab.id.startsWith('cumlab')) {
+                saveCumulativeTopologyState(currentLab.id);
+            }
         }
 
         function drawConnection(connectionId, device1, device2, color) {
@@ -6136,9 +7016,9 @@
             // Add to canvas (insert before devices so lines appear behind)
             canvas.insertBefore(line, canvas.firstChild);
 
-            // Add click handler to delete connection
+            // Add click handler to delete connection (delete mode or Ctrl+Click)
             line.addEventListener('click', (e) => {
-                if (e.ctrlKey || e.metaKey) {
+                if (deleteMode || e.ctrlKey || e.metaKey) {
                     e.stopPropagation();
                     deleteConnection(connectionId);
                 }
@@ -6531,6 +7411,11 @@
             }
             output.scrollTop = output.scrollHeight;
 
+            // Auto-save topology state for cumulative labs after GUI config change
+            if (currentLab && currentLab.id && currentLab.id.startsWith('cumlab')) {
+                saveCumulativeTopologyState(currentLab.id);
+            }
+
             console.log('Configuration applied:', selectedDevice);
         });
 
@@ -6547,147 +7432,426 @@
 
         function processCommand(cmd) {
             const output = document.getElementById('cliOutput');
-            const prompt = document.getElementById('cliPrompt').textContent;
+            const promptEl = document.getElementById('cliPrompt');
+
+            // Initialize device config storage if needed
+            if (selectedDevice && !selectedDevice.config) {
+                selectedDevice.config = { vlans: {}, staticRoutes: [], ospf: null, eigrp: null, hsrp: {}, acls: {}, stpPriority: {} };
+            }
 
             // Echo command
-            output.innerHTML += `<div style="margin-top: 10px;">${prompt} ${cmd}</div>`;
+            output.innerHTML += `<div style="margin-top: 10px;">${promptEl.textContent} ${cmd}</div>`;
 
-            // Process commands
-            const lowerCmd = cmd.toLowerCase();
+            const lowerCmd = cmd.toLowerCase().trim();
 
+            // ========== HELP ==========
             if (lowerCmd === 'help' || lowerCmd === '?') {
-                output.innerHTML += `<div style="color: #0ff;">Available commands:</div>`;
-                output.innerHTML += `<div>  show ip           - Display IP configuration</div>`;
-                output.innerHTML += `<div>  show running      - Display running configuration</div>`;
-                output.innerHTML += `<div>  show ip dhcp binding - Display DHCP leases (servers)</div>`;
-                output.innerHTML += `<div>  configure         - Enter configuration mode</div>`;
-                output.innerHTML += `<div>  hostname [name]   - Set device hostname</div>`;
-                output.innerHTML += `<div>  ip address [ip] [mask] - Set IP address</div>`;
-                output.innerHTML += `<div>  ip address dhcp   - Enable DHCP client (PCs)</div>`;
-                output.innerHTML += `<div>  ip dhcp pool [name] - Create DHCP pool (servers)</div>`;
-                output.innerHTML += `<div>  clear             - Clear CLI output</div>`;
-                output.innerHTML += `<div>  help or ?         - Show this help</div>`;
-            } else if (lowerCmd === 'show ip' || lowerCmd === 'show ip interface brief') {
-                output.innerHTML += `<div style="color: #ff0;">Interface Status Table:</div>`;
-                output.innerHTML += `<div>Interface          IP-Address      Status    Protocol</div>`;
-                selectedDevice.interfaces.forEach(intf => {
-                    const intfName = intf.name.padEnd(18);
-                    const ip = (intf.ip || 'unassigned').padEnd(15);
-                    const status = intf.status === 'up' ? 'up  ' : 'down';
-                    const protocol = intf.status === 'up' ? 'up' : 'down';
-                    output.innerHTML += `<div>${intfName} ${ip} ${status}   ${protocol}</div>`;
-                });
-            } else if (lowerCmd === 'show running' || lowerCmd === 'show run') {
-                output.innerHTML += `<div style="color: #ff0;">Current configuration:</div>`;
-                output.innerHTML += `<div>hostname ${selectedDevice.name}</div>`;
-                output.innerHTML += `<div>!</div>`;
-                selectedDevice.interfaces.forEach(intf => {
-                    output.innerHTML += `<div>interface ${intf.name}</div>`;
-                    if (intf.ip) {
-                        output.innerHTML += `<div>  ip address ${intf.ip} ${intf.mask || '255.255.255.0'}</div>`;
+                output.innerHTML += `<div style="color: #0ff; font-weight: bold;">━━━ Packet Tracer Lite CLI v3.5 ━━━</div>`;
+                output.innerHTML += `<div style="color: #ff0;">Mode Commands:</div>`;
+                output.innerHTML += `<div>  enable / en            Enter privileged mode</div>`;
+                output.innerHTML += `<div>  configure terminal     Enter config mode (conf t)</div>`;
+                output.innerHTML += `<div>  exit / end             Return to previous mode</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Interface Config:</div>`;
+                output.innerHTML += `<div>  interface [name]       e.g., int Gi0/0, int vlan 10</div>`;
+                output.innerHTML += `<div>  ip address [ip] [mask] Configure IP</div>`;
+                output.innerHTML += `<div>  no shutdown / shutdown Enable/disable interface</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Switching:</div>`;
+                output.innerHTML += `<div>  vlan [id]              Create VLAN</div>`;
+                output.innerHTML += `<div>  switchport mode access/trunk</div>`;
+                output.innerHTML += `<div>  switchport access vlan [id]</div>`;
+                output.innerHTML += `<div>  spanning-tree vlan [id] root primary</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Routing:</div>`;
+                output.innerHTML += `<div>  ip route [net] [mask] [next-hop]</div>`;
+                output.innerHTML += `<div>  router ospf [id] / router eigrp [as]</div>`;
+                output.innerHTML += `<div>  network [ip] [wildcard] area [id]</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Show Commands:</div>`;
+                output.innerHTML += `<div>  show ip int brief, show run, show vlan brief</div>`;
+                output.innerHTML += `<div>  show ip route, show span, show ip ospf neighbor</div>`;
+                output.innerHTML += `<div style="color: #ff0; margin-top: 5px;">Other:</div>`;
+                output.innerHTML += `<div>  hostname [name], ping [ip], clear</div>`;
+            }
+            // ========== CLEAR ==========
+            else if (lowerCmd === 'clear') {
+                output.innerHTML = '<div>Cisco IOS Software, Lite Version 3.5</div><div>Type \'help\' or \'?\' for commands</div><div style="margin-top: 10px;">Ready.</div>';
+            }
+            // ========== ENABLE ==========
+            else if (lowerCmd === 'enable' || lowerCmd === 'en') {
+                cliMode = 'privileged';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ Privileged EXEC mode</div>`;
+            }
+            // ========== CONFIGURE TERMINAL ==========
+            else if (lowerCmd === 'configure terminal' || lowerCmd === 'conf t') {
+                if (cliMode === 'user') {
+                    output.innerHTML += `<div style="color: #f00;">% Must be in privileged mode first (type 'enable')</div>`;
+                } else {
+                    cliMode = 'config';
+                    currentInterface = null;
+                    updateCLIPrompt(promptEl, selectedDevice.name);
+                    output.innerHTML += `<div style="color: #0ff;">Enter configuration commands, one per line.</div>`;
+                }
+            }
+            // ========== EXIT / END ==========
+            else if (lowerCmd === 'exit') {
+                if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan') {
+                    cliMode = 'config';
+                    currentInterface = null;
+                } else if (cliMode === 'config') {
+                    cliMode = 'privileged';
+                } else if (cliMode === 'privileged') {
+                    cliMode = 'user';
+                }
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0ff;">Exiting...</div>`;
+            }
+            else if (lowerCmd === 'end') {
+                cliMode = 'privileged';
+                currentInterface = null;
+                currentRouterProcess = null;
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0ff;">Returning to privileged mode</div>`;
+            }
+            // ========== INTERFACE ==========
+            else if (lowerCmd.startsWith('interface ') || lowerCmd.startsWith('int ')) {
+                const intfName = cmd.substring(cmd.indexOf(' ') + 1).trim();
+                handleInterface(intfName, output, promptEl, selectedDevice);
+            }
+            // ========== IP ADDRESS ==========
+            else if (lowerCmd.startsWith('ip address ')) {
+                const parts = cmd.substring(11).trim().split(/\s+/);
+                if (parts[0] === 'dhcp') {
+                    output.innerHTML += `<div style="color: #0f0;">✓ DHCP client enabled</div>`;
+                } else if (parts.length >= 2 && currentInterface) {
+                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
+                    if (intf) {
+                        intf.ip = parts[0];
+                        intf.mask = parts[1];
+                        output.innerHTML += `<div style="color: #0f0;">✓ IP ${parts[0]} ${parts[1]} on ${currentInterface}</div>`;
                     }
-                    if (intf.gateway) {
-                        output.innerHTML += `<div>  ip default-gateway ${intf.gateway}</div>`;
-                    }
-                    output.innerHTML += `<div>  ${intf.status === 'up' ? 'no shutdown' : 'shutdown'}</div>`;
-                    output.innerHTML += `<div>!</div>`;
-                });
-            } else if (lowerCmd.startsWith('hostname ')) {
+                } else if (parts.length >= 2) {
+                    output.innerHTML += `<div style="color: #0f0;">✓ IP address configured</div>`;
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">% Usage: ip address [ip] [mask]</div>`;
+                }
+            }
+            // ========== NO SHUTDOWN ==========
+            else if (lowerCmd === 'no shutdown' || lowerCmd === 'no shut') {
+                if (currentInterface) {
+                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
+                    if (intf) { intf.status = 'up'; }
+                    output.innerHTML += `<div style="color: #0f0;">✓ Interface ${currentInterface} enabled</div>`;
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">% Must be in interface config mode</div>`;
+                }
+            }
+            else if (lowerCmd === 'shutdown' || lowerCmd === 'shut') {
+                if (currentInterface) {
+                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
+                    if (intf) { intf.status = 'down'; }
+                    output.innerHTML += `<div style="color: #ff0;">⚠ Interface ${currentInterface} disabled</div>`;
+                }
+            }
+            // ========== HOSTNAME ==========
+            else if (lowerCmd.startsWith('hostname ')) {
                 const newName = cmd.substring(9).trim();
                 if (newName) {
                     selectedDevice.name = newName;
-                    const deviceElement = document.getElementById(selectedDevice.id);
-                    if (deviceElement) {
-                        const label = deviceElement.querySelector('text[y="45"]');
-                        if (label) label.textContent = newName;
-                    }
-                    document.getElementById('cliPrompt').textContent = `${newName}>`;
+                    const el = document.getElementById(selectedDevice.id);
+                    if (el) { const lbl = el.querySelector('text[y="45"]'); if (lbl) lbl.textContent = newName; }
+                    updateCLIPrompt(promptEl, newName);
                     document.getElementById('deviceNameInput').value = newName;
-                    output.innerHTML += `<div style="color: #0f0;">✓ Hostname set to: ${newName}</div>`;
+                    output.innerHTML += `<div style="color: #0f0;">✓ Hostname: ${newName}</div>`;
                 }
-            } else if (lowerCmd.startsWith('ip address ')) {
-                const parts = cmd.substring(11).trim().split(/\s+/);
-                if (parts.length >= 2) {
-                    selectedDevice.ip = parts[0];
-                    selectedDevice.mask = parts[1];
-                    document.getElementById('deviceIpInput').value = parts[0];
-                    document.getElementById('deviceMaskInput').value = parts[1];
-                    output.innerHTML += `<div style="color: #0f0;">✓ IP address configured</div>`;
-                } else {
-                    output.innerHTML += `<div style="color: #f00;">Error: Usage: ip address [ip] [mask]</div>`;
+            }
+            // ========== VLAN ==========
+            else if (lowerCmd.startsWith('vlan ') && (cliMode === 'config' || cliMode === 'privileged')) {
+                const vlanId = cmd.substring(5).trim();
+                if (vlanId && !isNaN(vlanId)) {
+                    currentVlan = vlanId;
+                    selectedDevice.config.vlans[vlanId] = selectedDevice.config.vlans[vlanId] || { id: vlanId, name: 'VLAN' + vlanId };
+                    cliMode = 'config-vlan';
+                    updateCLIPrompt(promptEl, selectedDevice.name);
+                    output.innerHTML += `<div style="color: #0f0;">✓ VLAN ${vlanId} configured</div>`;
                 }
-            } else if (lowerCmd === 'clear') {
-                output.innerHTML = '<div>Cisco IOS Software, Lite Version 3.0</div><div>Type \'help\' for available commands</div><div style="margin-top: 10px;">Ready.</div>';
-            } else if (lowerCmd === 'configure' || lowerCmd === 'conf t') {
-                document.getElementById('cliPrompt').textContent = `${selectedDevice.name}(config)#`;
-                output.innerHTML += `<div style="color: #0ff;">Entering configuration mode...</div>`;
-            } else if (lowerCmd === 'exit' || lowerCmd === 'end') {
-                document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
-                output.innerHTML += `<div style="color: #0ff;">Exiting configuration mode...</div>`;
-            } else if (lowerCmd === 'show ip dhcp binding') {
-                // Show DHCP leases (server only)
-                if (selectedDevice.type === 'server' && selectedDevice.dhcpServer) {
-                    const dhcp = selectedDevice.dhcpServer;
-                    if (!dhcp.enabled) {
-                        output.innerHTML += `<div style="color: #f00;">DHCP server is not enabled</div>`;
-                    } else if (dhcp.leases.length === 0) {
-                        output.innerHTML += `<div style="color: #ff0;">No active DHCP bindings</div>`;
-                    } else {
-                        output.innerHTML += `<div style="color: #ff0;">DHCP Server Bindings:</div>`;
-                        output.innerHTML += `<div>IP Address       Client Name         Expiration</div>`;
-                        output.innerHTML += `<div>---------------------------------------------------------</div>`;
-                        dhcp.leases.forEach(lease => {
-                            const ip = lease.ip.padEnd(16);
-                            const name = lease.clientName.padEnd(19);
-                            const expiry = new Date(lease.expiry).toLocaleString();
-                            output.innerHTML += `<div>${ip} ${name} ${expiry}</div>`;
-                        });
-                        output.innerHTML += `<div style="margin-top: 10px;">Total bindings: ${dhcp.leases.length}</div>`;
-                    }
-                } else {
-                    output.innerHTML += `<div style="color: #f00;">This command is only available on DHCP servers</div>`;
+            }
+            else if (lowerCmd.startsWith('name ') && cliMode === 'config-vlan' && currentVlan) {
+                selectedDevice.config.vlans[currentVlan].name = cmd.substring(5).trim();
+                output.innerHTML += `<div style="color: #0f0;">✓ VLAN ${currentVlan} named</div>`;
+            }
+            // ========== SWITCHPORT ==========
+            else if (lowerCmd.startsWith('switchport ')) {
+                if (!currentInterface) { output.innerHTML += `<div style="color: #f00;">% Must be in interface config</div>`; }
+                else {
+                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
+                    if (lowerCmd.includes('mode access')) { if(intf) intf.switchportMode = 'access'; output.innerHTML += `<div style="color: #0f0;">✓ Mode access</div>`; }
+                    else if (lowerCmd.includes('mode trunk')) { if(intf) intf.switchportMode = 'trunk'; output.innerHTML += `<div style="color: #0f0;">✓ Mode trunk</div>`; }
+                    else if (lowerCmd.includes('access vlan')) { const m = cmd.match(/vlan\s+(\d+)/i); if(m && intf) { intf.vlan = parseInt(m[1]); output.innerHTML += `<div style="color: #0f0;">✓ Access VLAN ${m[1]}</div>`; } }
+                    else if (lowerCmd.includes('trunk native vlan')) { const m = cmd.match(/vlan\s+(\d+)/i); if(m && intf) { intf.nativeVlan = parseInt(m[1]); output.innerHTML += `<div style="color: #0f0;">✓ Native VLAN ${m[1]}</div>`; } }
+                    else if (lowerCmd.includes('trunk encapsulation')) { output.innerHTML += `<div style="color: #0f0;">✓ Encapsulation 802.1Q</div>`; }
+                    else { output.innerHTML += `<div style="color: #0f0;">✓ Switchport configured</div>`; }
                 }
-            } else if (lowerCmd.startsWith('ip dhcp pool ')) {
-                // Configure DHCP pool (server only)
-                if (selectedDevice.type === 'server' && selectedDevice.dhcpServer) {
-                    const poolName = cmd.substring(13).trim();
-                    if (poolName) {
-                        selectedDevice.dhcpServer.poolName = poolName;
-                        selectedDevice.dhcpServer.enabled = true;
-                        document.getElementById('dhcpServerEnabled').checked = true;
-                        document.getElementById('dhcpPoolName').value = poolName;
-                        document.getElementById('dhcpPoolConfig').style.display = 'block';
-                        output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool "${poolName}" created</div>`;
-                        output.innerHTML += `<div>  Use Config panel to set network range and options</div>`;
-                    } else {
-                        output.innerHTML += `<div style="color: #f00;">Error: Usage: ip dhcp pool [name]</div>`;
-                    }
-                } else {
-                    output.innerHTML += `<div style="color: #f00;">This command is only available on server devices</div>`;
+            }
+            else if (lowerCmd === 'no switchport') {
+                if (currentInterface) { const intf = selectedDevice.interfaces.find(i => i.name === currentInterface); if(intf) intf.isRouted = true; }
+                output.innerHTML += `<div style="color: #0f0;">✓ Routed port (L3)</div>`;
+            }
+            // ========== IP ROUTE ==========
+            else if (lowerCmd.startsWith('ip route ')) {
+                const parts = cmd.substring(9).trim().split(/\s+/);
+                if (parts.length >= 3) {
+                    selectedDevice.config.staticRoutes.push({ network: parts[0], mask: parts[1], nextHop: parts[2] });
+                    output.innerHTML += `<div style="color: #0f0;">✓ Static route: ${parts[0]} via ${parts[2]}</div>`;
                 }
-            } else if (lowerCmd === 'ip address dhcp') {
-                // Enable DHCP client (PC only)
-                if (selectedDevice.type === 'pc') {
-                    const interfaceIndex = parseInt(document.getElementById('interfaceSelect').value);
-                    const intf = selectedDevice.interfaces[interfaceIndex];
-                    if (intf) {
-                        intf.dhcpEnabled = true;
-                        document.getElementById('dhcpClientCheckbox').checked = true;
-                        loadInterfaceConfig();
-                        output.innerHTML += `<div style="color: #0f0;">✓ DHCP client enabled on ${intf.name}</div>`;
-                        output.innerHTML += `<div>  Use "Request IP from DHCP Server" button to obtain IP</div>`;
-                    }
-                } else {
-                    output.innerHTML += `<div style="color: #f00;">This command is only available on PC devices</div>`;
+            }
+            // ========== ROUTER OSPF ==========
+            else if (lowerCmd.startsWith('router ospf ')) {
+                const pid = cmd.substring(12).trim();
+                selectedDevice.config.ospf = { processId: pid, networks: [], routerId: null };
+                currentRouterProcess = 'ospf';
+                cliMode = 'config-router';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ OSPF process ${pid}</div>`;
+            }
+            // ========== ROUTER EIGRP ==========
+            else if (lowerCmd.startsWith('router eigrp ')) {
+                const as = cmd.substring(13).trim();
+                selectedDevice.config.eigrp = { asNumber: as, networks: [] };
+                currentRouterProcess = 'eigrp';
+                cliMode = 'config-router';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ EIGRP AS ${as}</div>`;
+            }
+            // ========== NETWORK (OSPF/EIGRP) ==========
+            else if (lowerCmd.startsWith('network ') && cliMode === 'config-router') {
+                const parts = cmd.substring(8).trim().split(/\s+/);
+                if (currentRouterProcess === 'ospf' && parts.length >= 4) {
+                    // Full OSPF syntax: network <ip> <wildcard> area <num>
+                    selectedDevice.config.ospf.networks.push({ ip: parts[0], wildcard: parts[1], area: parts[3] });
+                    output.innerHTML += `<div style="color: #0f0;">✓ Network ${parts[0]} area ${parts[3]}</div>`;
+                } else if (currentRouterProcess === 'ospf' && parts.length < 4) {
+                    // Incomplete OSPF syntax - missing area
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command - OSPF requires area</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;wildcard&gt; area &lt;area-id&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 0.0.0.0 255.255.255.255 area 0</div>`;
+                } else if (currentRouterProcess === 'eigrp' && parts.length >= 2) {
+                    // EIGRP syntax: network <ip> <wildcard>
+                    selectedDevice.config.eigrp.networks.push({ ip: parts[0], wildcard: parts[1] });
+                    output.innerHTML += `<div style="color: #0f0;">✓ Network ${parts[0]}</div>`;
+                } else if (currentRouterProcess === 'eigrp' && parts.length < 2) {
+                    // Incomplete EIGRP syntax
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;wildcard&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 10.0.0.0 0.255.255.255</div>`;
                 }
-            } else {
-                output.innerHTML += `<div style="color: #f00;">% Unrecognized command: "${cmd}"</div>`;
-                output.innerHTML += `<div>Type 'help' or '?' for available commands</div>`;
+            }
+            else if (lowerCmd.startsWith('router-id ') && cliMode === 'config-router') {
+                output.innerHTML += `<div style="color: #0f0;">✓ Router-ID set</div>`;
+            }
+            else if (lowerCmd.startsWith('passive-interface ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ Passive interface configured</div>`;
+            }
+            else if (lowerCmd === 'no auto-summary') {
+                output.innerHTML += `<div style="color: #0f0;">✓ Auto-summary disabled</div>`;
+            }
+            else if (lowerCmd.startsWith('redistribute ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ Redistribution configured</div>`;
+            }
+            else if (lowerCmd.startsWith('auto-cost reference-bandwidth ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ Reference bandwidth set</div>`;
+            }
+            // ========== SPANNING-TREE ==========
+            else if (lowerCmd.startsWith('spanning-tree ')) {
+                if (lowerCmd.includes('mode rapid-pvst')) { output.innerHTML += `<div style="color: #0f0;">✓ Rapid-PVST+ enabled</div>`; }
+                else if (lowerCmd.includes('root primary')) { output.innerHTML += `<div style="color: #0f0;">✓ Root primary configured</div>`; }
+                else if (lowerCmd.includes('root secondary')) { output.innerHTML += `<div style="color: #0f0;">✓ Root secondary configured</div>`; }
+                else if (lowerCmd.includes('portfast')) { output.innerHTML += `<div style="color: #0f0;">✓ PortFast enabled</div>`; }
+                else if (lowerCmd.includes('bpduguard')) { output.innerHTML += `<div style="color: #0f0;">✓ BPDU Guard enabled</div>`; }
+                else { output.innerHTML += `<div style="color: #0f0;">✓ STP configured</div>`; }
+            }
+            // ========== STANDBY (HSRP) ==========
+            else if (lowerCmd.startsWith('standby ')) {
+                const parts = cmd.substring(8).trim().split(/\s+/);
+                if (parts[1] === 'ip') { output.innerHTML += `<div style="color: #0f0;">✓ HSRP ${parts[0]} VIP: ${parts[2]}</div>`; }
+                else if (parts[1] === 'priority') { output.innerHTML += `<div style="color: #0f0;">✓ HSRP ${parts[0]} priority: ${parts[2]}</div>`; }
+                else if (parts[1] === 'preempt') { output.innerHTML += `<div style="color: #0f0;">✓ HSRP ${parts[0]} preempt</div>`; }
+                else { output.innerHTML += `<div style="color: #0f0;">✓ HSRP configured</div>`; }
+            }
+            // ========== IP ACCESS-LIST ==========
+            else if (lowerCmd.startsWith('ip access-list ')) {
+                const parts = cmd.substring(15).trim().split(/\s+/);
+                currentAcl = parts[1] || 'ACL';
+                selectedDevice.config.acls[currentAcl] = { entries: [] };
+                cliMode = 'config-acl';
+                output.innerHTML += `<div style="color: #0f0;">✓ ACL "${currentAcl}" created</div>`;
+            }
+            else if ((lowerCmd.startsWith('permit ') || lowerCmd.startsWith('deny ')) && currentAcl) {
+                output.innerHTML += `<div style="color: #0f0;">✓ ACL entry: ${cmd}</div>`;
+            }
+            else if (lowerCmd.startsWith('ip access-group ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ ACL applied to interface</div>`;
+            }
+            // ========== IP DHCP ==========
+            else if (lowerCmd.startsWith('ip dhcp pool ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool configured</div>`;
+            }
+            else if (lowerCmd.startsWith('ip dhcp excluded-address ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ DHCP exclusion set</div>`;
+            }
+            else if (lowerCmd.startsWith('default-router ') || lowerCmd.startsWith('dns-server ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ DHCP option configured</div>`;
+            }
+            // ========== SNMP ==========
+            else if (lowerCmd.startsWith('snmp-server ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ SNMP configured</div>`;
+            }
+            // ========== PING ==========
+            else if (lowerCmd.startsWith('ping ')) {
+                const target = cmd.substring(5).trim();
+                output.innerHTML += `<div style="color: #ff0;">Pinging ${target}...</div>`;
+                output.innerHTML += `<div style="color: #0f0;">Reply from ${target}: time<1ms TTL=64</div>`;
+                output.innerHTML += `<div style="color: #0f0;">Reply from ${target}: time<1ms TTL=64</div>`;
+                output.innerHTML += `<div>Packets: Sent=4, Received=4, Lost=0</div>`;
+            }
+            // ========== SHOW COMMANDS ==========
+            else if (lowerCmd.startsWith('show ')) {
+                handleShowCommand(lowerCmd, output, selectedDevice);
+            }
+            // ========== INT RANGE ==========
+            else if (lowerCmd.startsWith('int range ') || lowerCmd.startsWith('interface range ')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ Interface range selected</div>`;
+                cliMode = 'config-if';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+            }
+            // ========== LOOPBACK ==========
+            else if (lowerCmd.startsWith('int loopback') || lowerCmd.startsWith('interface loopback')) {
+                output.innerHTML += `<div style="color: #0f0;">✓ Loopback interface configured</div>`;
+                cliMode = 'config-if';
+                currentInterface = 'Loopback0';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+            }
+            // ========== NETWORK COMMAND OUTSIDE ROUTER MODE ==========
+            else if (lowerCmd.startsWith('network ') && cliMode !== 'config-router') {
+                output.innerHTML += `<div style="color: #f00;">% Invalid input - 'network' requires router configuration mode</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For a default route, use:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        ip route 0.0.0.0 0.0.0.0 &lt;next-hop-ip&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For OSPF, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        router ospf 1</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;wildcard&gt; area &lt;num&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For EIGRP, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        router eigrp 100</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;wildcard&gt;</div>`;
+            }
+            // ========== UNKNOWN ==========
+            else {
+                output.innerHTML += `<div style="color: #f00;">% Unrecognized: "${cmd}"</div>`;
+                output.innerHTML += `<div>Type 'help' or '?' for commands</div>`;
             }
 
             // Auto-scroll to bottom
             output.scrollTop = output.scrollHeight;
+
+            // Auto-save topology state for cumulative labs after any CLI command
+            if (currentLab && currentLab.id && currentLab.id.startsWith('cumlab')) {
+                saveCumulativeTopologyState(currentLab.id);
+            }
         }
+
+        function updateCLIPrompt(promptEl, name) {
+            const n = name || 'Router';
+            switch(cliMode) {
+                case 'user': promptEl.textContent = `${n}>`; break;
+                case 'privileged': promptEl.textContent = `${n}#`; break;
+                case 'config': promptEl.textContent = `${n}(config)#`; break;
+                case 'config-if': promptEl.textContent = `${n}(config-if)#`; break;
+                case 'config-router': promptEl.textContent = `${n}(config-router)#`; break;
+                case 'config-vlan': promptEl.textContent = `${n}(config-vlan)#`; break;
+                case 'config-acl': promptEl.textContent = `${n}(config-ext-nacl)#`; break;
+                default: promptEl.textContent = `${n}>`; break;
+            }
+        }
+
+        function handleInterface(intfName, output, promptEl, device) {
+            let normalized = intfName;
+            if (intfName.toLowerCase().startsWith('gi')) normalized = 'GigabitEthernet' + intfName.substring(2).replace(/gabitethernet/i, '');
+            else if (intfName.toLowerCase().startsWith('fa')) normalized = 'FastEthernet' + intfName.substring(2).replace(/stethernet/i, '');
+            else if (intfName.toLowerCase().startsWith('vlan')) normalized = 'Vlan' + intfName.substring(4).trim();
+            else if (intfName.toLowerCase().startsWith('se')) normalized = 'Serial' + intfName.substring(2).replace(/rial/i, '');
+
+            let intf = device.interfaces.find(i => i.name.toLowerCase().includes(normalized.toLowerCase().replace(/[^a-z0-9]/g, '')));
+
+            if (!intf && normalized.toLowerCase().startsWith('vlan')) {
+                intf = { name: normalized, ip: '', mask: '', status: 'down' };
+                device.interfaces.push(intf);
+            }
+
+            if (intf) {
+                currentInterface = intf.name;
+                cliMode = 'config-if';
+                updateCLIPrompt(promptEl, device.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ Configuring ${intf.name}</div>`;
+            } else {
+                output.innerHTML += `<div style="color: #ff0;">% Interface not found. Available:</div>`;
+                device.interfaces.slice(0, 5).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
+            }
+        }
+
+        function handleShowCommand(lowerCmd, output, device) {
+            if (lowerCmd.includes('ip int') || lowerCmd === 'show ip') {
+                output.innerHTML += `<div style="color: #ff0;">Interface            IP-Address      Status    Protocol</div>`;
+                device.interfaces.forEach(i => {
+                    output.innerHTML += `<div>${i.name.padEnd(20)} ${(i.ip||'unassigned').padEnd(15)} ${i.status.padEnd(9)} ${i.status}</div>`;
+                });
+            } else if (lowerCmd.includes('run')) {
+                output.innerHTML += `<div style="color: #ff0;">hostname ${device.name}</div>`;
+                output.innerHTML += `<div>!</div>`;
+                device.interfaces.forEach(i => {
+                    output.innerHTML += `<div>interface ${i.name}</div>`;
+                    if (i.ip) output.innerHTML += `<div> ip address ${i.ip} ${i.mask || '255.255.255.0'}</div>`;
+                    if (i.switchportMode) output.innerHTML += `<div> switchport mode ${i.switchportMode}</div>`;
+                    output.innerHTML += `<div> ${i.status === 'up' ? 'no shutdown' : 'shutdown'}</div>`;
+                    output.innerHTML += `<div>!</div>`;
+                });
+                (device.config?.staticRoutes || []).forEach(r => output.innerHTML += `<div>ip route ${r.network} ${r.mask} ${r.nextHop}</div>`);
+                if (device.config?.ospf) {
+                    output.innerHTML += `<div>router ospf ${device.config.ospf.processId}</div>`;
+                    device.config.ospf.networks.forEach(n => output.innerHTML += `<div> network ${n.ip} ${n.wildcard} area ${n.area}</div>`);
+                }
+            } else if (lowerCmd.includes('vlan')) {
+                output.innerHTML += `<div style="color: #ff0;">VLAN Name                             Status</div>`;
+                output.innerHTML += `<div>1    default                          active</div>`;
+                Object.values(device.config?.vlans || {}).forEach(v => output.innerHTML += `<div>${v.id.toString().padEnd(4)} ${v.name.padEnd(32)} active</div>`);
+            } else if (lowerCmd.includes('trunk')) {
+                output.innerHTML += `<div style="color: #ff0;">Port        Mode    Encapsulation  Native vlan</div>`;
+                device.interfaces.filter(i => i.switchportMode === 'trunk').forEach(i => output.innerHTML += `<div>${i.name.padEnd(11)} on      802.1q         ${i.nativeVlan || 1}</div>`);
+            } else if (lowerCmd.includes('route')) {
+                output.innerHTML += `<div style="color: #ff0;">Codes: C-connected, S-static, O-OSPF</div>`;
+                device.interfaces.filter(i => i.ip).forEach(i => output.innerHTML += `<div>C    ${i.ip} directly connected, ${i.name}</div>`);
+                (device.config?.staticRoutes || []).forEach(r => output.innerHTML += `<div>S    ${r.network} via ${r.nextHop}</div>`);
+            } else if (lowerCmd.includes('span')) {
+                output.innerHTML += `<div style="color: #ff0;">Spanning tree enabled protocol rstp</div>`;
+                output.innerHTML += `<div>Root ID: Priority 32769, Address ${device.id}</div>`;
+            } else if (lowerCmd.includes('ospf neighbor')) {
+                output.innerHTML += `<div style="color: #ff0;">Neighbor ID     Pri   State      Interface</div>`;
+                output.innerHTML += `<div style="color: #0f0;">(Simulated)</div>`;
+            } else if (lowerCmd.includes('standby')) {
+                output.innerHTML += `<div style="color: #ff0;">Interface   Grp  Pri  State   Virtual IP</div>`;
+            } else if (lowerCmd.includes('access')) {
+                output.innerHTML += `<div style="color: #ff0;">Access Control Lists:</div>`;
+                Object.keys(device.config?.acls || {}).forEach(a => output.innerHTML += `<div>Extended ACL ${a}</div>`);
+            } else if (lowerCmd.includes('eigrp')) {
+                output.innerHTML += `<div style="color: #ff0;">EIGRP Neighbors:</div>`;
+                output.innerHTML += `<div style="color: #0f0;">(Simulated)</div>`;
+            } else {
+                output.innerHTML += `<div style="color: #f00;">% Invalid show command</div>`;
+            }
+        }
+
+        // CLI State tracking for enhanced command support
+        let cliMode = 'user'; // user, privileged, config, config-if, config-router, config-vlan
+        let currentInterface = null;
+        let currentRouterProcess = null;
+        let currentVlan = null;
+        let currentAcl = null;
 
         // ========== PLACEHOLDER FUNCTIONS ==========
         document.getElementById('newTopologyBtn').addEventListener('click', () => {
@@ -6701,8 +7865,200 @@
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
-            exportGradingReport();
+            // Show export options
+            const choice = prompt(
+                'Export Options:\n\n' +
+                '1 - Export Topology (JSON) - Save your network design\n' +
+                '2 - Export Grading Report (TXT) - Lab completion report\n\n' +
+                'Enter 1 or 2:'
+            );
+
+            if (choice === '1') {
+                exportTopologyJSON();
+            } else if (choice === '2') {
+                exportGradingReport();
+            }
         });
+
+        // Import button click - trigger file picker
+        document.getElementById('importBtn').addEventListener('click', () => {
+            document.getElementById('importFileInput').click();
+        });
+
+        // File input change - process selected file
+        document.getElementById('importFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+                    alert('❌ Please select a valid JSON file.');
+                    return;
+                }
+                importTopologyJSON(file);
+                // Reset the input so the same file can be selected again
+                e.target.value = '';
+            }
+        });
+
+        function exportTopologyJSON() {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+            const topology = {
+                version: '3.5',
+                exportedAt: new Date().toISOString(),
+                lab: currentLab ? {
+                    title: currentLab.title,
+                    id: currentLab.id || null,
+                    type: currentLab.num ? 'cumulative' : 'standard'
+                } : null,
+                devices: devices.map(d => ({
+                    id: d.id,
+                    type: d.type,
+                    name: d.name,
+                    x: d.x,
+                    y: d.y,
+                    interfaces: d.interfaces || []
+                })),
+                connections: connections.map(c => ({
+                    id: c.id,
+                    device1: c.device1,
+                    device2: c.device2,
+                    color: c.color
+                }))
+            };
+
+            const json = JSON.stringify(topology, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `topology_${timestamp}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log('Topology exported as JSON');
+        }
+
+        // Helper function to generate default interfaces for a device type
+        function getDefaultInterfaces(type) {
+            if (type === 'router') {
+                return [
+                    { name: 'GigabitEthernet0/0', ip: '', mask: '', status: 'down' },
+                    { name: 'GigabitEthernet0/1', ip: '', mask: '', status: 'down' },
+                    { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
+                    { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
+                ];
+            } else if (type === 'l2switch') {
+                return [
+                    { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' }
+                ];
+            } else if (type === 'l3switch') {
+                return [
+                    { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'Vlan1', ip: '', mask: '', status: 'down' }
+                ];
+            } else {
+                // PC or Server
+                return [
+                    { name: 'Ethernet0', ip: '', mask: '', gateway: '', status: 'up', dhcpEnabled: false }
+                ];
+            }
+        }
+
+        function importTopologyJSON(file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // Validate the JSON structure
+                    if (!data.devices || !Array.isArray(data.devices)) {
+                        throw new Error('Invalid topology file: missing devices array');
+                    }
+                    if (!data.connections || !Array.isArray(data.connections)) {
+                        throw new Error('Invalid topology file: missing connections array');
+                    }
+
+                    // Build topology object for loadTopology()
+                    const topology = {
+                        devices: data.devices,
+                        connections: data.connections
+                    };
+
+                    // Update UI
+                    document.getElementById('welcomeMessage').style.display = 'none';
+                    document.getElementById('homeBtn').style.display = 'inline-flex';
+                    document.getElementById('labLibraryBtn').style.display = 'none';
+                    document.getElementById('cumulativeLabsBtn').style.display = 'none';
+
+                    // Set lab info if available
+                    if (data.lab) {
+                        document.getElementById('currentLab').textContent = `📂 ${data.lab.title || 'Imported Topology'}`;
+
+                        // If it was a cumulative lab, try to restore it
+                        if (data.lab.type === 'cumulative' && data.lab.id && CUMULATIVE_LABS[data.lab.id]) {
+                            currentLab = CUMULATIVE_LABS[data.lab.id];
+                            // Restore step progress from localStorage
+                            const savedSteps = loadStepProgress(data.lab.id);
+                            currentLab.instructions.forEach((instruction, index) => {
+                                instruction.completed = savedSteps[index] === true;
+                            });
+                            renderCumulativeInstructions(currentLab);
+                        } else if (data.lab.type === 'standard' && data.lab.id && LAB_SCENARIOS[data.lab.id]) {
+                            currentLab = LAB_SCENARIOS[data.lab.id];
+                            renderInstructions(currentLab);
+                        } else {
+                            currentLab = null;
+                            // Clear instructions panel for custom topology
+                            document.getElementById('instructionsList').innerHTML = `
+                                <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                                    <p style="font-size: 1.1em; margin-bottom: 10px;">📂 Imported Topology</p>
+                                    <p style="font-size: 0.9em;">Exported: ${data.exportedAt ? new Date(data.exportedAt).toLocaleString() : 'Unknown'}</p>
+                                    <p style="font-size: 0.9em; margin-top: 10px;">${data.devices.length} devices, ${data.connections.length} connections</p>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        currentLab = null;
+                        document.getElementById('currentLab').textContent = '📂 Imported Topology';
+                        document.getElementById('instructionsList').innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                                <p style="font-size: 1.1em; margin-bottom: 10px;">📂 Imported Topology</p>
+                                <p style="font-size: 0.9em;">Exported: ${data.exportedAt ? new Date(data.exportedAt).toLocaleString() : 'Unknown'}</p>
+                                <p style="font-size: 0.9em; margin-top: 10px;">${data.devices.length} devices, ${data.connections.length} connections</p>
+                            </div>
+                        `;
+                    }
+
+                    // Use the existing loadTopology function to render devices and connections
+                    loadTopology(topology);
+
+                    // Show success message
+                    alert(`✅ Topology imported successfully!\n\n• ${data.devices.length} devices\n• ${data.connections.length} connections\n\nExported: ${data.exportedAt ? new Date(data.exportedAt).toLocaleString() : 'Unknown'}`);
+
+                    console.log('Topology imported:', { devices: data.devices.length, connections: data.connections.length });
+
+                } catch (error) {
+                    console.error('Import error:', error);
+                    alert(`❌ Failed to import topology:\n\n${error.message}\n\nPlease ensure you selected a valid Packet Tracer Lite JSON export file.`);
+                }
+            };
+
+            reader.onerror = function() {
+                alert('❌ Error reading file. Please try again.');
+            };
+
+            reader.readAsText(file);
+        }
 
         function exportGradingReport() {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -6712,7 +8068,7 @@
 
             // Header
             report += '═══════════════════════════════════════════════════════\n';
-            report += '   PACKET TRACER LITE v3.0 - LAB GRADING REPORT\n';
+            report += '   PACKET TRACER LITE v3.5 - LAB GRADING REPORT\n';
             report += '═══════════════════════════════════════════════════════\n\n';
             report += `Student Name: _______________________________\n`;
             report += `Date: ${new Date().toLocaleDateString()}\n`;
@@ -6720,7 +8076,12 @@
 
             if (currentLab) {
                 report += `Lab: ${currentLab.title}\n`;
-                report += `Difficulty: ${currentLab.difficulty.toUpperCase()}\n`;
+                if (currentLab.difficulty) {
+                    report += `Difficulty: ${currentLab.difficulty.toUpperCase()}\n`;
+                } else if (currentLab.num) {
+                    // Cumulative Lab
+                    report += `Type: Cumulative Lab ${currentLab.num} of 6\n`;
+                }
             } else {
                 report += `Lab: Custom Topology\n`;
             }
@@ -6765,11 +8126,12 @@
             let configEarned = 0;
 
             devices.forEach((device, index) => {
-                report += `Device ${index + 1}: ${device.name} (${device.type.toUpperCase()})\n`;
+                report += `Device ${index + 1}: ${device.name} (${device.type ? device.type.toUpperCase() : 'UNKNOWN'})\n`;
 
                 // Check each interface
                 let deviceHasConfig = false;
-                device.interfaces.forEach(intf => {
+                const interfaces = device.interfaces || [];
+                interfaces.forEach(intf => {
                     if (intf.ip || intf.status === 'up') {
                         deviceHasConfig = true;
                         const intfPoints = 3; // Each configured interface worth 3 points
@@ -6905,7 +8267,7 @@
 
             // Footer
             report += '═'.repeat(55) + '\n';
-            report += 'Generated by Packet Tracer Lite v3.0 - Lab Library Edition\n';
+            report += 'Generated by Packet Tracer Lite v3.5 - Lab Library Edition\n';
             report += `Report ID: ${timestamp}\n`;
             report += '═'.repeat(55) + '\n';
 
@@ -6972,6 +8334,12 @@
                     e.preventDefault();
                     commandSearch.focus();
                 }
+            }
+            // Ctrl+Shift+U to unlock all cumulative labs
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'U') {
+                e.preventDefault();
+                unlockAllCumulativeLabs();
+                alert('🔓 All cumulative labs have been unlocked!');
             }
         });
 
@@ -7099,7 +8467,7 @@
 
         console.log('✅ Help system initialized successfully');
 
-        console.log('📚 Packet Tracer Lite v3.0 - Lab Library Edition');
+        console.log('📚 Packet Tracer Lite v3.5 - Lab Library Edition');
         console.log('Loaded labs:', Object.keys(LAB_LIBRARY).length);
     </script>
 </body>
