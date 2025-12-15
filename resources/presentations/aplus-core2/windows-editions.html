@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Editions - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #0078d4;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0078d4;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #0078d4;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #005a9e;
+            font-size: 1.6em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 25px;
+            right: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #005a9e;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* CompTIA A+ Branding Colors */
+        .aplus-badge {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Windows Edition Cards */
+        .edition-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .edition-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .edition-card.home {
+            border-left-color: #00a4ef;
+        }
+
+        .edition-card.pro {
+            border-left-color: #7fba00;
+        }
+
+        .edition-card.enterprise {
+            border-left-color: #ffb900;
+        }
+
+        .edition-card.education {
+            border-left-color: #f25022;
+        }
+
+        .edition-card.workstation {
+            border-left-color: #737373;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .col {
+            padding: 20px;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: #0078d4;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .comparison-table td.yes {
+            color: #107c10;
+            font-weight: bold;
+        }
+
+        .comparison-table td.no {
+            color: #d13438;
+            font-weight: bold;
+        }
+
+        /* Feature Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight-box li {
+            color: white;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-card.warning {
+            border-left-color: #ffb900;
+            background: #fff4ce;
+        }
+
+        .info-card.success {
+            border-left-color: #107c10;
+            background: #f0fdf4;
+        }
+
+        .info-card.exam-tip {
+            border-left-color: #e52d27;
+            background: #fef2f2;
+        }
+
+        /* Hierarchy Diagram */
+        .hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        .hierarchy-level {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.3em;
+            transition: transform 0.3s;
+        }
+
+        .hierarchy-level:hover {
+            transform: scale(1.02);
+        }
+
+        .hierarchy-level.home {
+            background: linear-gradient(135deg, #00a4ef, #0078d4);
+        }
+
+        .hierarchy-level.pro {
+            background: linear-gradient(135deg, #7fba00, #5e9000);
+        }
+
+        .hierarchy-level.enterprise {
+            background: linear-gradient(135deg, #ffb900, #d39300);
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #0078d4;
+        }
+
+        .feature-box h4 {
+            color: #0078d4;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature-box p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Icon Styles */
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .command-box .prompt {
+            color: #6a9955;
+        }
+
+        .command-box .cmd {
+            color: #dcdcaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .two-col,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.8em; }
+
+            .slide {
+                padding: 30px;
+            }
+        }
+
+        /* Windows Logo Style */
+        .windows-logo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+
+        .windows-logo div {
+            background: #0078d4;
+        }
+
+        /* Speaker Notes (hidden by default) */
+        .speaker-notes {
+            display: none;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='../../../index.html'">&#8592; Back to Catalog</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="windows-logo">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h1>Windows Editions Overview</h1>
+            <p class="subtitle">Understanding Windows 10/11 Editions for CompTIA A+ Core 2</p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <span class="aplus-badge">CompTIA A+ 220-1102</span>
+            </div>
+
+            <div class="hierarchy">
+                <div class="hierarchy-level home">Windows Home Edition</div>
+                <div style="text-align: center; font-size: 2em; color: white;">↓</div>
+                <div class="hierarchy-level pro">Windows Pro Edition</div>
+                <div style="text-align: center; font-size: 2em; color: white;">↓</div>
+                <div class="hierarchy-level enterprise">Windows Enterprise Edition</div>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px; color: #666;">
+                CompTIA A+ 220-1102 Objective 1.1 - Operating System Types
+            </p>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Welcome to Windows Editions overview. This presentation covers Objective 1.1 of the CompTIA A+ Core 2 exam. We'll explore the different Windows editions, their features, and use cases. Understanding these differences is crucial for recommending the right edition to clients and troubleshooting edition-specific features.
+            </div>
+
+            <span class="slide-number">Slide 1 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide">
+            <h2>Learning Objectives</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.1</p>
+
+            <div class="highlight-box">
+                <h3>By the end of this presentation, you will be able to:</h3>
+                <ul>
+                    <li>Identify the main Windows 10/11 editions and their target audiences</li>
+                    <li>Compare features across Home, Pro, Enterprise, and Education editions</li>
+                    <li>Explain key business features available in Pro and Enterprise</li>
+                    <li>Describe edition-specific features: BitLocker, Group Policy, Remote Desktop, Hyper-V</li>
+                    <li>Recommend appropriate Windows editions based on use case scenarios</li>
+                    <li>Understand upgrade paths between different Windows editions</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Exam Coverage:</strong> This topic appears frequently on A+ exams. Expect scenario-based questions about which edition to recommend for specific business needs.
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Key Exam Tip:</strong> Know which features are exclusive to Pro/Enterprise (BitLocker, Domain Join, Group Policy, Remote Desktop Host, Hyper-V). These are commonly tested!
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These learning objectives align directly with CompTIA A+ 220-1102 Objective 1.1. Focus on the practical differences between editions - the exam often presents scenarios where you must recommend the right edition. Pay special attention to Pro-exclusive features as they are heavily tested.
+            </div>
+
+            <span class="slide-number">Slide 2 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 3: Windows Edition Hierarchy -->
+        <div class="slide">
+            <h2>Windows Edition Hierarchy</h2>
+            <p>Windows editions are organized in a feature hierarchy. Each higher tier includes all features from lower tiers plus additional capabilities.</p>
+
+            <div class="hierarchy" style="max-width: 800px;">
+                <div class="hierarchy-level home" style="padding: 25px;">
+                    <span class="icon">🏠</span>
+                    Windows 10/11 Home
+                    <div style="font-size: 0.7em; margin-top: 10px; opacity: 0.9;">Consumer Edition - Basic Features</div>
+                </div>
+                <div style="text-align: center; font-size: 2em; color: white;">↓ Adds Business Features</div>
+                <div class="hierarchy-level pro" style="padding: 25px;">
+                    <span class="icon">💼</span>
+                    Windows 10/11 Pro
+                    <div style="font-size: 0.7em; margin-top: 10px; opacity: 0.9;">Small Business Edition - Home + Pro Features</div>
+                </div>
+                <div style="text-align: center; font-size: 2em; color: white;">↓ Adds Enterprise Features</div>
+                <div class="hierarchy-level enterprise" style="padding: 25px;">
+                    <span class="icon">🏢</span>
+                    Windows 10/11 Enterprise
+                    <div style="font-size: 0.7em; margin-top: 10px; opacity: 0.9;">Large Organization - Pro + Advanced Security/Management</div>
+                </div>
+            </div>
+
+            <div class="info-card success">
+                <strong>Important Concept:</strong> Windows editions follow an <em>additive model</em>. Pro includes everything in Home plus business features. Enterprise includes everything in Pro plus advanced enterprise features. Think of it as nested circles of functionality.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Emphasize the additive nature of Windows editions. This is crucial for understanding upgrade paths and feature availability. Home is for consumers, Pro adds small business features (domain join, BitLocker), and Enterprise adds large organization features (AppLocker, DirectAccess). Education edition sits parallel to Enterprise with similar features but licensed for academic institutions.
+            </div>
+
+            <span class="slide-number">Slide 3 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 4: Windows Home Features & Limitations -->
+        <div class="slide">
+            <h2>Windows 10/11 Home Edition</h2>
+            <p class="subtitle">Consumer-Focused Features & Limitations</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>✓ What Home INCLUDES</h3>
+                    <ul>
+                        <li><strong>Windows Defender Antivirus</strong> - Built-in malware protection</li>
+                        <li><strong>Windows Firewall</strong> - Network security</li>
+                        <li><strong>Microsoft Edge Browser</strong> - Web browsing</li>
+                        <li><strong>Cortana</strong> - Digital assistant</li>
+                        <li><strong>Windows Hello</strong> - Biometric login</li>
+                        <li><strong>BitLocker Device Encryption</strong> - On compatible hardware only</li>
+                        <li><strong>Remote Desktop Client</strong> - Connect TO other PCs</li>
+                        <li><strong>Windows Update</strong> - Automatic updates</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>✗ What Home LACKS</h3>
+                    <ul>
+                        <li><strong>Domain Join</strong> - Cannot join Active Directory</li>
+                        <li><strong>Group Policy Editor</strong> (gpedit.msc) - No centralized management</li>
+                        <li><strong>BitLocker Drive Encryption</strong> - Full drive encryption not available</li>
+                        <li><strong>Remote Desktop Host</strong> - Cannot be accessed remotely</li>
+                        <li><strong>Hyper-V</strong> - No virtualization platform</li>
+                        <li><strong>Windows Sandbox</strong> - No isolated testing environment</li>
+                        <li><strong>Assigned Access</strong> - Kiosk mode unavailable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Critical Limitation:</strong> Windows Home users cannot join a corporate Active Directory domain. This makes Home unsuitable for managed business environments where centralized control is required.
+            </div>
+
+            <div class="edition-card home">
+                <strong>Target Audience:</strong> Home users, students (non-institutional), small households with no business needs. Best for personal computing, gaming, media consumption, and casual productivity.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Highlight that Home edition is perfectly adequate for consumers but lacks critical business features. The key limitation is no domain join - this alone disqualifies it from corporate environments. Note that "BitLocker Device Encryption" in Home is not the same as full BitLocker - it's automatic encryption on Modern Standby devices, not user-configurable.
+            </div>
+
+            <span class="slide-number">Slide 4 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 5: Windows Pro Features -->
+        <div class="slide">
+            <h2>Windows 10/11 Pro Edition</h2>
+            <p class="subtitle">Business-Class Features for Small to Medium Organizations</p>
+
+            <div class="highlight-box">
+                <h3>Pro Edition = Home + Business Features</h3>
+                <p>Windows Pro includes ALL Home features PLUS these business-critical capabilities:</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>🔐 BitLocker Drive Encryption</h4>
+                    <p>Full disk encryption with TPM support to protect data at rest. Encrypt entire drives including USB drives.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🏢 Domain Join & Azure AD</h4>
+                    <p>Join Active Directory domains or Azure Active Directory for centralized management and authentication.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📋 Group Policy Management</h4>
+                    <p>Access to gpedit.msc for local policy configuration. Receive and apply domain-based Group Policies.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🖥️ Remote Desktop Host</h4>
+                    <p>Allow other users to remotely connect to your PC using Remote Desktop Protocol (RDP).</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>💻 Hyper-V Virtualization</h4>
+                    <p>Built-in Type-1 hypervisor for running virtual machines without third-party software.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🛡️ Windows Sandbox</h4>
+                    <p>Isolated desktop environment for testing untrusted software without affecting your system.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📱 Mobile Device Management</h4>
+                    <p>Enroll devices in MDM solutions like Microsoft Intune for cloud-based management.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🔄 Windows Update for Business</h4>
+                    <p>Granular control over update deployment and deferral policies for business continuity.</p>
+                </div>
+            </div>
+
+            <div class="edition-card pro">
+                <strong>Target Audience:</strong> Small to medium businesses, power users, IT professionals, developers. Essential for any organization requiring domain integration or centralized management.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Pro edition is the minimum requirement for business environments. The five key features to memorize are: BitLocker, Domain Join, Group Policy, Remote Desktop Host, and Hyper-V. These appear frequently on A+ exams. Emphasize that Pro provides local business features - it's ideal for small businesses or branch offices.
+            </div>
+
+            <span class="slide-number">Slide 5 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 6: Pro vs Home Comparison Table -->
+        <div class="slide">
+            <h2>Windows Pro vs Home: Feature Comparison</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Home</th>
+                        <th>Pro</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BitLocker Encryption</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Protect sensitive business data on laptops</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Domain Join (AD)</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Centralized user management in corporate networks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Policy (gpedit.msc)</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Enforce security policies and configurations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Remote Desktop Host</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>IT support, remote work, server management</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hyper-V</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Testing environments, running multiple OS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Sandbox</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Safe testing of suspicious files/software</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Assigned Access (Kiosk)</strong></td>
+                        <td class="no">✗ No</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Lock device to single application (retail, public)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Defender</strong></td>
+                        <td class="yes">✓ Yes</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Basic antivirus protection for all users</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Firewall</strong></td>
+                        <td class="yes">✓ Yes</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Network security for all users</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Remote Desktop Client</strong></td>
+                        <td class="yes">✓ Yes</td>
+                        <td class="yes">✓ Yes</td>
+                        <td>Connect to other Remote Desktop hosts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max RAM Support</strong></td>
+                        <td>128 GB</td>
+                        <td>2 TB</td>
+                        <td>Pro supports significantly more memory</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price</strong></td>
+                        <td>Lower</td>
+                        <td>Higher (~$100 more)</td>
+                        <td>Pro costs more due to business features</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Memorize the "Pro Big 5": BitLocker, Domain Join, Group Policy, Remote Desktop Host, Hyper-V. If a question mentions needing any of these features, the answer is Pro or higher - never Home!
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This comparison table is exam gold. Focus on the features marked "No" for Home - these are the decision points. If a scenario requires encryption (BitLocker), domain membership, remote access as a host, or virtualization, you must recommend Pro minimum. Note that both editions have Remote Desktop Client - only the Host (being accessed) requires Pro.
+            </div>
+
+            <span class="slide-number">Slide 6 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 7: Windows Pro for Workstations -->
+        <div class="slide">
+            <h2>Windows 10/11 Pro for Workstations</h2>
+            <p class="subtitle">High-Performance Edition for Power Users</p>
+
+            <div class="highlight-box">
+                <h3>Pro for Workstations = Pro + Extreme Hardware Support</h3>
+                <p>Designed for high-end hardware configurations with advanced processing and storage needs.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Enhanced Hardware Support</h3>
+                    <ul>
+                        <li><strong>Up to 4 CPUs</strong> (Pro supports only 2)</li>
+                        <li><strong>Up to 6 TB of RAM</strong> (Pro supports 2 TB)</li>
+                        <li><strong>ReFS (Resilient File System)</strong> - Advanced file system with better fault tolerance</li>
+                        <li><strong>Persistent Memory Support</strong> - NVDIMM-N hardware for ultra-fast storage</li>
+                        <li><strong>SMB Direct</strong> - High-speed network file transfers with RDMA</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Ideal Use Cases</h3>
+                    <div class="info-card">
+                        <strong>CAD/CAM Workstations</strong><br>
+                        Engineers running AutoCAD, SolidWorks with massive datasets
+                    </div>
+                    <div class="info-card">
+                        <strong>3D Rendering</strong><br>
+                        Animation studios, visual effects production
+                    </div>
+                    <div class="info-card">
+                        <strong>Data Science</strong><br>
+                        Machine learning, big data analytics requiring massive RAM
+                    </div>
+                    <div class="info-card">
+                        <strong>Video Production</strong><br>
+                        4K/8K video editing with high-speed storage requirements
+                    </div>
+                </div>
+            </div>
+
+            <div class="edition-card workstation">
+                <strong>Target Audience:</strong> Professional workstation users with high-end hardware: engineers, architects, data scientists, video editors, 3D animators. NOT typically needed for general business use.
+            </div>
+
+            <div class="info-card warning">
+                <strong>Note:</strong> Pro for Workstations is rarely tested on A+ exams but may appear in high-performance computing scenarios. The key differentiator is support for server-grade hardware (4 CPUs, 6TB RAM).
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Pro for Workstations is a niche edition. Most students won't encounter it in typical IT support roles. The key point is that it's for workstations that rival servers in hardware specs. ReFS and persistent memory support are advanced features for data integrity and performance. If a scenario involves extreme hardware specs or specialized workloads, this is the answer.
+            </div>
+
+            <span class="slide-number">Slide 7 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 8: Windows Enterprise -->
+        <div class="slide">
+            <h2>Windows 10/11 Enterprise Edition</h2>
+            <p class="subtitle">Advanced Features for Large Organizations</p>
+
+            <div class="highlight-box">
+                <h3>Enterprise = Pro + Advanced Security & Management</h3>
+                <p>Available only through volume licensing agreements. Not sold at retail.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Enterprise-Exclusive Features</h3>
+                    <ul>
+                        <li><strong>AppLocker</strong> - Application whitelisting/blacklisting for security</li>
+                        <li><strong>DirectAccess</strong> - Always-on VPN connectivity without user intervention</li>
+                        <li><strong>BranchCache</strong> - Reduce WAN bandwidth usage across remote offices</li>
+                        <li><strong>Windows To Go</strong> - Boot Windows from USB drive (deprecated in Win10)</li>
+                        <li><strong>Credential Guard</strong> - Virtualization-based security for credentials</li>
+                        <li><strong>Device Guard</strong> - Only trusted code can run</li>
+                        <li><strong>Microsoft LAPS</strong> - Local Administrator Password Solution</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Enhanced Management</h3>
+                    <div class="info-card success">
+                        <strong>Advanced Group Policy</strong><br>
+                        Additional policy settings not available in Pro
+                    </div>
+                    <div class="info-card success">
+                        <strong>Windows Analytics</strong><br>
+                        Advanced telemetry and upgrade readiness assessment
+                    </div>
+                    <div class="info-card success">
+                        <strong>Microsoft Desktop Optimization Pack</strong><br>
+                        Advanced deployment and management tools
+                    </div>
+                    <div class="info-card success">
+                        <strong>Long-Term Servicing Channel (LTSC)</strong><br>
+                        10-year support lifecycle for critical systems
+                    </div>
+                </div>
+            </div>
+
+            <div class="edition-card enterprise">
+                <strong>Target Audience:</strong> Large corporations, government agencies, healthcare organizations. Requires volume licensing (not available for individual purchase). Typically 500+ devices or organizations with advanced security requirements.
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> If a question mentions "volume licensing," "application whitelisting" (AppLocker), or "always-on VPN" (DirectAccess), the answer is Enterprise edition. These features are unique to Enterprise.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Enterprise is designed for large organizations with complex security needs. Key differentiators are AppLocker (application control), DirectAccess (transparent VPN), and advanced credential protection. Enterprise also includes access to LTSC versions for systems that need long-term stability without feature updates (ATMs, medical devices, industrial control systems).
+            </div>
+
+            <span class="slide-number">Slide 8 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 9: Windows Education -->
+        <div class="slide">
+            <h2>Windows 10/11 Education Edition</h2>
+            <p class="subtitle">Academic Licensing with Enterprise Features</p>
+
+            <div class="highlight-box">
+                <h3>Education = Enterprise for Academic Institutions</h3>
+                <p>Available exclusively through academic volume licensing programs.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Feature Parity with Enterprise</h3>
+                    <ul>
+                        <li>Includes ALL Enterprise features</li>
+                        <li>AppLocker, DirectAccess, BranchCache</li>
+                        <li>Credential Guard and Device Guard</li>
+                        <li>Advanced Group Policy options</li>
+                        <li>Same management capabilities as Enterprise</li>
+                    </ul>
+
+                    <h3 style="margin-top: 30px;">Differences from Enterprise</h3>
+                    <ul>
+                        <li><strong>Cortana disabled by default</strong> (privacy for students)</li>
+                        <li><strong>Suggestive content disabled</strong> (Windows tips, suggestions)</li>
+                        <li><strong>Licensing model</strong> - Academic only (students/faculty/staff)</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Licensing Requirements</h3>
+                    <div class="info-card">
+                        <strong>Eligible Institutions:</strong>
+                        <ul style="font-size: 0.95em;">
+                            <li>K-12 schools and school districts</li>
+                            <li>Colleges and universities</li>
+                            <li>Academic research institutions</li>
+                            <li>Must be accredited educational institutions</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card warning">
+                        <strong>Important:</strong> Education edition cannot be used by businesses or commercial entities, even if they provide training. It's strictly for accredited academic institutions.
+                    </div>
+
+                    <div class="info-card success">
+                        <strong>Benefit:</strong> Academic institutions get Enterprise-level features at significantly reduced educational pricing.
+                    </div>
+                </div>
+            </div>
+
+            <div class="edition-card education">
+                <strong>Target Audience:</strong> Educational institutions (K-12, higher education), students, faculty, staff. Provides enterprise security and management for academic environments at academic pricing.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Education edition is essentially Enterprise with minor tweaks for educational environments. The main difference is licensing eligibility and default privacy settings. It's a way for schools to get Enterprise features without Enterprise costs. Note that Education is NOT the same as the "S Mode" sometimes found on student laptops - that's a locked-down mode available across editions.
+            </div>
+
+            <span class="slide-number">Slide 9 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 10: BitLocker Deep Dive -->
+        <div class="slide">
+            <h2>Key Feature: BitLocker Drive Encryption</h2>
+            <p class="subtitle">Pro, Enterprise, and Education Only</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is BitLocker?</h3>
+                    <p><strong>BitLocker</strong> is Microsoft's full-disk encryption technology that encrypts entire volumes to protect data at rest.</p>
+
+                    <h3 style="margin-top: 20px;">Key Capabilities</h3>
+                    <ul>
+                        <li><strong>Full Volume Encryption</strong> - Encrypts entire drive including system volume</li>
+                        <li><strong>TPM Integration</strong> - Uses Trusted Platform Module for secure key storage</li>
+                        <li><strong>Pre-boot Authentication</strong> - PIN or USB key required before Windows boots</li>
+                        <li><strong>BitLocker To Go</strong> - Encrypt removable drives (USB, external HDD)</li>
+                        <li><strong>Recovery Keys</strong> - Multiple recovery methods if password forgotten</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Typical Use Cases</h3>
+                    <div class="info-card">
+                        <strong>Laptop Protection</strong><br>
+                        If laptop is lost or stolen, data remains encrypted and inaccessible
+                    </div>
+                    <div class="info-card">
+                        <strong>Compliance Requirements</strong><br>
+                        HIPAA, PCI-DSS, GDPR often require encryption of sensitive data
+                    </div>
+                    <div class="info-card">
+                        <strong>Removable Media</strong><br>
+                        Encrypt USB drives containing confidential business data
+                    </div>
+
+                    <h3 style="margin-top: 20px;">TPM Requirements</h3>
+                    <div class="info-card warning">
+                        Best with <strong>TPM 1.2 or 2.0</strong> chip. Can work without TPM using USB key or password, but less secure and not recommended.
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Enable BitLocker via command line (requires elevation)</span><br>
+                <span class="cmd">manage-bde -on C: -RecoveryPassword</span><br><br>
+                <span class="prompt"># Check BitLocker status</span><br>
+                <span class="cmd">manage-bde -status</span><br><br>
+                <span class="prompt"># GUI Access</span><br>
+                <span class="cmd">Control Panel → System and Security → BitLocker Drive Encryption</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> BitLocker is NOT available in Windows Home. If a scenario requires drive encryption, recommend Pro minimum. BitLocker To Go (for USB drives) is also Pro+ only.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> BitLocker is one of the most important Pro features. Emphasize that it protects data at rest (when device is off/stolen). TPM provides hardware-based key protection. Recovery keys should always be backed up to Active Directory or Microsoft Account. Without TPM, BitLocker requires a startup key (USB) every boot, which is inconvenient but works.
+            </div>
+
+            <span class="slide-number">Slide 10 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 11: Group Policy Deep Dive -->
+        <div class="slide">
+            <h2>Key Feature: Group Policy (gpedit.msc)</h2>
+            <p class="subtitle">Pro, Enterprise, and Education Only</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Group Policy?</h3>
+                    <p><strong>Group Policy</strong> allows administrators to centrally configure Windows settings, security policies, and user environments.</p>
+
+                    <h3 style="margin-top: 20px;">Policy Scope</h3>
+                    <ul>
+                        <li><strong>Local Group Policy</strong> - Applies to single computer (available in Pro)</li>
+                        <li><strong>Domain Group Policy</strong> - Applied from Active Directory (requires domain)</li>
+                        <li><strong>Computer Policies</strong> - Apply to machine regardless of user</li>
+                        <li><strong>User Policies</strong> - Apply to user regardless of machine</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Common Policy Uses</h3>
+                    <div class="info-card">
+                        <strong>Security Policies</strong><br>
+                        Password complexity, account lockout, firewall settings
+                    </div>
+                    <div class="info-card">
+                        <strong>Software Deployment</strong><br>
+                        Automatically install applications to users/computers
+                    </div>
+                    <div class="info-card">
+                        <strong>Desktop Control</strong><br>
+                        Disable Control Panel, restrict USB, remove desktop icons
+                    </div>
+                    <div class="info-card">
+                        <strong>Logon Scripts</strong><br>
+                        Run scripts automatically when users log in
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Open Local Group Policy Editor (Pro/Enterprise/Education only)</span><br>
+                <span class="cmd">gpedit.msc</span><br><br>
+                <span class="prompt"># Refresh Group Policy from command line</span><br>
+                <span class="cmd">gpupdate /force</span><br><br>
+                <span class="prompt"># View applied Group Policies</span><br>
+                <span class="cmd">gpresult /r</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Policy Processing Order (LSDOU)</h3>
+                <p style="font-size: 1.1em; margin-bottom: 10px;">Policies are applied in this order (last applied wins):</p>
+                <ol style="font-size: 1.1em;">
+                    <li><strong>L</strong>ocal - Policies on the local computer</li>
+                    <li><strong>S</strong>ite - Active Directory site policies</li>
+                    <li><strong>D</strong>omain - Domain-level policies</li>
+                    <li><strong>O</strong>U - Organizational Unit policies (most specific, wins)</li>
+                </ol>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> If you see "gpedit.msc is not found" error, the computer is running Windows Home edition. Group Policy Editor is NOT available in Home - only Pro and above.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Group Policy is fundamental to Windows management in business environments. Local Group Policy (gpedit.msc) is available on Pro, but its real power comes from Active Directory domain policies. Emphasize that Home edition has NO access to Group Policy Editor - this is a major limitation. LSDOU order is important for troubleshooting conflicting policies.
+            </div>
+
+            <span class="slide-number">Slide 11 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 12: Remote Desktop Deep Dive -->
+        <div class="slide">
+            <h2>Key Feature: Remote Desktop Host</h2>
+            <p class="subtitle">Pro, Enterprise, and Education Only</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Remote Desktop Protocol (RDP)</h3>
+                    <p><strong>Remote Desktop</strong> allows users to remotely control a Windows computer over a network connection.</p>
+
+                    <h3 style="margin-top: 20px;">Important Distinction</h3>
+                    <div class="info-card warning">
+                        <strong>Remote Desktop CLIENT:</strong> Connects TO other computers. Available in ALL editions including Home.
+                    </div>
+                    <div class="info-card success">
+                        <strong>Remote Desktop HOST:</strong> Allows your computer to BE accessed remotely. Requires Pro or higher.
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Common Use Cases</h3>
+                    <ul>
+                        <li><strong>IT Support</strong> - Remotely troubleshoot user computers</li>
+                        <li><strong>Remote Work</strong> - Access office computer from home</li>
+                        <li><strong>Server Management</strong> - Administer Windows Servers remotely</li>
+                        <li><strong>Application Access</strong> - Run applications installed on remote computer</li>
+                    </ul>
+
+                    <h3 style="margin-top: 20px;">Configuration Requirements</h3>
+                    <ul>
+                        <li>Windows Pro or higher on host computer</li>
+                        <li>Enable Remote Desktop in System Settings</li>
+                        <li>Configure firewall to allow RDP (port 3389)</li>
+                        <li>User account must have password</li>
+                        <li>User must be member of Remote Desktop Users group</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Enable Remote Desktop via command line (requires elevation)</span><br>
+                <span class="cmd">Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0</span><br><br>
+                <span class="prompt"># Enable firewall rule for RDP</span><br>
+                <span class="cmd">Enable-NetFirewallRule -DisplayGroup "Remote Desktop"</span><br><br>
+                <span class="prompt"># Launch Remote Desktop Client (available on all editions)</span><br>
+                <span class="cmd">mstsc.exe</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Security Considerations</h3>
+                <ul>
+                    <li>Default RDP port 3389 is frequently attacked - consider changing it</li>
+                    <li>Use strong passwords and consider Network Level Authentication (NLA)</li>
+                    <li>Implement account lockout policies to prevent brute force</li>
+                    <li>Use VPN for RDP access over the Internet rather than exposing RDP directly</li>
+                    <li>Enable logging and monitor for unauthorized access attempts</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Home can be a Remote Desktop CLIENT (connect to others) but NOT a HOST (be accessed). If a scenario requires allowing remote connections TO a computer, it must be Pro or higher.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> The Client vs Host distinction is critical for exams. Many students get confused - remember ALL Windows editions can use Remote Desktop Client (mstsc.exe) to connect TO other computers. Only Pro+ can act as a HOST (be remotely accessed). RDP uses port 3389 TCP. Network Level Authentication (NLA) requires authentication before establishing full RDP session, reducing attack surface.
+            </div>
+
+            <span class="slide-number">Slide 12 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 13: Hyper-V Deep Dive -->
+        <div class="slide">
+            <h2>Key Feature: Hyper-V Virtualization</h2>
+            <p class="subtitle">Pro, Enterprise, and Education Only</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Hyper-V?</h3>
+                    <p><strong>Hyper-V</strong> is Microsoft's Type-1 hypervisor that allows running multiple virtual machines (VMs) on a single physical computer.</p>
+
+                    <h3 style="margin-top: 20px;">Key Capabilities</h3>
+                    <ul>
+                        <li><strong>Multiple Operating Systems</strong> - Run Windows, Linux, other OS simultaneously</li>
+                        <li><strong>Isolated Environments</strong> - VMs are completely separated from host</li>
+                        <li><strong>Snapshots</strong> - Save VM state and revert if needed</li>
+                        <li><strong>Virtual Networking</strong> - Create virtual switches and network segments</li>
+                        <li><strong>No Additional Cost</strong> - Free built-in feature (vs. VMware, etc.)</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>System Requirements</h3>
+                    <div class="info-card warning">
+                        <strong>Hardware Requirements:</strong>
+                        <ul style="font-size: 0.95em;">
+                            <li>64-bit processor with SLAT (Second Level Address Translation)</li>
+                            <li>CPU virtualization (Intel VT-x or AMD-V) enabled in BIOS</li>
+                            <li>Minimum 4 GB RAM (8+ GB recommended)</li>
+                            <li>Windows Pro, Enterprise, or Education (64-bit only)</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Common Use Cases</h3>
+                    <ul>
+                        <li><strong>Development</strong> - Test software on different OS versions</li>
+                        <li><strong>Training</strong> - Practice installations without affecting host</li>
+                        <li><strong>Security Testing</strong> - Analyze malware in isolated environment</li>
+                        <li><strong>Legacy Apps</strong> - Run old software on older OS versions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Enable Hyper-V via PowerShell (requires restart)</span><br>
+                <span class="cmd">Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All</span><br><br>
+                <span class="prompt"># Enable via DISM</span><br>
+                <span class="cmd">DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V</span><br><br>
+                <span class="prompt"># Check if system supports Hyper-V</span><br>
+                <span class="cmd">systeminfo</span><br>
+                <span class="output"># Look for "Hyper-V Requirements" section</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Hyper-V vs Third-Party Hypervisors</h3>
+                <ul>
+                    <li><strong>Type-1 Hypervisor:</strong> Runs directly on hardware (like VMware ESXi). More efficient than Type-2 (like VirtualBox)</li>
+                    <li><strong>Free with Windows Pro+:</strong> No additional licensing cost unlike VMware Workstation Pro</li>
+                    <li><strong>Windows Integration:</strong> Enhanced integration with Windows guest OS (mouse, clipboard, shared folders)</li>
+                    <li><strong>Note:</strong> Hyper-V and VMware/VirtualBox can conflict if both installed (they can't run simultaneously)</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Hyper-V is ONLY available in Pro, Enterprise, and Education (64-bit versions only). NOT available in Home. If scenario requires running virtual machines using built-in Windows feature, recommend Pro minimum.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Hyper-V is a powerful Pro+ feature. Emphasize it's Type-1 (bare metal) hypervisor - it actually converts Windows into a hypervisor with the host OS running as a special VM. Hardware virtualization must be enabled in BIOS. Common issue: students try to enable Hyper-V on Home edition or systems without VT-x/AMD-V support. SLAT (Intel EPT or AMD RVI) is required for modern Hyper-V.
+            </div>
+
+            <span class="slide-number">Slide 13 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 14: Domain Join & Azure AD -->
+        <div class="slide">
+            <h2>Key Feature: Domain Join & Azure AD</h2>
+            <p class="subtitle">Pro, Enterprise, and Education Only</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Active Directory Domain Join</h3>
+                    <p><strong>Domain Join</strong> allows a Windows computer to join an on-premises Active Directory domain for centralized management.</p>
+
+                    <h3 style="margin-top: 20px;">Benefits of Domain Join</h3>
+                    <ul>
+                        <li><strong>Centralized Authentication</strong> - Single sign-on to network resources</li>
+                        <li><strong>Group Policy Application</strong> - Receive policies from domain controllers</li>
+                        <li><strong>Network Resource Access</strong> - Access file shares, printers, applications</li>
+                        <li><strong>Roaming Profiles</strong> - User settings follow them to any domain computer</li>
+                        <li><strong>Centralized Management</strong> - IT can manage all domain computers remotely</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Azure Active Directory Join</h3>
+                    <p><strong>Azure AD Join</strong> connects Windows to cloud-based Azure Active Directory for modern cloud management.</p>
+
+                    <h3 style="margin-top: 20px;">Benefits of Azure AD</h3>
+                    <ul>
+                        <li><strong>Cloud-Based Management</strong> - No on-premises servers required</li>
+                        <li><strong>Microsoft 365 Integration</strong> - SSO to Office 365, OneDrive, Teams</li>
+                        <li><strong>Mobile Device Management</strong> - Manage via Intune</li>
+                        <li><strong>Conditional Access</strong> - Modern security policies (MFA, device compliance)</li>
+                        <li><strong>Remote Workers</strong> - No VPN needed for cloud resource access</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Join Windows to Active Directory domain (Pro+ only)</span><br>
+                <span class="cmd">Settings → System → About → Domain or workgroup → Change... → Domain</span><br><br>
+                <span class="prompt"># Join Azure AD (Pro+ only)</span><br>
+                <span class="cmd">Settings → Accounts → Access work or school → Connect → Join this device to Azure AD</span><br><br>
+                <span class="prompt"># Check domain membership status</span><br>
+                <span class="cmd">systeminfo | findstr /B /C:"Domain"</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Domain Join vs Azure AD Join vs Hybrid Join</h3>
+                <ul>
+                    <li><strong>Domain Join:</strong> Traditional on-premises AD. Best for organizations with local domain controllers.</li>
+                    <li><strong>Azure AD Join:</strong> Cloud-only. Best for new organizations, remote workers, no on-premises infrastructure.</li>
+                    <li><strong>Hybrid Join:</strong> Both on-premises AD and Azure AD. Best for organizations transitioning to cloud.</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Windows Home CANNOT join a domain (on-premises or Azure AD). This is one of the primary reasons businesses must use Pro or higher. Workgroups are the only option for Home edition.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domain join is critical for business environments. Without it, users can't access centralized resources or receive Group Policies. Traditional AD Domain Join requires on-premises domain controllers. Azure AD Join is the modern cloud alternative - devices authenticate to Azure AD and are managed via cloud tools like Intune. Hybrid Join gives best of both worlds during cloud migration.
+            </div>
+
+            <span class="slide-number">Slide 14 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 15: Summary & Exam Tips -->
+        <div class="slide">
+            <h2>Summary & Exam Tips</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.1</p>
+
+            <div class="highlight-box">
+                <h3>Quick Reference: Edition Decision Tree</h3>
+                <ul style="font-size: 1.1em;">
+                    <li><strong>Home:</strong> Consumer use, no business features needed → Windows Home</li>
+                    <li><strong>Business/Domain:</strong> Need domain join, encryption, remote access → Windows Pro minimum</li>
+                    <li><strong>Large Enterprise:</strong> Need AppLocker, DirectAccess, advanced security → Windows Enterprise</li>
+                    <li><strong>Academic:</strong> School/university with volume licensing → Windows Education</li>
+                    <li><strong>High-End Workstation:</strong> 4+ CPUs, 6TB RAM, CAD/rendering → Windows Pro for Workstations</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>The "Pro Big 5" Features</h3>
+                    <div class="info-card exam-tip">
+                        <strong>Memorize These Pro-Exclusive Features:</strong>
+                        <ol style="margin-top: 10px;">
+                            <li><strong>BitLocker</strong> - Drive encryption</li>
+                            <li><strong>Domain Join</strong> - Active Directory</li>
+                            <li><strong>Group Policy</strong> - gpedit.msc</li>
+                            <li><strong>Remote Desktop Host</strong> - Be accessed remotely</li>
+                            <li><strong>Hyper-V</strong> - Virtualization</li>
+                        </ol>
+                        <p style="margin-top: 10px;">If any scenario requires these → Pro or higher!</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Common Exam Scenarios</h3>
+                    <div class="info-card">
+                        <strong>Q: "User needs to encrypt laptop for travel"</strong><br>
+                        A: Windows Pro (BitLocker)
+                    </div>
+                    <div class="info-card">
+                        <strong>Q: "Small business joining domain"</strong><br>
+                        A: Windows Pro minimum
+                    </div>
+                    <div class="info-card">
+                        <strong>Q: "gpedit.msc not found"</strong><br>
+                        A: Computer has Windows Home edition
+                    </div>
+                    <div class="info-card">
+                        <strong>Q: "Allow IT to remote into computer"</strong><br>
+                        A: Windows Pro (RDP Host)
+                    </div>
+                    <div class="info-card">
+                        <strong>Q: "Run VMs without third-party software"</strong><br>
+                        A: Windows Pro (Hyper-V)
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-table" style="margin-top: 20px;">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Edition</th>
+                            <th>Key Differentiator</th>
+                            <th>Target User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Home</strong></td>
+                            <td>Consumer features only, no domain join</td>
+                            <td>Personal/home users</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pro</strong></td>
+                            <td>Business features: BitLocker, Domain, GPO, RDP, Hyper-V</td>
+                            <td>Small businesses, professionals</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pro for Workstations</strong></td>
+                            <td>Extreme hardware support (4 CPUs, 6TB RAM, ReFS)</td>
+                            <td>High-end workstations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enterprise</strong></td>
+                            <td>AppLocker, DirectAccess, advanced security</td>
+                            <td>Large organizations (volume licensing)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Education</strong></td>
+                            <td>Enterprise features for academic institutions</td>
+                            <td>Schools, universities</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-card success" style="margin-top: 20px;">
+                <strong>Final Exam Tip:</strong> When in doubt, eliminate answers. If a feature is Pro-exclusive and the scenario requires it, eliminate "Home" immediately. If it mentions volume licensing or advanced security, eliminate "Pro" and choose "Enterprise." Use the process of elimination!
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This summary slide ties everything together. Emphasize the decision tree approach for exam questions - identify the required feature, then eliminate editions that don't support it. The "Pro Big 5" are the most testable features. Practice scenario-based questions where you must recommend an edition based on requirements. Remember: Home is adequate for consumers, but any business feature requirement means Pro minimum.
+            </div>
+
+            <span class="slide-number">Slide 15 of 15</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592; Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next &#8594;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            } else if (e.key === 'n' || e.key === 'N') {
+                // Toggle speaker notes
+                const currentSlideEl = slides[currentSlide];
+                const notes = currentSlideEl.querySelector('.speaker-notes');
+                if (notes) {
+                    notes.style.display = notes.style.display === 'none' || notes.style.display === '' ? 'block' : 'none';
+                }
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add console tip for speaker notes
+        console.log('%cSpeaker Notes: Press "N" to toggle speaker notes on current slide', 'color: #0078d4; font-size: 14px; font-weight: bold;');
+    </script>
+</body>
+</html>
