@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Packet Tracer Lite v3.9 - Interactive Network Lab Library</title>
+    <title>Packet Tracer Lite v3.5 - Interactive Network Lab Library</title>
     <style>
         /* ========== GLOBAL RESET & VARIABLES ========== */
         * {
@@ -1271,133 +1271,6 @@
             background: white;
         }
 
-        /* Command Reference Popup Styles */
-        .cmd-ref-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            backdrop-filter: blur(5px);
-        }
-        .cmd-ref-overlay.active {
-            display: flex;
-        }
-        .cmd-ref-popup {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 15px;
-            width: 90%;
-            max-width: 900px;
-            max-height: 85vh;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-        }
-        .cmd-ref-header {
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cmd-ref-title {
-            color: white;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .cmd-ref-close {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-            padding: 5px 12px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .cmd-ref-close:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .cmd-ref-search {
-            padding: 15px 20px;
-            background: rgba(0,0,0,0.3);
-        }
-        .cmd-ref-search input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid rgba(0,255,255,0.3);
-            border-radius: 8px;
-            background: rgba(0,0,0,0.5);
-            color: #0ff;
-            font-size: 1em;
-            font-family: 'Courier New', monospace;
-        }
-        .cmd-ref-search input::placeholder {
-            color: rgba(0,255,255,0.5);
-        }
-        .cmd-ref-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .cmd-category {
-            margin-bottom: 25px;
-        }
-        .cmd-category-title {
-            color: #ffd700;
-            font-size: 1.2em;
-            font-weight: bold;
-            padding: 10px 0;
-            border-bottom: 2px solid rgba(255,215,0,0.3);
-            margin-bottom: 15px;
-        }
-        .cmd-item {
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #0ff;
-        }
-        .cmd-syntax {
-            color: #0ff;
-            font-family: 'Courier New', monospace;
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .cmd-desc {
-            color: #aaa;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-        .cmd-example {
-            margin-top: 8px;
-            padding: 8px 12px;
-            background: rgba(0,255,0,0.1);
-            border-radius: 5px;
-            color: #0f0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-        }
-        .cmd-mode {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75em;
-            margin-left: 10px;
-            background: rgba(102,126,234,0.3);
-            color: #a0b0ff;
-        }
-        .cmd-item.hidden {
-            display: none;
-        }
-
         .help-section {
             display: none;
         }
@@ -1628,11 +1501,11 @@
         <!-- HEADER TOOLBAR -->
         <header class="toolbar">
             <div class="toolbar-left">
-                <div class="app-title">📚 Packet Tracer Lite v3.9</div>
+                <div class="app-title">📚 Packet Tracer Lite v3.5</div>
                 <span style="color: var(--text-muted); font-size: 0.85em;">Interactive Network Lab Library</span>
             </div>
             <div class="toolbar-right">
-                <a href="../catalog.html" class="btn" style="text-decoration: none;">
+                <a href="catalog.html" class="btn" style="text-decoration: none;">
                     <span class="btn-icon">📁</span> Back to Catalog
                 </a>
                 <button class="btn" id="homeBtn" style="display: none;">
@@ -1710,7 +1583,7 @@
             <div class="canvas-container">
                 <svg id="network-canvas"></svg>
                 <div class="canvas-overlay" id="welcomeMessage">
-                    <h2>Welcome to Packet Tracer Lite v3.9!</h2>
+                    <h2>Welcome to Packet Tracer Lite v3.5!</h2>
                     <p>🎯 Click <strong>Lab Library</strong> to load a pre-built scenario</p>
                     <p>🖱️ Or drag devices from the left panel to build your own network</p>
                     <p>📖 Follow step-by-step instructions on the right panel</p>
@@ -1878,7 +1751,7 @@
 
                         <div id="cliInterface" style="display: none;">
                             <div id="cliOutput" style="background: #000; color: #0f0; padding: 15px; border-radius: 6px; height: 400px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9em; margin-bottom: 10px; border: 2px solid var(--accent-cyan);">
-                                <div>Cisco IOS Software, Lite Version 3.9</div>
+                                <div>Cisco IOS Software, Lite Version 3.5</div>
                                 <div>Type 'help' for available commands</div>
                                 <div style="margin-top: 10px;">Ready.</div>
                             </div>
@@ -1886,7 +1759,6 @@
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <span id="cliPrompt" style="color: var(--accent-cyan); font-family: 'Courier New', monospace; font-weight: bold;">Router&gt;</span>
                                 <input type="text" id="cliInput" placeholder="Enter command..." style="flex: 1; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
-                                <button id="cmdRefBtn" onclick="openCommandReference()" title="Command Reference" style="padding: 8px 12px; background: var(--accent-purple); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">📖</button>
                             </div>
                         </div>
                     </div>
@@ -2091,317 +1963,6 @@
         </div>
     </div>
 
-    <!-- COMMAND REFERENCE POPUP -->
-    <div class="cmd-ref-overlay" id="cmdRefPopup">
-        <div class="cmd-ref-popup">
-            <div class="cmd-ref-header">
-                <div class="cmd-ref-title">📖 CLI Command Reference - Packet Tracer Lite v3.9</div>
-                <button class="cmd-ref-close" onclick="closeCommandReference()">✕</button>
-            </div>
-            <div class="cmd-ref-search">
-                <input type="text" id="cmdRefSearch" placeholder="🔍 Search commands (e.g., 'vlan', 'ospf', 'show')..." oninput="filterCommands()">
-            </div>
-            <div class="cmd-ref-body" id="cmdRefBody">
-                <!-- Mode Navigation Commands -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🔐 Mode Navigation</div>
-                    <div class="cmd-item" data-keywords="enable en privileged exec">
-                        <div class="cmd-syntax">enable <span class="cmd-mode">User Mode</span></div>
-                        <div class="cmd-desc">Enter privileged EXEC mode. Shortcut: <code>en</code></div>
-                    </div>
-                    <div class="cmd-item" data-keywords="configure terminal conf t config global">
-                        <div class="cmd-syntax">configure terminal <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Enter global configuration mode. Shortcut: <code>conf t</code></div>
-                    </div>
-                    <div class="cmd-item" data-keywords="exit back previous">
-                        <div class="cmd-syntax">exit <span class="cmd-mode">Any Mode</span></div>
-                        <div class="cmd-desc">Return to the previous mode level</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="end privileged return">
-                        <div class="cmd-syntax">end <span class="cmd-mode">Config Modes</span></div>
-                        <div class="cmd-desc">Return directly to privileged EXEC mode from any config mode</div>
-                    </div>
-                </div>
-
-                <!-- Interface Configuration -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🔌 Interface Configuration</div>
-                    <div class="cmd-item" data-keywords="interface int gi fa eth vlan port">
-                        <div class="cmd-syntax">interface [name] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Enter interface configuration mode</div>
-                        <div class="cmd-example">Example: int Gi0/0, int Fa0/1, int vlan 10</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="interface range int range multiple ports">
-                        <div class="cmd-syntax">interface range [ports] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Configure multiple interfaces at once</div>
-                        <div class="cmd-example">Example: int range Fa0/1-24</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="ip address configure ipv4 subnet mask">
-                        <div class="cmd-syntax">ip address [ip] [mask] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Assign IPv4 address to the interface</div>
-                        <div class="cmd-example">Example: ip address 192.168.1.1 255.255.255.0</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="no shutdown enable activate up">
-                        <div class="cmd-syntax">no shutdown <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Enable the interface (bring it up). Shortcut: <code>no shut</code></div>
-                    </div>
-                    <div class="cmd-item" data-keywords="shutdown disable down">
-                        <div class="cmd-syntax">shutdown <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Disable the interface (bring it down)</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="loopback virtual testing">
-                        <div class="cmd-syntax">interface loopback [number] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Create a virtual loopback interface (for testing/router-id)</div>
-                        <div class="cmd-example">Example: int loopback 0</div>
-                    </div>
-                </div>
-
-                <!-- Switching Commands -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🔀 Switching / VLANs</div>
-                    <div class="cmd-item" data-keywords="vlan create id number">
-                        <div class="cmd-syntax">vlan [id] <span class="cmd-mode">Config/Privileged</span></div>
-                        <div class="cmd-desc">Create a VLAN and enter VLAN configuration mode</div>
-                        <div class="cmd-example">Example: vlan 10</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="name vlan label description">
-                        <div class="cmd-syntax">name [vlan-name] <span class="cmd-mode">VLAN Config</span></div>
-                        <div class="cmd-desc">Assign a name to the current VLAN</div>
-                        <div class="cmd-example">Example: name Sales</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="switchport mode access port type">
-                        <div class="cmd-syntax">switchport mode access <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Set port to access mode (single VLAN)</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="switchport mode trunk tagging 802.1q">
-                        <div class="cmd-syntax">switchport mode trunk <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Set port to trunk mode (carry multiple VLANs)</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="switchport access vlan assign port">
-                        <div class="cmd-syntax">switchport access vlan [id] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Assign port to a specific VLAN</div>
-                        <div class="cmd-example">Example: switchport access vlan 10</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="switchport trunk native vlan untagged">
-                        <div class="cmd-syntax">switchport trunk native vlan [id] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Set the native (untagged) VLAN for trunk</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="no switchport routed layer3 l3">
-                        <div class="cmd-syntax">no switchport <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Convert switch port to routed (Layer 3) port</div>
-                    </div>
-                </div>
-
-                <!-- Spanning Tree -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🌳 Spanning Tree Protocol</div>
-                    <div class="cmd-item" data-keywords="spanning-tree mode rapid pvst rstp">
-                        <div class="cmd-syntax">spanning-tree mode rapid-pvst <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Enable Rapid PVST+ spanning tree protocol</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="spanning-tree root primary bridge priority">
-                        <div class="cmd-syntax">spanning-tree vlan [id] root primary <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Make this switch the root bridge for specified VLAN</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="spanning-tree root secondary backup">
-                        <div class="cmd-syntax">spanning-tree vlan [id] root secondary <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Make this switch the backup root bridge</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="spanning-tree portfast edge fast">
-                        <div class="cmd-syntax">spanning-tree portfast <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Enable PortFast on access ports (skip listening/learning)</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="spanning-tree bpduguard security protect">
-                        <div class="cmd-syntax">spanning-tree bpduguard enable <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Shut down port if it receives a BPDU</div>
-                    </div>
-                </div>
-
-                <!-- Routing Commands -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🛣️ Routing</div>
-                    <div class="cmd-item" data-keywords="ip route static default gateway next-hop">
-                        <div class="cmd-syntax">ip route [network] [mask] [next-hop] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Configure a static route</div>
-                        <div class="cmd-example">Example: ip route 0.0.0.0 0.0.0.0 192.168.1.254</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="router ospf process dynamic link-state">
-                        <div class="cmd-syntax">router ospf [process-id] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Enable OSPF and enter router configuration mode</div>
-                        <div class="cmd-example">Example: router ospf 1</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="router eigrp as autonomous system">
-                        <div class="cmd-syntax">router eigrp [as-number] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Enable EIGRP and enter router configuration mode</div>
-                        <div class="cmd-example">Example: router eigrp 100</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="network advertise area wildcard">
-                        <div class="cmd-syntax">network [ip] [wildcard] area [id] <span class="cmd-mode">Router-OSPF</span></div>
-                        <div class="cmd-desc">Advertise a network in OSPF</div>
-                        <div class="cmd-example">Example: network 192.168.1.0 0.0.0.255 area 0</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="network eigrp advertise wildcard">
-                        <div class="cmd-syntax">network [ip] [wildcard] <span class="cmd-mode">Router-EIGRP</span></div>
-                        <div class="cmd-desc">Advertise a network in EIGRP</div>
-                        <div class="cmd-example">Example: network 10.0.0.0 0.255.255.255</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="router-id ospf rid loopback">
-                        <div class="cmd-syntax">router-id [ip] <span class="cmd-mode">Router</span></div>
-                        <div class="cmd-desc">Manually set the OSPF/EIGRP router ID</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="passive-interface silent suppress">
-                        <div class="cmd-syntax">passive-interface [name] <span class="cmd-mode">Router</span></div>
-                        <div class="cmd-desc">Suppress routing updates on an interface</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="no auto-summary classful eigrp">
-                        <div class="cmd-syntax">no auto-summary <span class="cmd-mode">Router-EIGRP</span></div>
-                        <div class="cmd-desc">Disable automatic route summarization</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="redistribute import routes protocol">
-                        <div class="cmd-syntax">redistribute [protocol] <span class="cmd-mode">Router</span></div>
-                        <div class="cmd-desc">Import routes from another routing protocol</div>
-                    </div>
-                </div>
-
-                <!-- HSRP -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🔄 HSRP (First Hop Redundancy)</div>
-                    <div class="cmd-item" data-keywords="standby hsrp virtual ip vip gateway">
-                        <div class="cmd-syntax">standby [group] ip [vip] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Configure HSRP virtual IP address</div>
-                        <div class="cmd-example">Example: standby 1 ip 192.168.1.1</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="standby hsrp priority active master">
-                        <div class="cmd-syntax">standby [group] priority [value] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Set HSRP priority (higher = preferred active)</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="standby hsrp preempt takeover">
-                        <div class="cmd-syntax">standby [group] preempt <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Allow this router to take over as active when it has higher priority</div>
-                    </div>
-                </div>
-
-                <!-- Access Control Lists -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">🛡️ Access Control Lists (ACLs)</div>
-                    <div class="cmd-item" data-keywords="ip access-list extended named acl security">
-                        <div class="cmd-syntax">ip access-list extended [name] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Create a named extended ACL</div>
-                        <div class="cmd-example">Example: ip access-list extended BLOCK_TELNET</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="permit allow acl rule">
-                        <div class="cmd-syntax">permit [protocol] [source] [dest] <span class="cmd-mode">ACL Config</span></div>
-                        <div class="cmd-desc">Allow matching traffic</div>
-                        <div class="cmd-example">Example: permit tcp any any eq 80</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="deny block acl rule drop">
-                        <div class="cmd-syntax">deny [protocol] [source] [dest] <span class="cmd-mode">ACL Config</span></div>
-                        <div class="cmd-desc">Block matching traffic</div>
-                        <div class="cmd-example">Example: deny tcp any any eq 23</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="ip access-group apply acl interface in out">
-                        <div class="cmd-syntax">ip access-group [name] [in|out] <span class="cmd-mode">Interface</span></div>
-                        <div class="cmd-desc">Apply ACL to interface</div>
-                        <div class="cmd-example">Example: ip access-group BLOCK_TELNET in</div>
-                    </div>
-                </div>
-
-                <!-- DHCP -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">📋 DHCP Configuration</div>
-                    <div class="cmd-item" data-keywords="ip dhcp pool server create">
-                        <div class="cmd-syntax">ip dhcp pool [name] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Create a DHCP address pool</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="ip dhcp excluded-address reserve">
-                        <div class="cmd-syntax">ip dhcp excluded-address [start] [end] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Exclude addresses from DHCP pool</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="default-router gateway dhcp option">
-                        <div class="cmd-syntax">default-router [ip] <span class="cmd-mode">DHCP Pool</span></div>
-                        <div class="cmd-desc">Set default gateway for DHCP clients</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="dns-server dhcp option nameserver">
-                        <div class="cmd-syntax">dns-server [ip] <span class="cmd-mode">DHCP Pool</span></div>
-                        <div class="cmd-desc">Set DNS server for DHCP clients</div>
-                    </div>
-                </div>
-
-                <!-- Device Management -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">⚙️ Device Management</div>
-                    <div class="cmd-item" data-keywords="hostname name device label">
-                        <div class="cmd-syntax">hostname [name] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Set the device hostname</div>
-                        <div class="cmd-example">Example: hostname CoreRouter</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="ping icmp test connectivity reachability">
-                        <div class="cmd-syntax">ping [ip] <span class="cmd-mode">Any Mode</span></div>
-                        <div class="cmd-desc">Test connectivity to a destination</div>
-                        <div class="cmd-example">Example: ping 192.168.1.1</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="clear screen reset output">
-                        <div class="cmd-syntax">clear <span class="cmd-mode">Any Mode</span></div>
-                        <div class="cmd-desc">Clear the CLI output screen</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="snmp-server monitoring management trap">
-                        <div class="cmd-syntax">snmp-server [options] <span class="cmd-mode">Config</span></div>
-                        <div class="cmd-desc">Configure SNMP for network management</div>
-                    </div>
-                </div>
-
-                <!-- Show Commands -->
-                <div class="cmd-category">
-                    <div class="cmd-category-title">👁️ Show Commands (Verification)</div>
-                    <div class="cmd-item" data-keywords="show ip interface brief status summary">
-                        <div class="cmd-syntax">show ip interface brief <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display summary of all interfaces with IP and status</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show running-config run configuration">
-                        <div class="cmd-syntax">show running-config <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display the current configuration. Shortcut: <code>show run</code></div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show vlan brief list all vlans">
-                        <div class="cmd-syntax">show vlan brief <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display all VLANs and their status</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show interfaces trunk trunking">
-                        <div class="cmd-syntax">show interfaces trunk <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display trunk port information</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show ip route routing table">
-                        <div class="cmd-syntax">show ip route <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display the IP routing table</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show spanning-tree stp bridge root">
-                        <div class="cmd-syntax">show spanning-tree <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display spanning tree protocol status</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show ip ospf neighbor adjacency">
-                        <div class="cmd-syntax">show ip ospf neighbor <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display OSPF neighbor relationships</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show ip eigrp neighbors adjacency">
-                        <div class="cmd-syntax">show ip eigrp neighbors <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display EIGRP neighbor relationships</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show standby hsrp status">
-                        <div class="cmd-syntax">show standby <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display HSRP status and configuration</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="show access-lists acl rules">
-                        <div class="cmd-syntax">show access-lists <span class="cmd-mode">Privileged</span></div>
-                        <div class="cmd-desc">Display all configured ACLs</div>
-                    </div>
-                    <div class="cmd-item" data-keywords="help question mark available commands">
-                        <div class="cmd-syntax">help or ? <span class="cmd-mode">Any Mode</span></div>
-                        <div class="cmd-desc">Display quick help with available commands</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- HELP MODAL -->
     <div class="help-modal-overlay" id="helpModal">
         <div class="help-modal">
@@ -2416,7 +1977,6 @@
             <div class="help-tabs">
                 <button class="help-tab active" data-tab="quickstart">🚀 Quick Start</button>
                 <button class="help-tab" data-tab="controls">🎮 Lab Controls</button>
-                <button class="help-tab" data-tab="export-import">💾 Export/Import</button>
                 <button class="help-tab" data-tab="commands">💻 CLI Commands</button>
                 <button class="help-tab" data-tab="shortcuts">⌨️ Shortcuts</button>
                 <button class="help-tab" data-tab="troubleshooting">🔧 Troubleshooting</button>
@@ -2428,7 +1988,7 @@
                 <!-- QUICK START SECTION -->
                 <div class="help-section active" id="quickstart">
                     <h2>🚀 Quick Start Guide</h2>
-                    <p>Welcome to Packet Tracer Lite v3.9! This guide will help you get started in 5-10 minutes.</p>
+                    <p>Welcome to Packet Tracer Lite v3.5! This guide will help you get started in 5-10 minutes.</p>
 
                     <h3><span class="step-number">1</span>Open the Lab Library</h3>
                     <p>Click the <strong>Lab Library</strong> button in the top toolbar to view available lab scenarios.</p>
@@ -2563,73 +2123,6 @@
                     </div>
                 </div>
 
-                <!-- EXPORT/IMPORT DETAILED SECTION -->
-                <div class="help-section" id="export-import">
-                    <h2>💾 Export & Import Guide</h2>
-                    <p>Save your work and share topologies with classmates or submit to your instructor.</p>
-
-                    <h3 style="margin-top: 20px; color: var(--primary);">📤 Exporting Your Topology</h3>
-                    <div style="background: var(--surface); padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <p><strong>How to Export:</strong></p>
-                        <ol style="margin-left: 20px; margin-top: 10px;">
-                            <li>Build your topology and configure devices</li>
-                            <li>Click the <strong>💾 Export</strong> button in the toolbar</li>
-                            <li>A JSON file downloads automatically</li>
-                            <li>File is named: <code>topology_YYYY-MM-DDTHH-MM-SS.json</code></li>
-                        </ol>
-                        <p style="margin-top: 15px;"><strong>What Gets Saved:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li>✅ All devices and their positions</li>
-                            <li>✅ Device names (hostnames)</li>
-                            <li>✅ Interface configurations (IPs, masks, VLANs)</li>
-                            <li>✅ All connections between devices</li>
-                            <li>✅ Router configs (routes, OSPF, EIGRP, ACLs)</li>
-                            <li>✅ Switch configs (VLANs, STP settings)</li>
-                            <li>✅ DHCP server configurations</li>
-                            <li>✅ Lab progress (if working on a lab)</li>
-                        </ul>
-                    </div>
-
-                    <h3 style="margin-top: 20px; color: var(--primary);">📥 Importing a Topology</h3>
-                    <div style="background: var(--surface); padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <p><strong>How to Import:</strong></p>
-                        <ol style="margin-left: 20px; margin-top: 10px;">
-                            <li>Click the <strong>📂 Import</strong> button in the toolbar</li>
-                            <li>Select a <code>.json</code> file from your computer</li>
-                            <li>The topology loads with all configurations restored</li>
-                            <li>If it was a lab, instructions and progress are restored too</li>
-                        </ol>
-                        <p style="margin-top: 15px;"><strong>Use Cases:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li>📁 <strong>Backup:</strong> Save work before closing browser</li>
-                            <li>📧 <strong>Submit:</strong> Export and email to instructor</li>
-                            <li>👥 <strong>Share:</strong> Send topology to classmates</li>
-                            <li>💻 <strong>Transfer:</strong> Move work between computers</li>
-                            <li>🔄 <strong>Continue:</strong> Resume work from previous session</li>
-                        </ul>
-                    </div>
-
-                    <h3 style="margin-top: 20px; color: var(--primary);">⚠️ Important Notes</h3>
-                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <ul style="margin-left: 20px;">
-                            <li><strong>File Format:</strong> Only <code>.json</code> files exported from this tool can be imported</li>
-                            <li><strong>Version Compatibility:</strong> Files from older versions (v3.9 and earlier) may not include all configuration data</li>
-                            <li><strong>Browser Storage:</strong> Lab progress is also saved in localStorage automatically - export is for backup/sharing</li>
-                            <li><strong>Real Packet Tracer:</strong> These JSON files are NOT compatible with Cisco Packet Tracer (.pkt files)</li>
-                        </ul>
-                    </div>
-
-                    <h3 style="margin-top: 20px; color: var(--primary);">📋 For Lab Submissions</h3>
-                    <div style="background: var(--surface); padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <p><strong>Recommended naming convention for submissions:</strong></p>
-                        <p style="margin-top: 10px; font-family: monospace; background: var(--background); padding: 10px; border-radius: 4px;">
-                            Lab[#]_[YourName]_[Date].json<br>
-                            Example: Lab3_JohnSmith_2025-12-09.json
-                        </p>
-                        <p style="margin-top: 10px;">After exporting, rename the file following your instructor's guidelines before submitting.</p>
-                    </div>
-                </div>
-
                 <!-- CLI COMMANDS SECTION -->
                 <div class="help-section" id="commands">
                     <h2>💻 CLI Command Reference</h2>
@@ -2741,8 +2234,8 @@
                                 <div class="command-description">Enable OSPF routing and enter OSPF configuration mode</div>
                             </div>
                             <div class="command-item" data-keywords="network advertise area ospf">
-                                <div class="command-syntax">network [network] [wildcard] area [area-id]</div>
-                                <div class="command-description">Advertise a network in OSPF with wildcard mask and area ID</div>
+                                <div class="command-syntax">network [ip] [wildcard] area [area-id]</div>
+                                <div class="command-description">Advertise a network in OSPF (must be in router config mode). Example: network 0.0.0.0 255.255.255.255 area 0</div>
                             </div>
                             <div class="command-item" data-keywords="router-id rid identifier ospf">
                                 <div class="command-syntax">router-id [id]</div>
@@ -2762,12 +2255,37 @@
                             </div>
                         </div>
 
+                        <!-- EIGRP Commands -->
+                        <div class="command-category" data-category="eigrp">
+                            <h3>🔹 EIGRP Commands</h3>
+                            <div class="command-item" data-keywords="router eigrp enable start as autonomous">
+                                <div class="command-syntax">router eigrp [as-number]</div>
+                                <div class="command-description">Enable EIGRP routing and enter EIGRP configuration mode</div>
+                            </div>
+                            <div class="command-item" data-keywords="network advertise eigrp wildcard">
+                                <div class="command-syntax">network [ip] [wildcard]</div>
+                                <div class="command-description">Advertise a network in EIGRP (must be in router config mode). Example: network 10.0.0.0 0.255.255.255</div>
+                            </div>
+                            <div class="command-item" data-keywords="no auto-summary eigrp classless">
+                                <div class="command-syntax">no auto-summary</div>
+                                <div class="command-description">Disable automatic summarization for classless routing</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip eigrp neighbors adjacency">
+                                <div class="command-syntax">show ip eigrp neighbors</div>
+                                <div class="command-description">Display EIGRP neighbor relationships</div>
+                            </div>
+                            <div class="command-item" data-keywords="show ip eigrp topology routes">
+                                <div class="command-syntax">show ip eigrp topology</div>
+                                <div class="command-description">Display EIGRP topology table with successor and feasible successor routes</div>
+                            </div>
+                        </div>
+
                         <!-- Routing Commands -->
                         <div class="command-category" data-category="routing">
                             <h3>🔹 Routing Commands</h3>
-                            <div class="command-item" data-keywords="ip route static next-hop gateway">
+                            <div class="command-item" data-keywords="ip route static next-hop gateway default">
                                 <div class="command-syntax">ip route [dest] [mask] [next-hop]</div>
-                                <div class="command-description">Configure a static route to a destination network</div>
+                                <div class="command-description">Configure a static route. For default route: ip route 0.0.0.0 0.0.0.0 [next-hop]</div>
                             </div>
                             <div class="command-item" data-keywords="show ip route table routing">
                                 <div class="command-syntax">show ip route</div>
@@ -3020,7 +2538,7 @@
                     <div style="text-align: center; margin: 30px 0;">
                         <h3 style="font-size: 2em; color: #2a5298;">
                             Packet Tracer Lite
-                            <span class="version-badge">v3.9</span>
+                            <span class="version-badge">v3.5</span>
                         </h3>
                         <p style="color: #6c757d; margin-top: 10px;">Interactive Network Lab Library Edition</p>
                     </div>
@@ -5771,20 +5289,7 @@
                         {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
                         {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-7", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-9", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-10", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-12", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Configure Edge Router WAN Interface", description: "Assign IP 203.0.113.2/30 to Gi0/0 (WAN link)", commands: ["enable", "conf t", "int Gi0/0", "ip address 203.0.113.2 255.255.255.252", "no shut"], completed: false},
@@ -5822,20 +5327,7 @@
                         {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
                         {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-7", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-9", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-10", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-12", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Create VLANs on Access-SW1", description: "Create VLAN 10 (Sales), VLAN 20 (Engineering), VLAN 30 (Servers)", commands: ["vlan 10", "name Sales", "vlan 20", "name Engineering", "vlan 30", "name Servers", "exit"], completed: false},
@@ -5873,23 +5365,7 @@
                         {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
                         {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Edge-R1", device2: "Core-SW2", color: "#06b6d4"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-7", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-9", device1: "Access-SW3", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-10", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-12", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-13", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-14", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-15", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Enable Rapid PVST+", description: "Configure all switches to use Rapid Spanning Tree", commands: ["spanning-tree mode rapid-pvst"], completed: false},
@@ -5927,23 +5403,7 @@
                         {id: "SRV1", type: "server", name: "Web-Server", x: 550, y: 500},
                         {id: "SRV2", type: "server", name: "DB-Server", x: 700, y: 500}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Edge-R1", device2: "Core-SW2", color: "#06b6d4"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-7", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-9", device1: "Access-SW3", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-10", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-12", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-13", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-14", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-15", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Remove Static Routes", description: "Clear existing static routes from Edge Router", commands: ["no ip route 192.168.0.0 255.255.0.0 10.0.0.2"], completed: false},
@@ -5985,26 +5445,7 @@
                         {id: "Remote-PC1", type: "pc", name: "Remote-PC1", x: 750, y: 350},
                         {id: "Remote-PC2", type: "pc", name: "Remote-PC2", x: 850, y: 350}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Edge-R1", device2: "Core-SW2", color: "#06b6d4"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-7", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-9", device1: "Access-SW3", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-10", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-12", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-13", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-14", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-15", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"},
-                        {id: "conn-16", device1: "Edge-R1", device2: "Remote-R1", color: "#06b6d4"},
-                        {id: "conn-17", device1: "Remote-R1", device2: "Remote-PC1", color: "#f59e0b"},
-                        {id: "conn-18", device1: "Remote-R1", device2: "Remote-PC2", color: "#f59e0b"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Configure WAN Link to Remote Site", description: "Add new interface on Edge Router for remote branch", commands: ["int Gi0/2", "ip address 10.10.10.1 255.255.255.252", "no shut", "exit"], completed: false},
@@ -6046,26 +5487,7 @@
                         {id: "Remote-PC1", type: "pc", name: "Remote-PC1", x: 750, y: 350},
                         {id: "Remote-PC2", type: "pc", name: "Remote-PC2", x: 850, y: 350}
                     ],
-                    connections: [
-                        {id: "conn-1", device1: "Edge-R1", device2: "Core-SW1", color: "#06b6d4"},
-                        {id: "conn-2", device1: "Edge-R1", device2: "Core-SW2", color: "#06b6d4"},
-                        {id: "conn-3", device1: "Core-SW1", device2: "Core-SW2", color: "#10b981"},
-                        {id: "conn-4", device1: "Core-SW1", device2: "Access-SW1", color: "#9333ea"},
-                        {id: "conn-5", device1: "Core-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-6", device1: "Core-SW2", device2: "Access-SW3", color: "#9333ea"},
-                        {id: "conn-7", device1: "Core-SW2", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-8", device1: "Access-SW1", device2: "Access-SW2", color: "#9333ea"},
-                        {id: "conn-9", device1: "Access-SW3", device2: "Access-SW4", color: "#9333ea"},
-                        {id: "conn-10", device1: "Access-SW1", device2: "PC1", color: "#f59e0b"},
-                        {id: "conn-11", device1: "Access-SW1", device2: "PC2", color: "#f59e0b"},
-                        {id: "conn-12", device1: "Access-SW2", device2: "PC3", color: "#f59e0b"},
-                        {id: "conn-13", device1: "Access-SW3", device2: "PC4", color: "#f59e0b"},
-                        {id: "conn-14", device1: "Access-SW4", device2: "SRV1", color: "#ec4899"},
-                        {id: "conn-15", device1: "Access-SW4", device2: "SRV2", color: "#ec4899"},
-                        {id: "conn-16", device1: "Edge-R1", device2: "Remote-R1", color: "#06b6d4"},
-                        {id: "conn-17", device1: "Remote-R1", device2: "Remote-PC1", color: "#f59e0b"},
-                        {id: "conn-18", device1: "Remote-R1", device2: "Remote-PC2", color: "#f59e0b"}
-                    ]
+                    connections: []
                 },
                 instructions: [
                     {step: 1, title: "Configure HSRP on Core-SW1", description: "Set up HSRP group 10 for VLAN 10 gateway redundancy", commands: ["int vlan 10", "standby 10 ip 192.168.10.254", "standby 10 priority 110", "standby 10 preempt", "exit"], completed: false},
@@ -6613,12 +6035,6 @@
 
             // Load the appropriate topology
             if (topologyToLoad) {
-                // BUGFIX: If saved state has devices but no/empty connections,
-                // merge the device configs with the current lab's default connections
-                if (!topologyToLoad.connections || topologyToLoad.connections.length === 0) {
-                    console.log('Saved state has no connections - merging with default topology connections');
-                    topologyToLoad.connections = lab.topology.connections || [];
-                }
                 loadTopology(topologyToLoad);
             } else {
                 // Fall back to the lab's default topology
@@ -7949,29 +7365,7 @@
                 `Connected to: ${selectedDevice.name} (${selectedDevice.type.toUpperCase()})`;
 
             document.getElementById('cliInterface').style.display = 'block';
-
-            // Reset CLI state when switching devices
-            // These variables are declared later but accessible due to script scope
-            if (typeof cliMode !== 'undefined') {
-                cliMode = 'user';
-                currentInterface = null;
-                currentRouterProcess = null;
-                currentVlan = null;
-                currentAcl = null;
-            }
-
-            // Update prompt with correct device name and mode
-            const promptEl = document.getElementById('cliPrompt');
-            if (promptEl) {
-                promptEl.textContent = `${selectedDevice.name}>`;
-            }
-
-            // Add device switch notification to CLI output
-            const output = document.getElementById('cliOutput');
-            if (output) {
-                output.innerHTML += `<div style="color: var(--accent-cyan); border-top: 1px solid var(--border-color); margin-top: 5px; padding-top: 5px;">--- Connected to ${selectedDevice.name} ---</div>`;
-                output.scrollTop = output.scrollHeight;
-            }
+            document.getElementById('cliPrompt').textContent = `${selectedDevice.name}>`;
         }
 
         // Apply configuration from Config panel
@@ -8052,7 +7446,7 @@
 
             // ========== HELP ==========
             if (lowerCmd === 'help' || lowerCmd === '?') {
-                output.innerHTML += `<div style="color: #0ff; font-weight: bold;">━━━ Packet Tracer Lite CLI v3.9 ━━━</div>`;
+                output.innerHTML += `<div style="color: #0ff; font-weight: bold;">━━━ Packet Tracer Lite CLI v3.5 ━━━</div>`;
                 output.innerHTML += `<div style="color: #ff0;">Mode Commands:</div>`;
                 output.innerHTML += `<div>  enable / en            Enter privileged mode</div>`;
                 output.innerHTML += `<div>  configure terminal     Enter config mode (conf t)</div>`;
@@ -8078,7 +7472,7 @@
             }
             // ========== CLEAR ==========
             else if (lowerCmd === 'clear') {
-                output.innerHTML = '<div>Cisco IOS Software, Lite Version 3.9</div><div>Type \'help\' or \'?\' for commands</div><div style="margin-top: 10px;">Ready.</div>';
+                output.innerHTML = '<div>Cisco IOS Software, Lite Version 3.5</div><div>Type \'help\' or \'?\' for commands</div><div style="margin-top: 10px;">Ready.</div>';
             }
             // ========== ENABLE ==========
             else if (lowerCmd === 'enable' || lowerCmd === 'en') {
@@ -8099,7 +7493,7 @@
             }
             // ========== EXIT / END ==========
             else if (lowerCmd === 'exit') {
-                if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan') {
+                if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan' || cliMode === 'config-dhcp' || cliMode === 'config-acl') {
                     cliMode = 'config';
                     currentInterface = null;
                 } else if (cliMode === 'config') {
@@ -8231,11 +7625,23 @@
             else if (lowerCmd.startsWith('network ') && cliMode === 'config-router') {
                 const parts = cmd.substring(8).trim().split(/\s+/);
                 if (currentRouterProcess === 'ospf' && parts.length >= 4) {
+                    // Full OSPF syntax: network <ip> <wildcard> area <num>
                     selectedDevice.config.ospf.networks.push({ ip: parts[0], wildcard: parts[1], area: parts[3] });
                     output.innerHTML += `<div style="color: #0f0;">✓ Network ${parts[0]} area ${parts[3]}</div>`;
+                } else if (currentRouterProcess === 'ospf' && parts.length < 4) {
+                    // Incomplete OSPF syntax - missing area
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command - OSPF requires area</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;wildcard&gt; area &lt;area-id&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 0.0.0.0 255.255.255.255 area 0</div>`;
                 } else if (currentRouterProcess === 'eigrp' && parts.length >= 2) {
+                    // EIGRP syntax: network <ip> <wildcard>
                     selectedDevice.config.eigrp.networks.push({ ip: parts[0], wildcard: parts[1] });
                     output.innerHTML += `<div style="color: #0f0;">✓ Network ${parts[0]}</div>`;
+                } else if (currentRouterProcess === 'eigrp' && parts.length < 2) {
+                    // Incomplete EIGRP syntax
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;wildcard&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 10.0.0.0 0.255.255.255</div>`;
                 }
             }
             else if (lowerCmd.startsWith('router-id ') && cliMode === 'config-router') {
@@ -8286,7 +7692,9 @@
             }
             // ========== IP DHCP ==========
             else if (lowerCmd.startsWith('ip dhcp pool ')) {
-                output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool configured</div>`;
+                cliMode = 'config-dhcp';
+                updateCLIPrompt(promptEl, selectedDevice.name);
+                output.innerHTML += `<div style="color: #0f0;">✓ DHCP pool configured - entering DHCP config mode</div>`;
             }
             else if (lowerCmd.startsWith('ip dhcp excluded-address ')) {
                 output.innerHTML += `<div style="color: #0f0;">✓ DHCP exclusion set</div>`;
@@ -8323,6 +7731,32 @@
                 currentInterface = 'Loopback0';
                 updateCLIPrompt(promptEl, selectedDevice.name);
             }
+            // ========== NETWORK COMMAND IN DHCP MODE ==========
+            else if (lowerCmd.startsWith('network ') && cliMode === 'config-dhcp') {
+                const parts = cmd.substring(8).trim().split(/\s+/);
+                if (parts.length >= 2) {
+                    output.innerHTML += `<div style="color: #0f0;">✓ DHCP network ${parts[0]} ${parts[1]}</div>`;
+                } else {
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;subnet-mask&gt;</div>`;
+                    output.innerHTML += `<div style="color: #0ff;">  Example: network 192.168.10.0 255.255.255.0</div>`;
+                }
+            }
+            // ========== NETWORK COMMAND OUTSIDE ROUTER/DHCP MODE ==========
+            else if (lowerCmd.startsWith('network ') && cliMode !== 'config-router' && cliMode !== 'config-dhcp') {
+                output.innerHTML += `<div style="color: #f00;">% Invalid input - 'network' requires router or DHCP configuration mode</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For a default route, use:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        ip route 0.0.0.0 0.0.0.0 &lt;next-hop-ip&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For OSPF, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        router ospf 1</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;wildcard&gt; area &lt;num&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For EIGRP, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        router eigrp 100</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;wildcard&gt;</div>`;
+                output.innerHTML += `<div style="color: #ff0;">  Hint: For DHCP pool, first enter:</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        ip dhcp pool &lt;name&gt;</div>`;
+                output.innerHTML += `<div style="color: #0ff;">        network &lt;ip&gt; &lt;subnet-mask&gt;</div>`;
+            }
             // ========== UNKNOWN ==========
             else {
                 output.innerHTML += `<div style="color: #f00;">% Unrecognized: "${cmd}"</div>`;
@@ -8358,24 +7792,11 @@
             else if (intfName.toLowerCase().startsWith('fa')) normalized = 'FastEthernet' + intfName.substring(2).replace(/stethernet/i, '');
             else if (intfName.toLowerCase().startsWith('vlan')) normalized = 'Vlan' + intfName.substring(4).trim();
             else if (intfName.toLowerCase().startsWith('se')) normalized = 'Serial' + intfName.substring(2).replace(/rial/i, '');
-            else if (intfName.toLowerCase().startsWith('lo')) normalized = 'Loopback' + intfName.replace(/^(lo|loop|loopback)\s*/i, '');
 
-            // Strip non-alphanumeric for comparison (fixes Gi0/1 vs GigabitEthernet0/1 matching)
-            const normalizedStripped = normalized.toLowerCase().replace(/[^a-z0-9]/g, '');
-            let intf = device.interfaces.find(i => {
-                const intfStripped = i.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-                return intfStripped === normalizedStripped || intfStripped.includes(normalizedStripped);
-            });
+            let intf = device.interfaces.find(i => i.name.toLowerCase().includes(normalized.toLowerCase().replace(/[^a-z0-9]/g, '')));
 
-            // Auto-create VLAN interfaces (SVIs) on demand
             if (!intf && normalized.toLowerCase().startsWith('vlan')) {
                 intf = { name: normalized, ip: '', mask: '', status: 'down' };
-                device.interfaces.push(intf);
-            }
-
-            // Auto-create Loopback interfaces on demand (virtual interfaces for router-id, testing)
-            if (!intf && normalized.toLowerCase().startsWith('loopback')) {
-                intf = { name: normalized, ip: '', mask: '', status: 'up' };
                 device.interfaces.push(intf);
             }
 
@@ -8386,7 +7807,7 @@
                 output.innerHTML += `<div style="color: #0f0;">✓ Configuring ${intf.name}</div>`;
             } else {
                 output.innerHTML += `<div style="color: #ff0;">% Interface not found. Available:</div>`;
-                device.interfaces.slice(0, 8).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
+                device.interfaces.slice(0, 5).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
             }
         }
 
@@ -8498,33 +7919,21 @@
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
             const topology = {
-                version: '3.9',
+                version: '3.5',
                 exportedAt: new Date().toISOString(),
                 lab: currentLab ? {
                     title: currentLab.title,
                     id: currentLab.id || null,
                     type: currentLab.num ? 'cumulative' : 'standard'
                 } : null,
-                devices: devices.map(d => {
-                    const deviceData = {
-                        id: d.id,
-                        type: d.type,
-                        name: d.name,
-                        x: d.x,
-                        y: d.y,
-                        interfaces: d.interfaces || [],
-                        selectedInterface: d.selectedInterface || 0
-                    };
-                    // Include config object (VLANs, routes, OSPF, EIGRP, ACLs)
-                    if (d.config) {
-                        deviceData.config = d.config;
-                    }
-                    // Include DHCP server settings
-                    if (d.dhcpServer) {
-                        deviceData.dhcpServer = d.dhcpServer;
-                    }
-                    return deviceData;
-                }),
+                devices: devices.map(d => ({
+                    id: d.id,
+                    type: d.type,
+                    name: d.name,
+                    x: d.x,
+                    y: d.y,
+                    interfaces: d.interfaces || []
+                })),
                 connections: connections.map(c => ({
                     id: c.id,
                     device1: c.device1,
@@ -8675,7 +8084,7 @@
 
             // Header
             report += '═══════════════════════════════════════════════════════\n';
-            report += '   PACKET TRACER LITE v3.9 - LAB GRADING REPORT\n';
+            report += '   PACKET TRACER LITE v3.5 - LAB GRADING REPORT\n';
             report += '═══════════════════════════════════════════════════════\n\n';
             report += `Student Name: _______________________________\n`;
             report += `Date: ${new Date().toLocaleDateString()}\n`;
@@ -8874,7 +8283,7 @@
 
             // Footer
             report += '═'.repeat(55) + '\n';
-            report += 'Generated by Packet Tracer Lite v3.9 - Lab Library Edition\n';
+            report += 'Generated by Packet Tracer Lite v3.5 - Lab Library Edition\n';
             report += `Report ID: ${timestamp}\n`;
             report += '═'.repeat(55) + '\n';
 
@@ -8901,61 +8310,6 @@
         const commandSearch = document.getElementById('commandSearch');
         const commandList = document.getElementById('commandList');
         const noResults = document.getElementById('noResults');
-
-        // ========== COMMAND REFERENCE POPUP ==========
-        function openCommandReference() {
-            document.getElementById('cmdRefPopup').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('cmdRefSearch').focus();
-        }
-
-        function closeCommandReference() {
-            document.getElementById('cmdRefPopup').classList.remove('active');
-            document.body.style.overflow = 'auto';
-            document.getElementById('cmdRefSearch').value = '';
-            // Reset all command items to visible
-            document.querySelectorAll('.cmd-item').forEach(item => item.classList.remove('hidden'));
-        }
-
-        function filterCommands() {
-            const search = document.getElementById('cmdRefSearch').value.toLowerCase().trim();
-            const items = document.querySelectorAll('.cmd-item');
-
-            items.forEach(item => {
-                const syntax = item.querySelector('.cmd-syntax').textContent.toLowerCase();
-                const desc = item.querySelector('.cmd-desc').textContent.toLowerCase();
-                const keywords = (item.dataset.keywords || '').toLowerCase();
-                const example = item.querySelector('.cmd-example');
-                const exampleText = example ? example.textContent.toLowerCase() : '';
-
-                const matches = syntax.includes(search) ||
-                               desc.includes(search) ||
-                               keywords.includes(search) ||
-                               exampleText.includes(search);
-
-                item.classList.toggle('hidden', !matches && search !== '');
-            });
-
-            // Show/hide category headers based on visible items
-            document.querySelectorAll('.cmd-category').forEach(cat => {
-                const visibleItems = cat.querySelectorAll('.cmd-item:not(.hidden)');
-                cat.style.display = visibleItems.length > 0 ? 'block' : 'none';
-            });
-        }
-
-        // Click outside popup to close
-        document.getElementById('cmdRefPopup').addEventListener('click', (e) => {
-            if (e.target.id === 'cmdRefPopup') {
-                closeCommandReference();
-            }
-        });
-
-        // Escape key to close command reference
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('cmdRefPopup').classList.contains('active')) {
-                closeCommandReference();
-            }
-        });
 
         // Open help modal
         function openHelpModal() {
@@ -9129,7 +8483,7 @@
 
         console.log('✅ Help system initialized successfully');
 
-        console.log('📚 Packet Tracer Lite v3.9 - Lab Library Edition');
+        console.log('📚 Packet Tracer Lite v3.5 - Lab Library Edition');
         console.log('Loaded labs:', Object.keys(LAB_LIBRARY).length);
     </script>
 </body>
