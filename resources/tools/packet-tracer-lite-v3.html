@@ -7629,10 +7629,18 @@
                     selectedDevice.config.ospf.networks.push({ ip: parts[0], wildcard: parts[1], area: parts[3] });
                     output.innerHTML += `<div style="color: #0f0;">✓ Network ${parts[0]} area ${parts[3]}</div>`;
                 } else if (currentRouterProcess === 'ospf' && parts.length < 4) {
-                    // Incomplete OSPF syntax - missing area
-                    output.innerHTML += `<div style="color: #f00;">% Incomplete command - OSPF requires area</div>`;
-                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;wildcard&gt; area &lt;area-id&gt;</div>`;
-                    output.innerHTML += `<div style="color: #0ff;">  Example: network 0.0.0.0 255.255.255.255 area 0</div>`;
+                    // Incomplete OSPF syntax - missing area or wrong mask type
+                    output.innerHTML += `<div style="color: #f00;">% Incomplete command - OSPF requires wildcard mask + area</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Syntax: network &lt;ip&gt; &lt;WILDCARD-mask&gt; area &lt;area-id&gt;</div>`;
+                    // Check if user might be using subnet mask instead of wildcard
+                    if (parts.length >= 2 && parts[1] && parts[1].startsWith('255.')) {
+                        output.innerHTML += `<div style="color: #f00;">  Note: You used subnet mask (${parts[1]}). OSPF needs WILDCARD mask!</div>`;
+                        // Calculate wildcard from subnet
+                        const octets = parts[1].split('.').map(n => 255 - parseInt(n));
+                        output.innerHTML += `<div style="color: #0ff;">  Try: network ${parts[0]} ${octets.join('.')} area 0</div>`;
+                    } else {
+                        output.innerHTML += `<div style="color: #0ff;">  Example: network 192.168.10.0 0.0.0.255 area 0</div>`;
+                    }
                 } else if (currentRouterProcess === 'eigrp' && parts.length >= 2) {
                     // EIGRP syntax: network <ip> <wildcard>
                     selectedDevice.config.eigrp.networks.push({ ip: parts[0], wildcard: parts[1] });
