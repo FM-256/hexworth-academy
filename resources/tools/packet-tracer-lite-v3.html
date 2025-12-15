@@ -1759,6 +1759,7 @@
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <span id="cliPrompt" style="color: var(--accent-cyan); font-family: 'Courier New', monospace; font-weight: bold;">Router&gt;</span>
                                 <input type="text" id="cliInput" placeholder="Enter command..." style="flex: 1; padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-family: 'Courier New', monospace;">
+                                <button id="cmdRefBtn" title="Command Reference" style="padding: 10px 12px; background: var(--accent-cyan); border: none; border-radius: 6px; cursor: pointer; font-size: 1.1em;">📋</button>
                             </div>
                         </div>
                     </div>
@@ -8408,6 +8409,18 @@
 
         // Help button click handler
         document.getElementById('helpBtn').addEventListener('click', openHelpModal);
+
+        // Command Reference button (next to CLI) - opens Help modal directly to Commands tab
+        document.getElementById('cmdRefBtn').addEventListener('click', () => {
+            openHelpModal();
+            // Switch to Commands tab
+            helpTabs.forEach(t => t.classList.remove('active'));
+            helpSections.forEach(s => s.classList.remove('active'));
+            document.querySelector('[data-tab="commands"]').classList.add('active');
+            document.getElementById('commands').classList.add('active');
+            // Focus the search box
+            setTimeout(() => commandSearch.focus(), 100);
+        });
 
         // Close button click handler
         helpCloseBtn.addEventListener('click', closeHelpModal);
