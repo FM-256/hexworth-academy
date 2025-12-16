@@ -8771,7 +8771,18 @@
             else if (intfName.toLowerCase().startsWith('vlan')) normalized = 'Vlan' + intfName.substring(4).trim();
             else if (intfName.toLowerCase().startsWith('se')) normalized = 'Serial' + intfName.substring(2).replace(/rial/i, '');
 
-            let intf = device.interfaces.find(i => i.name.toLowerCase().includes(normalized.toLowerCase().replace(/[^a-z0-9]/g, '')));
+            // Normalize search term (remove non-alphanumeric for comparison)
+            const searchTerm = normalized.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Find interface by normalizing both sides for comparison
+            let intf = device.interfaces.find(i => {
+                const intfNormalized = i.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                // Exact match first (e.g., "fastethernet02" === "fastethernet02")
+                if (intfNormalized === searchTerm) return true;
+                // Partial match for short names (e.g., "fa" matches "fastethernet01")
+                if (searchTerm.length < 15 && intfNormalized.startsWith(searchTerm)) return true;
+                return false;
+            });
 
             if (!intf && normalized.toLowerCase().startsWith('vlan')) {
                 intf = { name: normalized, ip: '', mask: '', status: 'down' };
@@ -8786,7 +8797,10 @@
                 output.innerHTML += `<div style="color: #0f0;">✓ Configuring ${intf.name}</div>`;
             } else {
                 output.innerHTML += `<div style="color: #ff0;">% Interface not found. Available:</div>`;
-                device.interfaces.slice(0, 5).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
+                device.interfaces.slice(0, 8).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
+                if (device.interfaces.length > 8) {
+                    output.innerHTML += `<div style="color: #888;">  ... and ${device.interfaces.length - 8} more</div>`;
+                }
             }
         }
 
@@ -8831,10 +8845,17 @@
                 return null;
             }
 
-            // Generate interface names and find them in device
+            // Generate interface names and find them in device (case-insensitive)
             for (let port = startPort; port <= endPort; port++) {
                 const intfName = `${prefix}${slot}/${port}`;
-                const intf = device.interfaces.find(i => i.name === intfName);
+                const searchNormalized = intfName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+                // Find interface with case-insensitive, normalized matching
+                const intf = device.interfaces.find(i => {
+                    const deviceIntfNormalized = i.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    return deviceIntfNormalized === searchNormalized;
+                });
+
                 if (intf) {
                     interfaces.push(intf.name);
                 }
