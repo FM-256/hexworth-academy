@@ -2450,7 +2450,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.9.2</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.9.3</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2469,7 +2469,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.9.2</div>
+                        <div class="value" id="modalCurrentVersion">7.9.3</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -8392,7 +8392,49 @@
             { title: 'Subnetting Cheat Sheet', type: 'Handout', icon: '📄', link: 'resources/subnetting-cheatsheet.pdf', keywords: ['subnetting', 'cheat sheet', 'reference', 'cidr', 'masks'], section: 'section-handouts' },
             { title: 'Port Numbers Reference', type: 'Handout', icon: '📄', link: 'resources/ports-reference.pdf', keywords: ['ports', 'well-known', 'tcp', 'udp', 'reference'], section: 'section-handouts' },
             { title: 'CLI Command Reference', type: 'Handout', icon: '📄', link: 'resources/cli-reference.pdf', keywords: ['cli', 'commands', 'cisco', 'ios', 'reference'], section: 'section-handouts' },
-            { title: 'Network+ Study Guide', type: 'Handout', icon: '📄', link: 'resources/network-plus-guide.pdf', keywords: ['network+', 'certification', 'study', 'exam', 'comptia'], section: 'section-handouts' }
+            { title: 'Network+ Study Guide', type: 'Handout', icon: '📄', link: 'resources/network-plus-guide.pdf', keywords: ['network+', 'certification', 'study', 'exam', 'comptia'], section: 'section-handouts' },
+
+            // A+ Core 2 Presentations
+            { title: 'Windows Editions', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/windows-editions.html', keywords: ['windows', 'editions', 'home', 'pro', 'enterprise', 'a+', 'core 2', '1.1'], section: 'section-aplus' },
+            { title: 'Windows Settings', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/windows-settings.html', keywords: ['windows', 'settings', 'configuration', 'system', 'a+', 'core 2', '1.2'], section: 'section-aplus' },
+            { title: 'Windows Features', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/windows-features.html', keywords: ['windows', 'features', 'system tools', 'a+', 'core 2', '1.3'], section: 'section-aplus' },
+            { title: 'Control Panel', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/control-panel.html', keywords: ['control panel', 'windows', 'settings', 'applets', 'a+', 'core 2', '1.4'], section: 'section-aplus' },
+            { title: 'Administrative Tools', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/admin-tools.html', keywords: ['admin', 'administrative', 'tools', 'mmc', 'event viewer', 'a+', 'core 2', '1.5'], section: 'section-aplus' },
+            { title: 'macOS & Linux Basics', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/macos-linux-basics.html', keywords: ['macos', 'linux', 'unix', 'mac', 'apple', 'ubuntu', 'terminal', 'bash', 'a+', 'core 2', '1.6'], section: 'section-aplus' },
+            { title: 'Workgroup vs Domain', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/workgroup-vs-domain.html', keywords: ['workgroup', 'domain', 'active directory', 'ad', 'network', 'a+', 'core 2', '1.8'], section: 'section-aplus' },
+            { title: 'OS Installation Types', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/os-installation-types-presentation.html', keywords: ['installation', 'os', 'operating system', 'clean install', 'upgrade', 'image', 'a+', 'core 2', '1.9'], section: 'section-aplus' },
+            { title: 'OS Upgrade Process', type: 'A+ Presentation', icon: '🎓', link: 'presentations/aplus-core2/os-upgrade-process-presentation.html', keywords: ['upgrade', 'os', 'operating system', 'migration', 'compatibility', 'a+', 'core 2', '1.10'], section: 'section-aplus' },
+
+            // A+ Interactive Tools & Simulators
+            { title: 'Windows Editions Matrix', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/windows-editions-matrix.html', keywords: ['windows', 'editions', 'comparison', 'matrix', 'features', 'a+'], section: 'section-aplus' },
+            { title: 'Windows Settings Simulator', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/windows-settings-simulator.html', keywords: ['windows', 'settings', 'simulator', 'interactive', 'a+'], section: 'section-aplus' },
+            { title: 'Control Panel Simulator', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/control-panel-simulator.html', keywords: ['control panel', 'simulator', 'windows', 'applets', 'a+'], section: 'section-aplus' },
+            { title: 'Admin Tools Simulator', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/admin-tools-simulator.html', keywords: ['admin', 'administrative', 'tools', 'simulator', 'mmc', 'a+'], section: 'section-aplus' },
+            { title: 'System Tools Explorer', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/windows-system-tools.html', keywords: ['system tools', 'msconfig', 'task manager', 'disk management', 'a+'], section: 'section-aplus' },
+            { title: 'Command Translator', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/command-translator.html', keywords: ['command', 'translator', 'windows', 'linux', 'macos', 'terminal', 'cli', 'a+'], section: 'section-aplus' },
+            { title: 'Workgroup/Domain Quiz', type: 'A+ Quiz', icon: '❓', link: 'tools/aplus-applets/quiz-workgroup-domain.html', keywords: ['quiz', 'workgroup', 'domain', 'test', 'a+'], section: 'section-aplus' },
+            { title: 'Installation Decision Tree', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/installation-decision-tree.html', keywords: ['installation', 'decision', 'tree', 'os', 'flowchart', 'a+'], section: 'section-aplus' },
+            { title: 'Upgrade Simulator', type: 'A+ Tool', icon: '🔧', link: 'tools/aplus-applets/upgrade-simulator.html', keywords: ['upgrade', 'simulator', 'os', 'migration', 'a+'], section: 'section-aplus' },
+
+            // A+ Labs
+            { title: 'Lab: Windows Editions', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-windows-editions.html', keywords: ['lab', 'windows', 'editions', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: Windows Settings', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-windows-settings.html', keywords: ['lab', 'windows', 'settings', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: Control Panel', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-control-panel.html', keywords: ['lab', 'control panel', 'windows', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: Admin Tools', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-admin-tools.html', keywords: ['lab', 'admin', 'administrative', 'tools', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: System Tools', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-system-tools.html', keywords: ['lab', 'system tools', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: macOS & Linux', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-macos-linux.html', keywords: ['lab', 'macos', 'linux', 'unix', 'mac', 'terminal', 'bash', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: Workgroup vs Domain', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-workgroup-domain.html', keywords: ['lab', 'workgroup', 'domain', 'active directory', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: OS Installation', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-os-installation.html', keywords: ['lab', 'installation', 'os', 'operating system', 'hands-on', 'a+'], section: 'section-aplus' },
+            { title: 'Lab: OS Upgrade', type: 'A+ Lab', icon: '🔬', link: 'tools/aplus-applets/lab-os-upgrade.html', keywords: ['lab', 'upgrade', 'os', 'migration', 'hands-on', 'a+'], section: 'section-aplus' },
+
+            // Script House Tools (Linux/Windows)
+            { title: 'Linux Command Simulator', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/linux-command-simulator.html', keywords: ['linux', 'command', 'terminal', 'bash', 'cli', 'shell'], section: 'section-script' },
+            { title: 'Linux Filesystem Navigator', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/linux-filesystem-navigator.html', keywords: ['linux', 'filesystem', 'directory', 'fhs', 'navigation', 'folder'], section: 'section-script' },
+            { title: 'Linux Permissions Calculator', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/linux-permissions-calculator.html', keywords: ['linux', 'permissions', 'chmod', 'rwx', 'octal', 'access'], section: 'section-script' },
+            { title: 'Linux Firewall Builder', type: 'Script Tool', icon: '💻', link: 'tools/cyber-applets/linux-firewall-builder.html', keywords: ['linux', 'firewall', 'iptables', 'security', 'rules'], section: 'section-script' },
+            { title: 'Windows CLI Tools', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/windows-cli-tools.html', keywords: ['windows', 'cli', 'command', 'cmd', 'powershell', 'terminal'], section: 'section-script' },
+            { title: 'Windows Registry Explorer', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/windows-registry-explorer.html', keywords: ['windows', 'registry', 'regedit', 'hkey', 'keys', 'values'], section: 'section-script' },
+            { title: 'Windows Troubleshooting', type: 'Script Tool', icon: '💻', link: 'tools/script-applets/windows-troubleshooting.html', keywords: ['windows', 'troubleshooting', 'diagnostics', 'repair', 'problems'], section: 'section-script' }
         ];
 
         // Search state
@@ -9258,7 +9300,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.9.2',
+            currentVersion: '7.9.3',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
