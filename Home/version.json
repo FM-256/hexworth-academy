@@ -1,10 +1,12 @@
 {
-  "version": "7.9.5",
+  "version": "7.10.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Fixed: 'int range' command now works (was being caught by generic 'int' handler)",
-    "Fixed: FastEthernet interface selection (int fa0/2, fa0/3, etc.)",
-    "Improved: Interface matching uses normalized comparison"
+    "Added: AWS Cloud Practitioner (CLF-C02) applet collection - 25 interactive tools",
+    "Added: All 12 chapters covered with visualizers and quizzes",
+    "Added: AWS Service Explorer, Cloud Architecture Designer, Provider Comparison",
+    "Added: House of the Cloud section in index with AWS domain organization",
+    "Added: Search index entries for all AWS content"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json"
