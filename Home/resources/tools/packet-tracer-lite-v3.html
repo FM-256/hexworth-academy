@@ -6477,6 +6477,7 @@
                 // Device type configurations
                 const deviceConfig = {
                     'router': { icon: '🔷', color: '#06b6d4', label: 'Router' },
+                    'switch': { icon: '🔶', color: '#9333ea', label: 'Switch' },
                     'l2switch': { icon: '🔶', color: '#9333ea', label: 'Switch' },
                     'l3switch': { icon: '🔷', color: '#10b981', label: 'L3-SW' },
                     'pc': { icon: '💻', color: '#f59e0b', label: 'PC' },
@@ -6538,13 +6539,32 @@
                             { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
                             { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
                         ];
-                    } else if (deviceData.type === 'l2switch' || deviceData.type === 'l3switch') {
+                    } else if (deviceData.type === 'l2switch' || deviceData.type === 'l3switch' || deviceData.type === 'switch') {
                         interfaces = [
                             { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
                             { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
                             { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
                             { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
                             { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/6', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/7', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/8', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/9', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/10', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/11', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/12', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/13', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/14', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/15', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/16', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/17', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/18', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/19', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/20', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/21', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/22', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/23', vlan: 1, status: 'up' },
+                            { name: 'FastEthernet0/24', vlan: 1, status: 'up' },
                             { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
                             { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
                         ];
@@ -8378,6 +8398,7 @@
                 } else {
                     cliMode = 'config';
                     currentInterface = null;
+                    currentInterfaceRange = null;
                     updateCLIPrompt(promptEl, selectedDevice.name);
                     output.innerHTML += `<div style="color: #0ff;">Enter configuration commands, one per line.</div>`;
                 }
@@ -8387,6 +8408,7 @@
                 if (cliMode === 'config-if' || cliMode === 'config-router' || cliMode === 'config-vlan' || cliMode === 'config-dhcp' || cliMode === 'config-acl') {
                     cliMode = 'config';
                     currentInterface = null;
+                    currentInterfaceRange = null;
                 } else if (cliMode === 'config') {
                     cliMode = 'privileged';
                 } else if (cliMode === 'privileged') {
@@ -8398,6 +8420,7 @@
             else if (lowerCmd === 'end') {
                 cliMode = 'privileged';
                 currentInterface = null;
+                currentInterfaceRange = null;
                 currentRouterProcess = null;
                 updateCLIPrompt(promptEl, selectedDevice.name);
                 output.innerHTML += `<div style="color: #0ff;">Returning to privileged mode</div>`;
@@ -8410,15 +8433,19 @@
             // ========== IP ADDRESS ==========
             else if (lowerCmd.startsWith('ip address ')) {
                 const parts = cmd.substring(11).trim().split(/\s+/);
+                const targetInterfaces = currentInterfaceRange || (currentInterface ? [currentInterface] : null);
+
                 if (parts[0] === 'dhcp') {
                     output.innerHTML += `<div style="color: #0f0;">✓ DHCP client enabled</div>`;
-                } else if (parts.length >= 2 && currentInterface) {
-                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
-                    if (intf) {
-                        intf.ip = parts[0];
-                        intf.mask = parts[1];
-                        output.innerHTML += `<div style="color: #0f0;">✓ IP ${parts[0]} ${parts[1]} on ${currentInterface}</div>`;
-                    }
+                } else if (parts.length >= 2 && targetInterfaces) {
+                    targetInterfaces.forEach(intfName => {
+                        const intf = selectedDevice.interfaces.find(i => i.name === intfName);
+                        if (intf) {
+                            intf.ip = parts[0];
+                            intf.mask = parts[1];
+                        }
+                    });
+                    output.innerHTML += `<div style="color: #0f0;">✓ IP ${parts[0]} ${parts[1]} (${targetInterfaces.length} interface${targetInterfaces.length > 1 ? 's' : ''})</div>`;
                 } else if (parts.length >= 2) {
                     output.innerHTML += `<div style="color: #0f0;">✓ IP address configured</div>`;
                 } else {
@@ -8427,19 +8454,27 @@
             }
             // ========== NO SHUTDOWN ==========
             else if (lowerCmd === 'no shutdown' || lowerCmd === 'no shut') {
-                if (currentInterface) {
-                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
-                    if (intf) { intf.status = 'up'; }
-                    output.innerHTML += `<div style="color: #0f0;">✓ Interface ${currentInterface} enabled</div>`;
+                const targetInterfaces = currentInterfaceRange || (currentInterface ? [currentInterface] : null);
+
+                if (targetInterfaces) {
+                    targetInterfaces.forEach(intfName => {
+                        const intf = selectedDevice.interfaces.find(i => i.name === intfName);
+                        if (intf) { intf.status = 'up'; }
+                    });
+                    output.innerHTML += `<div style="color: #0f0;">✓ Interface${targetInterfaces.length > 1 ? 's' : ''} enabled (${targetInterfaces.length})</div>`;
                 } else {
                     output.innerHTML += `<div style="color: #f00;">% Must be in interface config mode</div>`;
                 }
             }
             else if (lowerCmd === 'shutdown' || lowerCmd === 'shut') {
-                if (currentInterface) {
-                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
-                    if (intf) { intf.status = 'down'; }
-                    output.innerHTML += `<div style="color: #ff0;">⚠ Interface ${currentInterface} disabled</div>`;
+                const targetInterfaces = currentInterfaceRange || (currentInterface ? [currentInterface] : null);
+
+                if (targetInterfaces) {
+                    targetInterfaces.forEach(intfName => {
+                        const intf = selectedDevice.interfaces.find(i => i.name === intfName);
+                        if (intf) { intf.status = 'down'; }
+                    });
+                    output.innerHTML += `<div style="color: #ff0;">⚠ Interface${targetInterfaces.length > 1 ? 's' : ''} disabled (${targetInterfaces.length})</div>`;
                 }
             }
             // ========== HOSTNAME ==========
@@ -8471,15 +8506,45 @@
             }
             // ========== SWITCHPORT ==========
             else if (lowerCmd.startsWith('switchport ')) {
-                if (!currentInterface) { output.innerHTML += `<div style="color: #f00;">% Must be in interface config</div>`; }
-                else {
-                    const intf = selectedDevice.interfaces.find(i => i.name === currentInterface);
-                    if (lowerCmd.includes('mode access')) { if(intf) intf.switchportMode = 'access'; output.innerHTML += `<div style="color: #0f0;">✓ Mode access</div>`; }
-                    else if (lowerCmd.includes('mode trunk')) { if(intf) intf.switchportMode = 'trunk'; output.innerHTML += `<div style="color: #0f0;">✓ Mode trunk</div>`; }
-                    else if (lowerCmd.includes('access vlan')) { const m = cmd.match(/vlan\s+(\d+)/i); if(m && intf) { intf.vlan = parseInt(m[1]); output.innerHTML += `<div style="color: #0f0;">✓ Access VLAN ${m[1]}</div>`; } }
-                    else if (lowerCmd.includes('trunk native vlan')) { const m = cmd.match(/vlan\s+(\d+)/i); if(m && intf) { intf.nativeVlan = parseInt(m[1]); output.innerHTML += `<div style="color: #0f0;">✓ Native VLAN ${m[1]}</div>`; } }
-                    else if (lowerCmd.includes('trunk encapsulation')) { output.innerHTML += `<div style="color: #0f0;">✓ Encapsulation 802.1Q</div>`; }
-                    else { output.innerHTML += `<div style="color: #0f0;">✓ Switchport configured</div>`; }
+                const targetInterfaces = currentInterfaceRange || (currentInterface ? [currentInterface] : null);
+
+                if (!targetInterfaces) {
+                    output.innerHTML += `<div style="color: #f00;">% Must be in interface config</div>`;
+                } else {
+                    // Apply to all interfaces (single or range)
+                    targetInterfaces.forEach(intfName => {
+                        const intf = selectedDevice.interfaces.find(i => i.name === intfName);
+                        if (!intf) return;
+
+                        if (lowerCmd.includes('mode access')) {
+                            intf.switchportMode = 'access';
+                        } else if (lowerCmd.includes('mode trunk')) {
+                            intf.switchportMode = 'trunk';
+                        } else if (lowerCmd.includes('access vlan')) {
+                            const m = cmd.match(/vlan\s+(\d+)/i);
+                            if (m) intf.vlan = parseInt(m[1]);
+                        } else if (lowerCmd.includes('trunk native vlan')) {
+                            const m = cmd.match(/vlan\s+(\d+)/i);
+                            if (m) intf.nativeVlan = parseInt(m[1]);
+                        }
+                    });
+
+                    // Show appropriate output message
+                    if (lowerCmd.includes('mode access')) {
+                        output.innerHTML += `<div style="color: #0f0;">✓ Mode access (${targetInterfaces.length} interface${targetInterfaces.length > 1 ? 's' : ''})</div>`;
+                    } else if (lowerCmd.includes('mode trunk')) {
+                        output.innerHTML += `<div style="color: #0f0;">✓ Mode trunk (${targetInterfaces.length} interface${targetInterfaces.length > 1 ? 's' : ''})</div>`;
+                    } else if (lowerCmd.includes('access vlan')) {
+                        const m = cmd.match(/vlan\s+(\d+)/i);
+                        if (m) output.innerHTML += `<div style="color: #0f0;">✓ Access VLAN ${m[1]} (${targetInterfaces.length} interface${targetInterfaces.length > 1 ? 's' : ''})</div>`;
+                    } else if (lowerCmd.includes('trunk native vlan')) {
+                        const m = cmd.match(/vlan\s+(\d+)/i);
+                        if (m) output.innerHTML += `<div style="color: #0f0;">✓ Native VLAN ${m[1]} (${targetInterfaces.length} interface${targetInterfaces.length > 1 ? 's' : ''})</div>`;
+                    } else if (lowerCmd.includes('trunk encapsulation')) {
+                        output.innerHTML += `<div style="color: #0f0;">✓ Encapsulation 802.1Q</div>`;
+                    } else {
+                        output.innerHTML += `<div style="color: #0f0;">✓ Switchport configured</div>`;
+                    }
                 }
             }
             else if (lowerCmd === 'no switchport') {
@@ -8619,9 +8684,22 @@
             }
             // ========== INT RANGE ==========
             else if (lowerCmd.startsWith('int range ') || lowerCmd.startsWith('interface range ')) {
-                output.innerHTML += `<div style="color: #0f0;">✓ Interface range selected</div>`;
-                cliMode = 'config-if';
-                updateCLIPrompt(promptEl, selectedDevice.name);
+                const rangeStr = cmd.substring(cmd.indexOf('range ') + 6).trim();
+                const interfaces = parseInterfaceRange(rangeStr, selectedDevice);
+
+                if (interfaces && interfaces.length > 0) {
+                    currentInterfaceRange = interfaces;
+                    currentInterface = null; // Clear single interface
+                    cliMode = 'config-if';
+                    updateCLIPrompt(promptEl, selectedDevice.name);
+                    output.innerHTML += `<div style="color: #0f0;">✓ Interface range selected (${interfaces.length} interfaces)</div>`;
+                    interfaces.forEach(intfName => {
+                        output.innerHTML += `<div style="color: #0ff;">  - ${intfName}</div>`;
+                    });
+                } else {
+                    output.innerHTML += `<div style="color: #ff0;">% Invalid interface range: ${rangeStr}</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Examples: int range fa0/1-4, int range Gi0/1-2</div>`;
+                }
             }
             // ========== LOOPBACK ==========
             else if (lowerCmd.startsWith('int loopback') || lowerCmd.startsWith('interface loopback')) {
@@ -8702,6 +8780,7 @@
 
             if (intf) {
                 currentInterface = intf.name;
+                currentInterfaceRange = null; // Clear range when single interface is selected
                 cliMode = 'config-if';
                 updateCLIPrompt(promptEl, device.name);
                 output.innerHTML += `<div style="color: #0f0;">✓ Configuring ${intf.name}</div>`;
@@ -8709,6 +8788,59 @@
                 output.innerHTML += `<div style="color: #ff0;">% Interface not found. Available:</div>`;
                 device.interfaces.slice(0, 5).forEach(i => output.innerHTML += `<div>  ${i.name}</div>`);
             }
+        }
+
+        function parseInterfaceRange(rangeStr, device) {
+            // Parse interface range like "fa0/1-4", "Gi0/1-2", "FastEthernet0/1-5"
+            // Returns array of interface names or null if invalid
+            const interfaces = [];
+
+            // Normalize the interface type
+            let normalized = rangeStr.trim();
+            let prefix = '';
+            let remaining = '';
+
+            if (normalized.toLowerCase().startsWith('gi')) {
+                prefix = 'GigabitEthernet';
+                remaining = normalized.substring(2).replace(/gabitethernet/i, '');
+            } else if (normalized.toLowerCase().startsWith('fa')) {
+                prefix = 'FastEthernet';
+                remaining = normalized.substring(2).replace(/stethernet/i, '');
+            } else {
+                // Already normalized (e.g., "FastEthernet0/1-4")
+                const match = normalized.match(/^(FastEthernet|GigabitEthernet|Serial)(.+)$/i);
+                if (match) {
+                    prefix = match[1];
+                    remaining = match[2];
+                } else {
+                    return null;
+                }
+            }
+
+            // Parse the range: "0/1-4" or "0/1-5"
+            const rangeMatch = remaining.match(/^(\d+)\/(\d+)-(\d+)$/);
+            if (!rangeMatch) {
+                return null;
+            }
+
+            const slot = rangeMatch[1];
+            const startPort = parseInt(rangeMatch[2]);
+            const endPort = parseInt(rangeMatch[3]);
+
+            if (startPort > endPort) {
+                return null;
+            }
+
+            // Generate interface names and find them in device
+            for (let port = startPort; port <= endPort; port++) {
+                const intfName = `${prefix}${slot}/${port}`;
+                const intf = device.interfaces.find(i => i.name === intfName);
+                if (intf) {
+                    interfaces.push(intf.name);
+                }
+            }
+
+            return interfaces.length > 0 ? interfaces : null;
         }
 
         function handleShowCommand(lowerCmd, output, device) {
@@ -8799,6 +8931,7 @@
         // CLI State tracking for enhanced command support
         let cliMode = 'user'; // user, privileged, config, config-if, config-router, config-vlan
         let currentInterface = null;
+        let currentInterfaceRange = null; // Array of interface names when using 'int range'
         let currentRouterProcess = null;
         let currentVlan = null;
         let currentAcl = null;
@@ -8899,20 +9032,63 @@
                     { name: 'GigabitEthernet0/2', ip: '', mask: '', status: 'down' },
                     { name: 'Serial0/0/0', ip: '', mask: '', status: 'down' }
                 ];
-            } else if (type === 'l2switch') {
+            } else if (type === 'l2switch' || type === 'switch') {
                 return [
                     { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
                     { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
                     { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
                     { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
-                    { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' }
+                    { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/6', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/7', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/8', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/9', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/10', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/11', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/12', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/13', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/14', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/15', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/16', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/17', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/18', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/19', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/20', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/21', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/22', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/23', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/24', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' }
                 ];
             } else if (type === 'l3switch') {
                 return [
                     { name: 'FastEthernet0/1', vlan: 1, status: 'up' },
                     { name: 'FastEthernet0/2', vlan: 1, status: 'up' },
                     { name: 'FastEthernet0/3', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/4', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/5', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/6', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/7', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/8', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/9', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/10', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/11', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/12', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/13', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/14', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/15', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/16', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/17', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/18', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/19', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/20', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/21', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/22', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/23', vlan: 1, status: 'up' },
+                    { name: 'FastEthernet0/24', vlan: 1, status: 'up' },
                     { name: 'GigabitEthernet0/1', vlan: 1, status: 'up' },
+                    { name: 'GigabitEthernet0/2', vlan: 1, status: 'up' },
                     { name: 'Vlan1', ip: '', mask: '', status: 'down' }
                 ];
             } else {
