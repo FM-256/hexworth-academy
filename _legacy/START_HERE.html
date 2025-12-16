@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>START HERE - Network Essentials</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .step-content p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .launch-button {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .launch-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .launch-button .arrow {
+            margin-left: 10px;
+        }
+
+        .tips {
+            background: #e8f4fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips h4 {
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips h4 span {
+            margin-right: 8px;
+        }
+
+        .tips ul {
+            list-style: none;
+            color: #555;
+        }
+
+        .tips li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tips li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+        }
+
+        .dont-panic {
+            background: #fff3cd;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .dont-panic h4 {
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .dont-panic p {
+            color: #856404;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome! 👋</h1>
+            <p>Network Essentials Interactive Training</p>
+        </div>
+
+        <div class="content">
+            <div class="dont-panic">
+                <h4>📁 Seeing lots of files?</h4>
+                <p>Don't worry! You only need to open ONE file. Everything else is accessed from there.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Click the button below</h3>
+                    <p>This opens the <strong>Catalog</strong> - your home base for all course materials.</p>
+                </div>
+            </div>
+
+            <a href="Home/catalog.html" class="launch-button">
+                🚀 Launch Course Catalog <span class="arrow">→</span>
+            </a>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Navigate from the Catalog</h3>
+                    <p>Click on any presentation, lab, or simulator. They all link back to the catalog when you're done.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Use keyboard shortcuts in presentations</h3>
+                    <p>Press <strong>← →</strong> arrow keys to move between slides. Press <strong>Escape</strong> to return to the catalog.</p>
+                </div>
+            </div>
+
+            <div class="tips">
+                <h4><span>💡</span> Quick Tips</h4>
+                <ul>
+                    <li>Bookmark <strong>catalog.html</strong> for quick access</li>
+                    <li>All content works offline - no internet needed</li>
+                    <li>Start with presentations, then practice with labs</li>
+                    <li>Use the simulators to practice before Packet Tracer</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            Network Essentials v5.0.0 | Created by EQ6
+        </div>
+    </div>
+</body>
+</html>

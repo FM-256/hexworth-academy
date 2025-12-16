@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab: Control Panel Configuration Tasks | CompTIA A+ Core 2</title>
+    <style>
+        /* ==================== CSS RESET & BASE STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --card-bg: #0f3460;
+            --accent-color: #e94560;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --text-primary: #eee;
+            --text-secondary: #a8b2d1;
+            --border-color: #2a3f5f;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #0f0f1e 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ==================== HEADER & NAVIGATION ==================== */
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .home-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .home-btn::before {
+            content: '🏠';
+            font-size: 16px;
+        }
+
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .aplus-badge {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .aplus-badge::before {
+            content: '🎓';
+            font-size: 20px;
+        }
+
+        .lab-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .lab-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            background: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .meta-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+
+        /* ==================== MAIN CONTAINER ==================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ==================== OBJECTIVES SECTION ==================== */
+        .objectives-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .objectives-section h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .objectives-section h2::before {
+            content: '🎯';
+            font-size: 24px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .objectives-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* ==================== PROGRESS TRACKER ==================== */
+        .progress-container {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress-header h3 {
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+
+        .progress-percentage {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 30px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #ff6b9d);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(233, 69, 96, 0.5);
+        }
+
+        /* ==================== EXERCISE SECTIONS ==================== */
+        .exercise-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .exercise-number {
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .exercise-title {
+            font-size: 22px;
+            color: var(--text-primary);
+        }
+
+        .exercise-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        /* ==================== TASK ITEMS ==================== */
+        .task-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+        }
+
+        .task-item.completed {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: var(--success-color);
+        }
+
+        .task-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .task-checkbox-container {
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
+        .task-content {
+            flex-grow: 1;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .task-instructions {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .task-instructions ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .task-instructions li {
+            margin: 5px 0;
+        }
+
+        .task-instructions code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--info-color);
+        }
+
+        .task-note {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 3px solid var(--warning-color);
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--warning-color);
+        }
+
+        .task-note::before {
+            content: '⚠️ ';
+            margin-right: 5px;
+        }
+
+        .task-expected {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid var(--success-color);
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--success-color);
+        }
+
+        .task-expected::before {
+            content: '✓ ';
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .task-tip {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 3px solid var(--info-color);
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--info-color);
+        }
+
+        .task-tip::before {
+            content: '💡 ';
+            margin-right: 5px;
+        }
+
+        /* ==================== COMMAND TABLE ==================== */
+        .command-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .command-table th {
+            background: rgba(233, 69, 96, 0.2);
+            color: var(--accent-color);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .command-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .command-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .command-table tr:hover {
+            background: rgba(233, 69, 96, 0.05);
+        }
+
+        .command-table code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--info-color);
+            font-size: 13px;
+        }
+
+        .command-table input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
+        /* ==================== INPUT FIELDS ==================== */
+        .input-group {
+            margin-top: 15px;
+        }
+
+        .input-label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+        }
+
+        .checkbox-list {
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
+        .checkbox-item label {
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* ==================== DOCUMENTATION SECTION ==================== */
+        .documentation-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .documentation-section h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .documentation-section h2::before {
+            content: '📝';
+            font-size: 24px;
+        }
+
+        .doc-field {
+            margin-bottom: 25px;
+        }
+
+        .doc-label {
+            display: block;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .doc-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .doc-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+        }
+
+        /* ==================== LAB SUMMARY ==================== */
+        .summary-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-section h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .key-takeaways {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .key-takeaways h3 {
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .key-takeaways ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-takeaways li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .key-takeaways li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+
+        .exam-tips {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .exam-tips h3 {
+            color: var(--warning-color);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .exam-tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .exam-tips li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .exam-tips li::before {
+            content: '📝';
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+
+        .practice-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .practice-link:hover {
+            background: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ==================== COMPLETION MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .celebration-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .modal-content h2 {
+            color: var(--success-color);
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .modal-content p {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-close-btn {
+            padding: 12px 30px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: #ff4757;
+            transform: translateY(-2px);
+        }
+
+        /* ==================== ACTION BUTTONS ==================== */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff4757;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header-container,
+            .exercise-section,
+            .documentation-section,
+            .summary-section,
+            .objectives-section,
+            .progress-container {
+                padding: 20px;
+            }
+
+            .lab-title {
+                font-size: 22px;
+            }
+
+            .exercise-title {
+                font-size: 18px;
+            }
+
+            .task-title {
+                font-size: 16px;
+            }
+
+            .lab-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .command-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        /* ==================== PRINT STYLES ==================== */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .home-btn,
+            .action-buttons,
+            .modal {
+                display: none;
+            }
+
+            .exercise-section,
+            .task-item,
+            .documentation-section,
+            .summary-section {
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header-container">
+        <div class="nav-breadcrumb">
+            <a href="../../../index.html" class="home-btn">Home</a>
+            <span style="color: var(--text-secondary);">></span>
+            <span style="color: var(--text-secondary);">CompTIA A+ Core 2 Labs</span>
+        </div>
+
+        <div class="badge-container">
+            <span class="aplus-badge">CompTIA A+ Core 2</span>
+        </div>
+
+        <h1 class="lab-title">Lab: Control Panel Configuration Tasks</h1>
+
+        <div class="lab-meta">
+            <div class="meta-item">
+                <div class="meta-label">Estimated Time</div>
+                <div class="meta-value">45-60 minutes</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Difficulty</div>
+                <div class="meta-value">Intermediate</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Prerequisites</div>
+                <div class="meta-value">Windows 10/11 with admin access</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Lab Objectives -->
+        <section class="objectives-section">
+            <h2>Lab Objectives</h2>
+            <ul class="objectives-list">
+                <li>Navigate Control Panel in different view modes</li>
+                <li>Use run commands to access utilities directly</li>
+                <li>Configure essential system settings</li>
+                <li>Understand Control Panel vs Settings relationship</li>
+            </ul>
+        </section>
+
+        <!-- Progress Tracker -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <h3>Lab Progress</h3>
+                <span class="progress-percentage" id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;">
+                    <span id="progressText"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 1: Control Panel Navigation -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">1</div>
+                <h2 class="exercise-title">
+                    Control Panel Navigation
+                    <span class="exercise-count">(3 tasks)</span>
+                </h2>
+            </div>
+
+            <!-- Task 1.1 -->
+            <div class="task-item" data-task="ex1-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex1-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex1-task1" class="task-title">Access Control Panel Three Ways</label>
+                        <div class="task-instructions">
+                            Test each method and check it off when successful:
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="sub-checkbox" id="ex1-task1-method1" data-parent="ex1-task1">
+                                    <label for="ex1-task1-method1"><strong>Method 1:</strong> Search for "Control Panel" in Windows Search</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="sub-checkbox" id="ex1-task1-method2" data-parent="ex1-task1">
+                                    <label for="ex1-task1-method2"><strong>Method 2:</strong> Run command - Press Win+R, type <code>control</code>, press Enter</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="sub-checkbox" id="ex1-task1-method3" data-parent="ex1-task1">
+                                    <label for="ex1-task1-method3"><strong>Method 3:</strong> File Explorer address bar - Type <code>Control Panel</code> and press Enter</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-tip">Keyboard shortcut Win+R (Run dialog) is fastest for IT professionals!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 1.2 -->
+            <div class="task-item" data-task="ex1-task2">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex1-task2">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex1-task2" class="task-title">Switch View Modes</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Find the "View by" dropdown in the top-right corner of Control Panel</li>
+                                <li>Switch to <strong>Category</strong> view - observe grouped categories</li>
+                                <li>Switch to <strong>Large icons</strong> - count total items shown</li>
+                                <li>Switch to <strong>Small icons</strong> - note the difference in layout</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">How many total Control Panel items are shown? (in icon view)</label>
+                                <input type="text" class="text-input" id="ex1-task2-count" placeholder="Enter count...">
+                            </div>
+                        </div>
+                        <div class="task-expected">Category view groups items; icon views show all items alphabetically</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 1.3 -->
+            <div class="task-item" data-task="ex1-task3">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex1-task3">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex1-task3" class="task-title">Use Run Commands</label>
+                        <div class="task-instructions">
+                            Test each command using Win+R and check when successful:
+                            <table class="command-table">
+                                <thead>
+                                    <tr>
+                                        <th>Command</th>
+                                        <th>Opens</th>
+                                        <th style="width: 80px; text-align: center;">Tested</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>appwiz.cpl</code></td>
+                                        <td>Programs and Features</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd1" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>devmgmt.msc</code></td>
+                                        <td>Device Manager</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd2" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>inetcpl.cpl</code></td>
+                                        <td>Internet Options</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd3" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>powercfg.cpl</code></td>
+                                        <td>Power Options</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd4" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>sysdm.cpl</code></td>
+                                        <td>System Properties</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd5" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>firewall.cpl</code></td>
+                                        <td>Windows Firewall</td>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" class="command-checkbox" id="cmd6" data-parent="ex1-task3">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="task-tip">Memorize these commands - they're exam favorites and real-world time-savers!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 2: Programs and Features -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">2</div>
+                <h2 class="exercise-title">
+                    Programs and Features
+                    <span class="exercise-count">(2 tasks)</span>
+                </h2>
+            </div>
+
+            <!-- Task 2.1 -->
+            <div class="task-item" data-task="ex2-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex2-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex2-task1" class="task-title">Explore Installed Programs</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Open Programs and Features using <code>appwiz.cpl</code></li>
+                                <li>Click the "Installed On" column header to sort by date</li>
+                                <li>Identify the most recently installed program</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Most recently installed program name:</label>
+                                <input type="text" class="text-input" id="ex2-task1-program" placeholder="Enter program name...">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Install date:</label>
+                                <input type="text" class="text-input" id="ex2-task1-date" placeholder="MM/DD/YYYY">
+                            </div>
+                        </div>
+                        <div class="task-note">DO NOT uninstall anything without permission!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 2.2 -->
+            <div class="task-item" data-task="ex2-task2">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex2-task2">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex2-task2" class="task-title">View Windows Features</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>In Programs and Features, click "Turn Windows features on or off" (left sidebar)</li>
+                                <li>Record the status of these features (enabled/disabled/not present):</li>
+                            </ul>
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="feature-checkbox" id="feature1" data-parent="ex2-task2">
+                                    <label for="feature1">Hyper-V (may not be present on Home edition)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="feature-checkbox" id="feature2" data-parent="ex2-task2">
+                                    <label for="feature2">Internet Information Services (IIS)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="feature-checkbox" id="feature3" data-parent="ex2-task2">
+                                    <label for="feature3">Telnet Client</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="feature-checkbox" id="feature4" data-parent="ex2-task2">
+                                    <label for="feature4">Windows Subsystem for Linux</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-note">DO NOT change anything - just observe and record!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 3: Device Manager Exploration -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">3</div>
+                <h2 class="exercise-title">
+                    Device Manager Exploration
+                    <span class="exercise-count">(2 tasks)</span>
+                </h2>
+            </div>
+
+            <!-- Task 3.1 -->
+            <div class="task-item" data-task="ex3-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex3-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex3-task1" class="task-title">Navigate Device Categories</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Open Device Manager using <code>devmgmt.msc</code></li>
+                                <li>Expand each category below and record the information:</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Network adapters - How many do you have?</label>
+                                <input type="text" class="text-input" id="ex3-task1-network" placeholder="Enter count...">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Display adapters - Record your GPU name:</label>
+                                <input type="text" class="text-input" id="ex3-task1-gpu" placeholder="e.g., Intel UHD Graphics 620">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Disk drives - Record your drive model:</label>
+                                <input type="text" class="text-input" id="ex3-task1-disk" placeholder="e.g., Samsung SSD 970 EVO">
+                            </div>
+                        </div>
+                        <div class="task-expected">Device categories expand to show individual hardware devices</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 3.2 -->
+            <div class="task-item" data-task="ex3-task2">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex3-task2">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex3-task2" class="task-title">Check Driver Information</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Right-click your display adapter, select Properties</li>
+                                <li>Go to the "Driver" tab</li>
+                                <li>Record driver details and note available buttons</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Driver Version:</label>
+                                <input type="text" class="text-input" id="ex3-task2-version" placeholder="e.g., 30.0.101.1404">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Driver Date:</label>
+                                <input type="text" class="text-input" id="ex3-task2-date" placeholder="MM/DD/YYYY">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Available buttons (check all that you see):</label>
+                                <div class="checkbox-list">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" class="driver-button-checkbox" id="driver-btn1" data-parent="ex3-task2">
+                                        <label for="driver-btn1">Update Driver</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" class="driver-button-checkbox" id="driver-btn2" data-parent="ex3-task2">
+                                        <label for="driver-btn2">Roll Back Driver</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" class="driver-button-checkbox" id="driver-btn3" data-parent="ex3-task2">
+                                        <label for="driver-btn3">Disable Device</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" class="driver-button-checkbox" id="driver-btn4" data-parent="ex3-task2">
+                                        <label for="driver-btn4">Uninstall Device</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-tip">Roll Back Driver is only available if a previous driver exists!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 4: Internet Options Configuration -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">4</div>
+                <h2 class="exercise-title">
+                    Internet Options Configuration
+                    <span class="exercise-count">(2 tasks)</span>
+                </h2>
+            </div>
+
+            <!-- Task 4.1 -->
+            <div class="task-item" data-task="ex4-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex4-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex4-task1" class="task-title">Explore Security Zones</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Open Internet Options using <code>inetcpl.cpl</code></li>
+                                <li>Go to the Security tab</li>
+                                <li>Click on each zone and record its security level:</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Internet zone security level:</label>
+                                <input type="text" class="text-input" id="ex4-task1-internet" placeholder="e.g., Medium-high">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Local intranet security level:</label>
+                                <input type="text" class="text-input" id="ex4-task1-intranet" placeholder="e.g., Medium-low">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Trusted sites security level:</label>
+                                <input type="text" class="text-input" id="ex4-task1-trusted" placeholder="e.g., Medium">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Restricted sites security level:</label>
+                                <input type="text" class="text-input" id="ex4-task1-restricted" placeholder="e.g., High">
+                            </div>
+                        </div>
+                        <div class="task-expected">Different zones have different default security levels</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 4.2 -->
+            <div class="task-item" data-task="ex4-task2">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex4-task2">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex4-task2" class="task-title">Review Connections Tab</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>In Internet Options, go to the Connections tab</li>
+                                <li>Click "LAN settings" button</li>
+                                <li>Record proxy configuration (DO NOT change anything!)</li>
+                            </ul>
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ex4-task2-auto" data-parent="ex4-task2">
+                                    <label for="ex4-task2-auto">"Automatically detect settings" is checked</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ex4-task2-proxy" data-parent="ex4-task2">
+                                    <label for="ex4-task2-proxy">A proxy server is configured</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-note">NEVER change proxy settings on school/work networks without authorization!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 5: Power Options -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">5</div>
+                <h2 class="exercise-title">
+                    Power Options
+                    <span class="exercise-count">(1 task)</span>
+                </h2>
+            </div>
+
+            <!-- Task 5.1 -->
+            <div class="task-item" data-task="ex5-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex5-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex5-task1" class="task-title">Review Power Plans</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Open Power Options using <code>powercfg.cpl</code></li>
+                                <li>Identify your currently selected power plan</li>
+                                <li>Click "Change plan settings" on your active plan</li>
+                                <li>Record current settings, then click "Change advanced power settings" to explore</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Currently selected power plan:</label>
+                                <input type="text" class="text-input" id="ex5-task1-plan" placeholder="e.g., Balanced, High Performance">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Turn off display after:</label>
+                                <input type="text" class="text-input" id="ex5-task1-display" placeholder="e.g., 10 minutes">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Put computer to sleep after:</label>
+                                <input type="text" class="text-input" id="ex5-task1-sleep" placeholder="e.g., 30 minutes">
+                            </div>
+                        </div>
+                        <div class="task-tip">High Performance plan uses more energy but maximizes performance</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 6: User Account Control -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">6</div>
+                <h2 class="exercise-title">
+                    User Account Control
+                    <span class="exercise-count">(1 task)</span>
+                </h2>
+            </div>
+
+            <!-- Task 6.1 -->
+            <div class="task-item" data-task="ex6-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex6-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex6-task1" class="task-title">Check UAC Level</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Search for "UAC" or "User Account Control" in Windows Search</li>
+                                <li>Click "Change User Account Control settings"</li>
+                                <li>Observe the slider position (1-4, from bottom to top)</li>
+                                <li>Record the current level and its description</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Current UAC slider position (1-4, where 1 is lowest):</label>
+                                <input type="text" class="text-input" id="ex6-task1-level" placeholder="e.g., 2">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Description of current setting:</label>
+                                <input type="text" class="text-input" id="ex6-task1-desc" placeholder="e.g., Notify me only when apps try to make changes">
+                            </div>
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ex6-task1-default" data-parent="ex6-task1">
+                                    <label for="ex6-task1-default">I understand the default is Level 2 (second from bottom)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-note">DO NOT change UAC settings without instructor permission!</div>
+                        <div class="task-tip">Default UAC (Level 2): Notify only when apps try to make changes to your computer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 7: File Explorer Options -->
+        <section class="exercise-section">
+            <div class="exercise-header">
+                <div class="exercise-number">7</div>
+                <h2 class="exercise-title">
+                    File Explorer Options
+                    <span class="exercise-count">(1 task)</span>
+                </h2>
+            </div>
+
+            <!-- Task 7.1 -->
+            <div class="task-item" data-task="ex7-task1">
+                <div class="task-header">
+                    <div class="task-checkbox-container">
+                        <input type="checkbox" class="task-checkbox" id="ex7-task1">
+                    </div>
+                    <div class="task-content">
+                        <label for="ex7-task1" class="task-title">Check View Settings</label>
+                        <div class="task-instructions">
+                            <ul>
+                                <li>Open File Explorer Options: Win+R, type <code>control folders</code></li>
+                                <li>Go to the "View" tab</li>
+                                <li>Record the current state of these critical security settings:</li>
+                            </ul>
+                            <div class="input-group">
+                                <label class="input-label">Hidden files and folders current setting:</label>
+                                <div class="checkbox-list">
+                                    <div class="checkbox-item">
+                                        <input type="radio" name="hidden-files" id="ex7-task1-show" data-parent="ex7-task1">
+                                        <label for="ex7-task1-show">Show hidden files, folders, and drives</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="radio" name="hidden-files" id="ex7-task1-hide" data-parent="ex7-task1">
+                                        <label for="ex7-task1-hide">Don't show hidden files, folders, or drives</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ex7-task1-ext" data-parent="ex7-task1">
+                                    <label for="ex7-task1-ext">"Hide extensions for known file types" is CHECKED</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ex7-task1-os" data-parent="ex7-task1">
+                                    <label for="ex7-task1-os">"Hide protected operating system files" is CHECKED</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-note">SECURITY TIP: For better security, UNCHECK "Hide extensions for known file types"!</div>
+                        <div class="task-tip">Hiding extensions makes it easier for malware to disguise itself (e.g., virus.pdf.exe appears as virus.pdf)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section class="documentation-section">
+            <h2>Documentation Challenge</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Complete these reflection questions based on your lab experience:
+            </p>
+
+            <div class="doc-field">
+                <label for="doc-commands" class="doc-label">1. Three run commands you memorized:</label>
+                <textarea id="doc-commands" class="doc-textarea" placeholder="List three .cpl or .msc commands you can now recall from memory..."></textarea>
+            </div>
+
+            <div class="doc-field">
+                <label for="doc-security" class="doc-label">2. One setting you would change for security and why:</label>
+                <textarea id="doc-security" class="doc-textarea" placeholder="Describe a setting and explain how changing it would improve security..."></textarea>
+            </div>
+
+            <div class="doc-field">
+                <label for="doc-difference" class="doc-label">3. One key difference between Control Panel and Settings:</label>
+                <textarea id="doc-difference" class="doc-textarea" placeholder="Describe a functional or interface difference you noticed..."></textarea>
+            </div>
+
+            <div class="doc-field">
+                <label for="doc-uac" class="doc-label">4. What is the default UAC setting and why is it important?</label>
+                <textarea id="doc-uac" class="doc-textarea" placeholder="Describe the default UAC level and its security purpose..."></textarea>
+            </div>
+        </section>
+
+        <!-- Lab Summary -->
+        <section class="summary-section">
+            <h2>Lab Summary</h2>
+
+            <div class="key-takeaways">
+                <h3>Key Control Panel Skills Learned</h3>
+                <ul>
+                    <li><strong>Multiple Access Methods:</strong> Search, Run commands (Win+R), and File Explorer all provide quick access to Control Panel</li>
+                    <li><strong>View Modes:</strong> Category view groups related items; Icon views show all utilities alphabetically for faster direct access</li>
+                    <li><strong>Run Commands:</strong> Professional IT technicians memorize .cpl and .msc commands for instant access to specific utilities</li>
+                    <li><strong>Device Manager:</strong> Essential tool for viewing hardware, updating drivers, and troubleshooting device conflicts</li>
+                    <li><strong>Security Settings:</strong> Internet Options, UAC, and File Explorer Options all contain critical security configurations</li>
+                </ul>
+            </div>
+
+            <div class="exam-tips">
+                <h3>CompTIA A+ Exam Tips</h3>
+                <ul>
+                    <li><strong>Memorize Run Commands:</strong> Know appwiz.cpl, devmgmt.msc, inetcpl.cpl, powercfg.cpl, sysdm.cpl, firewall.cpl</li>
+                    <li><strong>UAC Default:</strong> Level 2 - "Notify me only when apps try to make changes to my computer"</li>
+                    <li><strong>Security Best Practice:</strong> Uncheck "Hide extensions for known file types" to prevent malware disguises</li>
+                    <li><strong>Device Manager:</strong> Yellow exclamation = driver issue; Red X = disabled device; Down arrow = device disabled by user</li>
+                    <li><strong>Control Panel vs Settings:</strong> Know that Microsoft is migrating features to Settings, but Control Panel still provides advanced options</li>
+                    <li><strong>Internet Security Zones:</strong> Internet (Medium-high), Local intranet (Medium-low), Trusted (Medium), Restricted (High)</li>
+                </ul>
+            </div>
+
+            <div class="key-takeaways" style="margin-top: 20px;">
+                <h3>Most Important Run Commands to Memorize</h3>
+                <ul>
+                    <li><strong>appwiz.cpl</strong> - Programs and Features (uninstall programs)</li>
+                    <li><strong>devmgmt.msc</strong> - Device Manager (hardware troubleshooting)</li>
+                    <li><strong>sysdm.cpl</strong> - System Properties (computer name, domain, hardware profiles)</li>
+                    <li><strong>inetcpl.cpl</strong> - Internet Options (browser security settings)</li>
+                    <li><strong>firewall.cpl</strong> - Windows Defender Firewall</li>
+                    <li><strong>powercfg.cpl</strong> - Power Options (battery and sleep settings)</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                    Want more practice? Try the Control Panel Simulator for interactive practice without affecting your actual system:
+                </p>
+                <a href="./control-panel-simulator.html" class="practice-link">
+                    Launch Control Panel Simulator
+                </a>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.print()">Print Lab Report</button>
+                <button class="btn btn-secondary" onclick="resetLab()">Reset Lab Progress</button>
+                <button class="btn btn-primary" onclick="checkCompletion()">Check Completion Status</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completionModal">
+        <div class="modal-content">
+            <div class="celebration-emoji">🎉</div>
+            <h2>Lab Completed!</h2>
+            <p>Congratulations! You've successfully completed the Control Panel Configuration Tasks Lab. You've practiced essential Windows administration skills and run commands that are critical for the CompTIA A+ Core 2 exam and real-world IT support.</p>
+            <p style="margin-top: 15px; font-weight: 600; color: var(--accent-color);">
+                Your progress has been saved. Keep practicing those run commands!
+            </p>
+            <button class="modal-close-btn" onclick="closeModal()">Continue Learning</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE MANAGEMENT ====================
+        const STORAGE_KEY = 'lab-control-panel-progress';
+
+        // Total items to track
+        const TOTAL_MAIN_TASKS = 10; // Main task checkboxes
+        const TOTAL_SUB_ITEMS = 40; // Approximate sub-checkboxes, inputs, etc.
+        const TOTAL_DOC_FIELDS = 4; // Documentation text areas
+        const TOTAL_ITEMS = TOTAL_MAIN_TASKS + TOTAL_DOC_FIELDS; // Simplified for progress calculation
+
+        // ==================== INITIALIZE ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            attachEventListeners();
+            updateProgress();
+        });
+
+        // ==================== EVENT LISTENERS ====================
+        function attachEventListeners() {
+            // Main task checkboxes
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    handleCheckboxChange(this);
+                });
+            });
+
+            // All other checkboxes (sub-checkboxes, command checkboxes, etc.)
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(.task-checkbox)');
+            allCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    saveProgress();
+                });
+            });
+
+            // Radio buttons
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    saveProgress();
+                });
+            });
+
+            // Text inputs
+            const textInputs = document.querySelectorAll('.text-input');
+            textInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    saveProgress();
+                });
+            });
+
+            // Documentation textareas
+            const docTextareas = document.querySelectorAll('.doc-textarea');
+            docTextareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    saveProgress();
+                    updateProgress();
+                });
+            });
+        }
+
+        // ==================== CHECKBOX HANDLING ====================
+        function handleCheckboxChange(checkbox) {
+            const taskItem = checkbox.closest('.task-item');
+            if (taskItem) {
+                if (checkbox.checked) {
+                    taskItem.classList.add('completed');
+                } else {
+                    taskItem.classList.remove('completed');
+                }
+            }
+
+            saveProgress();
+            updateProgress();
+
+            // Check if lab is complete
+            if (isLabComplete()) {
+                setTimeout(showCompletionModal, 500);
+            }
+        }
+
+        // ==================== PROGRESS CALCULATION ====================
+        function updateProgress() {
+            let completedCount = 0;
+
+            // Count completed main task checkboxes
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            taskCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) completedCount++;
+            });
+
+            // Count filled documentation fields (consider filled if > 20 characters)
+            const docTextareas = document.querySelectorAll('.doc-textarea');
+            docTextareas.forEach(textarea => {
+                if (textarea.value.trim().length > 20) completedCount++;
+            });
+
+            // Calculate percentage
+            const percentage = Math.round((completedCount / TOTAL_ITEMS) * 100);
+
+            // Update progress bar
+            const progressBar = document.getElementById('progressBarFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressText = document.getElementById('progressText');
+
+            progressBar.style.width = percentage + '%';
+            progressPercentage.textContent = percentage + '%';
+
+            if (percentage > 15) {
+                progressText.textContent = completedCount + '/' + TOTAL_ITEMS;
+            } else {
+                progressText.textContent = '';
+            }
+        }
+
+        // ==================== COMPLETION CHECK ====================
+        function isLabComplete() {
+            // Lab is complete if all main tasks are checked and all docs are filled
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            const allTasksChecked = Array.from(taskCheckboxes).every(cb => cb.checked);
+
+            const docTextareas = document.querySelectorAll('.doc-textarea');
+            const allDocsCompleted = Array.from(docTextareas).every(ta => ta.value.trim().length > 20);
+
+            return allTasksChecked && allDocsCompleted;
+        }
+
+        function checkCompletion() {
+            const completedCount = countCompleted();
+            const percentage = Math.round((completedCount / TOTAL_ITEMS) * 100);
+
+            if (isLabComplete()) {
+                showCompletionModal();
+            } else {
+                alert(`Lab Progress: ${percentage}%\n\nCompleted: ${completedCount}/${TOTAL_ITEMS} items\n\nKeep going! Complete all tasks and documentation fields to finish the lab.`);
+            }
+        }
+
+        function countCompleted() {
+            let count = 0;
+
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            taskCheckboxes.forEach(cb => {
+                if (cb.checked) count++;
+            });
+
+            const docTextareas = document.querySelectorAll('.doc-textarea');
+            docTextareas.forEach(ta => {
+                if (ta.value.trim().length > 20) count++;
+            });
+
+            return count;
+        }
+
+        // ==================== MODAL MANAGEMENT ====================
+        function showCompletionModal() {
+            const modal = document.getElementById('completionModal');
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('completionModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('completionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ==================== LOCAL STORAGE ====================
+        function saveProgress() {
+            const progress = {
+                checkboxes: {},
+                radios: {},
+                textInputs: {},
+                textareas: {},
+                timestamp: new Date().toISOString()
+            };
+
+            // Save all checkbox states
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.id) {
+                    progress.checkboxes[checkbox.id] = checkbox.checked;
+                }
+            });
+
+            // Save radio button states
+            const radios = document.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                if (radio.id) {
+                    progress.radios[radio.id] = radio.checked;
+                }
+            });
+
+            // Save text input values
+            const textInputs = document.querySelectorAll('.text-input');
+            textInputs.forEach(input => {
+                if (input.id) {
+                    progress.textInputs[input.id] = input.value;
+                }
+            });
+
+            // Save textarea content
+            const textareas = document.querySelectorAll('.doc-textarea');
+            textareas.forEach(textarea => {
+                if (textarea.id) {
+                    progress.textareas[textarea.id] = textarea.value;
+                }
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (!savedData) return;
+
+            try {
+                const progress = JSON.parse(savedData);
+
+                // Restore checkbox states
+                if (progress.checkboxes) {
+                    Object.keys(progress.checkboxes).forEach(id => {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) {
+                            checkbox.checked = progress.checkboxes[id];
+                            if (checkbox.classList.contains('task-checkbox')) {
+                                const taskItem = checkbox.closest('.task-item');
+                                if (taskItem && checkbox.checked) {
+                                    taskItem.classList.add('completed');
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Restore radio button states
+                if (progress.radios) {
+                    Object.keys(progress.radios).forEach(id => {
+                        const radio = document.getElementById(id);
+                        if (radio) {
+                            radio.checked = progress.radios[id];
+                        }
+                    });
+                }
+
+                // Restore text input values
+                if (progress.textInputs) {
+                    Object.keys(progress.textInputs).forEach(id => {
+                        const input = document.getElementById(id);
+                        if (input) {
+                            input.value = progress.textInputs[id];
+                        }
+                    });
+                }
+
+                // Restore textarea content
+                if (progress.textareas) {
+                    Object.keys(progress.textareas).forEach(id => {
+                        const textarea = document.getElementById(id);
+                        if (textarea) {
+                            textarea.value = progress.textareas[id];
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        function resetLab() {
+            if (confirm('Are you sure you want to reset all lab progress? This cannot be undone.')) {
+                // Clear localStorage
+                localStorage.removeItem(STORAGE_KEY);
+
+                // Uncheck all checkboxes
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    const taskItem = checkbox.closest('.task-item');
+                    if (taskItem) {
+                        taskItem.classList.remove('completed');
+                    }
+                });
+
+                // Uncheck all radio buttons
+                const radios = document.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Clear all text inputs
+                const textInputs = document.querySelectorAll('.text-input');
+                textInputs.forEach(input => {
+                    input.value = '';
+                });
+
+                // Clear all textareas
+                const textareas = document.querySelectorAll('.doc-textarea');
+                textareas.forEach(textarea => {
+                    textarea.value = '';
+                });
+
+                // Update progress
+                updateProgress();
+
+                alert('Lab progress has been reset successfully!');
+            }
+        }
+    </script>
+</body>
+</html>

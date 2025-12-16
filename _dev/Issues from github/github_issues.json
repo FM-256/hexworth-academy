@@ -1,0 +1,42 @@
+{
+  "last_updated": "2025-12-16T07:59:53.060483",
+  "repos_checked": [
+    "FM-256/hexworth-academy",
+    "tntxtra/hexworth-academy"
+  ],
+  "total_issues": 2,
+  "open_count": 2,
+  "closed_count": 0,
+  "issues": [
+    {
+      "id": 3731570354,
+      "number": 2,
+      "title": "Lab 6",
+      "state": "open",
+      "created_at": "2025-12-15T18:09:06Z",
+      "updated_at": "2025-12-15T18:09:06Z",
+      "closed_at": null,
+      "url": "https://github.com/FM-256/hexworth-academy/issues/2",
+      "author": "Voryx-IT",
+      "labels": [],
+      "body": "The following commands of step 8 of lab 6 don't work and give this (% Invalid show command)\nshow ip dhcp binding\nshow snmp\n\nAlso the command searcher no longer exists.\n\n[Lab 6 Issues.json](https://github.com/user-attachments/files/24172829/Lab.6.Issues.json)",
+      "comments": 0,
+      "repo": "FM-256/hexworth-academy"
+    },
+    {
+      "id": 3731120935,
+      "number": 1,
+      "title": "Lab 6 Issue",
+      "state": "open",
+      "created_at": "2025-12-15T16:06:57Z",
+      "updated_at": "2025-12-15T16:06:57Z",
+      "closed_at": null,
+      "url": "https://github.com/FM-256/hexworth-academy/issues/1",
+      "author": "Voryx-IT",
+      "labels": [],
+      "body": "The \"Network 0.0.0.0 0.0.0.0\" Command is unrecognized in packet tracer lite\n\n[Broken Lab 6.json](https://github.com/user-attachments/files/24170650/Broken.Lab.6.json)\n",
+      "comments": 0,
+      "repo": "FM-256/hexworth-academy"
+    }
+  ]
+}

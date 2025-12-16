@@ -1,0 +1,234 @@
+================================================================================
+ACL WILDCARD CALCULATOR - MATHEMATICAL VERIFICATION TEST
+================================================================================
+
+
+Test Case 1: 0.0.0.0
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.0
+Subnet Mask: 255.255.255.255 (Expected: 255.255.255.255)
+CIDR: /32 (Expected: /32)
+Addresses: 1 (Expected: 1)
+Wildcard Bits: 0 (Expected: 0)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111111111
+Example Range: 192.168.1.0 - 192.168.1.0
+✅ PASS
+
+Test Case 2: 0.0.0.255
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.255
+Subnet Mask: 255.255.255.0 (Expected: 255.255.255.0)
+CIDR: /24 (Expected: /24)
+Addresses: 256 (Expected: 256)
+Wildcard Bits: 8 (Expected: 8)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111100000000
+Example Range: 192.168.1.0 - 192.168.1.255
+✅ PASS
+
+Test Case 3: 0.0.3.255
+------------------------------------------------------------
+Wildcard Mask: 0.0.3.255
+Subnet Mask: 255.255.252.0 (Expected: 255.255.252.0)
+CIDR: /22 (Expected: /22)
+Addresses: 1024 (Expected: 1024)
+Wildcard Bits: 10 (Expected: 10)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111110000000000
+Example Range: 192.168.0.0 - 192.168.3.255
+✅ PASS
+
+Test Case 4: 0.0.255.255
+------------------------------------------------------------
+Wildcard Mask: 0.0.255.255
+Subnet Mask: 255.255.0.0 (Expected: 255.255.0.0)
+CIDR: /16 (Expected: /16)
+Addresses: 65536 (Expected: 65536)
+Wildcard Bits: 16 (Expected: 16)
+Is Contiguous: true
+Binary (Subnet): 11111111111111110000000000000000
+Example Range: 192.168.0.0 - 192.168.255.255
+✅ PASS
+
+Test Case 5: 0.255.255.255
+------------------------------------------------------------
+Wildcard Mask: 0.255.255.255
+Subnet Mask: 255.0.0.0 (Expected: 255.0.0.0)
+CIDR: /8 (Expected: /8)
+Addresses: 16777216 (Expected: 16777216)
+Wildcard Bits: 24 (Expected: 24)
+Is Contiguous: true
+Binary (Subnet): 11111111000000000000000000000000
+Example Range: 192.0.0.0 - 192.255.255.255
+✅ PASS
+
+Test Case 6: 255.255.255.255
+------------------------------------------------------------
+Wildcard Mask: 255.255.255.255
+Subnet Mask: 0.0.0.0 (Expected: 0.0.0.0)
+CIDR: /0 (Expected: /0)
+Addresses: 4294967296 (Expected: 4294967296)
+Wildcard Bits: 32 (Expected: 32)
+Is Contiguous: true
+Binary (Subnet): 00000000000000000000000000000000
+Example Range: 0.0.0.0 - 255.255.255.255
+✅ PASS
+
+Test Case 7: 255.0.0.0
+------------------------------------------------------------
+Wildcard Mask: 255.0.0.0
+Subnet Mask: 0.255.255.255 (Expected: 0.255.255.255)
+CIDR: /N/A (Expected: /N/A)
+Addresses: 256 (Expected: 16777216)
+Wildcard Bits: 8 (Expected: 24)
+Is Contiguous: false
+Binary (Subnet): 00000000111111111111111111111111
+Example Range: 0.168.1.0 - 255.168.1.0
+❌ FAIL
+Errors:
+  - Addresses: Expected 16777216, got 256
+  - Wildcard Bits: Expected 24, got 8
+
+Test Case 8: 255.255.255.0
+------------------------------------------------------------
+Wildcard Mask: 255.255.255.0
+Subnet Mask: 0.0.0.255 (Expected: 0.0.0.255)
+CIDR: /N/A (Expected: /N/A)
+Addresses: 16777216 (Expected: 16777216)
+Wildcard Bits: 24 (Expected: 24)
+Is Contiguous: false
+Binary (Subnet): 00000000000000000000000011111111
+Example Range: 0.0.0.0 - 255.255.255.0
+✅ PASS
+
+Test Case 9: 0.0.15.255
+------------------------------------------------------------
+Wildcard Mask: 0.0.15.255
+Subnet Mask: 255.255.240.0 (Expected: 255.255.240.0)
+CIDR: /20 (Expected: /20)
+Addresses: 4096 (Expected: 4096)
+Wildcard Bits: 12 (Expected: 12)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111000000000000
+Example Range: 192.168.0.0 - 192.168.15.255
+✅ PASS
+
+Test Case 10: 0.63.255.255
+------------------------------------------------------------
+Wildcard Mask: 0.63.255.255
+Subnet Mask: 255.192.0.0 (Expected: 255.192.0.0)
+CIDR: /10 (Expected: /10)
+Addresses: 4194304 (Expected: 4194304)
+Wildcard Bits: 22 (Expected: 22)
+Is Contiguous: true
+Binary (Subnet): 11111111110000000000000000000000
+Example Range: 192.128.0.0 - 192.191.255.255
+✅ PASS
+
+Test Case 11: 0.0.0.1
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.1
+Subnet Mask: 255.255.255.254 (Expected: 255.255.255.254)
+CIDR: /31 (Expected: /N/A)
+Addresses: 2 (Expected: 2)
+Wildcard Bits: 1 (Expected: 1)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111111110
+Example Range: 192.168.1.0 - 192.168.1.1
+❌ FAIL
+Errors:
+  - CIDR: Expected N/A, got 31
+
+Test Case 12: 0.0.0.3
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.3
+Subnet Mask: 255.255.255.252 (Expected: 255.255.255.252)
+CIDR: /30 (Expected: /30)
+Addresses: 4 (Expected: 4)
+Wildcard Bits: 2 (Expected: 2)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111111100
+Example Range: 192.168.1.0 - 192.168.1.3
+✅ PASS
+
+Test Case 13: 0.0.0.7
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.7
+Subnet Mask: 255.255.255.248 (Expected: 255.255.255.248)
+CIDR: /29 (Expected: /29)
+Addresses: 8 (Expected: 8)
+Wildcard Bits: 3 (Expected: 3)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111111000
+Example Range: 192.168.1.0 - 192.168.1.7
+✅ PASS
+
+Test Case 14: 0.0.0.15
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.15
+Subnet Mask: 255.255.255.240 (Expected: 255.255.255.240)
+CIDR: /28 (Expected: /28)
+Addresses: 16 (Expected: 16)
+Wildcard Bits: 4 (Expected: 4)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111110000
+Example Range: 192.168.1.0 - 192.168.1.15
+✅ PASS
+
+Test Case 15: 0.0.0.31
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.31
+Subnet Mask: 255.255.255.224 (Expected: 255.255.255.224)
+CIDR: /27 (Expected: /27)
+Addresses: 32 (Expected: 32)
+Wildcard Bits: 5 (Expected: 5)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111100000
+Example Range: 192.168.1.0 - 192.168.1.31
+✅ PASS
+
+Test Case 16: 0.0.0.63
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.63
+Subnet Mask: 255.255.255.192 (Expected: 255.255.255.192)
+CIDR: /26 (Expected: /26)
+Addresses: 64 (Expected: 64)
+Wildcard Bits: 6 (Expected: 6)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111111000000
+Example Range: 192.168.1.0 - 192.168.1.63
+✅ PASS
+
+Test Case 17: 0.0.0.127
+------------------------------------------------------------
+Wildcard Mask: 0.0.0.127
+Subnet Mask: 255.255.255.128 (Expected: 255.255.255.128)
+CIDR: /25 (Expected: /25)
+Addresses: 128 (Expected: 128)
+Wildcard Bits: 7 (Expected: 7)
+Is Contiguous: true
+Binary (Subnet): 11111111111111111111111110000000
+Example Range: 192.168.1.0 - 192.168.1.127
+✅ PASS
+
+================================================================================
+TEST SUMMARY
+================================================================================
+Total Tests: 17
+Passed: 15
+Failed: 2
+Success Rate: 88.24%
+
+================================================================================
+FAILURES DETAIL
+================================================================================
+
+1. Input: 255.0.0.0
+   - Addresses: Expected 16777216, got 256
+   - Wildcard Bits: Expected 24, got 8
+
+2. Input: 0.0.0.1
+   - CIDR: Expected N/A, got 31
+
+================================================================================

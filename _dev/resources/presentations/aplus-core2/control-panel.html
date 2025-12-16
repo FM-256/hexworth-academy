@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Control Panel Utilities - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #0078d4;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0078d4;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #0078d4;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #005a9e;
+            font-size: 1.6em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .note {
+            font-size: 1.2em;
+            color: #e52d27;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 25px;
+            right: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #005a9e;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* CompTIA A+ Branding Colors */
+        .aplus-badge {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Exam Tip Box */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-card.exam-tip {
+            border-left-color: #e52d27;
+            background: #fef2f2;
+        }
+
+        .info-card.warning {
+            border-left-color: #ffb900;
+            background: #fff4ce;
+        }
+
+        .info-card strong {
+            color: #e52d27;
+            font-size: 1.1em;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: #0078d4;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .comparison-table code {
+            background: #e1e1e1;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        /* UAC Levels */
+        .uac-level {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .uac-level:hover {
+            transform: translateX(5px);
+        }
+
+        .uac-level.level-1 {
+            border-left-color: #107c10;
+        }
+
+        .uac-level.level-2 {
+            border-left-color: #0078d4;
+        }
+
+        .uac-level.level-3 {
+            border-left-color: #ffb900;
+        }
+
+        .uac-level.level-4 {
+            border-left-color: #e52d27;
+        }
+
+        .uac-level strong {
+            display: block;
+            font-size: 1.15em;
+            margin-bottom: 5px;
+            color: #005a9e;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight-box li {
+            color: white;
+        }
+
+        /* Code/Command styling */
+        code {
+            background: #e1e1e1;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+
+        strong {
+            color: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='../../../index.html'">Home</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h1>Windows Control Panel Utilities</h1>
+            <p class="subtitle">Essential Configuration Tools for A+ Technicians</p>
+            <p class="note">Legacy but Essential!</p>
+
+            <div class="highlight-box" style="margin-top: 50px;">
+                <h3>What You'll Learn</h3>
+                <ul>
+                    <li>Navigate and configure Control Panel utilities</li>
+                    <li>Understand System, Network, and User Account settings</li>
+                    <li>Master Device Manager and Administrative Tools</li>
+                    <li>Identify critical exam-focused utilities and their purposes</li>
+                    <li>Use run commands for quick access to common utilities</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">1</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 2: Control Panel Overview -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Control Panel Overview</h2>
+
+            <h3>What is Control Panel?</h3>
+            <p>Legacy Windows configuration interface that provides access to system settings, hardware configuration, network setup, and administrative tools. While Windows Settings app is modern, many advanced features still require Control Panel.</p>
+
+            <h3>How to Access Control Panel</h3>
+            <ul>
+                <li><strong>Search:</strong> Type "Control Panel" in Start menu search</li>
+                <li><strong>Run Command:</strong> <code>control</code> (Win + R)</li>
+                <li><strong>File Explorer:</strong> Type "Control Panel" in address bar</li>
+                <li><strong>Right-click Start:</strong> Some versions show Control Panel link</li>
+            </ul>
+
+            <h3>View Modes</h3>
+            <div class="two-col">
+                <div>
+                    <div class="feature-card">
+                        <strong>Category View</strong>
+                        <p>Groups items by function - user-friendly but hides advanced options</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="feature-card">
+                        <strong>Large/Small Icons</strong>
+                        <p>Shows all Control Panel items alphabetically - faster for power users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Many utilities ONLY exist in Control Panel, not in Settings app. Know how to navigate both interfaces!
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">2</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 3: System and Security -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>System and Security</h2>
+
+            <div class="feature-card">
+                <h3>System</h3>
+                <ul>
+                    <li><strong>Device Specifications:</strong> Processor, RAM, system type (32/64-bit)</li>
+                    <li><strong>Computer Name:</strong> View and change computer name</li>
+                    <li><strong>Workgroup/Domain:</strong> Join or leave domains and workgroups</li>
+                    <li><strong>Remote Settings:</strong> Remote Desktop and Remote Assistance configuration</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Windows Defender Firewall</h3>
+                <ul>
+                    <li><strong>Firewall Rules:</strong> Allow or block applications through firewall</li>
+                    <li><strong>Exceptions:</strong> Create custom rules for specific ports or programs</li>
+                    <li><strong>Network Profiles:</strong> Domain, Private, Public network settings</li>
+                    <li><strong>Advanced Settings:</strong> Inbound/outbound rules configuration</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Security and Maintenance (Action Center)</h3>
+                <ul>
+                    <li><strong>Security Alerts:</strong> Firewall, antivirus, UAC status notifications</li>
+                    <li><strong>Maintenance Alerts:</strong> Windows Update, backup, troubleshooting</li>
+                    <li><strong>Problem Reports:</strong> View solutions to reported problems</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Power Options & Administrative Tools</h3>
+                <ul>
+                    <li><strong>Power Options:</strong> Power plans, sleep/hibernate, advanced settings</li>
+                    <li><strong>Administrative Tools:</strong> Links to MMC consoles and management tools</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">3</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 4: Programs and Features -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Programs and Features</h2>
+
+            <p><strong>Run Command:</strong> <code>appwiz.cpl</code></p>
+
+            <h3>Key Functions</h3>
+
+            <div class="feature-card">
+                <strong>1. Uninstall or Change Programs</strong>
+                <ul>
+                    <li>Remove installed applications properly</li>
+                    <li>Modify or repair existing installations</li>
+                    <li>View installation date and size</li>
+                    <li>Sort by name, publisher, install date, or size</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>2. Turn Windows Features On or Off</strong>
+                <ul>
+                    <li><strong>Hyper-V:</strong> Microsoft's virtualization platform (Pro/Enterprise)</li>
+                    <li><strong>Internet Information Services (IIS):</strong> Web server</li>
+                    <li><strong>Telnet Client:</strong> Legacy remote access protocol</li>
+                    <li><strong>Windows Subsystem for Linux (WSL):</strong> Run Linux distributions</li>
+                    <li><strong>.NET Framework:</strong> Application runtime versions</li>
+                    <li><strong>SMB 1.0/CIFS:</strong> Legacy file sharing (security risk - disable if not needed)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>3. View Installed Updates</strong>
+                <ul>
+                    <li>See all installed Windows updates with KB numbers</li>
+                    <li>Uninstall problematic updates if needed</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>4. Run Programs in Compatibility Mode</strong>
+                <ul>
+                    <li>Configure programs for previous Windows versions</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> This is where you enable/disable Windows features! Requires reboot for most features to take effect.
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">4</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 5: Network and Internet -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Network and Internet</h2>
+
+            <div class="feature-card">
+                <h3>Network and Sharing Center</h3>
+                <ul>
+                    <li><strong>View Network Status:</strong> Active connections and network type</li>
+                    <li><strong>Change Adapter Settings:</strong> Configure network interfaces (IP, DNS, etc.)</li>
+                    <li><strong>Set Up New Connection:</strong> VPN, dial-up, wireless network setup</li>
+                    <li><strong>Troubleshoot Problems:</strong> Built-in network troubleshooter</li>
+                    <li><strong>Change Advanced Sharing Settings:</strong> File/printer sharing, network discovery</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Change Adapter Settings</h3>
+                <ul>
+                    <li><strong>IP Configuration:</strong> Static IP, subnet mask, default gateway</li>
+                    <li><strong>DNS Settings:</strong> Preferred and alternate DNS servers</li>
+                    <li><strong>IPv4/IPv6:</strong> Enable or disable protocols</li>
+                    <li><strong>Advanced Properties:</strong> WINS, QoS, and other advanced settings</li>
+                    <li><strong>Enable/Disable Adapters:</strong> Troubleshooting network issues</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Internet Options</h3>
+                <p><strong>Run Command:</strong> <code>inetcpl.cpl</code></p>
+                <ul>
+                    <li>Browser configuration (primarily Internet Explorer/Edge Legacy)</li>
+                    <li>Security zones and privacy settings</li>
+                    <li>Certificates and connections</li>
+                    <li>LAN proxy settings (used by all Windows browsers)</li>
+                </ul>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Note:</strong> HomeGroup was removed in Windows 10 version 1803 and later. Use modern file sharing via network discovery instead.
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">5</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 6: Internet Options Deep Dive -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Internet Options Deep Dive</h2>
+
+            <p><strong>Run Command:</strong> <code>inetcpl.cpl</code></p>
+
+            <div class="two-col">
+                <div>
+                    <div class="feature-card">
+                        <strong>General Tab</strong>
+                        <ul>
+                            <li>Home page configuration</li>
+                            <li>Startup behavior</li>
+                            <li>Browsing history (delete cache, cookies)</li>
+                            <li>Search settings</li>
+                            <li>Tabs and appearance</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Security Tab</strong>
+                        <ul>
+                            <li><strong>Internet Zone:</strong> Default for websites</li>
+                            <li><strong>Local Intranet:</strong> Company network sites</li>
+                            <li><strong>Trusted Sites:</strong> Explicitly trusted</li>
+                            <li><strong>Restricted Sites:</strong> Blocked sites</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Privacy Tab</strong>
+                        <ul>
+                            <li>Pop-up blocker settings</li>
+                            <li>InPrivate browsing</li>
+                            <li>Cookie handling</li>
+                            <li>Location tracking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="feature-card">
+                        <strong>Content Tab</strong>
+                        <ul>
+                            <li>Certificates (view, import, export)</li>
+                            <li>AutoComplete settings</li>
+                            <li>Feeds and Web Slices</li>
+                            <li>Parental controls</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Connections Tab</strong>
+                        <ul>
+                            <li>Dial-up and VPN settings</li>
+                            <li><strong>LAN Settings:</strong> Proxy configuration</li>
+                            <li>Automatic configuration scripts</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Programs Tab</strong>
+                        <ul>
+                            <li>Default web browser</li>
+                            <li>Manage add-ons</li>
+                            <li>HTML editor</li>
+                            <li>File associations</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Advanced Tab</strong>
+                        <ul>
+                            <li>Reset browser settings</li>
+                            <li>SSL/TLS settings</li>
+                            <li>Advanced security options</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Internet Options affects ALL browsers on Windows for certain settings like proxy configuration (LAN Settings)!
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">6</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 7: Hardware and Sound -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Hardware and Sound</h2>
+
+            <div class="feature-card">
+                <h3>Devices and Printers</h3>
+                <ul>
+                    <li><strong>View Installed Devices:</strong> Printers, scanners, cameras, phones</li>
+                    <li><strong>Add a Device:</strong> Manually add Bluetooth or network devices</li>
+                    <li><strong>Set Default Printer:</strong> Configure default printing device</li>
+                    <li><strong>Print Server Properties:</strong> Manage forms, ports, drivers</li>
+                    <li><strong>Troubleshoot:</strong> Built-in hardware troubleshooters</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Device Manager</h3>
+                <p><strong>Run Command:</strong> <code>devmgmt.msc</code></p>
+                <ul>
+                    <li>Manage all hardware devices in the system</li>
+                    <li>Update, roll back, or uninstall drivers</li>
+                    <li>Enable or disable devices</li>
+                    <li>View hardware resources (IRQ, DMA, I/O, Memory)</li>
+                    <li>Critical for hardware troubleshooting!</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Sound</h3>
+                <ul>
+                    <li><strong>Playback Devices:</strong> Speakers, headphones - set default, levels, enhancements</li>
+                    <li><strong>Recording Devices:</strong> Microphones - configure input levels and boost</li>
+                    <li><strong>Sounds:</strong> System sound scheme configuration</li>
+                    <li><strong>Communications:</strong> Auto-adjust volume during calls</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Power Options</h3>
+                <p><strong>Run Command:</strong> <code>powercfg.cpl</code></p>
+                <ul>
+                    <li><strong>Power Plans:</strong> Balanced, Power Saver, High Performance</li>
+                    <li><strong>Sleep/Hibernate:</strong> Configure timeout periods</li>
+                    <li><strong>Power Button Actions:</strong> What happens when lid closes or power button pressed</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>AutoPlay</h3>
+                <ul>
+                    <li>Configure automatic actions when inserting media (USB, CD/DVD, memory cards)</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">7</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 8: Device Manager Spotlight -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Device Manager Spotlight</h2>
+
+            <p><strong>Run Commands:</strong> <code>devmgmt.msc</code> or <code>hdwwiz.cpl</code></p>
+
+            <h3>Access Methods</h3>
+            <ul>
+                <li><strong>Control Panel:</strong> Hardware and Sound → Device Manager</li>
+                <li><strong>Run Command:</strong> <code>devmgmt.msc</code></li>
+                <li><strong>Right-click Start Menu:</strong> Device Manager (Windows 10/11)</li>
+                <li><strong>System Properties:</strong> Advanced → Hardware tab → Device Manager</li>
+            </ul>
+
+            <h3>Key Functions</h3>
+            <div class="two-col">
+                <div>
+                    <div class="feature-card">
+                        <strong>Update Drivers</strong>
+                        <ul>
+                            <li>Search automatically for updated driver software</li>
+                            <li>Browse computer for driver software (manual install)</li>
+                            <li>Right-click device → Update driver</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Roll Back Drivers</strong>
+                        <ul>
+                            <li>Revert to previous driver version</li>
+                            <li>Useful when new driver causes problems</li>
+                            <li>Properties → Driver tab → Roll Back Driver</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Uninstall Devices</strong>
+                        <ul>
+                            <li>Remove device and its driver</li>
+                            <li>Option to delete driver software</li>
+                            <li>Useful for troubleshooting corrupted drivers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="feature-card">
+                        <strong>Disable/Enable Devices</strong>
+                        <ul>
+                            <li>Temporarily disable hardware without uninstalling</li>
+                            <li>Enable previously disabled devices</li>
+                            <li>Useful for isolating hardware conflicts</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>View Hardware Resources</strong>
+                        <ul>
+                            <li>IRQ (Interrupt Request) assignments</li>
+                            <li>DMA (Direct Memory Access) channels</li>
+                            <li>I/O ports and memory addresses</li>
+                            <li>View → Resources by type/connection</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Scan for Hardware Changes</strong>
+                        <ul>
+                            <li>Detect newly connected devices</li>
+                            <li>Action menu → Scan for hardware changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Device Status Indicators</h3>
+            <ul>
+                <li><strong>Yellow Exclamation Mark (!):</strong> Device has a problem or driver issue</li>
+                <li><strong>Red X:</strong> Device is disabled</li>
+                <li><strong>Down Arrow:</strong> Device is disabled by user</li>
+                <li><strong>No Icon:</strong> Device is working properly</li>
+            </ul>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Device Manager is CRITICAL for hardware troubleshooting! Know how to update, roll back, and uninstall drivers.
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">8</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 9: User Accounts -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>User Accounts</h2>
+
+            <p><strong>Run Command:</strong> <code>control userpasswords</code> or <code>netplwiz</code></p>
+
+            <h3>User Account Management</h3>
+
+            <div class="feature-card">
+                <strong>Change Account Type</strong>
+                <ul>
+                    <li><strong>Standard User:</strong> Limited privileges, cannot install software or change system settings</li>
+                    <li><strong>Administrator:</strong> Full control over the system, install software, change settings</li>
+                    <li>Best Practice: Use Standard account for daily tasks, elevate when needed</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>Manage Another Account</strong>
+                <ul>
+                    <li>Create new user accounts</li>
+                    <li>Delete user accounts</li>
+                    <li>Change account name or password</li>
+                    <li>Set up parental controls (Family Safety)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>Change User Account Control (UAC) Settings</strong>
+                <ul>
+                    <li>Configure when to be notified about system changes</li>
+                    <li>Four UAC levels from Never Notify to Always Notify</li>
+                    <li>Balance between security and convenience</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <strong>Credential Manager</strong>
+                <ul>
+                    <li><strong>Web Credentials:</strong> Stored passwords for websites and web apps</li>
+                    <li><strong>Windows Credentials:</strong> Network credentials, Remote Desktop, and app passwords</li>
+                    <li>View, edit, add, or remove saved credentials</li>
+                    <li>Backup and restore credentials</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> UAC slider has 4 levels! Know the default setting (Notify only when apps try to make changes).
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">9</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 10: UAC Deep Dive -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>User Account Control (UAC) Deep Dive</h2>
+
+            <h3>Four UAC Levels Explained</h3>
+
+            <div class="uac-level level-1">
+                <strong>Level 1: Always Notify (Most Secure)</strong>
+                <p>Notify when programs try to install or make changes AND when I change Windows settings. Screen dims and desktop locks.</p>
+                <ul>
+                    <li>Maximum security</li>
+                    <li>Most intrusive - prompts very frequently</li>
+                    <li>Recommended for high-security environments</li>
+                </ul>
+            </div>
+
+            <div class="uac-level level-2">
+                <strong>Level 2: Notify Only When Apps Try to Make Changes (DEFAULT)</strong>
+                <p>Notify only when programs try to make changes, not when I change Windows settings. Screen dims and desktop locks.</p>
+                <ul>
+                    <li>Default Windows setting</li>
+                    <li>Good balance of security and usability</li>
+                    <li>Reduces prompts for administrative tasks</li>
+                    <li>Most commonly used setting</li>
+                </ul>
+            </div>
+
+            <div class="uac-level level-3">
+                <strong>Level 3: Notify But Don't Dim Desktop</strong>
+                <p>Same as Level 2, but screen doesn't dim and desktop doesn't lock.</p>
+                <ul>
+                    <li>Less secure - other programs can interfere</li>
+                    <li>Faster response time</li>
+                    <li>Use only on trusted systems</li>
+                </ul>
+            </div>
+
+            <div class="uac-level level-4">
+                <strong>Level 4: Never Notify (Least Secure - NOT RECOMMENDED!)</strong>
+                <p>Never notify when programs try to install software or make changes.</p>
+                <ul>
+                    <li>Disables UAC completely</li>
+                    <li>Major security risk!</li>
+                    <li>Malware can make changes without permission</li>
+                    <li>Only use for testing/troubleshooting, then re-enable</li>
+                </ul>
+            </div>
+
+            <h3>Why UAC Matters</h3>
+            <ul>
+                <li><strong>Prevents Unauthorized Changes:</strong> Malware can't silently install</li>
+                <li><strong>Principle of Least Privilege:</strong> Users run with standard privileges by default</li>
+                <li><strong>Audit Trail:</strong> Logs elevation attempts in Security log</li>
+                <li><strong>Over-the-Shoulder Consent:</strong> Prompts for admin password if standard user</li>
+            </ul>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Know the DEFAULT UAC setting is Level 2: "Notify only when apps try to make changes"! This is testable!
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">10</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 11: Clock and Region -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Clock and Region</h2>
+
+            <p><strong>Run Command:</strong> <code>timedate.cpl</code></p>
+
+            <div class="feature-card">
+                <h3>Date and Time</h3>
+                <ul>
+                    <li><strong>Set Time and Date:</strong> Manually adjust system clock</li>
+                    <li><strong>Change Time Zone:</strong> Select correct time zone and DST settings</li>
+                    <li><strong>Internet Time:</strong> Synchronize with time server (time.windows.com)</li>
+                    <li><strong>Additional Clocks:</strong> Display up to 2 additional time zones</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Internet Time Synchronization</h3>
+                <ul>
+                    <li>Windows synchronizes time with NTP servers automatically</li>
+                    <li>Default server: time.windows.com</li>
+                    <li>Can configure custom NTP servers</li>
+                    <li>Critical for domain authentication (Kerberos requires accurate time)</li>
+                    <li>Default sync interval: Once per week for workstations</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Region</h3>
+                <ul>
+                    <li><strong>Format:</strong> Date, time, currency, and number format display</li>
+                    <li><strong>Location:</strong> Determines location-based content</li>
+                    <li><strong>Administrative:</strong> Language for non-Unicode programs, copy settings to system accounts</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="info-card exam-tip">
+                    <strong>Exam Tip:</strong> Time sync issues can break domain authentication! Kerberos requires clocks to be within 5 minutes.
+                </div>
+                <div class="info-card warning">
+                    <strong>Common Issue:</strong> Wrong time zone or disabled time sync causes login failures on domain-joined computers.
+                </div>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">11</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 12: Ease of Access -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Ease of Access (Accessibility)</h2>
+
+            <h3>Ease of Access Center</h3>
+            <p>Accessibility features to help users with disabilities use the computer more effectively.</p>
+
+            <div class="two-col">
+                <div>
+                    <div class="feature-card">
+                        <strong>Visual Aids</strong>
+                        <ul>
+                            <li><strong>Narrator:</strong> Screen reader that reads aloud screen content</li>
+                            <li><strong>Magnifier:</strong> Enlarges portions of the screen</li>
+                            <li><strong>High Contrast Themes:</strong> Easier to see for visually impaired users</li>
+                            <li><strong>Adjust Screen Brightness:</strong> Optimize visual display</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Keyboard Aids</strong>
+                        <ul>
+                            <li><strong>Sticky Keys:</strong> Press modifier keys (Shift, Ctrl, Alt) one at a time instead of simultaneously</li>
+                            <li><strong>Filter Keys:</strong> Ignore brief or repeated keystrokes</li>
+                            <li><strong>Toggle Keys:</strong> Sound alerts when Caps Lock, Num Lock, or Scroll Lock pressed</li>
+                            <li><strong>On-Screen Keyboard:</strong> Virtual keyboard for mouse/touch input</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="feature-card">
+                        <strong>Mouse Aids</strong>
+                        <ul>
+                            <li><strong>Mouse Pointer Size/Color:</strong> Larger, more visible cursor</li>
+                            <li><strong>Mouse Keys:</strong> Control mouse pointer with numeric keypad</li>
+                            <li><strong>Click Lock:</strong> Highlight or drag without holding mouse button</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Audio Aids</strong>
+                        <ul>
+                            <li><strong>Visual Notifications:</strong> Flash screen instead of sounds</li>
+                            <li><strong>Mono Audio:</strong> Combine stereo to single channel</li>
+                            <li><strong>Captions:</strong> Show captions for speech</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Speech Recognition</strong>
+                        <ul>
+                            <li>Control computer using voice commands</li>
+                            <li>Dictate text instead of typing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Sticky Keys activates automatically if you press Shift key 5 times rapidly! Know how to enable/disable accessibility features.
+            </div>
+
+            <div class="info-card warning">
+                <strong>Quick Shortcuts:</strong> Win + U opens Ease of Access settings. Win + Plus/Minus activates Magnifier. Win + Ctrl + Enter activates Narrator.
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">12</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 13: File Explorer Options -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>File Explorer Options (Folder Options)</h2>
+
+            <p><strong>Access:</strong> File Explorer → View tab → Options OR Control Panel → File Explorer Options</p>
+
+            <div class="feature-card">
+                <h3>General Tab</h3>
+                <ul>
+                    <li><strong>Open File Explorer to:</strong> Quick access or This PC</li>
+                    <li><strong>Browse Folders:</strong> Open each folder in same or new window</li>
+                    <li><strong>Click Behavior:</strong> Single-click or double-click to open</li>
+                    <li><strong>Navigation Pane:</strong> Show/hide All Folders, expand to current folder</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>View Tab (CRITICAL for A+ Exam!)</h3>
+                <ul>
+                    <li><strong>Hidden Files and Folders:</strong> Show or hide hidden files/folders</li>
+                    <li><strong>Hide Extensions for Known File Types:</strong> UNCHECK to see file extensions!</li>
+                    <li><strong>Hide Protected Operating System Files:</strong> Keep checked unless troubleshooting</li>
+                    <li><strong>Show Drive Letters:</strong> Display drive letters before drive names</li>
+                    <li><strong>Launch Folder Windows in Separate Process:</strong> Stability vs performance</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>Search Tab</h3>
+                <ul>
+                    <li><strong>What to Search:</strong> Index only vs always search file names and contents</li>
+                    <li><strong>Include System Directories:</strong> Search system folders</li>
+                    <li><strong>Include Compressed Files:</strong> Search inside ZIP files</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Critical Security Settings</h3>
+                <ul>
+                    <li><strong>Show Hidden Files and Folders:</strong> Malware often hides files</li>
+                    <li><strong>Show File Extensions:</strong> Prevents malware disguised as other file types (virus.txt.exe appears as virus.txt if extensions hidden!)</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Malware frequently uses hidden file attributes and double extensions (file.pdf.exe). ALWAYS show hidden files and file extensions when troubleshooting!
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">13</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 14: Administrative Tools -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Administrative Tools</h2>
+
+            <p>Collection of Microsoft Management Console (MMC) snap-ins and system tools for advanced configuration.</p>
+
+            <div class="two-col">
+                <div>
+                    <div class="feature-card">
+                        <strong>Computer Management</strong>
+                        <p><code>compmgmt.msc</code></p>
+                        <ul>
+                            <li>System Tools: Task Scheduler, Event Viewer, Shared Folders, Local Users and Groups, Performance Monitor, Device Manager</li>
+                            <li>Storage: Disk Management</li>
+                            <li>Services and Applications: Services, WMI Control</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Disk Management</strong>
+                        <p><code>diskmgmt.msc</code></p>
+                        <ul>
+                            <li>Create, delete, format partitions and volumes</li>
+                            <li>Assign drive letters</li>
+                            <li>Initialize new disks</li>
+                            <li>Convert between MBR and GPT</li>
+                            <li>Shrink or extend volumes</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Event Viewer</strong>
+                        <p><code>eventvwr.msc</code></p>
+                        <ul>
+                            <li><strong>Application Log:</strong> Application errors and warnings</li>
+                            <li><strong>System Log:</strong> System component events</li>
+                            <li><strong>Security Log:</strong> Audit events (login attempts, file access)</li>
+                            <li><strong>Setup Log:</strong> Installation events</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="feature-card">
+                        <strong>Services</strong>
+                        <p><code>services.msc</code></p>
+                        <ul>
+                            <li>Start, stop, pause, or restart services</li>
+                            <li>Configure startup type: Automatic, Manual, Disabled</li>
+                            <li>Set recovery options if service fails</li>
+                            <li>Log on as different account</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Local Security Policy</strong>
+                        <p><code>secpol.msc</code> (Pro/Enterprise only)</p>
+                        <ul>
+                            <li>Password policies</li>
+                            <li>Account lockout policies</li>
+                            <li>User rights assignment</li>
+                            <li>Security options</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Task Scheduler</strong>
+                        <p><code>taskschd.msc</code></p>
+                        <ul>
+                            <li>Schedule programs or scripts to run automatically</li>
+                            <li>Trigger on time, login, or system events</li>
+                            <li>Run tasks with elevated privileges</li>
+                            <li>View task history and logs</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <strong>Other Tools</strong>
+                        <ul>
+                            <li><strong>Performance Monitor:</strong> <code>perfmon.msc</code></li>
+                            <li><strong>Resource Monitor:</strong> <code>resmon.exe</code></li>
+                            <li><strong>Memory Diagnostic:</strong> Test RAM</li>
+                            <li><strong>System Information:</strong> <code>msinfo32</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">14</span> of <span class="total">15</span></div>
+        </div>
+
+        <!-- Slide 15: Summary -->
+        <div class="slide">
+            <div class="aplus-badge">CompTIA A+ Core 2 - Objective 1.3</div>
+            <h2>Summary - Key Control Panel Items for A+</h2>
+
+            <h3>Quick Reference - Essential Utilities and Run Commands</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Utility</th>
+                        <th>Run Command</th>
+                        <th>Key Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Device Manager</strong></td>
+                        <td><code>devmgmt.msc</code></td>
+                        <td>Hardware troubleshooting, update/roll back drivers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Programs & Features</strong></td>
+                        <td><code>appwiz.cpl</code></td>
+                        <td>Install/uninstall programs, Windows features</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Internet Options</strong></td>
+                        <td><code>inetcpl.cpl</code></td>
+                        <td>Browser/security settings, proxy, certificates</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Power Options</strong></td>
+                        <td><code>powercfg.cpl</code></td>
+                        <td>Power plans, sleep/hibernate settings</td>
+                    </tr>
+                    <tr>
+                        <td><strong>System Properties</strong></td>
+                        <td><code>sysdm.cpl</code></td>
+                        <td>Computer name, domain/workgroup, remote settings</td>
+                    </tr>
+                    <tr>
+                        <td><strong>User Accounts</strong></td>
+                        <td><code>control userpasswords</code></td>
+                        <td>Account management, UAC settings</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Firewall</strong></td>
+                        <td><code>firewall.cpl</code></td>
+                        <td>Firewall rules, network profiles, exceptions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date and Time</strong></td>
+                        <td><code>timedate.cpl</code></td>
+                        <td>Time zone, Internet time sync</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disk Management</strong></td>
+                        <td><code>diskmgmt.msc</code></td>
+                        <td>Partitions, volumes, drive letters</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Services</strong></td>
+                        <td><code>services.msc</code></td>
+                        <td>Start/stop services, configure startup type</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Event Viewer</strong></td>
+                        <td><code>eventvwr.msc</code></td>
+                        <td>System, application, security logs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Computer Management</strong></td>
+                        <td><code>compmgmt.msc</code></td>
+                        <td>Consolidated management console</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Final Exam Tips:</strong>
+                <ul>
+                    <li>Know how to access Control Panel utilities via Run commands (.cpl and .msc files)</li>
+                    <li>Understand default UAC setting (Level 2: Notify only when apps try to make changes)</li>
+                    <li>Remember Device Manager status indicators (Yellow ! = problem, Red X = disabled)</li>
+                    <li>Always show file extensions and hidden files when troubleshooting malware!</li>
+                    <li>Internet Options proxy settings affect ALL Windows browsers</li>
+                </ul>
+            </div>
+
+            <div class="prepared-by">Prepared by: Hexworth Academy</div>
+            <div class="slide-number">Slide <span class="current">15</span> of <span class="total">15</span></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateSlideNumbers() {
+            const currentSpans = document.querySelectorAll('.current');
+            const totalSpans = document.querySelectorAll('.total');
+
+            currentSpans.forEach(span => {
+                span.textContent = currentSlide + 1;
+            });
+
+            totalSpans.forEach(span => {
+                span.textContent = totalSlides;
+            });
+        }
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+
+            if (n >= totalSlides) {
+                currentSlide = 0;
+            } else if (n < 0) {
+                currentSlide = totalSlides - 1;
+            } else {
+                currentSlide = n;
+            }
+
+            slides[currentSlide].classList.add('active');
+            updateSlideNumbers();
+            updateButtons();
+
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        updateSlideNumbers();
+        updateButtons();
+    </script>
+</body>
+</html>

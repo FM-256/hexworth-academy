@@ -1,5 +1,29 @@
 # Network Essentials Project - Claude Guidelines
 
+## File Structure (MAINTAIN SINGLE-FILE VIEW)
+**CRITICAL: Keep the root directory clean for users!**
+
+The project uses a **single-file view** pattern:
+```
+/                          ← Root (clean, minimal)
+├── index.html             ← Redirect to Home/index.html
+├── Home/                  ← DEPLOYABLE PACKAGE (all content here)
+│   ├── index.html         ← Main catalog (THIS IS THE APP)
+│   ├── version.json       ← Version tracking
+│   └── resources/         ← All presentations, tools, labs
+├── _dev/                  ← Development files (hidden from users)
+├── _archive/              ← Old versions, zip files
+├── _legacy/               ← Deprecated content
+├── README.md              ← Project readme
+└── CLAUDE.md              ← These guidelines
+```
+
+**Rules:**
+1. **NEVER add files to root** - use appropriate subdirectory
+2. **Home/ is the deployable package** - deploy this folder to LMS/Blackboard
+3. **Underscore folders are hidden** - `_dev/`, `_archive/`, `_legacy/` are for development only
+4. **New content goes in Home/resources/** - presentations, tools, labs, etc.
+
 ## Interaction Rules
 
 ### 1. DISCUSS BEFORE ACTING

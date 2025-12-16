@@ -1,0 +1,170 @@
+================================================================================
+SUBNET CALCULATOR - MATHEMATICAL VERIFICATION TEST
+================================================================================
+
+
+Test Case 1: 192.168.1.100/24
+------------------------------------------------------------
+Network Address: 192.168.1.0 (Expected: 192.168.1.0)
+Subnet Mask: 255.255.255.0 (Expected: 255.255.255.0)
+Wildcard Mask: 0.0.0.255 (Expected: 0.0.0.255)
+First Usable: 192.168.1.1 (Expected: 192.168.1.1)
+Last Usable: 192.168.1.254 (Expected: 192.168.1.254)
+Broadcast: 192.168.1.255 (Expected: 192.168.1.255)
+Total Hosts: 256 (Expected: 256)
+Usable Hosts: 254 (Expected: 254)
+✅ PASS
+
+Test Case 2: 172.16.50.100/16
+------------------------------------------------------------
+Network Address: 172.16.0.0 (Expected: 172.16.0.0)
+Subnet Mask: 255.255.0.0 (Expected: 255.255.0.0)
+Wildcard Mask: 0.0.255.255 (Expected: 0.0.255.255)
+First Usable: 172.16.0.1 (Expected: 172.16.0.1)
+Last Usable: 172.16.255.254 (Expected: 172.16.255.254)
+Broadcast: 172.16.255.255 (Expected: 172.16.255.255)
+Total Hosts: 65536 (Expected: 65536)
+Usable Hosts: 65534 (Expected: 65534)
+✅ PASS
+
+Test Case 3: 10.50.100.200/8
+------------------------------------------------------------
+Network Address: 10.0.0.0 (Expected: 10.0.0.0)
+Subnet Mask: 255.0.0.0 (Expected: 255.0.0.0)
+Wildcard Mask: 0.255.255.255 (Expected: 0.255.255.255)
+First Usable: 10.0.0.1 (Expected: 10.0.0.1)
+Last Usable: 10.255.255.254 (Expected: 10.255.255.254)
+Broadcast: 10.255.255.255 (Expected: 10.255.255.255)
+Total Hosts: 16777216 (Expected: 16777216)
+Usable Hosts: 16777214 (Expected: 16777214)
+✅ PASS
+
+Test Case 4: 192.168.1.200/25
+------------------------------------------------------------
+Network Address: 192.168.1.128 (Expected: 192.168.1.128)
+Subnet Mask: 255.255.255.128 (Expected: 255.255.255.128)
+Wildcard Mask: 0.0.0.127 (Expected: 0.0.0.127)
+First Usable: 192.168.1.129 (Expected: 192.168.1.129)
+Last Usable: 192.168.1.254 (Expected: 192.168.1.254)
+Broadcast: 192.168.1.255 (Expected: 192.168.1.255)
+Total Hosts: 128 (Expected: 128)
+Usable Hosts: 126 (Expected: 126)
+✅ PASS
+
+Test Case 5: 192.168.1.0/22
+------------------------------------------------------------
+Network Address: 192.168.0.0 (Expected: 192.168.0.0)
+Subnet Mask: 255.255.252.0 (Expected: 255.255.252.0)
+Wildcard Mask: 0.0.3.255 (Expected: 0.0.3.255)
+First Usable: 192.168.0.1 (Expected: 192.168.0.1)
+Last Usable: 192.168.3.254 (Expected: 192.168.3.254)
+Broadcast: 192.168.3.255 (Expected: 192.168.3.255)
+Total Hosts: 1024 (Expected: 1024)
+Usable Hosts: 1022 (Expected: 1022)
+✅ PASS
+
+Test Case 6: 10.1.1.4/30
+------------------------------------------------------------
+Network Address: 10.1.1.4 (Expected: 10.1.1.4)
+Subnet Mask: 255.255.255.252 (Expected: 255.255.255.252)
+Wildcard Mask: 0.0.0.3 (Expected: 0.0.0.3)
+First Usable: 10.1.1.5 (Expected: 10.1.1.5)
+Last Usable: 10.1.1.6 (Expected: 10.1.1.6)
+Broadcast: 10.1.1.7 (Expected: 10.1.1.7)
+Total Hosts: 4 (Expected: 4)
+Usable Hosts: 2 (Expected: 2)
+✅ PASS
+
+Test Case 7: 10.1.1.0/31
+------------------------------------------------------------
+Network Address: 10.1.1.0 (Expected: 10.1.1.0)
+Subnet Mask: 255.255.255.254 (Expected: 255.255.255.254)
+Wildcard Mask: 0.0.0.1 (Expected: 0.0.0.1)
+First Usable: 10.1.1.1 (Expected: 10.1.1.1)
+Last Usable: 10.1.1.0 (Expected: 10.1.1.0)
+Broadcast: 10.1.1.1 (Expected: 10.1.1.1)
+Total Hosts: 2 (Expected: 2)
+Usable Hosts: 2 (Expected: 2)
+✅ PASS
+
+Test Case 8: 192.168.1.1/32
+------------------------------------------------------------
+Network Address: 192.168.1.1 (Expected: 192.168.1.1)
+Subnet Mask: 255.255.255.255 (Expected: 255.255.255.255)
+Wildcard Mask: 0.0.0.0 (Expected: 0.0.0.0)
+First Usable: 192.168.1.2 (Expected: 192.168.1.2)
+Last Usable: 192.168.1.0 (Expected: 192.168.1.0)
+Broadcast: 192.168.1.1 (Expected: 192.168.1.1)
+Total Hosts: 1 (Expected: 1)
+Usable Hosts: 1 (Expected: 1)
+✅ PASS
+
+Test Case 9: 0.0.0.0/0
+------------------------------------------------------------
+Network Address: 0.0.0.0 (Expected: 0.0.0.0)
+Subnet Mask: 0.0.0.0 (Expected: 0.0.0.0)
+Wildcard Mask: 255.255.255.255 (Expected: 255.255.255.255)
+First Usable: 0.0.0.1 (Expected: 0.0.0.1)
+Last Usable: 255.255.255.254 (Expected: 255.255.255.254)
+Broadcast: 255.255.255.255 (Expected: 255.255.255.255)
+Total Hosts: 4294967296 (Expected: 4294967296)
+Usable Hosts: 4294967294 (Expected: 4294967294)
+✅ PASS
+
+Test Case 10: 192.168.10.45/26
+------------------------------------------------------------
+Network Address: 192.168.10.0 (Expected: 192.168.10.0)
+Subnet Mask: 255.255.255.192 (Expected: 255.255.255.192)
+Wildcard Mask: 0.0.0.63 (Expected: 0.0.0.63)
+First Usable: 192.168.10.1 (Expected: 192.168.10.1)
+Last Usable: 192.168.10.62 (Expected: 192.168.10.62)
+Broadcast: 192.168.10.63 (Expected: 192.168.10.63)
+Total Hosts: 64 (Expected: 64)
+Usable Hosts: 62 (Expected: 62)
+✅ PASS
+
+Test Case 11: 10.1.1.64/27
+------------------------------------------------------------
+Network Address: 10.1.1.64 (Expected: 10.1.1.64)
+Subnet Mask: 255.255.255.224 (Expected: 255.255.255.224)
+Wildcard Mask: 0.0.0.31 (Expected: 0.0.0.31)
+First Usable: 10.1.1.65 (Expected: 10.1.1.65)
+Last Usable: 10.1.1.94 (Expected: 10.1.1.94)
+Broadcast: 10.1.1.95 (Expected: 10.1.1.95)
+Total Hosts: 32 (Expected: 32)
+Usable Hosts: 30 (Expected: 30)
+✅ PASS
+
+Test Case 12: 172.16.0.0/28
+------------------------------------------------------------
+Network Address: 172.16.0.0 (Expected: 172.16.0.0)
+Subnet Mask: 255.255.255.240 (Expected: 255.255.255.240)
+Wildcard Mask: 0.0.0.15 (Expected: 0.0.0.15)
+First Usable: 172.16.0.1 (Expected: 172.16.0.1)
+Last Usable: 172.16.0.14 (Expected: 172.16.0.14)
+Broadcast: 172.16.0.15 (Expected: 172.16.0.15)
+Total Hosts: 16 (Expected: 16)
+Usable Hosts: 14 (Expected: 14)
+✅ PASS
+
+Test Case 13: 192.168.1.8/29
+------------------------------------------------------------
+Network Address: 192.168.1.8 (Expected: 192.168.1.8)
+Subnet Mask: 255.255.255.248 (Expected: 255.255.255.248)
+Wildcard Mask: 0.0.0.7 (Expected: 0.0.0.7)
+First Usable: 192.168.1.9 (Expected: 192.168.1.9)
+Last Usable: 192.168.1.14 (Expected: 192.168.1.14)
+Broadcast: 192.168.1.15 (Expected: 192.168.1.15)
+Total Hosts: 8 (Expected: 8)
+Usable Hosts: 6 (Expected: 6)
+✅ PASS
+
+================================================================================
+TEST SUMMARY
+================================================================================
+Total Tests: 13
+Passed: 13
+Failed: 0
+Success Rate: 100.00%
+
+================================================================================
