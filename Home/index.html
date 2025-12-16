@@ -960,6 +960,54 @@
             color: white;
         }
 
+        .badge-new {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* Certification Badges */
+        .cert-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .cert-badge-aplus {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .cert-badge-netplus {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .cert-badge-secplus {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+        }
+
+        .cert-badge-ccna {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            color: white;
+        }
+
+        .cert-badge-cysa {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            color: white;
+        }
+
         .lab-card {
             background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
         }
@@ -2402,7 +2450,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.9.1</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.9.2</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2421,7 +2469,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.9.1</div>
+                        <div class="value" id="modalCurrentVersion">7.9.2</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -2615,6 +2663,11 @@
                         <span><strong>20 Slides</strong></span>
                         <span><span class="badge badge-new">NEW</span></span>
                     </div>
+                    <div class="cert-badges">
+                        <span class="cert-badge cert-badge-netplus">Network+</span>
+                        <span class="cert-badge cert-badge-ccna">CCNA</span>
+                        <span class="cert-badge cert-badge-aplus">A+ Core 1</span>
+                    </div>
                     <div class="card-description">
                         The 7-layer OSI Model explained - understand how data travels through networks from Application to Physical layer.
                         Foundation knowledge for all networking concepts.
@@ -2641,6 +2694,10 @@
                     <div class="card-meta">
                         <span><strong>18 Slides</strong></span>
                         <span><span class="badge badge-new">NEW</span></span>
+                    </div>
+                    <div class="cert-badges">
+                        <span class="cert-badge cert-badge-netplus">Network+</span>
+                        <span class="cert-badge cert-badge-ccna">CCNA</span>
                     </div>
                     <div class="card-description">
                         Physical and logical network designs - Star, Bus, Ring, Mesh, Hybrid, and Spine-Leaf architectures.
@@ -2920,6 +2977,11 @@
                     <div class="card-meta">
                         <span><strong>20 Slides</strong></span>
                         <span><span class="badge badge-complete">Complete</span></span>
+                    </div>
+                    <div class="cert-badges">
+                        <span class="cert-badge cert-badge-ccna">CCNA</span>
+                        <span class="cert-badge cert-badge-secplus">Security+</span>
+                        <span class="cert-badge cert-badge-netplus">Network+</span>
                     </div>
                     <div class="card-description">
                         Network security fundamentals with packet filtering, traffic control, and access management.
@@ -9196,7 +9258,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.9.1',
+            currentVersion: '7.9.2',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds

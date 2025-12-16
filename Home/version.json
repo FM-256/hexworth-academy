@@ -1,11 +1,10 @@
 {
-  "version": "7.9.1",
+  "version": "7.9.2",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: Alternative OSI mnemonics slide with 6 memory tricks",
-    "Added: DOD Model deep dive with alternative layer names",
-    "Added: Protocol mapping table for TCP/IP layers",
-    "Enhanced: Exam tips for CompTIA certification prep"
+    "Added: Certification badge system (A+, Network+, Security+, CCNA, CySA+)",
+    "Added: Certification tags to key presentations (OSI, Topologies, ACLs)",
+    "Feature: Visual certification alignment for exam prep planning"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
