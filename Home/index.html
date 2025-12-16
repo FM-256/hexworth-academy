@@ -88,6 +88,70 @@
             --ambient-2: #a855f7;
         }
 
+        /* House of the Cloud - Cloud Computing (Sky Blue/Silver Mist) */
+        .house-cloud {
+            --primary: #0284c7;
+            --primary-dark: #075985;
+            --secondary: #e0f2fe;
+            --accent: #38bdf8;
+            --gradient-start: #0c4a6e;
+            --gradient-end: #1e3a5f;
+            --gradient-mid: #0369a1;
+            --glow-color: rgba(56, 189, 248, 0.5);
+            --particle-color: rgba(186, 230, 253, 0.7);
+            --card-glow: rgba(14, 165, 233, 0.25);
+            --ambient-1: #0ea5e9;
+            --ambient-2: #7dd3fc;
+        }
+
+        /* House of the Code - Programming/DevOps (Neon Terminal/Matrix Green) */
+        .house-code {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --secondary: #10b981;
+            --accent: #34d399;
+            --gradient-start: #022c22;
+            --gradient-end: #064e3b;
+            --gradient-mid: #065f46;
+            --glow-color: rgba(52, 211, 153, 0.5);
+            --particle-color: rgba(110, 231, 183, 0.7);
+            --card-glow: rgba(16, 185, 129, 0.25);
+            --ambient-1: #10b981;
+            --ambient-2: #6ee7b7;
+        }
+
+        /* House of the Key - Cryptography/Identity (Royal Purple/Gold) */
+        .house-key {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #fbbf24;
+            --accent: #a78bfa;
+            --gradient-start: #2e1065;
+            --gradient-end: #4c1d95;
+            --gradient-mid: #5b21b6;
+            --glow-color: rgba(167, 139, 250, 0.5);
+            --particle-color: rgba(196, 181, 253, 0.7);
+            --card-glow: rgba(139, 92, 246, 0.25);
+            --ambient-1: #8b5cf6;
+            --ambient-2: #fcd34d;
+        }
+
+        /* House of the Eye - Monitoring/Analytics/SIEM (Deep Indigo/Electric Blue) */
+        .house-eye {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --accent: #818cf8;
+            --gradient-start: #1e1b4b;
+            --gradient-end: #312e81;
+            --gradient-mid: #3730a3;
+            --glow-color: rgba(129, 140, 248, 0.5);
+            --particle-color: rgba(165, 180, 252, 0.7);
+            --card-glow: rgba(99, 102, 241, 0.25);
+            --ambient-1: #6366f1;
+            --ambient-2: #22d3ee;
+        }
+
         /* Classic mode - Refined Amethyst */
         .house-classic {
             --primary: #5b21b6;
@@ -1804,6 +1868,46 @@
             box-shadow: 0 12px 40px rgba(34, 197, 94, 0.5), 0 0 60px rgba(168, 85, 247, 0.3);
         }
 
+        .house-card.cloud {
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(186, 230, 253, 0.3), transparent 50%),
+                linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #1e3a5f 100%);
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3);
+        }
+        .house-card.cloud:hover {
+            box-shadow: 0 12px 40px rgba(14, 165, 233, 0.5), 0 0 60px rgba(56, 189, 248, 0.3);
+        }
+
+        .house-card.code {
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(110, 231, 183, 0.2), transparent 50%),
+                linear-gradient(135deg, #022c22 0%, #065f46 50%, #064e3b 100%);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+        }
+        .house-card.code:hover {
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5), 0 0 60px rgba(52, 211, 153, 0.3);
+        }
+
+        .house-card.key {
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(196, 181, 253, 0.2), transparent 50%),
+                linear-gradient(135deg, #2e1065 0%, #5b21b6 50%, #4c1d95 100%);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+        .house-card.key:hover {
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5), 0 0 60px rgba(251, 191, 36, 0.3);
+        }
+
+        .house-card.eye {
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(165, 180, 252, 0.2), transparent 50%),
+                linear-gradient(135deg, #1e1b4b 0%, #3730a3 50%, #312e81 100%);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+        .house-card.eye:hover {
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5), 0 0 60px rgba(34, 211, 238, 0.3);
+        }
+
         /* Sorting Result */
         .sorting-result {
             display: none;
@@ -2246,6 +2350,26 @@
                             <div class="house-name">House of the Script</div>
                             <div class="house-domain">Software</div>
                         </div>
+                        <div class="house-card cloud" onclick="selectHouse('cloud')">
+                            <span class="house-crest">☁️</span>
+                            <div class="house-name">House of the Cloud</div>
+                            <div class="house-domain">Cloud Computing</div>
+                        </div>
+                        <div class="house-card code" onclick="selectHouse('code')">
+                            <span class="house-crest">📜</span>
+                            <div class="house-name">House of the Code</div>
+                            <div class="house-domain">Programming</div>
+                        </div>
+                        <div class="house-card key" onclick="selectHouse('key')">
+                            <span class="house-crest">🔑</span>
+                            <div class="house-name">House of the Key</div>
+                            <div class="house-domain">Cryptography</div>
+                        </div>
+                        <div class="house-card eye" onclick="selectHouse('eye')">
+                            <span class="house-crest">👁️</span>
+                            <div class="house-name">House of the Eye</div>
+                            <div class="house-domain">Monitoring & Analytics</div>
+                        </div>
                     </div>
                     <div style="text-align: center; margin-top: 25px;">
                         <button class="portal-btn secondary" onclick="showEntryOptions()">← Back</button>
@@ -2277,8 +2401,8 @@
             <h1 id="catalogTitle">🏰 Hexworth Academy</h1>
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
-            <div class="prepared-by">Last Updated: 2025-12-15</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.6.1</span></div>
+            <div class="prepared-by">Last Updated: 2025-12-16</div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.7.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2297,7 +2421,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.6.1</div>
+                        <div class="value" id="modalCurrentVersion">7.7.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -8072,10 +8196,38 @@
                 crest: '💻',
                 motto: 'Logic Is Our Spell',
                 colors: { primary: '#166534', secondary: '#7c3aed', accent: '#84cc16' }
+            },
+            cloud: {
+                name: 'House of the Cloud',
+                domain: 'Cloud Computing',
+                crest: '☁️',
+                motto: 'We Scale Without Limits',
+                colors: { primary: '#0284c7', secondary: '#e0f2fe', accent: '#38bdf8' }
+            },
+            code: {
+                name: 'House of the Code',
+                domain: 'Programming',
+                crest: '📜',
+                motto: 'We Automate Everything',
+                colors: { primary: '#059669', secondary: '#10b981', accent: '#34d399' }
+            },
+            key: {
+                name: 'House of the Key',
+                domain: 'Cryptography',
+                crest: '🔑',
+                motto: 'Secrets Are Our Currency',
+                colors: { primary: '#7c3aed', secondary: '#fbbf24', accent: '#a78bfa' }
+            },
+            eye: {
+                name: 'House of the Eye',
+                domain: 'Monitoring & Analytics',
+                crest: '👁️',
+                motto: 'We See All, We Know All',
+                colors: { primary: '#4f46e5', secondary: '#06b6d4', accent: '#818cf8' }
             }
         };
 
-        // Sorting Quiz Questions - 15 Deep, Thought-Provoking Questions
+        // Sorting Quiz Questions - 15 Deep, Thought-Provoking Questions (8 Houses)
         const QUIZ_QUESTIONS = [
             {
                 question: "When faced with a complex problem you've never seen before, what's your first instinct?",
@@ -8083,7 +8235,11 @@
                     { text: "Map out all the connections and trace the flow of data", house: 'web' },
                     { text: "Identify what could go wrong and secure the weak points first", house: 'shield' },
                     { text: "Take it apart to understand its physical components", house: 'forge' },
-                    { text: "Write a small test program to isolate and understand the issue", house: 'script' }
+                    { text: "Write a small test program to isolate and understand the issue", house: 'script' },
+                    { text: "Spin up a test environment in the cloud to experiment safely", house: 'cloud' },
+                    { text: "Automate data collection to understand patterns first", house: 'code' },
+                    { text: "Analyze the encryption and authentication mechanisms", house: 'key' },
+                    { text: "Check the logs and metrics to see what's actually happening", house: 'eye' }
                 ]
             },
             {
@@ -8092,7 +8248,11 @@
                     { text: "Design an alternative path that routes around the problem", house: 'web' },
                     { text: "Document it responsibly and help patch the vulnerability", house: 'shield' },
                     { text: "Build a physical workaround or replacement component", house: 'forge' },
-                    { text: "Write automation to detect and prevent exploitation", house: 'script' }
+                    { text: "Write automation to detect and prevent exploitation", house: 'script' },
+                    { text: "Deploy a cloud-based failover to maintain availability", house: 'cloud' },
+                    { text: "Create a CI/CD pipeline to rapidly deploy the fix", house: 'code' },
+                    { text: "Strengthen the cryptographic controls around the flaw", house: 'key' },
+                    { text: "Set up real-time alerts to detect any exploitation attempts", house: 'eye' }
                 ]
             },
             {
@@ -8101,7 +8261,11 @@
                     { text: "Cartography - mapping unknown territories and connections", house: 'web' },
                     { text: "Alchemy - transforming and protecting precious materials", house: 'shield' },
                     { text: "Smithing - forging powerful artifacts from raw materials", house: 'forge' },
-                    { text: "Rune-writing - encoding spells with precise symbols", house: 'script' }
+                    { text: "Rune-writing - encoding spells with precise symbols", house: 'script' },
+                    { text: "Weather control - commanding the elements from above", house: 'cloud' },
+                    { text: "Automation - creating golems to do repetitive work", house: 'code' },
+                    { text: "Secret keeping - the art of unbreakable ciphers", house: 'key' },
+                    { text: "Divination - seeing patterns others cannot perceive", house: 'eye' }
                 ]
             },
             {
@@ -8110,7 +8274,11 @@
                     { text: "How to make distant systems communicate seamlessly", house: 'web' },
                     { text: "What threats exist that nobody has discovered yet", house: 'shield' },
                     { text: "How to build something more efficient and reliable", house: 'forge' },
-                    { text: "An elegant algorithm to solve a persistent problem", house: 'script' }
+                    { text: "An elegant algorithm to solve a persistent problem", house: 'script' },
+                    { text: "How to architect systems that scale infinitely", house: 'cloud' },
+                    { text: "Ways to automate away tedious manual processes", house: 'code' },
+                    { text: "Whether current encryption will survive quantum computing", house: 'key' },
+                    { text: "What anomalies in the data might indicate a larger problem", house: 'eye' }
                 ]
             },
             {
@@ -8119,7 +8287,11 @@
                     { text: "How do we connect every person on Earth?", house: 'web' },
                     { text: "Can absolute security ever truly exist?", house: 'shield' },
                     { text: "What are the limits of what we can physically build?", house: 'forge' },
-                    { text: "Can machines ever truly think like humans?", house: 'script' }
+                    { text: "Can machines ever truly think like humans?", house: 'script' },
+                    { text: "Should computing resources be unlimited for everyone?", house: 'cloud' },
+                    { text: "Can every process in the world be automated?", house: 'code' },
+                    { text: "Is privacy a fundamental right in the digital age?", house: 'key' },
+                    { text: "Can we ever truly understand complex systems?", house: 'eye' }
                 ]
             },
             {
@@ -8128,7 +8300,11 @@
                     { text: "A global mesh network with no single point of failure", house: 'web' },
                     { text: "An impenetrable digital fortress protecting critical infrastructure", house: 'shield' },
                     { text: "A self-repairing data center that runs for centuries", house: 'forge' },
-                    { text: "An AI system that writes and maintains perfect code", house: 'script' }
+                    { text: "An AI system that writes and maintains perfect code", house: 'script' },
+                    { text: "Unlimited computing power accessible to everyone on Earth", house: 'cloud' },
+                    { text: "A platform that lets anyone build software without coding", house: 'code' },
+                    { text: "Quantum-resistant encryption protecting all communications", house: 'key' },
+                    { text: "An all-seeing system that predicts problems before they occur", house: 'eye' }
                 ]
             },
             {
@@ -8137,7 +8313,11 @@
                     { text: "The way packets find their path across continents in milliseconds", house: 'web' },
                     { text: "The mathematical elegance of encryption algorithms", house: 'shield' },
                     { text: "The precise engineering of a well-designed circuit board", house: 'forge' },
-                    { text: "The logic of a perfectly structured codebase", house: 'script' }
+                    { text: "The logic of a perfectly structured codebase", house: 'script' },
+                    { text: "Services that scale from zero to millions seamlessly", house: 'cloud' },
+                    { text: "A pipeline that deploys code automatically and safely", house: 'code' },
+                    { text: "The unbreakable mathematics behind PKI and digital signatures", house: 'key' },
+                    { text: "Dashboards that turn chaos into understandable patterns", house: 'eye' }
                 ]
             },
             {
@@ -8146,7 +8326,11 @@
                     { text: "Messenger or diplomat - keeping communities connected", house: 'web' },
                     { text: "Guardian or sentinel - protecting people from threats", house: 'shield' },
                     { text: "Builder or engineer - constructing essential infrastructure", house: 'forge' },
-                    { text: "Scribe or scholar - documenting and systematizing knowledge", house: 'script' }
+                    { text: "Scribe or scholar - documenting and systematizing knowledge", house: 'script' },
+                    { text: "Merchant - providing resources where they're needed most", house: 'cloud' },
+                    { text: "Inventor - creating tools to make work more efficient", house: 'code' },
+                    { text: "Keeper of secrets - protecting sensitive information", house: 'key' },
+                    { text: "Oracle - interpreting signs and advising leaders", house: 'eye' }
                 ]
             },
             {
@@ -8155,7 +8339,11 @@
                     { text: "It reveals where connections are weakest", house: 'web' },
                     { text: "It's data about what attacks succeeded", house: 'shield' },
                     { text: "It shows me which parts need better engineering", house: 'forge' },
-                    { text: "It's a bug to be traced, understood, and eliminated", house: 'script' }
+                    { text: "It's a bug to be traced, understood, and eliminated", house: 'script' },
+                    { text: "It means I need better redundancy and failover", house: 'cloud' },
+                    { text: "It's a chance to improve my automation pipeline", house: 'code' },
+                    { text: "It reveals weaknesses in my trust model", house: 'key' },
+                    { text: "It's an anomaly that should have triggered an alert", house: 'eye' }
                 ]
             },
             {
@@ -8164,7 +8352,11 @@
                     { text: "Vint Cerf - architect of the internet protocols", house: 'web' },
                     { text: "Alan Turing - who broke unbreakable codes", house: 'shield' },
                     { text: "Nikola Tesla - inventor of revolutionary hardware", house: 'forge' },
-                    { text: "Ada Lovelace - the first programmer", house: 'script' }
+                    { text: "Ada Lovelace - the first programmer", house: 'script' },
+                    { text: "Werner Vogels - architect of AWS cloud computing", house: 'cloud' },
+                    { text: "Linus Torvalds - creator of Linux and Git", house: 'code' },
+                    { text: "Whitfield Diffie - inventor of public key cryptography", house: 'key' },
+                    { text: "John Tukey - pioneer of data analysis and visualization", house: 'eye' }
                 ]
             },
             {
@@ -8173,7 +8365,11 @@
                     { text: "Coordinate everyone and keep information flowing smoothly", house: 'web' },
                     { text: "Ensure we don't create vulnerabilities in the rush", house: 'shield' },
                     { text: "Get the physical infrastructure running flawlessly", house: 'forge' },
-                    { text: "Write efficient code that does more with less", house: 'script' }
+                    { text: "Write efficient code that does more with less", house: 'script' },
+                    { text: "Provision cloud resources to parallelize the work", house: 'cloud' },
+                    { text: "Automate the repetitive tasks so we can focus on the hard stuff", house: 'code' },
+                    { text: "Make sure authentication and authorization are airtight", house: 'key' },
+                    { text: "Set up monitoring so we know immediately if something breaks", house: 'eye' }
                 ]
             },
             {
@@ -8182,7 +8378,11 @@
                     { text: "A single point of failure that brings everything down", house: 'web' },
                     { text: "Trust in systems that haven't been properly vetted", house: 'shield' },
                     { text: "Building on foundations that aren't solid", house: 'forge' },
-                    { text: "Code that nobody understands but everyone depends on", house: 'script' }
+                    { text: "Code that nobody understands but everyone depends on", house: 'script' },
+                    { text: "Vendor lock-in that traps you with one provider", house: 'cloud' },
+                    { text: "Manual processes that can't scale with demand", house: 'code' },
+                    { text: "Weak encryption that gives false sense of security", house: 'key' },
+                    { text: "Blind spots where problems grow undetected", house: 'eye' }
                 ]
             },
             {
@@ -8191,7 +8391,11 @@
                     { text: "Draw diagrams showing how everything connects", house: 'web' },
                     { text: "Explain the risks and how to protect against them", house: 'shield' },
                     { text: "Show the physical components and how they interact", house: 'forge' },
-                    { text: "Walk through the logic step by step", house: 'script' }
+                    { text: "Walk through the logic step by step", house: 'script' },
+                    { text: "Demonstrate by spinning up a live example in minutes", house: 'cloud' },
+                    { text: "Share a script that automates the whole process", house: 'code' },
+                    { text: "Explain the trust boundaries and verification methods", house: 'key' },
+                    { text: "Show the metrics and what they tell us about system health", house: 'eye' }
                 ]
             },
             {
@@ -8200,7 +8404,11 @@
                     { text: "Bringing reliable connectivity to every person on Earth", house: 'web' },
                     { text: "Eliminating cyber threats and online crime", house: 'shield' },
                     { text: "Creating sustainable, long-lasting hardware", house: 'forge' },
-                    { text: "Making programming accessible to everyone", house: 'script' }
+                    { text: "Making programming accessible to everyone", house: 'script' },
+                    { text: "Providing unlimited computing to developing nations", house: 'cloud' },
+                    { text: "Automating away all the world's tedious work", house: 'code' },
+                    { text: "Giving everyone true privacy in the digital age", house: 'key' },
+                    { text: "Making sense of the world's data to solve big problems", house: 'eye' }
                 ]
             },
             {
@@ -8209,14 +8417,18 @@
                     { text: "Infrastructure that connects generations", house: 'web' },
                     { text: "A safer digital world for everyone", house: 'shield' },
                     { text: "Innovations in hardware that outlast me", house: 'forge' },
-                    { text: "Code and tools that empower others to create", house: 'script' }
+                    { text: "Code and tools that empower others to create", house: 'script' },
+                    { text: "Platforms that democratize access to computing power", house: 'cloud' },
+                    { text: "Automation frameworks that make developers more productive", house: 'code' },
+                    { text: "Cryptographic standards that protect privacy forever", house: 'key' },
+                    { text: "Analytics systems that help humanity understand itself", house: 'eye' }
                 ]
             }
         ];
 
         // State
         let currentQuestion = 0;
-        let houseScores = { web: 0, shield: 0, forge: 0, script: 0 };
+        let houseScores = { web: 0, shield: 0, forge: 0, script: 0, cloud: 0, code: 0, key: 0, eye: 0 };
         let selectedHouse = null;
 
         // ========================================
@@ -8526,7 +8738,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.6.1',
+            currentVersion: '7.7.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds

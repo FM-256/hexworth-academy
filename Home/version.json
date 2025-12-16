@@ -1,11 +1,13 @@
 {
-  "version": "7.6.1",
-  "releaseDate": "2025-12-15",
+  "version": "7.7.0",
+  "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Fixed: Broken Back to Catalog navigation buttons across 18 presentations",
-    "Fixed: admin-tools.html home button placeholders (15 instances)",
-    "Fixed: Navigation links in 18 visualizers and tools",
-    "Fixed: All navigation links now correctly point to index.html"
+    "Added: House of the Cloud (Cloud Computing) with sky blue/silver theme",
+    "Added: House of the Code (Programming) with emerald/mint theme",
+    "Added: House of the Key (Cryptography) with violet/gold theme",
+    "Added: House of the Eye (Monitoring & Analytics) with indigo/cyan theme",
+    "Updated: Sorting quiz now includes all 8 houses with 8 answer options per question",
+    "Updated: House selection portal displays all 8 houses"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
