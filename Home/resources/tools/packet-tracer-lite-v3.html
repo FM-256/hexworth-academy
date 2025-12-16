@@ -2705,6 +2705,64 @@
                 description: "Learn to configure IP addresses and static routes to connect two separate networks through a router. Perfect introduction to Layer 3 routing.",
                 concepts: ["IP Addressing", "Static Routes", "Gateway Configuration", "Ping Testing"],
                 devices: "1 Router, 2 Switches, 4 PCs",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "Router Gi0/0 Configuration (IP + no shutdown)", points: 15 },
+                        { task: "Router Gi0/1 Configuration (IP + no shutdown)", points: 15 },
+                        { task: "PC-A Configuration (IP, Mask, Gateway)", points: 10 },
+                        { task: "PC-B Configuration (IP, Mask, Gateway)", points: 10 },
+                        { task: "PC-C Configuration (IP, Mask, Gateway)", points: 10 },
+                        { task: "PC-D Configuration (IP, Mask, Gateway)", points: 10 },
+                        { task: "Same-Network Connectivity Test (PC-A to PC-B)", points: 15 },
+                        { task: "Cross-Network Connectivity Test (PC-A to PC-C)", points: 15 }
+                    ],
+                    commonMistakes: [
+                        "Forgetting 'no shutdown' on router interfaces (loses 30 points!)",
+                        "Missing default gateway on PCs (loses 40 points!)",
+                        "Wrong subnet mask on PCs",
+                        "Wrong gateway IP (using .2.1 for Network 1 PCs)"
+                    ],
+                    maxPointsTips: "To get 100/100: Configure BOTH router interfaces with 'no shutdown', configure ALL FOUR PCs with IP/Mask/Gateway, and verify BOTH ping tests succeed. Use 'show ip interface brief' to verify router configs and 'ipconfig' to verify PC configs before testing."
+                },
+                quickReference: {
+                    title: "Lab 1 Quick Reference Cheat Sheet",
+                    sections: [
+                        {
+                            name: "Router Configuration",
+                            commands: [
+                                "enable",
+                                "configure terminal",
+                                "interface GigabitEthernet0/0",
+                                "ip address 192.168.1.1 255.255.255.0",
+                                "no shutdown",
+                                "interface GigabitEthernet0/1",
+                                "ip address 192.168.2.1 255.255.255.0",
+                                "no shutdown",
+                                "end"
+                            ]
+                        },
+                        {
+                            name: "PC Configuration",
+                            commands: [
+                                "PC-A: IP=192.168.1.10, Mask=255.255.255.0, GW=192.168.1.1",
+                                "PC-B: IP=192.168.1.20, Mask=255.255.255.0, GW=192.168.1.1",
+                                "PC-C: IP=192.168.2.10, Mask=255.255.255.0, GW=192.168.2.1",
+                                "PC-D: IP=192.168.2.20, Mask=255.255.255.0, GW=192.168.2.1"
+                            ]
+                        },
+                        {
+                            name: "Verification Commands",
+                            commands: [
+                                "show ip interface brief (on router)",
+                                "show running-config (on router)",
+                                "ipconfig (on PCs)",
+                                "ping 192.168.1.20 (test same network)",
+                                "ping 192.168.2.10 (test routing)"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "R1", type: "router", name: "Router-1", x: 400, y: 200},
@@ -2724,6 +2782,8 @@
                         description: "Assign IP address 192.168.1.1/24 to the router interface connected to Network 1 (left side).",
                         commands: ["enable", "configure terminal", "interface GigabitEthernet0/0", "ip address 192.168.1.1 255.255.255.0", "no shutdown", "exit"],
                         verification: "show ip interface brief",
+                        expectedOutput: "GigabitEthernet0/0 should show Status: up, Protocol: up with IP 192.168.1.1",
+                        tips: "⭐ MAX POINTS TIP: Always use 'no shutdown' to enable the interface! An interface configured but left shutdown will NOT earn full credit. Verify Status shows 'up' before moving to next step.",
                         completed: false
                     },
                     {
@@ -2732,6 +2792,8 @@
                         description: "Assign IP address 192.168.2.1/24 to the router interface connected to Network 2 (right side).",
                         commands: ["interface GigabitEthernet0/1", "ip address 192.168.2.1 255.255.255.0", "no shutdown", "exit", "end"],
                         verification: "show ip interface brief",
+                        expectedOutput: "GigabitEthernet0/1 should show Status: up, Protocol: up with IP 192.168.2.1. Both interfaces (Gi0/0 and Gi0/1) should now be up.",
+                        tips: "⭐ MAX POINTS TIP: Use 'show ip interface brief' to verify BOTH interfaces are up. Common mistake: forgetting 'no shutdown' loses points! Save config with 'write memory' or 'copy run start' (though simulation doesn't require this).",
                         completed: false
                     },
                     {
@@ -2740,6 +2802,8 @@
                         description: "Set IP address 192.168.1.10/24 with gateway 192.168.1.1 on PC-A.",
                         commands: ["IP: 192.168.1.10", "Mask: 255.255.255.0", "Gateway: 192.168.1.1"],
                         verification: "ipconfig",
+                        expectedOutput: "PC-A shows IP 192.168.1.10, Subnet Mask 255.255.255.0, Default Gateway 192.168.1.1",
+                        tips: "⭐ MAX POINTS TIP: Click on PC-A device, go to Config panel, and set all THREE values: IP, Mask, AND Gateway. Missing the gateway is a common mistake that costs points! Gateway must match router's Gi0/0 IP.",
                         completed: false
                     },
                     {
@@ -2748,6 +2812,8 @@
                         description: "Set IP address 192.168.1.20/24 with gateway 192.168.1.1 on PC-B.",
                         commands: ["IP: 192.168.1.20", "Mask: 255.255.255.0", "Gateway: 192.168.1.1"],
                         verification: "ipconfig",
+                        expectedOutput: "PC-B shows IP 192.168.1.20, Subnet Mask 255.255.255.0, Default Gateway 192.168.1.1 (same gateway as PC-A since they're in the same network)",
+                        tips: "⭐ MAX POINTS TIP: PC-A and PC-B are in the SAME subnet (192.168.1.0/24), so they use the SAME gateway (.1.1). Different IP addresses but same gateway!",
                         completed: false
                     },
                     {
@@ -2756,6 +2822,8 @@
                         description: "Set IP address 192.168.2.10/24 with gateway 192.168.2.1 on PC-C.",
                         commands: ["IP: 192.168.2.10", "Mask: 255.255.255.0", "Gateway: 192.168.2.1"],
                         verification: "ipconfig",
+                        expectedOutput: "PC-C shows IP 192.168.2.10, Subnet Mask 255.255.255.0, Default Gateway 192.168.2.1 (different gateway from Network 1)",
+                        tips: "⭐ MAX POINTS TIP: PC-C is in Network 2 (192.168.2.0/24), so it uses the router's Gi0/1 IP as gateway (.2.1). Wrong gateway = no connectivity!",
                         completed: false
                     },
                     {
@@ -2764,6 +2832,8 @@
                         description: "Set IP address 192.168.2.20/24 with gateway 192.168.2.1 on PC-D.",
                         commands: ["IP: 192.168.2.20", "Mask: 255.255.255.0", "Gateway: 192.168.2.1"],
                         verification: "ipconfig",
+                        expectedOutput: "PC-D shows IP 192.168.2.20, Subnet Mask 255.255.255.0, Default Gateway 192.168.2.1 (same as PC-C - same network)",
+                        tips: "⭐ MAX POINTS TIP: All 4 PCs must be configured! Verify each PC with 'ipconfig' before testing. PC-C and PC-D share the same gateway since they're in the same network.",
                         completed: false
                     },
                     {
@@ -2772,6 +2842,8 @@
                         description: "Ping from PC-A to PC-B to verify Layer 2 connectivity within Network 1.",
                         commands: ["ping 192.168.1.20"],
                         verification: "Successful ping (4 replies)",
+                        expectedOutput: "Reply from 192.168.1.20: bytes=32 time<1ms TTL=128 (should see 4 successful replies, 0% packet loss)",
+                        tips: "⭐ MAX POINTS TIP: This tests Layer 2 (same network). If this fails: 1) Check both PCs have correct IPs, 2) Check subnet masks match, 3) Check devices are connected. This should work WITHOUT the router even being configured!",
                         completed: false
                     },
                     {
@@ -2780,6 +2852,8 @@
                         description: "Ping from PC-A to PC-C to verify Layer 3 routing between networks.",
                         commands: ["ping 192.168.2.10"],
                         verification: "Successful ping (4 replies)",
+                        expectedOutput: "Reply from 192.168.2.10: bytes=32 time<1ms TTL=127 (TTL decrements by 1 per router hop). All 4 replies successful = routing works!",
+                        tips: "⭐ MAX POINTS TIP: This tests Layer 3 routing! If this fails but Step 7 worked: 1) Check router interfaces are UP, 2) Check gateways on PCs are correct, 3) Check router has both networks directly connected. NO static routes needed - these are DIRECTLY connected networks!",
                         completed: false
                     }
                 ]
@@ -2794,6 +2868,81 @@
                 description: "Create multiple VLANs on a switch, assign ports to different VLANs, and observe broadcast domain isolation. Essential for understanding network segmentation.",
                 concepts: ["VLANs", "Access Ports", "Broadcast Domains", "Network Isolation"],
                 devices: "1 L2 Switch, 4 PCs",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "Create VLAN 10 (Sales) with name", points: 10 },
+                        { task: "Create VLAN 20 (IT) with name", points: 10 },
+                        { task: "Assign Fa0/1 to VLAN 10 (access mode)", points: 10 },
+                        { task: "Assign Fa0/2 to VLAN 10 (access mode)", points: 10 },
+                        { task: "Assign Fa0/3 to VLAN 20 (access mode)", points: 10 },
+                        { task: "Assign Fa0/4 to VLAN 20 (access mode)", points: 10 },
+                        { task: "Configure PCs in VLAN 10 (correct IPs)", points: 10 },
+                        { task: "Configure PCs in VLAN 20 (correct IPs)", points: 10 },
+                        { task: "Same-VLAN Connectivity Test (must succeed)", points: 10 },
+                        { task: "Cross-VLAN Isolation Test (must FAIL!)", points: 10 }
+                    ],
+                    commonMistakes: [
+                        "Forgetting 'switchport mode access' before VLAN assignment",
+                        "Assigning ports to wrong VLANs",
+                        "Not creating VLANs before assigning ports",
+                        "Cross-VLAN ping succeeds (should FAIL - means VLANs not working!)"
+                    ],
+                    maxPointsTips: "To get 100/100: Create VLANs FIRST, then assign ports with 'switchport mode access', configure PCs in correct subnets, verify same-VLAN ping SUCCEEDS and cross-VLAN ping FAILS. Use 'show vlan brief' throughout to verify configurations. Remember: Failed ping in Step 10 = CORRECT = full points!"
+                },
+                quickReference: {
+                    title: "Lab 2 Quick Reference Cheat Sheet",
+                    sections: [
+                        {
+                            name: "Create VLANs",
+                            commands: [
+                                "enable",
+                                "configure terminal",
+                                "vlan 10",
+                                "name Sales",
+                                "vlan 20",
+                                "name IT",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Assign Ports to VLANs",
+                            commands: [
+                                "interface FastEthernet0/1",
+                                "switchport mode access",
+                                "switchport access vlan 10",
+                                "interface FastEthernet0/2",
+                                "switchport mode access",
+                                "switchport access vlan 10",
+                                "interface FastEthernet0/3",
+                                "switchport mode access",
+                                "switchport access vlan 20",
+                                "interface FastEthernet0/4",
+                                "switchport mode access",
+                                "switchport access vlan 20",
+                                "end"
+                            ]
+                        },
+                        {
+                            name: "PC Configuration",
+                            commands: [
+                                "Sales-PC1: IP=192.168.10.10, Mask=255.255.255.0",
+                                "Sales-PC2: IP=192.168.10.20, Mask=255.255.255.0",
+                                "IT-PC1: IP=192.168.20.10, Mask=255.255.255.0",
+                                "IT-PC2: IP=192.168.20.20, Mask=255.255.255.0"
+                            ]
+                        },
+                        {
+                            name: "Verification Commands",
+                            commands: [
+                                "show vlan brief (verify VLANs and port assignments)",
+                                "show interfaces status (check port status)",
+                                "ping 192.168.10.20 (same VLAN - MUST succeed)",
+                                "ping 192.168.20.10 (different VLAN - MUST fail)"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "SW1", type: "l2switch", name: "Switch-Core", x: 400, y: 250},
@@ -2811,6 +2960,8 @@
                         description: "Create VLAN 10 and name it 'Sales' on the switch.",
                         commands: ["enable", "configure terminal", "vlan 10", "name Sales", "exit"],
                         verification: "show vlan brief",
+                        expectedOutput: "VLAN 10 appears in the list with name 'Sales' and status 'active'. No ports assigned yet.",
+                        tips: "⭐ MAX POINTS TIP: VLANs must be CREATED before assigning ports! Use 'show vlan brief' to verify VLAN 10 exists. The 'name' command is optional but recommended for documentation and earns full points.",
                         completed: false
                     },
                     {
@@ -2819,6 +2970,8 @@
                         description: "Create VLAN 20 and name it 'IT' on the switch.",
                         commands: ["vlan 20", "name IT", "exit"],
                         verification: "show vlan brief",
+                        expectedOutput: "VLAN 20 appears in the list with name 'IT' and status 'active'. Both VLAN 10 and 20 should now be visible.",
+                        tips: "⭐ MAX POINTS TIP: Create ALL VLANs before assigning ports. Verify both VLANs (10 and 20) show in 'show vlan brief'. Missing VLANs = incomplete lab!",
                         completed: false
                     },
                     {
@@ -2827,6 +2980,8 @@
                         description: "Configure FastEthernet0/1 (Sales-PC1) as an access port in VLAN 10.",
                         commands: ["interface FastEthernet0/1", "switchport mode access", "switchport access vlan 10", "exit"],
                         verification: "show vlan brief",
+                        expectedOutput: "Fa0/1 now appears under VLAN 10 in the ports column. Interface is in access mode.",
+                        tips: "⭐ MAX POINTS TIP: ALWAYS configure 'switchport mode access' BEFORE 'switchport access vlan'. This explicitly sets the port as an access port (not trunk). Forgetting 'mode access' can cause issues!",
                         completed: false
                     },
                     {
@@ -2835,6 +2990,8 @@
                         description: "Configure FastEthernet0/2 (Sales-PC2) as an access port in VLAN 10.",
                         commands: ["interface FastEthernet0/2", "switchport mode access", "switchport access vlan 10", "exit"],
                         verification: "show vlan brief",
+                        expectedOutput: "Fa0/2 now appears under VLAN 10 along with Fa0/1. Both Sales ports are in same VLAN.",
+                        tips: "⭐ MAX POINTS TIP: Both Sales PCs (Fa0/1 and Fa0/2) must be in VLAN 10 to communicate. Verify 'show vlan brief' shows BOTH ports listed under VLAN 10.",
                         completed: false
                     },
                     {
@@ -2843,6 +3000,8 @@
                         description: "Configure FastEthernet0/3 (IT-PC1) as an access port in VLAN 20.",
                         commands: ["interface FastEthernet0/3", "switchport mode access", "switchport access vlan 20", "exit"],
                         verification: "show vlan brief",
+                        expectedOutput: "Fa0/3 appears under VLAN 20 in the ports column. VLAN 10 and VLAN 20 sections both have ports now.",
+                        tips: "⭐ MAX POINTS TIP: Different VLANs = different broadcast domains. IT devices go in VLAN 20, Sales in VLAN 10. This creates network segmentation and security!",
                         completed: false
                     },
                     {
@@ -2851,6 +3010,8 @@
                         description: "Configure FastEthernet0/4 (IT-PC2) as an access port in VLAN 20.",
                         commands: ["interface FastEthernet0/4", "switchport mode access", "switchport access vlan 20", "exit", "end"],
                         verification: "show vlan brief",
+                        expectedOutput: "Fa0/4 appears under VLAN 20 with Fa0/3. All 4 ports correctly assigned: Fa0/1-2 in VLAN 10, Fa0/3-4 in VLAN 20.",
+                        tips: "⭐ MAX POINTS TIP: Use 'show vlan brief' to verify ALL port assignments before testing! VLAN 10 should have Fa0/1, Fa0/2. VLAN 20 should have Fa0/3, Fa0/4. Wrong assignments = failed connectivity tests!",
                         completed: false
                     },
                     {
@@ -2859,6 +3020,8 @@
                         description: "Set Sales-PC1 to 192.168.10.10/24 and Sales-PC2 to 192.168.10.20/24.",
                         commands: ["PC1: 192.168.10.10/24", "PC2: 192.168.10.20/24"],
                         verification: "ipconfig on both PCs",
+                        expectedOutput: "Sales-PC1: 192.168.10.10/24, Sales-PC2: 192.168.10.20/24. NO gateway needed yet (no routing in this lab).",
+                        tips: "⭐ MAX POINTS TIP: Same VLAN should use same subnet! VLAN 10 uses 192.168.10.0/24, VLAN 20 uses 192.168.20.0/24. This makes it clear which VLAN a device belongs to. Gateway not needed for this lab since we're only testing Layer 2.",
                         completed: false
                     },
                     {
@@ -2867,6 +3030,8 @@
                         description: "Set IT-PC1 to 192.168.20.10/24 and IT-PC2 to 192.168.20.20/24.",
                         commands: ["PC3: 192.168.20.10/24", "PC4: 192.168.20.20/24"],
                         verification: "ipconfig on both PCs",
+                        expectedOutput: "IT-PC1: 192.168.20.10/24, IT-PC2: 192.168.20.20/24. Note the different subnet (20.x vs 10.x).",
+                        tips: "⭐ MAX POINTS TIP: Different VLANs use different subnets! Even though all devices are on the same physical switch, VLANs create logical separation. VLAN 20 devices can't reach VLAN 10 devices without a router (tested in Step 10).",
                         completed: false
                     },
                     {
@@ -2875,6 +3040,8 @@
                         description: "Ping from Sales-PC1 to Sales-PC2. This should work (same VLAN).",
                         commands: ["ping 192.168.10.20"],
                         verification: "Successful ping",
+                        expectedOutput: "Reply from 192.168.10.20: All 4 pings successful, 0% packet loss. Same VLAN = communication works!",
+                        tips: "⭐ MAX POINTS TIP: This MUST succeed! If it fails: 1) Check both PCs in same VLAN (use 'show vlan brief' on switch), 2) Check both PCs have correct IPs in same subnet, 3) Check switch ports not shutdown. Same VLAN connectivity is basic switch function!",
                         completed: false
                     },
                     {
@@ -2883,6 +3050,8 @@
                         description: "Ping from Sales-PC1 to IT-PC1. This should FAIL (different VLANs, no routing).",
                         commands: ["ping 192.168.20.10"],
                         verification: "Ping fails (Request timed out)",
+                        expectedOutput: "Request timed out (all 4 pings fail). This is CORRECT behavior! Different VLANs cannot communicate without Layer 3 routing.",
+                        tips: "⭐ MAX POINTS TIP: This MUST fail to earn full points! Successful ping here means VLANs aren't working properly. VLANs create security boundaries - Sales can't access IT network without a router. If ping succeeds, check: 1) Both PCs actually in different VLANs? 2) Port assignments correct? A failed ping here is the RIGHT answer!",
                         completed: false
                     }
                 ]
@@ -6555,6 +6724,86 @@
             const container = document.getElementById('instructionsList');
             container.innerHTML = '';
 
+            // Add quick reference cheat sheet if it exists
+            if (lab.quickReference) {
+                const quickRefDiv = document.createElement('div');
+                quickRefDiv.style.cssText = 'background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(16, 185, 129, 0.2)); border: 2px solid var(--accent-cyan); border-radius: 12px; padding: 16px; margin-bottom: 16px;';
+
+                let sectionsHTML = lab.quickReference.sections.map(section => {
+                    let commandsHTML = section.commands.map(cmd =>
+                        `<div style="font-family: monospace; color: var(--accent-green); background: rgba(0,0,0,0.4); padding: 4px 8px; margin: 2px 0; border-radius: 4px; font-size: 0.85em;">${cmd}</div>`
+                    ).join('');
+
+                    return `
+                        <div style="margin-bottom: 12px;">
+                            <div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 6px;">📌 ${section.name}:</div>
+                            ${commandsHTML}
+                        </div>
+                    `;
+                }).join('');
+
+                quickRefDiv.innerHTML = `
+                    <details open>
+                        <summary style="color: var(--accent-cyan); cursor: pointer; font-weight: bold; font-size: 1.1em; padding: 8px 0;">📖 ${lab.quickReference.title}</summary>
+                        <div style="margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                            ${sectionsHTML}
+                            <div style="margin-top: 12px; padding: 10px; background: rgba(6, 182, 212, 0.1); border-left: 3px solid var(--accent-cyan); border-radius: 4px;">
+                                <div style="color: var(--accent-cyan); font-weight: bold; font-size: 0.9em;">💡 Pro Tip:</div>
+                                <div style="color: var(--text-secondary); font-size: 0.85em; margin-top: 4px;">Copy commands from here and paste them into the CLI panel (right side). Click on a device first to select it, then paste commands into the CLI terminal!</div>
+                            </div>
+                        </div>
+                    </details>
+                `;
+
+                container.appendChild(quickRefDiv);
+            }
+
+            // Add scoring guide at the top if it exists
+            if (lab.scoringGuide) {
+                const scoringDiv = document.createElement('div');
+                scoringDiv.style.cssText = 'background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(6, 182, 212, 0.2)); border: 2px solid var(--accent-purple); border-radius: 12px; padding: 16px; margin-bottom: 20px;';
+
+                let breakdownHTML = lab.scoringGuide.breakdown.map(item =>
+                    `<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: var(--text-secondary);">${item.task}</span>
+                        <span style="color: var(--accent-cyan); font-weight: bold;">${item.points} pts</span>
+                    </div>`
+                ).join('');
+
+                let mistakesHTML = lab.scoringGuide.commonMistakes.map(mistake =>
+                    `<div style="color: var(--text-secondary); padding: 2px 0;">⚠️ ${mistake}</div>`
+                ).join('');
+
+                scoringDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h3 style="color: var(--accent-cyan); margin: 0;">📊 Scoring Guide</h3>
+                        <div style="background: var(--accent-purple); color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold;">
+                            Total: ${lab.scoringGuide.totalPoints} Points
+                        </div>
+                    </div>
+                    <div style="margin: 12px 0;">
+                        <div style="color: var(--accent-green); font-weight: bold; margin-bottom: 8px;">⭐ Maximum Points Strategy:</div>
+                        <div style="color: var(--text-primary); background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--accent-green);">
+                            ${lab.scoringGuide.maxPointsTips}
+                        </div>
+                    </div>
+                    <details style="margin-top: 12px;">
+                        <summary style="color: var(--accent-cyan); cursor: pointer; font-weight: bold; padding: 8px 0;">📋 Point Breakdown (click to expand)</summary>
+                        <div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px;">
+                            ${breakdownHTML}
+                        </div>
+                    </details>
+                    <details style="margin-top: 12px;">
+                        <summary style="color: var(--accent-orange); cursor: pointer; font-weight: bold; padding: 8px 0;">⚠️ Common Mistakes to Avoid</summary>
+                        <div style="margin-top: 8px; padding: 8px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; border-left: 3px solid var(--accent-orange);">
+                            ${mistakesHTML}
+                        </div>
+                    </details>
+                `;
+
+                container.appendChild(scoringDiv);
+            }
+
             lab.instructions.forEach((instruction, index) => {
                 const stepDiv = document.createElement('div');
                 stepDiv.className = `instruction-step ${instruction.completed ? 'completed' : ''}`;
@@ -6565,16 +6814,34 @@
                     </div>
                     <div class="step-title">${instruction.title}</div>
                     <div class="step-description">${instruction.description}</div>
-                    ${instruction.commands.length > 0 ? `
+                    ${instruction.commands && instruction.commands.length > 0 ? `
                         <div class="step-commands">
+                            <div style="color: #06b6d4; font-weight: bold; margin-bottom: 5px;">📋 Commands:</div>
                             ${instruction.commands.map(cmd => `<div>> ${cmd}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                    ${instruction.expectedOutput ? `
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 8px; margin-top: 8px; border-radius: 4px;">
+                            <div style="color: #10b981; font-weight: bold; font-size: 0.85em;">✓ Expected Output:</div>
+                            <div style="color: #cbd5e1; font-size: 0.85em; margin-top: 4px;">${instruction.expectedOutput}</div>
+                        </div>
+                    ` : ''}
+                    ${instruction.tips ? `
+                        <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; padding: 8px; margin-top: 8px; border-radius: 4px;">
+                            <div style="color: #f59e0b; font-weight: bold; font-size: 0.85em;">${instruction.tips.includes('⭐') ? instruction.tips.substring(0, instruction.tips.indexOf(':') + 1) : '💡 Tip:'}</div>
+                            <div style="color: #cbd5e1; font-size: 0.85em; margin-top: 4px;">${instruction.tips.includes('⭐') ? instruction.tips.substring(instruction.tips.indexOf(':') + 1).trim() : instruction.tips}</div>
+                        </div>
+                    ` : ''}
+                    ${instruction.verification ? `
+                        <div style="background: rgba(147, 51, 234, 0.1); border-left: 3px solid #9333ea; padding: 8px; margin-top: 8px; border-radius: 4px;">
+                            <div style="color: #9333ea; font-weight: bold; font-size: 0.85em;">🔍 Verification Command:</div>
+                            <div style="color: #10b981; font-family: monospace; font-size: 0.85em; margin-top: 4px;">> ${instruction.verification}</div>
                         </div>
                     ` : ''}
                     <div class="step-actions">
                         <button class="btn btn-small" onclick="markStepComplete(${index})">
                             ${instruction.completed ? '✅ Completed' : '✓ Mark Complete'}
                         </button>
-                        <button class="btn btn-small">💡 Hint</button>
                     </div>
                 `;
                 container.appendChild(stepDiv);

@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Cache Control: Prevent browser caching of the main HTML file -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <title>Hexworth Academy - Master Catalog</title>
     <style>
         * {
@@ -9305,6 +9311,83 @@
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
         };
+
+        /**
+         * Cache Busting System
+         *
+         * Automatically appends version query strings to all internal resource links
+         * to prevent browser caching issues when content is updated.
+         *
+         * How it works:
+         * - Reads the current version from UPDATE_CONFIG.currentVersion
+         * - Scans all links, iframes, scripts, stylesheets, and images
+         * - Adds ?v=VERSION to URLs starting with "resources/"
+         * - Runs on DOMContentLoaded to ensure all elements are loaded
+         *
+         * When to update:
+         * - Version is automatically pulled from UPDATE_CONFIG.currentVersion
+         * - When you bump the version (currently 7.9.3), all resources will automatically
+         *   use the new version parameter, forcing browsers to fetch fresh content
+         *
+         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.9.3
+         */
+        (function applyCacheBusting() {
+            const version = UPDATE_CONFIG.currentVersion;
+            const versionParam = '?v=' + version;
+
+            // Function to add version parameter to URL if it's an internal resource
+            function addVersionToUrl(url) {
+                if (!url) return url;
+
+                // Check if it's an internal resource link
+                if (url.startsWith('resources/')) {
+                    // Check if URL already has query parameters
+                    const separator = url.includes('?') ? '&' : '?';
+                    return url + separator + 'v=' + version;
+                }
+                return url;
+            }
+
+            // Apply cache busting when DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add version to all links with href starting with "resources/"
+                const links = document.querySelectorAll('a[href^="resources/"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    link.setAttribute('href', addVersionToUrl(href));
+                });
+
+                // Add version to all iframes with src starting with "resources/"
+                const iframes = document.querySelectorAll('iframe[src^="resources/"]');
+                iframes.forEach(iframe => {
+                    const src = iframe.getAttribute('src');
+                    iframe.setAttribute('src', addVersionToUrl(src));
+                });
+
+                // Add version to all scripts with src starting with "resources/"
+                const scripts = document.querySelectorAll('script[src^="resources/"]');
+                scripts.forEach(script => {
+                    const src = script.getAttribute('src');
+                    script.setAttribute('src', addVersionToUrl(src));
+                });
+
+                // Add version to all link tags (CSS) with href starting with "resources/"
+                const stylesheets = document.querySelectorAll('link[href^="resources/"]');
+                stylesheets.forEach(stylesheet => {
+                    const href = stylesheet.getAttribute('href');
+                    stylesheet.setAttribute('href', addVersionToUrl(href));
+                });
+
+                // Add version to all images with src starting with "resources/"
+                const images = document.querySelectorAll('img[src^="resources/"]');
+                images.forEach(img => {
+                    const src = img.getAttribute('src');
+                    img.setAttribute('src', addVersionToUrl(src));
+                });
+
+                console.log('Cache busting applied - Version: ' + version);
+            });
+        })();
 
         // State
         let latestVersionData = null;
