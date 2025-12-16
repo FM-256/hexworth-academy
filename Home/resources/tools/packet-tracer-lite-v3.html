@@ -3066,6 +3066,83 @@
                 description: "Implement OSPF routing protocol across three routers in Area 0. Learn neighbor discovery, LSA flooding, and automatic routing table construction.",
                 concepts: ["OSPF Protocol", "Area 0", "Neighbor Adjacency", "Link-State Routing", "Dynamic Routes"],
                 devices: "3 Routers, 3 Switches, 3 PCs",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "R1 Interface Configuration (Gi0/0 + Gi0/1 with IPs)", points: 10 },
+                        { task: "R2 Interface Configuration (All 3 interfaces with IPs)", points: 10 },
+                        { task: "R3 Interface Configuration (Gi0/0 + Gi0/1 with IPs)", points: 10 },
+                        { task: "R1 OSPF Configuration (Process 1, correct networks)", points: 10 },
+                        { task: "R2 OSPF Configuration (Process 1, all 3 networks)", points: 10 },
+                        { task: "R3 OSPF Configuration (Process 1, correct networks)", points: 10 },
+                        { task: "OSPF Neighbor Adjacencies (All FULL state)", points: 15 },
+                        { task: "OSPF Routes Learned (Routes with 'O' prefix)", points: 10 },
+                        { task: "PC Configuration (All 3 PCs with IPs + Gateways)", points: 10 },
+                        { task: "End-to-End Connectivity (PC-West to PC-East)", points: 15 }
+                    ],
+                    commonMistakes: [
+                        "Wrong wildcard masks in network statements (use 0.0.0.255 for /24, 0.0.0.3 for /30)",
+                        "Forgetting 'no shutdown' on router interfaces",
+                        "Wrong area numbers (must all be Area 0 for single-area OSPF)",
+                        "Not waiting for OSPF convergence before testing connectivity"
+                    ],
+                    maxPointsStrategy: "To get 100/100: Configure ALL router interfaces with correct IPs and 'no shutdown'. Enable OSPF on all routers with matching process ID (1) and correct network statements in Area 0. Verify FULL neighbor adjacencies on all routers. Confirm 'O' routes in routing tables. Configure ALL PCs with correct IPs and gateways. Test end-to-end connectivity across all 3 routers."
+                },
+                quickReference: {
+                    title: "Lab 3 Quick Reference - OSPF Single-Area",
+                    sections: [
+                        {
+                            name: "Router Interface Configuration",
+                            commands: [
+                                "enable",
+                                "configure terminal",
+                                "interface GigabitEthernet0/0",
+                                "ip address 10.1.1.1 255.255.255.0",
+                                "no shutdown",
+                                "interface GigabitEthernet0/1",
+                                "ip address 10.12.12.1 255.255.255.252",
+                                "no shutdown",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "OSPF Configuration",
+                            commands: [
+                                "router ospf 1",
+                                "network 10.1.1.0 0.0.0.255 area 0",
+                                "network 10.12.12.0 0.0.0.3 area 0",
+                                "end"
+                            ]
+                        },
+                        {
+                            name: "Wildcard Mask Quick Reference",
+                            commands: [
+                                "/24 network = 0.0.0.255 wildcard",
+                                "/30 network = 0.0.0.3 wildcard",
+                                "/16 network = 0.0.255.255 wildcard",
+                                "Formula: 255.255.255.255 - subnet_mask = wildcard"
+                            ]
+                        },
+                        {
+                            name: "OSPF Verification Commands",
+                            commands: [
+                                "show ip ospf neighbor (check FULL state)",
+                                "show ip ospf (verify process, router ID, areas)",
+                                "show ip route (look for 'O' OSPF routes)",
+                                "show ip protocols (verify OSPF config)",
+                                "show ip ospf interface brief (interface OSPF status)"
+                            ]
+                        },
+                        {
+                            name: "PC Configuration",
+                            commands: [
+                                "PC-West: IP=10.1.1.10/24, GW=10.1.1.1",
+                                "PC-Central: IP=10.2.2.10/24, GW=10.2.2.1",
+                                "PC-East: IP=10.3.3.10/24, GW=10.3.3.1"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "R1", type: "router", name: "Router-West", x: 150, y: 200},
@@ -3097,6 +3174,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Gi0/0: 10.1.1.1 (up/up), Gi0/1: 10.12.12.1 (up/up). Both interfaces operational. /30 subnet uses .252 mask (4 addresses: 10.12.12.0-3).",
+                        tips: "⭐ MAX POINTS TIP: /30 subnets are perfect for point-to-point WAN links - only 2 usable IPs! Mask is 255.255.255.252. Always verify BOTH interfaces show 'up/up' status. No 'no shutdown' = interface stays down = no OSPF neighbor!",
                         completed: false
                     },
                     {
@@ -3117,6 +3196,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Gi0/0: 10.2.2.1 (up/up), Gi0/1: 10.12.12.2 (up/up), Gi0/2: 10.23.23.1 (up/up). All THREE interfaces operational. R2 is the central hub connecting to both R1 and R3.",
+                        tips: "⭐ MAX POINTS TIP: R2 is the 'transit router' connecting R1 and R3! It needs THREE interfaces: one LAN (Gi0/0), two WAN links (Gi0/1 to R1, Gi0/2 to R3). Verify ALL three show 'up/up'. Missing one interface = broken OSPF topology!",
                         completed: false
                     },
                     {
@@ -3134,6 +3215,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Gi0/0: 10.3.3.1 (up/up), Gi0/1: 10.23.23.2 (up/up). Both interfaces operational. R3 mirrors R1 configuration with different IPs.",
+                        tips: "⭐ MAX POINTS TIP: All three routers now have interfaces configured! Before enabling OSPF, verify ALL router interfaces are 'up/up' with 'show ip interface brief' on each router. Downed interfaces = no OSPF adjacency on that link!",
                         completed: false
                     },
                     {
@@ -3147,6 +3230,8 @@
                             "end"
                         ],
                         verification: "show ip ospf",
+                        expectedOutput: "OSPF Process 1, Router ID chosen automatically (highest IP). Shows 2 areas configured (actually both Area 0). No neighbors yet until R2 is configured.",
+                        tips: "⭐ MAX POINTS TIP: Wildcard masks are INVERSE of subnet masks! /24 = 0.0.0.255, /30 = 0.0.0.3. The 'network' command tells OSPF which interfaces to activate. Wrong wildcard = interface not included = no adjacency! Use 'show ip ospf interface' to verify interfaces are OSPF-enabled.",
                         completed: false
                     },
                     {
@@ -3161,6 +3246,8 @@
                             "end"
                         ],
                         verification: "show ip ospf neighbor",
+                        expectedOutput: "R2 sees R1 as neighbor! State: FULL/DR or FULL/BDR. You should see one neighbor entry pointing to R1 (10.12.12.1). R3 not yet configured so no neighbor on that side.",
+                        tips: "⭐ MAX POINTS TIP: R2 needs THREE network statements (one per interface)! After this config, R1-R2 adjacency forms automatically. 'show ip ospf neighbor' should show FULL state (takes 30-40 seconds). If stuck in INIT or 2WAY, check interfaces are in same Area and subnet IPs are correct.",
                         completed: false
                     },
                     {
@@ -3174,6 +3261,8 @@
                             "end"
                         ],
                         verification: "show ip ospf neighbor",
+                        expectedOutput: "R3 sees R2 as neighbor! State: FULL. Now all three routers have OSPF enabled. Check R2's neighbor table - it should show BOTH R1 and R3 as neighbors!",
+                        tips: "⭐ MAX POINTS TIP: OSPF topology is now complete! All routers in Area 0 (single-area OSPF). Verify neighbor relationships: R1 sees R2, R2 sees R1 AND R3, R3 sees R2. All neighbors must show FULL state. INIT/EXSTART states = still converging, wait 30 seconds.",
                         completed: false
                     },
                     {
@@ -3182,6 +3271,8 @@
                         description: "Check that all routers have formed OSPF adjacencies (FULL state).",
                         commands: ["show ip ospf neighbor"],
                         verification: "All neighbors show FULL/DR or FULL/BDR",
+                        expectedOutput: "R1: 1 neighbor (R2). R2: 2 neighbors (R1 and R3). R3: 1 neighbor (R2). All show State=FULL. This confirms OSPF convergence is complete!",
+                        tips: "⭐ MAX POINTS TIP: FULL state is critical! Any other state (INIT, 2WAY, EXSTART) = problem. Check this on ALL THREE routers. R2 should have 2 neighbors, R1 and R3 should each have 1 neighbor. Missing neighbors = check interface IPs, Area numbers, and interface status.",
                         completed: false
                     },
                     {
@@ -3190,6 +3281,8 @@
                         description: "Verify that each router has learned routes via OSPF (marked with 'O').",
                         commands: ["show ip route"],
                         verification: "Routes with 'O' prefix present",
+                        expectedOutput: "Each router sees remote networks via OSPF! Look for 'O' prefix (OSPF routes). R1 should learn 10.2.2.0 and 10.3.3.0. R3 should learn 10.1.1.0 and 10.2.2.0. R2 learns 10.1.1.0 and 10.3.3.0.",
+                        tips: "⭐ MAX POINTS TIP: 'O' = OSPF learned route, 'C' = directly connected. Each router should have a mix of C and O routes. R1 should see remote networks (10.2.2.0 and 10.3.3.0) learned via OSPF with next-hop to R2. No 'O' routes = OSPF not working, check neighbor states!",
                         completed: false
                     },
                     {
@@ -3202,6 +3295,8 @@
                             "PC-East: 10.3.3.10/24, GW 10.3.3.1"
                         ],
                         verification: "ipconfig on all PCs",
+                        expectedOutput: "PC-West: 10.1.1.10, GW 10.1.1.1. PC-Central: 10.2.2.10, GW 10.2.2.1. PC-East: 10.3.3.10, GW 10.3.3.1. Each PC's gateway is its local router's LAN interface.",
+                        tips: "⭐ MAX POINTS TIP: Each PC's gateway MUST be its local router! PC-West gateway is R1's Gi0/0 (10.1.1.1), NOT R2 or R3. Wrong gateway = PC can't route off its local network = failed end-to-end test! Verify ALL THREE PCs before testing.",
                         completed: false
                     },
                     {
@@ -3210,6 +3305,8 @@
                         description: "Ping from PC-West to PC-East to verify multi-hop OSPF routing.",
                         commands: ["ping 10.3.3.10"],
                         verification: "Successful ping with 3-hop path",
+                        expectedOutput: "Reply from 10.3.3.10: All 4 pings successful! This proves multi-hop OSPF routing works: PC-West → R1 → R2 → R3 → PC-East. TTL decrements show multiple hops.",
+                        tips: "⭐ MAX POINTS TIP: This tests the ENTIRE lab! If ping fails: 1) Check OSPF neighbors FULL on all routers, 2) Check 'show ip route' shows 'O' routes on R1 for 10.3.3.0, 3) Check PC gateways correct, 4) Ping from R1 to 10.3.3.10 first to isolate if it's a routing or PC config issue. Successful ping = OSPF working perfectly!",
                         completed: false
                     }
                 ]
@@ -3224,6 +3321,95 @@
                 description: "Configure a Layer 3 switch to route between VLANs using SVIs (Switch Virtual Interfaces). Learn the difference between L2 and L3 switching.",
                 concepts: ["Layer 3 Switching", "SVIs", "Inter-VLAN Routing", "IP Routing", "VLAN Segmentation"],
                 devices: "1 L3 Switch, 3 PCs, 1 Server",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "Create VLANs 10, 20, 30 with names", points: 10 },
+                        { task: "Assign ports to VLAN 10 (Gi0/1, Gi0/5)", points: 10 },
+                        { task: "Assign ports to VLAN 20 (Gi0/2)", points: 5 },
+                        { task: "Assign ports to VLAN 30 (Gi0/3-4)", points: 10 },
+                        { task: "Enable 'ip routing' command (CRITICAL!)", points: 15 },
+                        { task: "Create SVI for VLAN 10 (IP + no shutdown)", points: 10 },
+                        { task: "Create SVI for VLAN 20 (IP + no shutdown)", points: 10 },
+                        { task: "Create SVI for VLAN 30 (IP + no shutdown)", points: 10 },
+                        { task: "Configure all end devices (5 devices total)", points: 10 },
+                        { task: "Inter-VLAN Connectivity Test (cross-VLAN pings work)", points: 10 }
+                    ],
+                    commonMistakes: [
+                        "Forgetting 'ip routing' command (CRITICAL - no routing without it!)",
+                        "Forgetting 'no shutdown' on SVI interfaces (SVIs default to shutdown)",
+                        "Wrong VLAN assignments on access ports",
+                        "Gateway IPs don't match SVI IPs on end devices"
+                    ],
+                    maxPointsStrategy: "To get 100/100: Create ALL three VLANs before assigning ports. Assign ALL ports to correct VLANs with 'switchport mode access'. MUST use 'ip routing' command! Create ALL three SVIs with correct IPs and 'no shutdown'. Configure ALL 5 end devices with correct IPs and gateways matching the SVI IPs. Test cross-VLAN connectivity - pings between different VLANs MUST succeed."
+                },
+                quickReference: {
+                    title: "Lab 4 Quick Reference - Inter-VLAN Routing",
+                    sections: [
+                        {
+                            name: "VLAN Creation",
+                            commands: [
+                                "enable",
+                                "configure terminal",
+                                "vlan 10",
+                                "name Sales",
+                                "vlan 20",
+                                "name Engineering",
+                                "vlan 30",
+                                "name Servers",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Assign Ports to VLANs",
+                            commands: [
+                                "interface range GigabitEthernet0/1 , GigabitEthernet0/5",
+                                "switchport mode access",
+                                "switchport access vlan 10",
+                                "no shutdown",
+                                "exit",
+                                "# Repeat for other VLANs..."
+                            ]
+                        },
+                        {
+                            name: "Enable IP Routing (CRITICAL!)",
+                            commands: [
+                                "ip routing  # Without this, NO inter-VLAN routing!"
+                            ]
+                        },
+                        {
+                            name: "Create SVIs (Layer 3 VLAN Interfaces)",
+                            commands: [
+                                "interface vlan 10",
+                                "ip address 192.168.10.1 255.255.255.0",
+                                "description Gateway for Sales VLAN",
+                                "no shutdown  # SVIs default to shutdown!",
+                                "exit",
+                                "# Repeat for VLAN 20 and 30..."
+                            ]
+                        },
+                        {
+                            name: "End Device Configuration",
+                            commands: [
+                                "PC-Sales: 192.168.10.10/24, GW 192.168.10.1",
+                                "PC-Sales2: 192.168.10.20/24, GW 192.168.10.1",
+                                "PC-Engineering: 192.168.20.10/24, GW 192.168.20.1",
+                                "PC-Servers: 192.168.30.10/24, GW 192.168.30.1",
+                                "FileServer: 192.168.30.100/24, GW 192.168.30.1"
+                            ]
+                        },
+                        {
+                            name: "Verification Commands",
+                            commands: [
+                                "show vlan brief (verify VLAN and port assignments)",
+                                "show ip interface brief (verify SVIs are up)",
+                                "show ip route (verify connected routes for VLANs)",
+                                "show interfaces status (check port status)",
+                                "ping 192.168.20.10 (test inter-VLAN routing)"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "L3SW1", type: "l3switch", name: "CoreSwitch", x: 400, y: 200},
@@ -3242,6 +3428,8 @@
                         description: "In this lab, you'll configure a Layer 3 switch to route between VLANs. Unlike traditional routing with a router, L3 switches use Switch Virtual Interfaces (SVIs) to provide default gateways for each VLAN. Observe the topology: One L3 switch connected to 6 end devices. Each device belongs to a different VLAN (Sales=VLAN 10, Engineering=VLAN 20, Servers=VLAN 30).",
                         commands: [],
                         verification: "Review the topology and understand the VLAN design",
+                        expectedOutput: "Understand the lab goal: One L3 switch will route between 3 VLANs using SVIs. This is more efficient than router-on-a-stick!",
+                        tips: "⭐ MAX POINTS TIP: Inter-VLAN routing can be done with: 1) Router with subinterfaces (router-on-a-stick), 2) Separate router interfaces per VLAN, or 3) L3 switch with SVIs (THIS lab - most modern approach). L3 switches route at wire speed using ASICs!",
                         completed: false
                     },
                     {
@@ -3253,6 +3441,8 @@
                             "configure terminal"
                         ],
                         verification: "Prompt shows CoreSwitch(config)#",
+                        expectedOutput: "Prompt changes: CoreSwitch> → CoreSwitch# → CoreSwitch(config)#. You're now in global configuration mode.",
+                        tips: "⭐ MAX POINTS TIP: On L3 switches, you'll configure both Layer 2 features (VLANs, access ports) AND Layer 3 features (SVIs, IP routing). This makes L3 switches very versatile!",
                         completed: false
                     },
                     {
@@ -3269,6 +3459,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "VLANs 10, 20, 30 appear with names 'Sales', 'Engineering', 'Servers'. Status: active. No ports assigned yet.",
+                        tips: "⭐ MAX POINTS TIP: Create VLANs FIRST before assigning ports. Even on L3 switches, VLANs must exist before you can create SVIs or assign ports! Use descriptive names for documentation.",
                         completed: false
                     },
                     {
@@ -3283,6 +3475,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "Gi0/1 and Gi0/5 appear under VLAN 10 in the ports column. Both ports are access ports for Sales VLAN.",
+                        tips: "⭐ MAX POINTS TIP: 'interface range' lets you configure multiple non-contiguous ports! Use comma for non-contiguous (Gi0/1 , Gi0/5), hyphen for contiguous (Gi0/3-4). Note the space before/after comma!",
                         completed: false
                     },
                     {
@@ -3297,6 +3491,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "Gi0/2 appears under VLAN 20. VLAN 10 still shows Gi0/1, Gi0/5. Port assignments building up correctly.",
+                        tips: "⭐ MAX POINTS TIP: Each access port belongs to ONE VLAN only. Access ports are for end devices (PCs, servers, printers). Trunk ports (different lab) carry multiple VLANs.",
                         completed: false
                     },
                     {
@@ -3311,6 +3507,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "Gi0/3 and Gi0/4 appear under VLAN 30. All ports now assigned: VLAN 10 (Gi0/1, Gi0/5), VLAN 20 (Gi0/2), VLAN 30 (Gi0/3-4).",
+                        tips: "⭐ MAX POINTS TIP: Server VLANs often get their own VLAN for security and traffic management. Separating servers from user VLANs is a best practice!",
                         completed: false
                     },
                     {
@@ -3319,6 +3517,8 @@
                         description: "Verify that all VLANs have been created and interfaces are correctly assigned to their respective VLANs.",
                         commands: ["show vlan brief"],
                         verification: "VLANs 10, 20, and 30 with correct interfaces assigned",
+                        expectedOutput: "Complete port assignment summary: VLAN 10: Gi0/1, Gi0/5. VLAN 20: Gi0/2. VLAN 30: Gi0/3-4. All VLANs show 'active' status.",
+                        tips: "⭐ MAX POINTS TIP: ALWAYS verify port assignments BEFORE creating SVIs! Wrong port assignments = devices in wrong VLAN = routing won't help! Double-check each VLAN has the correct ports listed.",
                         completed: false
                     },
                     {
@@ -3329,6 +3529,8 @@
                             "ip routing"
                         ],
                         verification: "show ip route (should show routing table)",
+                        expectedOutput: "'show ip route' now works! Routing table appears (currently empty except default routes). This confirms routing is enabled.",
+                        tips: "⭐ MAX POINTS TIP: 'ip routing' is THE MOST CRITICAL COMMAND in this lab! Without it, SVIs won't route traffic between VLANs. Forgetting this = 15 points lost + failed connectivity test! On L2 switches, this command doesn't exist. On L3 switches, it's disabled by default.",
                         completed: false
                     },
                     {
@@ -3343,6 +3545,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Vlan10 interface appears with IP 192.168.10.1, Status: up, Protocol: up. This SVI is the gateway for VLAN 10 devices.",
+                        tips: "⭐ MAX POINTS TIP: SVIs are virtual Layer 3 interfaces representing each VLAN! MUST use 'no shutdown' - SVIs default to shutdown (unlike physical interfaces). An SVI only comes 'up' if: 1) VLAN exists, 2) At least one access port in that VLAN is up, 3) SVI not shutdown.",
                         completed: false
                     },
                     {
@@ -3357,6 +3561,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Vlan20 interface appears with IP 192.168.20.1, Status: up, Protocol: up. Two SVIs now operational (VLAN 10 and 20).",
+                        tips: "⭐ MAX POINTS TIP: Each VLAN gets its own subnet! VLAN 10 = 192.168.10.0/24, VLAN 20 = 192.168.20.0/24, VLAN 30 = 192.168.30.0/24. Different subnets require routing to communicate - that's why we need Layer 3!",
                         completed: false
                     },
                     {
@@ -3371,6 +3577,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Vlan30 interface appears with IP 192.168.30.1, Status: up, Protocol: up. All three SVIs now operational!",
+                        tips: "⭐ MAX POINTS TIP: All three SVIs created! Each SVI acts as the default gateway for its VLAN. The L3 switch now has IP addresses in all three subnets and can route between them. Check 'show ip route' - you'll see three directly connected (C) routes!",
                         completed: false
                     },
                     {
@@ -3379,6 +3587,8 @@
                         description: "Verify that all three VLAN interfaces (Vlan10, Vlan20, Vlan30) show as 'up' with correct IP addresses.",
                         commands: ["show ip interface brief"],
                         verification: "All VLAN interfaces up with correct IPs",
+                        expectedOutput: "Vlan10: 192.168.10.1 (up/up), Vlan20: 192.168.20.1 (up/up), Vlan30: 192.168.30.1 (up/up). All three SVIs operational and ready to route!",
+                        tips: "⭐ MAX POINTS TIP: If any SVI shows 'down': 1) Check VLAN exists ('show vlan brief'), 2) Check at least one port in that VLAN is up, 3) Check 'no shutdown' was used on SVI. Use 'show ip route' to confirm three connected routes (C) appear - one per SVI.",
                         completed: false
                     },
                     {
@@ -3393,6 +3603,8 @@
                             "FileServer: 192.168.30.100/24, GW 192.168.30.1"
                         ],
                         verification: "ipconfig on all devices",
+                        expectedOutput: "All 5 devices configured. Each device's gateway matches its VLAN's SVI IP. Sales devices (.10.x) use .10.1 gateway, etc.",
+                        tips: "⭐ MAX POINTS TIP: Gateway IPs MUST match the SVI IPs! VLAN 10 devices use 192.168.10.1 (Vlan10 SVI), VLAN 20 uses 192.168.20.1 (Vlan20 SVI), VLAN 30 uses 192.168.30.1 (Vlan30 SVI). Wrong gateway = device can't route off its VLAN! Verify ALL 5 devices before testing.",
                         completed: false
                     },
                     {
@@ -3404,6 +3616,8 @@
                             "ping 192.168.30.100"
                         ],
                         verification: "All pings successful - Inter-VLAN routing works!",
+                        expectedOutput: "Reply from 192.168.20.10: SUCCESS! Reply from 192.168.30.100: SUCCESS! All pings work. VLAN 10 → VLAN 20 and VLAN 10 → VLAN 30 routing confirmed!",
+                        tips: "⭐ MAX POINTS TIP: Success! Devices in different VLANs can now communicate. Compare to Lab 2 where cross-VLAN pings FAILED (no routing). Here they SUCCEED (L3 switch routes). If pings fail: 1) Check 'ip routing' enabled, 2) Check all SVIs 'up/up', 3) Check device gateways match SVI IPs, 4) Check port VLAN assignments correct. Try same-VLAN ping first (PC-Sales to PC-Sales2) to isolate the problem!",
                         completed: false
                     }
                 ]
@@ -3419,6 +3633,91 @@
                 description: "Configure multi-area OSPF with Areas 0, 1, and 2, understanding area types and LSA flooding",
                 concepts: ["Multi-Area OSPF", "Area 0 Backbone", "ABR Configuration", "LSA Types", "OSPF Neighbors", "Inter-Area Routing"],
                 devices: "3 Routers, 2 PCs",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "ABR-West Configuration (Loopback + Interfaces + OSPF)", points: 15 },
+                        { task: "ABR-Core Configuration (Loopback + Interfaces + OSPF)", points: 15 },
+                        { task: "ABR-East Configuration (Loopback + Interfaces + OSPF)", points: 15 },
+                        { task: "Correct Area Assignments (Area 0 backbone, Area 1/2 branches)", points: 15 },
+                        { task: "OSPF Neighbor Adjacencies (All FULL state)", points: 10 },
+                        { task: "Inter-Area Routes (O IA routes in routing tables)", points: 10 },
+                        { task: "ABR Status Verification (ABR-West/East show as ABRs)", points: 5 },
+                        { task: "PC Configuration (Both PCs with IPs + Gateways)", points: 5 },
+                        { task: "End-to-End Connectivity (Area 1 → Area 0 → Area 2)", points: 10 }
+                    ],
+                    commonMistakes: [
+                        "Wrong area assignments (non-backbone interfaces in Area 0)",
+                        "Forgetting explicit router-id configuration with loopbacks",
+                        "Wrong wildcard masks in network statements",
+                        "Not understanding ABR role (must connect multiple areas)"
+                    ],
+                    maxPointsStrategy: "To get 100/100: Configure loopback interfaces on ALL routers for stable Router IDs. Configure ALL physical interfaces with correct IPs. Enable OSPF with explicit router-id matching loopback IP. CRITICAL: Use correct area assignments - backbone links in Area 0, branch networks in Area 1/2. Verify ALL neighbors reach FULL state. Check routing tables show 'O IA' inter-area routes. Verify ABR-West and ABR-East show as ABRs. Configure both PCs and test cross-area connectivity."
+                },
+                quickReference: {
+                    title: "Lab 5 Quick Reference - OSPF Multi-Area",
+                    sections: [
+                        {
+                            name: "Multi-Area OSPF Concepts",
+                            commands: [
+                                "Area 0 = Backbone (mandatory, all areas connect to it)",
+                                "ABR = Area Border Router (connects multiple areas)",
+                                "ASBR = Autonomous System Boundary Router (connects to other routing protocols)",
+                                "O = Intra-area OSPF route (same area)",
+                                "O IA = Inter-area OSPF route (from different area)"
+                            ]
+                        },
+                        {
+                            name: "Loopback Configuration (Router ID)",
+                            commands: [
+                                "interface loopback 0",
+                                "ip address 1.1.1.1 255.255.255.255  # /32 host route",
+                                "exit",
+                                "# Loopbacks never go down = stable Router ID"
+                            ]
+                        },
+                        {
+                            name: "OSPF Multi-Area Configuration",
+                            commands: [
+                                "router ospf 1",
+                                "router-id 1.1.1.1  # Explicit router-id",
+                                "network 10.1.1.0 0.0.0.3 area 0  # Backbone link",
+                                "network 10.2.1.0 0.0.0.255 area 1  # Branch network",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Area Assignment Rules",
+                            commands: [
+                                "Links between routers → Area 0 (backbone)",
+                                "Branch/LAN networks → Area 1, 2, 3, etc.",
+                                "ALL non-zero areas MUST connect to Area 0",
+                                "Area 0 must be contiguous (no gaps)"
+                            ]
+                        },
+                        {
+                            name: "Multi-Area Verification Commands",
+                            commands: [
+                                "show ip ospf neighbor (verify FULL state)",
+                                "show ip ospf (check ABR status, areas served)",
+                                "show ip ospf database (see LSA types 1, 2, 3)",
+                                "show ip route ospf (look for O and O IA routes)",
+                                "show ip protocols (verify area assignments)",
+                                "show ip ospf interface brief (interface area membership)"
+                            ]
+                        },
+                        {
+                            name: "LSA Types in Multi-Area OSPF",
+                            commands: [
+                                "Type 1 (Router LSA): Intra-area, generated by all routers",
+                                "Type 2 (Network LSA): Generated by DR on multi-access segments",
+                                "Type 3 (Summary LSA): Inter-area routes, generated by ABRs",
+                                "Type 4 (ASBR Summary): Path to ASBR (not in this lab)",
+                                "Type 5 (External LSA): External routes (not in this lab)"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "R1", type: "router", name: "ABR-West", x: 200, y: 250},
@@ -3441,6 +3740,8 @@
                         description: "Multi-area OSPF reduces routing table size and LSA flooding. Area 0 (backbone) is mandatory, and all other areas must connect to it through an ABR (Area Border Router). In this lab, we have three areas: Area 0 (backbone connecting ABR-West, ABR-Core, ABR-East), Area 1 (West branch), and Area 2 (East branch).",
                         commands: [],
                         verification: "Review the topology and understand the area design",
+                        expectedOutput: "Understand multi-area design: Area 0 (red links) = backbone, Area 1 (green) = West branch, Area 2 (orange) = East branch. All traffic between areas flows through Area 0!",
+                        tips: "⭐ MAX POINTS TIP: Multi-area OSPF benefits: 1) Smaller routing tables (areas summarize), 2) Reduced LSA flooding (LSAs don't cross area boundaries), 3) Faster convergence (changes in one area don't affect others). Area 0 is MANDATORY and ALL other areas MUST connect to it! ABR-West connects Areas 0+1, ABR-East connects Areas 0+2.",
                         completed: false
                     },
                     {
@@ -3455,6 +3756,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0 appears with IP 1.1.1.1, Status: up, Protocol: up. Loopbacks never go down (always up/up)!",
+                        tips: "⭐ MAX POINTS TIP: /32 mask (255.255.255.255) means 'host route' - single IP address. Loopbacks are virtual interfaces that never fail (no physical cable). OSPF Router ID selection order: 1) Configured with 'router-id', 2) Highest loopback IP, 3) Highest physical interface IP. Best practice: Use loopback for stable Router ID!",
                         completed: false
                     },
                     {
@@ -3472,6 +3775,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0: 1.1.1.1, Gi0/0: 10.1.1.1 (up/up), Gi0/1: 10.2.1.1 (up/up). Gi0/0 connects to backbone (Area 0), Gi0/1 to branch (Area 1).",
+                        tips: "⭐ MAX POINTS TIP: Gi0/0 uses /30 (point-to-point backbone link). Gi0/1 uses /24 (LAN network). This router has interfaces in TWO different areas - that makes it an ABR (Area Border Router)!",
                         completed: false
                     },
                     {
@@ -3486,6 +3791,8 @@
                             "exit"
                         ],
                         verification: "show ip protocols",
+                        expectedOutput: "OSPF Process 1, Router ID 1.1.1.1. Shows interfaces in Area 0 AND Area 1. This router is an ABR!",
+                        tips: "⭐ MAX POINTS TIP: CRITICAL - Different interfaces in different areas! Gi0/0 (10.1.1.0/30) → Area 0, Gi0/1 (10.2.1.0/24) → Area 1. This is what makes ABR-West an ABR! Wrong area assignment = broken multi-area OSPF. Backbone links MUST be Area 0. Use 'show ip protocols' to verify area assignments.",
                         completed: false
                     },
                     {
@@ -3500,6 +3807,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0: 2.2.2.2 (up/up). This will be ABR-Core's Router ID.",
+                        tips: "⭐ MAX POINTS TIP: Simple pattern for Router IDs: R1=1.1.1.1, R2=2.2.2.2, R3=3.3.3.3. Makes troubleshooting easier when you see neighbor lists!",
                         completed: false
                     },
                     {
@@ -3517,6 +3826,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0: 2.2.2.2, Gi0/0: 10.1.1.2 (up/up), Gi0/1: 10.1.2.1 (up/up). Both physical interfaces connect to backbone (Area 0).",
+                        tips: "⭐ MAX POINTS TIP: ABR-Core is a pure backbone router - BOTH interfaces in Area 0. It connects ABR-West (Area 0+1) to ABR-East (Area 0+2). All inter-area traffic flows through this router!",
                         completed: false
                     },
                     {
@@ -3531,6 +3842,8 @@
                             "exit"
                         ],
                         verification: "show ip protocols",
+                        expectedOutput: "OSPF Process 1, Router ID 2.2.2.2. BOTH networks in Area 0. This is NOT an ABR (only has Area 0). After this, ABR-West and ABR-Core should form adjacency!",
+                        tips: "⭐ MAX POINTS TIP: ABR-Core has all interfaces in Area 0 only, so it's NOT an ABR (ABRs need multiple areas). It's a pure backbone router. After this config, check ABR-West: 'show ip ospf neighbor' should show neighbor 2.2.2.2 in FULL state!",
                         completed: false
                     },
                     {
@@ -3545,6 +3858,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0: 3.3.3.3 (up/up). This will be ABR-East's Router ID.",
+                        tips: "⭐ MAX POINTS TIP: Third router, third loopback! All three routers now have stable Router IDs via loopbacks. This is OSPF best practice for production networks.",
                         completed: false
                     },
                     {
@@ -3562,6 +3877,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "Loopback0: 3.3.3.3, Gi0/0: 10.1.2.2 (up/up), Gi0/1: 10.3.1.1 (up/up). Gi0/0 for backbone (Area 0), Gi0/1 for branch (Area 2).",
+                        tips: "⭐ MAX POINTS TIP: ABR-East mirrors ABR-West design: Gi0/0 in Area 0 (backbone), Gi0/1 in Area 2 (branch). All three routers now have interfaces configured!",
                         completed: false
                     },
                     {
@@ -3576,6 +3893,8 @@
                             "exit"
                         ],
                         verification: "show ip protocols",
+                        expectedOutput: "OSPF Process 1, Router ID 3.3.3.3. Shows interfaces in Area 0 AND Area 2. ABR-East is now an ABR! All three routers configured, full mesh should form!",
+                        tips: "⭐ MAX POINTS TIP: Multi-area OSPF complete! Gi0/0 → Area 0, Gi0/1 → Area 2. ABR-East is second ABR (connects multiple areas). Check ABR-Core: 'show ip ospf neighbor' should now show TWO neighbors (1.1.1.1 and 3.3.3.3) both in FULL state!",
                         completed: false
                     },
                     {
@@ -3584,6 +3903,8 @@
                         description: "Check OSPF neighbor relationships on all routers. Each router should see its neighbors. ABRs show neighbors in multiple areas.",
                         commands: ["show ip ospf neighbor"],
                         verification: "All neighbors show FULL state with correct Router IDs",
+                        expectedOutput: "ABR-West sees 2.2.2.2 (ABR-Core). ABR-Core sees 1.1.1.1 (ABR-West) AND 3.3.3.3 (ABR-East). ABR-East sees 2.2.2.2 (ABR-Core). All FULL state!",
+                        tips: "⭐ MAX POINTS TIP: Topology: R1 ←→ R2 ←→ R3 (linear). ABR-Core is the hub. All neighbors MUST show FULL state. If stuck in other states, wait 40 seconds for convergence. Neighbor Router IDs should match loopback IPs (1.1.1.1, 2.2.2.2, 3.3.3.3). Check ALL THREE routers!",
                         completed: false
                     },
                     {
@@ -3592,6 +3913,8 @@
                         description: "Examine the OSPF Link State Database. Notice different LSA types: Type 1 (Router LSA), Type 2 (Network LSA), Type 3 (Summary LSA for inter-area routes).",
                         commands: ["show ip ospf database"],
                         verification: "LSA types 1, 2, and 3 visible in database",
+                        expectedOutput: "Type 1 (Router LSAs) from all routers in same area. Type 3 (Summary LSAs) from ABRs advertising inter-area routes. On ABR-West: Type 3 LSAs for Area 2 networks!",
+                        tips: "⭐ MAX POINTS TIP: Type 1 LSAs stay within an area. Type 3 LSAs are how ABRs advertise networks from one area into another! ABR-West generates Type 3 LSAs to advertise Area 1 (10.2.1.0/24) into Area 0. ABR-East generates Type 3 LSAs to advertise Area 2 (10.3.1.0/24) into Area 0. This is how Area 1 learns about Area 2!",
                         completed: false
                     },
                     {
@@ -3600,6 +3923,8 @@
                         description: "View OSPF routes in the routing table. Routes learned via OSPF are marked with 'O' (intra-area) or 'O IA' (inter-area routes from other areas).",
                         commands: ["show ip route ospf"],
                         verification: "OSPF routes present with O and O IA designations",
+                        expectedOutput: "On ABR-West: 'O' routes for Area 0 networks, 'O IA' routes for Area 2 (10.3.1.0/24). 'IA' = Inter-Area = from different area via ABR!",
+                        tips: "⭐ MAX POINTS TIP: 'O' = Intra-area OSPF route (same area). 'O IA' = Inter-area OSPF route (different area, learned via Type 3 LSA from ABR). On ABR-West, 10.3.1.0/24 shows as 'O IA' because it's in Area 2 (different from Area 0/1). This proves multi-area OSPF working! Check all three routers - each should have both O and O IA routes.",
                         completed: false
                     },
                     {
@@ -3608,6 +3933,8 @@
                         description: "Check OSPF process details. ABR-West and ABR-East should show as ABRs (Area Border Routers) because they connect multiple areas.",
                         commands: ["show ip ospf"],
                         verification: "ABR-West and ABR-East display as Area Border Routers",
+                        expectedOutput: "ABR-West shows 'Area Border Router (ABR)' and lists Areas 0, 1. ABR-East shows 'Area Border Router (ABR)' and lists Areas 0, 2. ABR-Core shows ONLY Area 0 (NOT an ABR).",
+                        tips: "⭐ MAX POINTS TIP: ABR status is automatic - router becomes ABR when interfaces belong to multiple areas! ABR-West has Areas 0+1 = ABR. ABR-East has Areas 0+2 = ABR. ABR-Core has only Area 0 = NOT ABR (just a backbone router). ABRs are responsible for generating Type 3 Summary LSAs!",
                         completed: false
                     },
                     {
@@ -3619,6 +3946,8 @@
                             "PC-East: 10.3.1.10/24, GW 10.3.1.1"
                         ],
                         verification: "ipconfig on both PCs shows correct IPs and gateways",
+                        expectedOutput: "PC-West: 10.2.1.10/24, GW 10.2.1.1 (ABR-West). PC-East: 10.3.1.10/24, GW 10.3.1.1 (ABR-East). Each PC's gateway is its local router.",
+                        tips: "⭐ MAX POINTS TIP: PC-West is in Area 1 (gateway = ABR-West). PC-East is in Area 2 (gateway = ABR-East). These PCs are in DIFFERENT areas! Traffic between them must route through Area 0 backbone.",
                         completed: false
                     },
                     {
@@ -3627,6 +3956,8 @@
                         description: "Ping from PC-West (10.2.1.10) to PC-East (10.3.1.10). Traffic routes through Area 0 backbone! PC-West (Area 1) → ABR-West → Area 0 (ABR-Core) → ABR-East → PC-East (Area 2).",
                         commands: ["ping 10.3.1.10"],
                         verification: "Successful ping - Multi-area OSPF routing works!",
+                        expectedOutput: "Reply from 10.3.1.10: SUCCESS! Packets flow: PC-West → ABR-West (Area 1 to Area 0) → ABR-Core (backbone transit) → ABR-East (Area 0 to Area 2) → PC-East. Multi-area OSPF working!",
+                        tips: "⭐ MAX POINTS TIP: This proves the entire multi-area OSPF design works! Traffic path: Area 1 → Area 0 → Area 2. If ping fails: 1) Check OSPF neighbors FULL on all routers, 2) Check 'show ip route' on ABR-West shows 'O IA' route for 10.3.1.0/24, 3) Check PC gateways correct, 4) Verify area assignments correct (backbone links in Area 0). Successful ping = multi-area OSPF mastery!",
                         completed: false
                     }
                 ]
@@ -3642,6 +3973,92 @@
                 description: "Configure standard and extended ACLs to control network traffic and enhance security",
                 concepts: ["Standard ACLs", "Extended ACLs", "Access Control", "Traffic Filtering", "Security Policies", "Implicit Deny"],
                 devices: "2 Routers, 2 PCs, 1 Server",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "Gateway-Router Interface Configuration (All 3 interfaces with IPs)", points: 10 },
+                        { task: "ISP-Router Interface Configuration", points: 5 },
+                        { task: "Baseline Connectivity Test (PCs and Server configured)", points: 10 },
+                        { task: "Standard ACL 10 Creation (deny host + permit any)", points: 10 },
+                        { task: "Standard ACL 10 Application (outbound on Gi0/1)", points: 10 },
+                        { task: "Standard ACL Verification (PC-User1 success, PC-User2 blocked)", points: 10 },
+                        { task: "Extended ACL 100 Creation (HTTP/HTTPS/ICMP permit, Telnet deny)", points: 15 },
+                        { task: "Extended ACL 100 Application (inbound on Gi0/0)", points: 10 },
+                        { task: "Extended ACL Verification (ICMP works, protocol filtering)", points: 10 },
+                        { task: "ACL Statistics Review (show access-lists and interface inspection)", points: 10 }
+                    ],
+                    commonMistakes: [
+                        "Forgetting 'permit any' in standard ACL (implicit deny blocks everything!)",
+                        "Wrong ACL placement (standard should be close to destination, extended close to source)",
+                        "Incorrect wildcard mask or 'host' keyword usage",
+                        "Applying ACL in wrong direction (in vs out)",
+                        "Not understanding implicit deny at end of ACL"
+                    ],
+                    maxPointsStrategy: "To get 100/100: Configure ALL router interfaces correctly. Create standard ACL 10 with BOTH deny and permit statements. Apply it OUTBOUND on Gi0/1 (close to destination). Test that PC-User2 is blocked but PC-User1 works. Create extended ACL 100 with protocol/port specificity. Apply it INBOUND on Gi0/0 (close to source). Verify ICMP works and understand protocol filtering. Review ACL statistics to confirm packet matches. Remember: ACL placement is critical for max points!"
+                },
+                quickReference: {
+                    title: "Lab 6 Quick Reference - Access Control Lists",
+                    sections: [
+                        {
+                            name: "Standard ACL Commands (1-99)",
+                            commands: [
+                                "access-list 10 deny host 192.168.10.20  # Block specific host",
+                                "access-list 10 permit any  # Allow all other traffic",
+                                "show access-lists  # View ACL configuration and hit counts",
+                                "show access-lists 10  # View specific ACL"
+                            ]
+                        },
+                        {
+                            name: "Extended ACL Commands (100-199)",
+                            commands: [
+                                "access-list 100 permit tcp any host 192.168.20.10 eq 80  # Allow HTTP",
+                                "access-list 100 permit tcp any host 192.168.20.10 eq 443  # Allow HTTPS",
+                                "access-list 100 permit icmp any any  # Allow all ICMP (ping)",
+                                "access-list 100 deny tcp any any eq 23  # Block Telnet",
+                                "access-list 100 permit ip any any  # Allow all other IP traffic"
+                            ]
+                        },
+                        {
+                            name: "Apply ACL to Interface",
+                            commands: [
+                                "interface GigabitEthernet0/0",
+                                "ip access-group 100 in  # Extended ACL inbound (close to source)",
+                                "exit",
+                                "interface GigabitEthernet0/1",
+                                "ip access-group 10 out  # Standard ACL outbound (close to destination)",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "ACL Verification Commands",
+                            commands: [
+                                "show access-lists  # View all ACLs with match counters",
+                                "show ip interface GigabitEthernet0/0  # See ACLs applied to interface",
+                                "show interfaces trunk  # Not used in this lab (trunk is Lab 7)",
+                                "show running-config | include access-list  # See ACL configs in running-config"
+                            ]
+                        },
+                        {
+                            name: "ACL Design Best Practices",
+                            commands: [
+                                "# 1. Standard ACLs: Place close to DESTINATION (filter by source IP only)",
+                                "# 2. Extended ACLs: Place close to SOURCE (more granular filtering)",
+                                "# 3. Always add explicit 'permit any' to avoid implicit deny blocking all",
+                                "# 4. ACLs process top-to-bottom, first match wins",
+                                "# 5. Use 'host' keyword for single IP (e.g., 'host 192.168.1.10')",
+                                "# 6. Wildcard mask: 0.0.0.0 = match exactly, 0.0.0.255 = any in last octet"
+                            ]
+                        },
+                        {
+                            name: "Remove ACL from Interface",
+                            commands: [
+                                "interface GigabitEthernet0/1",
+                                "no ip access-group 10 out  # Remove ACL from interface",
+                                "exit"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "R1", type: "router", name: "Gateway-Router", x: 400, y: 200},
@@ -3664,6 +4081,8 @@
                         description: "ACLs filter traffic based on IP addresses, protocols, and ports. They're essential for network security. Standard ACLs (1-99) filter by source IP only. Extended ACLs (100-199) filter by source/destination IP, protocol, and port. Remember: there's an implicit deny at the end of every ACL!",
                         commands: [],
                         verification: "Review the topology and understand ACL concepts",
+                        expectedOutput: "Understand the topology: Gateway-Router connects three zones (LAN, DMZ, WAN). We'll use ACLs to control traffic between these zones.",
+                        tips: "⭐ MAX POINTS TIP: ACL placement is CRITICAL! Standard ACLs (filter by source only) should be placed close to DESTINATION. Extended ACLs (filter by source/destination/protocol/port) should be placed close to SOURCE. Wrong placement = inefficient filtering or unintended traffic blocking!",
                         completed: false
                     },
                     {
@@ -3691,6 +4110,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief",
+                        expectedOutput: "All three interfaces show Status: up, Protocol: up. Gi0/0: 192.168.10.1, Gi0/1: 192.168.20.1, Gi0/2: 203.0.113.1 (/30 for point-to-point WAN).",
+                        tips: "⭐ MAX POINTS TIP: Three distinct network zones! LAN (192.168.10.0/24) for internal users, DMZ (192.168.20.0/24) for servers accessible from outside, WAN (203.0.113.0/30) for Internet. Using descriptions helps document the purpose of each interface. Always verify ALL three interfaces are 'up/up' before proceeding!",
                         completed: false
                     },
                     {
@@ -3706,6 +4127,8 @@
                             "exit"
                         ],
                         verification: "show ip interface brief on ISP-Router",
+                        expectedOutput: "Gi0/0 shows Status: up, Protocol: up with IP 203.0.113.2. WAN link between routers now complete.",
+                        tips: "⭐ MAX POINTS TIP: /30 subnet (255.255.255.252) provides only 2 usable IPs - perfect for point-to-point router links! The WAN uses .1 and .2. This simulates Internet connectivity. Verify Gateway-Router can ping ISP-Router (203.0.113.2) to confirm WAN link works.",
                         completed: false
                     },
                     {
@@ -3718,6 +4141,8 @@
                             "WebServer: 192.168.20.10/24, GW 192.168.20.1"
                         ],
                         verification: "Ping from PC-User1 to WebServer (192.168.20.10) - should succeed",
+                        expectedOutput: "Ping from PC-User1 to 192.168.20.10 succeeds. Ping from PC-User2 to 192.168.20.10 also succeeds. This is baseline - NO ACLs applied yet, so all traffic flows freely.",
+                        tips: "⭐ MAX POINTS TIP: CRITICAL - Test connectivity BEFORE applying ACLs! This confirms routing works. Both PCs should reach WebServer before ACLs. If baseline doesn't work, fix routing first! After ACLs are applied, PC-User2 will be blocked but PC-User1 will still work.",
                         completed: false
                     },
                     {
@@ -3729,6 +4154,8 @@
                             "access-list 10 permit any"
                         ],
                         verification: "show access-lists",
+                        expectedOutput: "Standard ACL 10 shows two entries: (1) deny 192.168.10.20 (0.0.0.0 wildcard), (2) permit any. No match counters yet (ACL not applied to interface).",
+                        tips: "⭐ MAX POINTS TIP: The 'host' keyword means exact match (wildcard 0.0.0.0). WITHOUT 'permit any', the implicit deny at the end would block EVERYONE, including PC-User1! ACL logic: First match wins, so deny PC-User2 first, then permit everything else. Order matters! Creating ACL doesn't affect traffic yet - must apply to interface.",
                         completed: false
                     },
                     {
@@ -3741,6 +4168,8 @@
                             "exit"
                         ],
                         verification: "show ip interface GigabitEthernet0/1",
+                        expectedOutput: "Gi0/1 shows 'Outgoing access list is 10'. ACL is now active and filtering outbound traffic on the DMZ interface.",
+                        tips: "⭐ MAX POINTS TIP: 'out' direction means traffic LEAVING the interface (going TO WebServer). Standard ACL placement: close to DESTINATION (we want to filter near the DMZ). If we placed it 'in' on Gi0/0, it would also block PC-User2 from reaching everything else, not just the DMZ! Direction matters: 'in' = arriving, 'out' = departing.",
                         completed: false
                     },
                     {
@@ -3752,6 +4181,8 @@
                             "From PC-User2: ping 192.168.20.10 (FAIL - blocked)"
                         ],
                         verification: "PC-User1 can reach WebServer, PC-User2 cannot",
+                        expectedOutput: "PC-User1 (192.168.10.10) → WebServer: SUCCESS (matches 'permit any'). PC-User2 (192.168.10.20) → WebServer: FAIL (matches 'deny host 192.168.10.20'). ACL working correctly!",
+                        tips: "⭐ MAX POINTS TIP: This proves selective filtering! PC-User1 allowed, PC-User2 blocked - both to same destination. Check 'show access-lists' on router after test - match counters should increment showing packets hit the ACL rules. PC-User2's denied packets increment the deny counter. This is how you verify ACL effectiveness!",
                         completed: false
                     },
                     {
@@ -3766,6 +4197,8 @@
                             "access-list 100 permit ip any any"
                         ],
                         verification: "show access-lists 100",
+                        expectedOutput: "Extended ACL 100 shows 5 entries: (1) permit tcp to 192.168.20.10 port 80, (2) permit tcp to 192.168.20.10 port 443, (3) permit icmp, (4) deny tcp port 23, (5) permit ip any any.",
+                        tips: "⭐ MAX POINTS TIP: Extended ACLs have MUCH more granularity! We can filter by protocol (TCP/UDP/ICMP), destination IP, AND port number. 'eq 80' = equals port 80 (HTTP). ICMP permitted everywhere (for ping). Telnet (port 23) denied. Last line permits all other IP traffic (like the standard ACL's 'permit any'). Extended ACLs are numbered 100-199.",
                         completed: false
                     },
                     {
@@ -3778,6 +4211,8 @@
                             "exit"
                         ],
                         verification: "show ip interface GigabitEthernet0/0",
+                        expectedOutput: "Gi0/0 shows 'Inbound access list is 100'. Extended ACL now filtering traffic ENTERING from the LAN (close to source).",
+                        tips: "⭐ MAX POINTS TIP: Extended ACL placement: close to SOURCE! We apply it inbound on Gi0/0 where traffic ORIGINATES (LAN users). This filters traffic early, preventing unwanted traffic from traversing the router. If placed at destination, the traffic would already have consumed router resources. 'in' direction = arriving at interface from LAN.",
                         completed: false
                     },
                     {
@@ -3790,6 +4225,8 @@
                             "exit"
                         ],
                         verification: "show ip interface GigabitEthernet0/1 - no ACL applied",
+                        expectedOutput: "Gi0/1 shows 'Outgoing access list is not set'. Standard ACL 10 removed from interface. ACL 10 still exists in config, just not applied.",
+                        tips: "⭐ MAX POINTS TIP: Removing ACL from interface doesn't DELETE the ACL - it just stops applying it! ACL 10 still exists (check 'show access-lists'). We can reapply it later with 'ip access-group 10 out'. This lets us test ACL 100 independently. Multiple ACLs can be created but only ONE ACL per interface per direction (one inbound, one outbound).",
                         completed: false
                     },
                     {
@@ -3800,6 +4237,8 @@
                             "ping 192.168.20.10"
                         ],
                         verification: "Ping successful - ICMP permitted by ACL 100",
+                        expectedOutput: "Ping from PC-User1 to 192.168.20.10 succeeds! Packets match the 'permit icmp any any' rule in ACL 100. ICMP traffic allowed.",
+                        tips: "⭐ MAX POINTS TIP: ICMP (ping) uses protocol number 1 (not TCP/UDP). ACL 100 explicitly permits ICMP with 'permit icmp any any'. Without this line, the implicit deny would block pings! This shows how extended ACLs can filter by protocol type. Check 'show access-lists 100' after ping - the ICMP permit line's match counter should increment!",
                         completed: false
                     },
                     {
@@ -3811,6 +4250,8 @@
                             "Telnet to any device on port 23 would fail"
                         ],
                         verification: "Understand protocol-specific filtering",
+                        expectedOutput: "Conceptual understanding: HTTP (port 80) to 192.168.20.10 permitted (matches first rule). HTTPS (port 443) to 192.168.20.10 permitted (matches second rule). Telnet (port 23) to ANY destination denied (matches fourth rule).",
+                        tips: "⭐ MAX POINTS TIP: Extended ACLs allow port-level security policies! We permit web traffic (80, 443) to the server but block insecure Telnet (23) everywhere. In production, you'd test with actual HTTP/Telnet clients. The simulator focuses on configuration understanding. Order matters: If 'permit ip any any' came BEFORE 'deny tcp any any eq 23', Telnet would be allowed (first match wins)!",
                         completed: false
                     },
                     {
@@ -3821,6 +4262,8 @@
                             "show access-lists"
                         ],
                         verification: "See ACLs 10 and 100 with match counters showing packet hits",
+                        expectedOutput: "Both ACL 10 and ACL 100 listed. Each rule shows '(X matches)' indicating how many packets hit that rule. ICMP permit line in ACL 100 shows matches from our ping tests.",
+                        tips: "⭐ MAX POINTS TIP: Match counters are ESSENTIAL for troubleshooting! If a deny rule shows 0 matches, it's not blocking anything (maybe traffic doesn't reach it?). If permit rules show 0 matches, traffic might be hitting deny rules first. High match counts on permit rules = ACL working as intended. Reset counters with 'clear access-list counters' to test fresh. This is how network engineers verify ACL behavior in production!",
                         completed: false
                     },
                     {
@@ -3832,6 +4275,8 @@
                             "show ip interface GigabitEthernet0/1"
                         ],
                         verification: "Gi0/0 shows ACL 100 inbound, Gi0/1 shows no ACL (we removed ACL 10)",
+                        expectedOutput: "Gi0/0: 'Inbound access list is 100' (extended ACL filtering LAN traffic). Gi0/1: 'Outgoing access list is not set' (standard ACL removed). This confirms current ACL deployment.",
+                        tips: "⭐ MAX POINTS TIP: Always verify ACL placement with 'show ip interface'! Common mistakes: (1) ACL applied to wrong interface, (2) ACL applied in wrong direction (in vs out), (3) Multiple ACLs expected but only one shows (can't have 2 ACLs same direction on same interface). Use this command to audit ACL deployment. In production, document which interfaces have which ACLs!",
                         completed: false
                     },
                     {
@@ -3840,6 +4285,8 @@
                         description: "Key takeaways: (1) Standard ACLs close to destination, Extended ACLs close to source. (2) Always add explicit 'permit any' to avoid implicit deny blocking everything. (3) Process top-to-bottom, first match wins. (4) Use 'show access-lists' to verify rules. (5) Test thoroughly before deploying in production!",
                         commands: [],
                         verification: "Understand ACL design principles and best practices",
+                        expectedOutput: "Comprehensive understanding of ACL design: placement strategy (standard vs extended), implicit deny behavior, top-to-bottom processing, wildcard masks, and verification techniques.",
+                        tips: "⭐ MAX POINTS TIP: Master these ACL principles for max points! (1) Placement: Standard ACLs filter by source only so place near DESTINATION to avoid blocking too much. Extended ACLs are granular so place near SOURCE to filter early. (2) Implicit deny exists at end of EVERY ACL - add explicit permit statements! (3) Order matters - specific rules first, general rules last. (4) Use 'host' for single IPs, wildcards for ranges. (5) Test incrementally - verify baseline first, apply ACLs one at a time, check match counters. (6) Named ACLs (not covered here) allow editing - numbered ACLs can't be edited, must delete and recreate. Real-world tip: Always have out-of-band access when testing ACLs on production equipment!",
                         completed: false
                     }
                 ]
@@ -3855,6 +4302,116 @@
                 description: "Configure 802.1Q trunks between switches to carry multiple VLANs, including native VLAN configuration",
                 concepts: ["802.1Q Trunking", "Native VLAN", "VLAN Tagging", "Trunk Ports", "VLAN Security"],
                 devices: "2 L2 Switches, 4 PCs",
+                scoringGuide: {
+                    totalPoints: 100,
+                    breakdown: [
+                        { task: "CoreSwitch VLAN Creation (VLANs 10, 20, 99 with names)", points: 10 },
+                        { task: "CoreSwitch Access Port Configuration (Gi0/2-3 assigned)", points: 10 },
+                        { task: "CoreSwitch Trunk Configuration (Gi0/1 trunk with native VLAN 99)", points: 15 },
+                        { task: "DistroSwitch VLAN Creation (matching VLANs)", points: 10 },
+                        { task: "DistroSwitch Access Port Configuration (Gi0/2-3 assigned)", points: 10 },
+                        { task: "DistroSwitch Trunk Configuration (matching native VLAN)", points: 15 },
+                        { task: "Trunk Verification (show interfaces trunk confirms operation)", points: 10 },
+                        { task: "VLAN 10 Connectivity Test (cross-trunk ping succeeds)", points: 10 },
+                        { task: "VLAN 20 Connectivity Test (cross-trunk ping succeeds)", points: 5 },
+                        { task: "VLAN Isolation Test (cross-VLAN ping fails correctly)", points: 5 }
+                    ],
+                    commonMistakes: [
+                        "Native VLAN mismatch between trunk ends (causes connectivity issues)",
+                        "Forgetting to create VLANs on both switches (VLANs must exist on both ends)",
+                        "Not restricting allowed VLANs on trunk (security best practice)",
+                        "Using VLAN 1 as native VLAN (security vulnerability)",
+                        "Forgetting 'switchport mode trunk' (port stays in access mode)"
+                    ],
+                    maxPointsStrategy: "To get 100/100: Create identical VLANs (10, 20, 99) on BOTH switches with matching names. Configure access ports on both switches correctly. Configure trunk ports with MATCHING native VLAN 99 on both ends. Restrict allowed VLANs to only 10,20,99. Verify trunk operation with 'show interfaces trunk'. Test that same-VLAN communication works across trunk (VLAN 10 to VLAN 10, VLAN 20 to VLAN 20). Verify VLANs remain isolated (VLAN 10 cannot reach VLAN 20). Native VLAN mismatch is the #1 reason for trunk failures!"
+                },
+                quickReference: {
+                    title: "Lab 7 Quick Reference - VLAN Trunking (802.1Q)",
+                    sections: [
+                        {
+                            name: "VLAN Creation (Both Switches)",
+                            commands: [
+                                "enable",
+                                "configure terminal",
+                                "vlan 10",
+                                "name Sales",
+                                "vlan 20",
+                                "name Engineering",
+                                "vlan 99",
+                                "name Native",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Access Port Configuration",
+                            commands: [
+                                "interface GigabitEthernet0/2",
+                                "switchport mode access",
+                                "switchport access vlan 10",
+                                "no shutdown",
+                                "interface GigabitEthernet0/3",
+                                "switchport mode access",
+                                "switchport access vlan 20",
+                                "no shutdown",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Trunk Port Configuration (CRITICAL - Must Match!)",
+                            commands: [
+                                "interface GigabitEthernet0/1",
+                                "switchport mode trunk  # Force trunk mode",
+                                "switchport trunk native vlan 99  # Native VLAN (untagged)",
+                                "switchport trunk allowed vlan 10,20,99  # Restrict VLANs",
+                                "no shutdown",
+                                "exit"
+                            ]
+                        },
+                        {
+                            name: "Trunk Verification Commands",
+                            commands: [
+                                "show interfaces trunk  # View all trunk ports and their config",
+                                "show interfaces GigabitEthernet0/1 switchport  # Detailed switchport info",
+                                "show vlan brief  # Verify VLANs exist and port assignments"
+                            ]
+                        },
+                        {
+                            name: "802.1Q Trunking Concepts",
+                            commands: [
+                                "# Trunk = Link that carries MULTIPLE VLANs",
+                                "# 802.1Q = Industry standard VLAN tagging protocol",
+                                "# Native VLAN = Untagged VLAN (default VLAN 1, should change for security)",
+                                "# Tagged frames = Have 4-byte 802.1Q header with VLAN ID",
+                                "# Untagged frames = Native VLAN traffic (no 802.1Q tag)",
+                                "# Both trunk ends must have MATCHING native VLAN!"
+                            ]
+                        },
+                        {
+                            name: "Native VLAN Security Best Practices",
+                            commands: [
+                                "# 1. Never use VLAN 1 as native (default management VLAN)",
+                                "# 2. Use unused VLAN as native (like VLAN 99)",
+                                "# 3. Don't assign any access ports to native VLAN",
+                                "# 4. Both trunk ends MUST have same native VLAN",
+                                "# 5. Restrict allowed VLANs to only what's needed",
+                                "# 6. VLAN hopping attacks exploit native VLAN misconfigurations"
+                            ]
+                        },
+                        {
+                            name: "Troubleshooting Trunk Issues",
+                            commands: [
+                                "# Issue: Native VLAN mismatch",
+                                "# Fix: Verify 'show interfaces trunk' shows same native VLAN both ends",
+                                "",
+                                "# Issue: VLANs not crossing trunk",
+                                "# Fix: Ensure VLAN exists on both switches, check allowed VLAN list",
+                                "",
+                                "# Issue: Trunk not forming",
+                                "# Fix: Use 'switchport mode trunk' to force trunk mode (disable DTP)"
+                            ]
+                        }
+                    ]
+                },
                 topology: {
                     devices: [
                         {id: "SW1", type: "l2switch", name: "CoreSwitch", x: 300, y: 200},
@@ -3879,6 +4436,8 @@
                         description: "Trunk ports carry traffic for multiple VLANs using 802.1Q tagging. This allows switches to extend VLANs across the network. In this lab, you'll configure trunk links between two switches to carry VLAN 10 (Sales) and VLAN 20 (Engineering) traffic. You'll also configure a native VLAN for security purposes.",
                         commands: [],
                         verification: "Review the topology and understand trunk link concept",
+                        expectedOutput: "Understand the goal: Two switches will be connected by a trunk link. This single physical link will carry traffic for MULTIPLE VLANs (10, 20, 99) using 802.1Q tagging.",
+                        tips: "⭐ MAX POINTS TIP: Trunking extends VLANs across switches! Without trunks, you'd need separate physical links for each VLAN (wasteful). 802.1Q adds a 4-byte tag to frames indicating which VLAN they belong to. Native VLAN traffic is UNtagged. This lab demonstrates both tagged (VLANs 10, 20) and untagged (VLAN 99 native) traffic on the same trunk. Key concept: Trunk = one link, multiple VLANs!",
                         completed: false
                     },
                     {
@@ -3898,6 +4457,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "VLANs 10, 20, 99 appear with names 'Sales', 'Engineering', 'Native'. All show 'active' status. No ports assigned yet (except VLAN 1 default).",
+                        tips: "⭐ MAX POINTS TIP: VLAN 99 is a security best practice! Never use VLAN 1 as native (default management VLAN, security risk). Instead, use an unused VLAN like 99 as native. We won't assign ANY access ports to VLAN 99 - it only carries untagged trunk traffic. This prevents VLAN hopping attacks where attackers exploit native VLAN to jump between VLANs. Create VLANs BEFORE configuring trunk!",
                         completed: false
                     },
                     {
@@ -3916,6 +4477,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "Gi0/2 appears under VLAN 10, Gi0/3 appears under VLAN 20. Access ports for local devices configured. Gi0/1 (trunk port) not yet configured.",
+                        tips: "⭐ MAX POINTS TIP: Access ports vs Trunk ports: Access ports belong to ONE VLAN, connect end devices (PCs), send untagged frames. Trunk ports carry MULTIPLE VLANs, connect switches, use 802.1Q tagging. Always configure 'switchport mode access' to explicitly set port as access (prevents DTP auto-negotiation issues). Each access port serves ONE device in ONE VLAN!",
                         completed: false
                     },
                     {
@@ -3931,6 +4494,8 @@
                             "exit"
                         ],
                         verification: "show interfaces trunk",
+                        expectedOutput: "Gi0/1 shows as trunk port, Mode: on, Encapsulation: 802.1Q, Status: trunking, Native VLAN: 99, VLANs Allowed: 10,20,99. First half of trunk configured!",
+                        tips: "⭐ MAX POINTS TIP: THREE critical trunk commands! (1) 'switchport mode trunk' forces trunk mode (disables DTP negotiation). (2) 'switchport trunk native vlan 99' sets native to unused VLAN for security. (3) 'switchport trunk allowed vlan 10,20,99' restricts which VLANs cross trunk (security best practice - only allow needed VLANs). By default, ALL VLANs (1-4094) allowed on trunk - that's a security risk! Trunk won't work yet until DistroSwitch configured with MATCHING settings!",
                         completed: false
                     },
                     {
@@ -3950,6 +4515,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "DistroSwitch shows VLANs 10, 20, 99 with identical names to CoreSwitch. Both switches now have matching VLAN database - essential for trunk!",
+                        tips: "⭐ MAX POINTS TIP: VLANs must exist on BOTH switches! If VLAN 10 exists on CoreSwitch but NOT on DistroSwitch, VLAN 10 traffic can't cross the trunk. Common mistake: configuring trunk without creating VLANs first - trunk forms but VLANs don't pass traffic. Names don't have to match (VLAN ID is what matters), but matching names helps documentation. Always create VLANs BEFORE configuring trunk!",
                         completed: false
                     },
                     {
@@ -3968,6 +4535,8 @@
                             "exit"
                         ],
                         verification: "show vlan brief",
+                        expectedOutput: "DistroSwitch: Gi0/2 in VLAN 10, Gi0/3 in VLAN 20. Mirrors CoreSwitch access port config. Both switches ready for trunk link.",
+                        tips: "⭐ MAX POINTS TIP: Symmetric configuration! CoreSwitch has Gi0/2→VLAN 10, Gi0/3→VLAN 20. DistroSwitch has same layout. This isn't required (ports can differ between switches), but it keeps things organized. The KEY is that VLAN IDs match, not port numbers. Verify 'show vlan brief' on BOTH switches shows correct port assignments before proceeding!",
                         completed: false
                     },
                     {
@@ -3983,6 +4552,8 @@
                             "exit"
                         ],
                         verification: "show interfaces trunk",
+                        expectedOutput: "DistroSwitch Gi0/1: trunk mode, 802.1Q, Native VLAN 99, Allowed VLANs 10,20,99. Trunk now operational between both switches! Both ends match perfectly.",
+                        tips: "⭐ MAX POINTS TIP: MATCHING native VLAN is CRITICAL! Native VLAN mismatch is the #1 trunk misconfiguration! If CoreSwitch has native VLAN 99 but DistroSwitch has native VLAN 1, you'll get errors like 'Native VLAN mismatch discovered on port Gi0/1' and connectivity issues. Both trunk ends MUST have: (1) Same native VLAN, (2) Compatible allowed VLAN lists, (3) Same encapsulation (802.1Q). Verify with 'show interfaces trunk' on BOTH switches!",
                         completed: false
                     },
                     {
@@ -3993,6 +4564,8 @@
                             "show interfaces trunk"
                         ],
                         verification: "Gi0/1 should show as trunk, Mode: on, Encapsulation: 802.1Q, Native VLAN: 99",
+                        expectedOutput: "Gi0/1 appears in trunk list. Mode: on, Encapsulation: 802.1Q, Status: trunking, Native VLAN: 99. VLANs Allowed on Trunk: 10,20,99. Both switches show identical trunk config.",
+                        tips: "⭐ MAX POINTS TIP: 'show interfaces trunk' is THE command for trunk verification! It shows: (1) Which interfaces are trunking, (2) Mode (on/auto/desirable - 'on' is best, disables DTP), (3) Encapsulation (802.1Q is standard), (4) Status (trunking = working), (5) Native VLAN, (6) Allowed VLANs. Run this on BOTH switches to verify matching config. If trunk doesn't appear in output, it's not trunking (check 'switchport mode trunk' command)!",
                         completed: false
                     },
                     {
@@ -4003,6 +4576,8 @@
                             "show interfaces GigabitEthernet0/1 switchport"
                         ],
                         verification: "Trunking VLANs Allowed: 10, 20, 99. Native VLAN: 99",
+                        expectedOutput: "Detailed switchport info: Administrative Mode: trunk, Operational Mode: trunk, Trunking Native Mode VLAN: 99, Trunking VLANs Allowed: 10,20,99. Confirms trunk security settings.",
+                        tips: "⭐ MAX POINTS TIP: This command shows MORE detail than 'show interfaces trunk'! It displays: Administrative Mode (what YOU configured) vs Operational Mode (what's ACTUALLY running). If they differ, investigate! Shows both configured and active VLANs. Administrative = configured, Operational = actual state. This is useful for troubleshooting DTP issues or verifying VLAN pruning!",
                         completed: false
                     },
                     {
@@ -4013,6 +4588,8 @@
                             "show vlan brief"
                         ],
                         verification: "VLANs 10, 20, 99 exist. Access ports assigned correctly",
+                        expectedOutput: "VLAN 10: Gi0/2 assigned. VLAN 20: Gi0/3 assigned. VLAN 99: NO access ports (used only as native). Trunk port Gi0/1 does NOT appear in VLAN list (trunk ports don't show in 'show vlan brief').",
+                        tips: "⭐ MAX POINTS TIP: Trunk ports are NOT listed in 'show vlan brief'! Only access ports appear. If Gi0/1 shows under a VLAN here, it's NOT configured as trunk (it's in access mode). VLAN 99 should have NO ports listed - it's only used as native VLAN on trunk. Access ports (Gi0/2, Gi0/3) should appear under their respective VLANs. Run this on BOTH switches to verify symmetrical config!",
                         completed: false
                     },
                     {
@@ -4025,6 +4602,8 @@
                             "ping 192.168.10.20"
                         ],
                         verification: "Ping successful - VLAN 10 traffic crosses trunk",
+                        expectedOutput: "Ping from PC-VLAN10-A (CoreSwitch) to PC-VLAN10-B (DistroSwitch) succeeds! Frames are 802.1Q tagged with VLAN 10 ID as they cross trunk. Trunk working perfectly for VLAN 10!",
+                        tips: "⭐ MAX POINTS TIP: This proves VLAN 10 extends across both switches via trunk! Traffic flow: PC-VLAN10-A → CoreSwitch access port Gi0/2 (untagged) → VLAN 10 internally → trunk Gi0/1 (802.1Q tagged with VLAN 10) → DistroSwitch trunk Gi0/1 (receives tagged frame) → VLAN 10 internally → access port Gi0/2 (untagged) → PC-VLAN10-B. The trunk adds/removes 802.1Q tags transparently! If ping fails: (1) Check VLAN 10 exists on both switches, (2) Check trunk native VLAN matches, (3) Check VLAN 10 in allowed VLAN list, (4) Verify PC IPs correct.",
                         completed: false
                     },
                     {
@@ -4037,6 +4616,8 @@
                             "ping 192.168.20.20"
                         ],
                         verification: "Ping successful - VLAN 20 traffic crosses trunk",
+                        expectedOutput: "Ping from PC-VLAN20-A to PC-VLAN20-B succeeds! VLAN 20 traffic crosses trunk with different 802.1Q tag than VLAN 10. Same physical trunk link carries MULTIPLE VLANs!",
+                        tips: "⭐ MAX POINTS TIP: Now BOTH VLANs work across the trunk! Same physical link (Gi0/1) carries both VLAN 10 and VLAN 20 traffic simultaneously. 802.1Q tag differentiates them: VLAN 10 frames have tag=10, VLAN 20 frames have tag=20. Switches read the tag and forward frames to the correct VLAN. This is the power of trunking - one link, multiple VLANs! Without trunks, you'd need separate physical cables for each VLAN (wasteful and doesn't scale).",
                         completed: false
                     },
                     {
@@ -4047,6 +4628,8 @@
                             "ping 192.168.20.10"
                         ],
                         verification: "Ping fails - VLANs are isolated (Layer 2 boundary)",
+                        expectedOutput: "Ping from VLAN 10 PC to VLAN 20 PC FAILS! Request timed out. VLANs remain completely isolated despite sharing the same trunk link. Layer 2 boundary maintained.",
+                        tips: "⭐ MAX POINTS TIP: This MUST fail to earn full points! VLANs create security boundaries at Layer 2. Even though VLAN 10 and VLAN 20 traffic both cross the same trunk, they're completely isolated. Trunk doesn't break VLAN isolation - it just transports multiple VLANs efficiently! If ping SUCCEEDS, something's wrong: (1) PCs might be in same VLAN (check 'show vlan brief'), (2) There might be Layer 3 routing configured (router or L3 switch). Failed ping here = CORRECT = trunk working perfectly with proper VLAN isolation!",
                         completed: false
                     },
                     {
@@ -4055,6 +4638,8 @@
                         description: "Native VLAN carries untagged traffic. Best practice: Use unused VLAN (like 99) as native to prevent VLAN hopping attacks. Never use VLAN 1 as native! VLAN hopping attacks exploit native VLAN behavior to gain unauthorized access to other VLANs. By using an unused VLAN as native and not assigning any ports to it, you eliminate this attack vector. Key takeaways: (1) Both trunk ends must have matching native VLAN, (2) Use non-default unused VLAN as native, (3) Don't assign any access ports to native VLAN, (4) Restrict allowed VLANs on trunks to only what's needed.",
                         commands: [],
                         verification: "Understand native VLAN security best practices",
+                        expectedOutput: "Comprehensive understanding of native VLAN security: Why VLAN 1 is vulnerable, how VLAN hopping works, why unused VLAN as native is best practice, importance of native VLAN matching on both trunk ends.",
+                        tips: "⭐ MAX POINTS TIP: Native VLAN security is CRITICAL for max points! Four key security principles: (1) NEVER use VLAN 1 as native (default management VLAN, biggest attack vector). (2) Use UNUSED VLAN as native (we used 99 - no devices in it). (3) Both trunk ends MUST match native VLAN (mismatch = connectivity issues + security risk). (4) Restrict allowed VLANs to only what's needed (we used 10,20,99 - not ALL VLANs). VLAN hopping attack: Attacker sends double-tagged 802.1Q frames; switch strips outer tag (native VLAN), inner tag lets attacker access unauthorized VLANs. Using unused native VLAN prevents this! Real-world: Always document native VLAN choice, verify with 'show interfaces trunk', and audit that no access ports exist in native VLAN. This lab demonstrates enterprise-grade trunk security!",
                         completed: false
                     }
                 ]
