@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workgroup vs Domain Quiz - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 120, 212, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .home-btn {
+            background: rgba(0, 120, 212, 0.2);
+            color: #0078d4;
+            border: 1px solid #0078d4;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-btn:hover {
+            background: #0078d4;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 120, 212, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .header h1 span {
+            color: #0078d4;
+        }
+
+        .aplus-badge {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Quiz Info Panel */
+        .quiz-info {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .quiz-header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .difficulty {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .objectives {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 120, 212, 0.2);
+        }
+
+        .objectives h3 {
+            color: #0078d4;
+            font-size: 1em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .objectives ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .objectives li {
+            padding-left: 24px;
+            position: relative;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .objectives li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #0078d4;
+            font-weight: bold;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+            z-index: 50;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-header h3 {
+            color: #0078d4;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .progress-fraction {
+            color: #94a3b8;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        .progress-percentage {
+            color: #10b981;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #0078d4 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(0, 120, 212, 0.2);
+        }
+
+        .question-number {
+            background: rgba(0, 120, 212, 0.2);
+            color: #0078d4;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .question-status {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.3);
+        }
+
+        .status-indicator.answered {
+            background: #0078d4;
+            box-shadow: 0 0 8px rgba(0, 120, 212, 0.5);
+        }
+
+        .status-indicator.correct {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        .status-indicator.incorrect {
+            background: #ef4444;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+
+        .question-text {
+            color: #fff;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            padding: 18px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            font-weight: 500;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(0, 120, 212, 0.2);
+            border-color: #0078d4;
+            transform: translateX(5px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-letter {
+            background: rgba(0, 120, 212, 0.3);
+            color: #0078d4;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .option-btn.selected {
+            background: rgba(0, 120, 212, 0.3);
+            border-color: #0078d4;
+            color: #fff;
+        }
+
+        .option-btn.selected .option-letter {
+            background: #0078d4;
+            color: #fff;
+        }
+
+        .option-btn.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .option-btn.correct .option-letter {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            line-height: 1.6;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 200px;
+            }
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            color: #10b981;
+        }
+
+        .explanation.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .explanation-header {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        .btn:disabled {
+            background: rgba(148, 163, 184, 0.3);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(148, 163, 184, 0.3);
+            color: #fff;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 120, 212, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-panel.show {
+            display: block;
+        }
+
+        .results-title {
+            color: #0078d4;
+            font-size: 2em;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .score-display {
+            background: rgba(0, 120, 212, 0.1);
+            border: 2px solid #0078d4;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .score-number {
+            font-size: 4em;
+            color: #10b981;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-label {
+            color: #94a3b8;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .breakdown-item {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .breakdown-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value.correct {
+            color: #10b981;
+        }
+
+        .breakdown-value.incorrect {
+            color: #ef4444;
+        }
+
+        .breakdown-label {
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        .performance-message {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 6px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin: 30px 0;
+        }
+
+        .performance-message.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: #f59e0b;
+        }
+
+        .performance-message.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+
+        .review-list {
+            text-align: left;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .review-list h3 {
+            color: #0078d4;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .review-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item strong {
+            color: #fff;
+        }
+
+        .review-item .incorrect-answer {
+            color: #ef4444;
+        }
+
+        .review-item .correct-answer {
+            color: #10b981;
+        }
+
+        /* Completion Celebration */
+        .completion-celebration {
+            display: none;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            animation: celebrate 0.6s ease;
+        }
+
+        .completion-celebration.show {
+            display: block;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05); }
+            75% { transform: scale(0.95); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.3em;
+                text-align: center;
+            }
+
+            .quiz-header {
+                grid-template-columns: 1fr;
+            }
+
+            .question-text {
+                font-size: 1.05em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .progress-tracker {
+                position: relative;
+                top: 0;
+            }
+
+            .score-number {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="../../../index.html" class="home-btn">
+                <span>←</span>
+                <span>Home</span>
+            </a>
+            <h1>Quiz: <span>Workgroup vs Domain</span></h1>
+        </div>
+        <span class="aplus-badge">CompTIA A+ Core 2 (220-1102)</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Quiz Info Panel -->
+        <div class="quiz-info">
+            <div class="quiz-header">
+                <div class="info-item">
+                    <span class="info-label">Total Questions</span>
+                    <span class="info-value">15</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Difficulty Level</span>
+                    <span class="info-value"><span class="difficulty">Intermediate</span></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Passing Score</span>
+                    <span class="info-value">80%</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time Estimate</span>
+                    <span class="info-value">10-15 minutes</span>
+                </div>
+            </div>
+
+            <div class="objectives">
+                <h3>Learning Objectives</h3>
+                <ul>
+                    <li>Distinguish between workgroup and domain network models</li>
+                    <li>Understand Active Directory and centralized authentication</li>
+                    <li>Identify features and limitations of each network type</li>
+                    <li>Apply knowledge to real-world scenarios</li>
+                    <li>Master domain join procedures and requirements</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <div class="progress-header">
+                <h3>Quiz Progress</h3>
+                <div class="progress-stats">
+                    <span class="progress-fraction" id="progressFraction">0/15</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="completion-celebration" id="celebrationMessage">
+                Quiz Complete! Great work!
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer"></div>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="resultsPanel">
+            <h2 class="results-title">Quiz Results</h2>
+
+            <div class="score-display">
+                <div class="score-number" id="finalScore">0%</div>
+                <div class="score-label">Your Score</div>
+            </div>
+
+            <div class="score-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-value correct" id="correctCount">0</div>
+                    <div class="breakdown-label">Correct</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-value incorrect" id="incorrectCount">0</div>
+                    <div class="breakdown-label">Incorrect</div>
+                </div>
+            </div>
+
+            <div class="performance-message" id="performanceMessage"></div>
+
+            <div class="review-list" id="reviewList" style="display: none;">
+                <h3>Questions to Review</h3>
+                <div id="reviewItems"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn" id="retakeBtn">Retake Quiz</button>
+                <button class="btn btn-secondary" id="reviewBtn">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                question: "What is the maximum recommended number of computers in a workgroup?",
+                options: ["5", "10", "20", "100"],
+                correct: 2,
+                explanation: "Microsoft recommends a maximum of 20 computers in a workgroup. Beyond this number, performance degrades and management becomes difficult. Larger networks should use a domain model."
+            },
+            {
+                question: "Which network model uses centralized authentication?",
+                options: ["Workgroup", "Domain", "Peer-to-peer", "Ad-hoc"],
+                correct: 1,
+                explanation: "Domain networks use centralized authentication through a Domain Controller. Users authenticate once with their domain credentials and can access all authorized resources (single sign-on)."
+            },
+            {
+                question: "What Microsoft service provides directory services in a domain?",
+                options: ["DHCP", "DNS", "Active Directory", "IIS"],
+                correct: 2,
+                explanation: "Active Directory (AD) is Microsoft's directory service that provides authentication, authorization, and centralized management of users, computers, and resources in a domain environment."
+            },
+            {
+                question: "In a workgroup, where are user accounts stored?",
+                options: ["Domain Controller", "Cloud", "Each local computer", "File server"],
+                correct: 2,
+                explanation: "In a workgroup, user accounts are stored locally on each computer. This means each computer maintains its own Security Accounts Manager (SAM) database, requiring separate accounts on each machine."
+            },
+            {
+                question: "What protocol does Active Directory use for authentication?",
+                options: ["NTLM", "Kerberos", "RADIUS", "TACACS+"],
+                correct: 1,
+                explanation: "Active Directory primarily uses Kerberos for authentication. Kerberos is a network authentication protocol that uses tickets to allow secure authentication without sending passwords over the network."
+            },
+            {
+                question: "What is required to join a computer to a domain?",
+                options: ["Local admin only", "Domain admin credentials", "Microsoft account", "No credentials needed"],
+                correct: 1,
+                explanation: "You must have domain administrator credentials (or an account with domain join permissions) to add a computer to a domain. Local admin rights on the computer are also required to make the change."
+            },
+            {
+                question: "Group Policy can only be used in which environment?",
+                options: ["Workgroup", "Domain", "Both", "Neither"],
+                correct: 1,
+                explanation: "Group Policy is a domain-only feature that allows centralized management and configuration of operating systems, applications, and user settings. Workgroups do not support Group Policy."
+            },
+            {
+                question: "What role does a Domain Controller serve?",
+                options: ["File storage", "Authentication and directory services", "Printing", "Email"],
+                correct: 1,
+                explanation: "A Domain Controller (DC) is a server that responds to authentication requests and verifies users on a network. It stores the Active Directory database and manages user access to network resources."
+            },
+            {
+                question: "Which is a characteristic of workgroup networking?",
+                options: ["Centralized management", "Single sign-on", "Decentralized security", "Group Policy"],
+                correct: 2,
+                explanation: "Workgroups have decentralized security where each computer maintains its own user accounts and security settings. There is no central server or authority controlling authentication or management."
+            },
+            {
+                question: "What is single sign-on (SSO)?",
+                options: ["One password for everything", "No password required", "Password saved in browser", "Biometric only"],
+                correct: 0,
+                explanation: "Single sign-on (SSO) means users authenticate once with their credentials and can then access multiple resources without re-entering credentials. In a domain, this is achieved through Kerberos tickets."
+            },
+            {
+                question: "Where do you change a computer's network membership in Windows?",
+                options: ["Network settings", "System Properties > Computer Name", "Device Manager", "Control Panel > Programs"],
+                correct: 1,
+                explanation: "To join a domain or workgroup, go to System Properties (Win+Pause/Break or Settings > System > About > Advanced system settings), click the 'Computer Name' tab, then click 'Change'."
+            },
+            {
+                question: "What happens after joining or leaving a domain?",
+                options: ["Nothing", "Restart required", "Internet disconnects", "Files deleted"],
+                correct: 1,
+                explanation: "After joining or leaving a domain (or changing workgroup membership), Windows requires a restart for the changes to take effect. This allows the computer to fully integrate with or disconnect from the domain."
+            },
+            {
+                question: "Which is NOT an Active Directory component?",
+                options: ["Forest", "Domain", "Organizational Unit", "Workgroup"],
+                correct: 3,
+                explanation: "Workgroup is NOT an Active Directory component. AD consists of Forests (collections of domains), Domains (security boundaries), Organizational Units (containers for objects), and other elements, but workgroups are a separate peer-to-peer model."
+            },
+            {
+                question: "Azure AD is used for:",
+                options: ["On-premises only", "Cloud identity management", "File sharing", "Printing"],
+                correct: 1,
+                explanation: "Azure AD (Microsoft Entra ID) is Microsoft's cloud-based identity and access management service. It provides authentication and authorization for cloud applications and can integrate with on-premises Active Directory."
+            },
+            {
+                question: "A small home network with 3 computers should use:",
+                options: ["Domain", "Workgroup", "Both", "Neither"],
+                correct: 1,
+                explanation: "A small home network with only 3 computers should use a workgroup. Setting up a domain requires a server running Windows Server and is unnecessary overhead for such a small network. Workgroups are perfect for home use."
+            }
+        ];
+
+        // Quiz State
+        let currentQuestion = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let quizComplete = false;
+
+        // Initialize Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuizState();
+            renderQuiz();
+            attachEventListeners();
+        });
+
+        // Load saved state from localStorage
+        function loadQuizState() {
+            const saved = localStorage.getItem('quizWorkgroupDomainState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    currentQuestion = state.currentQuestion || 0;
+                    userAnswers = state.userAnswers || new Array(quizData.length).fill(null);
+                    quizComplete = state.quizComplete || false;
+                } catch (e) {
+                    console.error('Error loading quiz state:', e);
+                }
+            }
+        }
+
+        // Save state to localStorage
+        function saveQuizState() {
+            const state = {
+                currentQuestion,
+                userAnswers,
+                quizComplete
+            };
+            localStorage.setItem('quizWorkgroupDomainState', JSON.stringify(state));
+        }
+
+        // Render Quiz
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            if (quizComplete) {
+                showResults();
+                return;
+            }
+
+            quizData.forEach((q, index) => {
+                const card = createQuestionCard(q, index);
+                container.appendChild(card);
+            });
+
+            // Add action buttons
+            const actionDiv = document.createElement('div');
+            actionDiv.className = 'action-buttons';
+            actionDiv.innerHTML = `
+                <button class="btn" id="submitBtn" ${!allQuestionsAnswered() ? 'disabled' : ''}>Submit Quiz</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset Quiz</button>
+            `;
+            container.appendChild(actionDiv);
+
+            updateProgress();
+        }
+
+        // Create Question Card
+        function createQuestionCard(questionData, index) {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            const answered = userAnswers[index] !== null;
+            const statusClass = answered ? 'answered' : '';
+
+            card.innerHTML = `
+                <div class="question-header">
+                    <div class="question-number">Question ${index + 1} of ${quizData.length}</div>
+                    <div class="question-status">
+                        <div class="status-indicator ${statusClass}"></div>
+                    </div>
+                </div>
+                <div class="question-text">${questionData.question}</div>
+                <div class="options-grid" data-question="${index}">
+                    ${questionData.options.map((option, optIndex) => `
+                        <button class="option-btn ${userAnswers[index] === optIndex ? 'selected' : ''}"
+                                data-question="${index}"
+                                data-option="${optIndex}">
+                            <span class="option-letter">${String.fromCharCode(65 + optIndex)}</span>
+                            <span>${option}</span>
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="explanation" id="explanation-${index}"></div>
+            `;
+
+            return card;
+        }
+
+        // Attach Event Listeners
+        function attachEventListeners() {
+            // Delegate event listener for option buttons
+            document.getElementById('quizContainer').addEventListener('click', (e) => {
+                const optionBtn = e.target.closest('.option-btn');
+                if (optionBtn && !quizComplete) {
+                    handleOptionClick(optionBtn);
+                }
+
+                // Submit button
+                if (e.target.id === 'submitBtn') {
+                    submitQuiz();
+                }
+
+                // Reset button
+                if (e.target.id === 'resetBtn') {
+                    if (confirm('Are you sure you want to reset the quiz? All progress will be lost.')) {
+                        resetQuiz();
+                    }
+                }
+            });
+
+            // Results panel buttons
+            document.getElementById('retakeBtn')?.addEventListener('click', () => {
+                resetQuiz();
+            });
+
+            document.getElementById('reviewBtn')?.addEventListener('click', () => {
+                reviewAnswers();
+            });
+        }
+
+        // Handle Option Click
+        function handleOptionClick(button) {
+            const questionIndex = parseInt(button.dataset.question);
+            const optionIndex = parseInt(button.dataset.option);
+
+            // Clear previous selection
+            document.querySelectorAll(`.option-btn[data-question="${questionIndex}"]`).forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            // Mark new selection
+            button.classList.add('selected');
+            userAnswers[questionIndex] = optionIndex;
+
+            // Update status indicator
+            const statusIndicator = button.closest('.question-card').querySelector('.status-indicator');
+            statusIndicator.classList.add('answered');
+
+            // Enable submit button if all answered
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = !allQuestionsAnswered();
+            }
+
+            saveQuizState();
+            updateProgress();
+        }
+
+        // Check if all questions are answered
+        function allQuestionsAnswered() {
+            return userAnswers.every(answer => answer !== null);
+        }
+
+        // Update Progress
+        function updateProgress() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const percentage = Math.round((answered / quizData.length) * 100);
+
+            document.getElementById('progressFraction').textContent = `${answered}/${quizData.length}`;
+            document.getElementById('progressPercentage').textContent = `${percentage}%`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+
+            if (answered === quizData.length && !quizComplete) {
+                document.getElementById('celebrationMessage').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('celebrationMessage').classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Submit Quiz
+        function submitQuiz() {
+            if (!allQuestionsAnswered()) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            quizComplete = true;
+            saveQuizState();
+            showResults();
+        }
+
+        // Show Results
+        function showResults() {
+            // Calculate score
+            let correct = 0;
+            const incorrect = [];
+
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizData[index].correct) {
+                    correct++;
+                } else {
+                    incorrect.push({
+                        questionNum: index + 1,
+                        question: quizData[index].question,
+                        userAnswer: quizData[index].options[answer],
+                        correctAnswer: quizData[index].options[quizData[index].correct],
+                        explanation: quizData[index].explanation
+                    });
+                }
+            });
+
+            const percentage = Math.round((correct / quizData.length) * 100);
+
+            // Update results display
+            document.getElementById('finalScore').textContent = `${percentage}%`;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = quizData.length - correct;
+
+            // Performance message
+            const perfMsg = document.getElementById('performanceMessage');
+            if (percentage >= 90) {
+                perfMsg.className = 'performance-message';
+                perfMsg.textContent = 'Outstanding! You have excellent knowledge of workgroups and domains.';
+            } else if (percentage >= 80) {
+                perfMsg.className = 'performance-message';
+                perfMsg.textContent = 'Great job! You passed the quiz and demonstrate solid understanding of the material.';
+            } else if (percentage >= 70) {
+                perfMsg.className = 'performance-message warning';
+                perfMsg.textContent = 'Good effort, but you should review the material and try again to reach the 80% passing score.';
+            } else {
+                perfMsg.className = 'performance-message danger';
+                perfMsg.textContent = 'You need more study time. Review the incorrect questions and their explanations, then retake the quiz.';
+            }
+
+            // Show incorrect questions
+            if (incorrect.length > 0) {
+                const reviewList = document.getElementById('reviewList');
+                const reviewItems = document.getElementById('reviewItems');
+                reviewList.style.display = 'block';
+                reviewItems.innerHTML = incorrect.map(item => `
+                    <div class="review-item">
+                        <strong>Question ${item.questionNum}:</strong> ${item.question}<br>
+                        <span class="incorrect-answer">Your answer: ${item.userAnswer}</span><br>
+                        <span class="correct-answer">Correct answer: ${item.correctAnswer}</span><br>
+                        <em>${item.explanation}</em>
+                    </div>
+                `).join('');
+            }
+
+            // Hide quiz, show results
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsPanel').classList.add('show');
+            document.getElementById('progressPercentage').textContent = `${percentage}%`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        // Review Answers
+        function reviewAnswers() {
+            document.getElementById('resultsPanel').classList.remove('show');
+            document.getElementById('quizContainer').style.display = 'block';
+
+            // Re-render with answers shown
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            quizData.forEach((q, index) => {
+                const card = createQuestionCard(q, index);
+                const optionsGrid = card.querySelector('.options-grid');
+                const explanation = card.querySelector('.explanation');
+
+                // Disable all buttons and show correct/incorrect
+                optionsGrid.querySelectorAll('.option-btn').forEach((btn, optIndex) => {
+                    btn.disabled = true;
+
+                    if (optIndex === q.correct) {
+                        btn.classList.add('correct');
+                    }
+
+                    if (userAnswers[index] === optIndex && optIndex !== q.correct) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                // Show explanation
+                const isCorrect = userAnswers[index] === q.correct;
+                explanation.className = `explanation show ${isCorrect ? 'correct' : 'incorrect'}`;
+                explanation.innerHTML = `
+                    <div class="explanation-header">${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</div>
+                    ${q.explanation}
+                `;
+
+                // Update status indicator
+                const statusIndicator = card.querySelector('.status-indicator');
+                statusIndicator.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                container.appendChild(card);
+            });
+
+            // Add back to results button
+            const actionDiv = document.createElement('div');
+            actionDiv.className = 'action-buttons';
+            actionDiv.innerHTML = `
+                <button class="btn" onclick="showResults()">Back to Results</button>
+                <button class="btn btn-secondary" onclick="resetQuiz()">Retake Quiz</button>
+            `;
+            container.appendChild(actionDiv);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Reset Quiz
+        function resetQuiz() {
+            currentQuestion = 0;
+            userAnswers = new Array(quizData.length).fill(null);
+            quizComplete = false;
+            saveQuizState();
+
+            document.getElementById('resultsPanel').classList.remove('show');
+            document.getElementById('quizContainer').style.display = 'block';
+
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

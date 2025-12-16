@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Upgrade Setup Simulator - CompTIA A+ Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0078d4 0%, #1e3a8a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* CompTIA Branding */
+        .branding {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0078d4;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #0078d4;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .home-link:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main Container */
+        .simulator-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 60px 80px;
+            min-height: 600px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scenario Selection */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .scenario-card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border: 2px solid #d0d0d0;
+            border-radius: 10px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-color: #0078d4;
+        }
+
+        .scenario-card.selected {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            border-color: #0078d4;
+        }
+
+        .scenario-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .scenario-desc {
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Buttons */
+        .button-container {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        button:hover:not(:disabled) {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        button.secondary {
+            background: transparent;
+            color: #0078d4;
+            border: 2px solid #0078d4;
+        }
+
+        button.secondary:hover:not(:disabled) {
+            background: rgba(0, 120, 212, 0.1);
+        }
+
+        /* Radio Options */
+        .radio-group {
+            margin: 30px 0;
+        }
+
+        .radio-option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .radio-option:hover {
+            border-color: #0078d4;
+            background: #f0f8ff;
+        }
+
+        .radio-option.selected {
+            border-color: #0078d4;
+            background: #e6f3ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            accent-color: #0078d4;
+        }
+
+        .radio-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .radio-description {
+            font-size: 14px;
+            color: #666;
+            margin-left: 35px;
+            line-height: 1.5;
+        }
+
+        /* Checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 15px;
+            accent-color: #0078d4;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            cursor: pointer;
+            font-size: 16px;
+            color: #1a1a1a;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 40px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0078d4 0%, #00bcf2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* Circular Progress (Windows Style) */
+        .circular-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 60px 0;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid #e0e0e0;
+            border-top: 6px solid #0078d4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-percentage {
+            font-size: 48px;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .progress-status {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+        }
+
+        /* Compatibility Check */
+        .compatibility-list {
+            margin: 30px 0;
+        }
+
+        .compatibility-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #28a745;
+        }
+
+        .compatibility-item.warning {
+            border-left-color: #ffc107;
+            background: #fff9e6;
+        }
+
+        .compatibility-item.error {
+            border-left-color: #dc3545;
+            background: #ffe6e6;
+        }
+
+        .compatibility-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .compatibility-content {
+            flex: 1;
+        }
+
+        .compatibility-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 3px;
+        }
+
+        .compatibility-detail {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* License Agreement */
+        .license-box {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: #e6f3ff;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 120, 212, 0.2);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .summary-value {
+            color: #555;
+        }
+
+        /* Info Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 8px;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background: #1a1a1a;
+            color: white;
+            text-align: left;
+            border-radius: 8px;
+            padding: 12px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1a1a1a transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Privacy Toggles */
+        .privacy-toggles {
+            margin: 30px 0;
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-content {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .toggle-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+            margin-left: 20px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #0078d4;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: start;
+        }
+
+        .warning-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #856404;
+        }
+
+        .warning-content {
+            flex: 1;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .warning-text {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Error Box */
+        .error-box {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: start;
+        }
+
+        .error-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #721c24;
+        }
+
+        .error-content {
+            flex: 1;
+        }
+
+        .error-title {
+            font-weight: 600;
+            color: #721c24;
+            margin-bottom: 8px;
+        }
+
+        .error-text {
+            color: #721c24;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Success Box */
+        .success-box {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 36px;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .tips-box {
+            background: #e6f3ff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .tips-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 8px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .tips-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Quiz Mode */
+        .quiz-container {
+            margin: 30px 0;
+        }
+
+        .quiz-question {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #0078d4;
+            background: #f0f8ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .screen {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tooltip-text {
+                width: 200px;
+                margin-left: -100px;
+            }
+
+            .branding,
+            .home-link {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+
+        /* Black Screen for Restart */
+        .black-screen {
+            background: #000;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+        }
+
+        .black-screen .spinner {
+            border-color: #333;
+            border-top-color: white;
+        }
+
+        /* Detailed Report Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+            line-height: 20px;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="branding">CompTIA A+ Core 2</div>
+    <a href="../../../index.html" class="home-link">Home</a>
+
+    <div class="simulator-container">
+        <!-- Screen 0: Scenario Selection -->
+        <div id="screen-0" class="screen active">
+            <h1>OS Upgrade Setup Simulator</h1>
+            <p>Choose a scenario to simulate different upgrade paths and outcomes. Each scenario demonstrates important concepts for CompTIA A+ certification.</p>
+
+            <div class="scenario-grid">
+                <div class="scenario-card" data-scenario="success">
+                    <div class="scenario-icon">✓</div>
+                    <div class="scenario-title">Successful Upgrade</div>
+                    <div class="scenario-desc">Experience a smooth upgrade with no issues</div>
+                </div>
+                <div class="scenario-card" data-scenario="compatibility">
+                    <div class="scenario-icon">⚠</div>
+                    <div class="scenario-title">Compatibility Issue</div>
+                    <div class="scenario-desc">Encounter and resolve compatibility problems</div>
+                </div>
+                <div class="scenario-card" data-scenario="space">
+                    <div class="scenario-icon">💾</div>
+                    <div class="scenario-title">Insufficient Space</div>
+                    <div class="scenario-desc">Learn to handle disk space issues</div>
+                </div>
+                <div class="scenario-card" data-scenario="rollback">
+                    <div class="scenario-icon">↶</div>
+                    <div class="scenario-title">Rollback Needed</div>
+                    <div class="scenario-desc">Simulate rolling back to previous version</div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="start-scenario" disabled>Start Simulation</button>
+            </div>
+        </div>
+
+        <!-- Screen 1: Welcome Screen -->
+        <div id="screen-1" class="screen">
+            <h1>Windows Setup</h1>
+            <p>Welcome to Windows 11 Setup. This tool will help you upgrade your PC to the latest version of Windows.</p>
+
+            <div class="radio-group">
+                <div class="radio-option" data-option="upgrade">
+                    <div class="radio-label">
+                        <input type="radio" name="setup-option" value="upgrade">
+                        Upgrade this PC now
+                    </div>
+                    <div class="radio-description">
+                        Recommended for this PC. Install Windows 11 and keep your personal files and apps.
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltip-text">This option performs an in-place upgrade, preserving your files, settings, and applications while updating the operating system.</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="radio-option" data-option="media">
+                    <div class="radio-label">
+                        <input type="radio" name="setup-option" value="media">
+                        Create installation media for another PC
+                    </div>
+                    <div class="radio-description">
+                        Create a USB drive, DVD, or ISO file to install Windows 11 on a different PC.
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(0)">Back</button>
+                <button id="welcome-next" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: License Terms -->
+        <div id="screen-2" class="screen">
+            <h1>Applicable notices and license terms</h1>
+            <p>Please review the license terms before proceeding with the installation.</p>
+
+            <div class="license-box">
+                <h3>MICROSOFT SOFTWARE LICENSE TERMS</h3>
+                <p><strong>WINDOWS OPERATING SYSTEM</strong></p>
+                <p>Thank you for choosing Microsoft! Depending on how you obtained the Windows software, this is a license agreement between (i) you and the device manufacturer or software installer that distributes the software with your device; or (ii) you and Microsoft Corporation (or, based on where you live or, if a business, where your principal place of business is located, one of its affiliates) if you acquired the software from a retailer.</p>
+                <p><strong>1. INSTALLATION AND USE RIGHTS.</strong></p>
+                <p>a. License. The software is licensed, not sold. Under this agreement, we grant you the right to install and run one instance of the software on your device (the licensed device), for use by one person at a time, so long as you comply with all the terms of this agreement.</p>
+                <p><strong>2. DATA COLLECTION.</strong> The software may collect information about you and your use of the software and send that to Microsoft. Microsoft may use this information to provide services and improve Microsoft's products and services.</p>
+                <p><strong>3. UPDATES.</strong> The software may periodically check for updates and download and install them for you. You may obtain updates only from Microsoft or authorized sources.</p>
+                <p>For complete terms and conditions, visit: microsoft.com/useterms</p>
+            </div>
+
+            <div class="checkbox-container" onclick="toggleCheckbox('license-accept')">
+                <input type="checkbox" id="license-accept">
+                <label for="license-accept">I accept the Microsoft Software License Terms</label>
+                <span class="tooltip">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">You must accept the license terms to continue with the installation. This is a legal agreement between you and Microsoft.</span>
+                </span>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(1)">Back</button>
+                <button id="license-next" disabled>Accept</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Getting Updates -->
+        <div id="screen-3" class="screen">
+            <h1>Getting updates</h1>
+            <p>We're checking for the latest updates to ensure your installation goes smoothly.</p>
+
+            <div class="circular-progress">
+                <div class="spinner"></div>
+                <div class="progress-status" id="update-status">Checking for updates...</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="update-progress"></div>
+                </div>
+                <div class="progress-text" id="update-text">Please wait while we prepare your system</div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Choose What to Keep -->
+        <div id="screen-4" class="screen">
+            <h1>Choose what to keep</h1>
+            <p>You can keep your personal files and apps, or start fresh with a clean installation.</p>
+
+            <div class="radio-group">
+                <div class="radio-option selected" data-option="keep-all">
+                    <div class="radio-label">
+                        <input type="radio" name="keep-option" value="keep-all" checked>
+                        Keep personal files and apps
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltip-text">Recommended option. Preserves your documents, pictures, user accounts, and installed applications. The operating system is upgraded in place.</span>
+                        </span>
+                    </div>
+                    <div class="radio-description">
+                        <strong>Recommended.</strong> Your personal files, apps, and settings will be preserved during the upgrade.
+                    </div>
+                </div>
+                <div class="radio-option" data-option="keep-files">
+                    <div class="radio-label">
+                        <input type="radio" name="keep-option" value="keep-files">
+                        Keep personal files only
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltip-text">Preserves your personal files but removes all installed applications and settings. You'll need to reinstall your programs after the upgrade.</span>
+                        </span>
+                    </div>
+                    <div class="radio-description">
+                        Your personal files will be kept, but apps and settings will be removed. You'll need to reinstall your apps.
+                    </div>
+                </div>
+                <div class="radio-option" data-option="keep-nothing">
+                    <div class="radio-label">
+                        <input type="radio" name="keep-option" value="keep-nothing">
+                        Nothing
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltip-text">Performs a clean installation. All files, apps, and settings will be removed. Use this option when you want to start completely fresh or when troubleshooting serious system issues.</span>
+                        </span>
+                    </div>
+                    <div class="radio-description">
+                        All personal files, apps, and settings will be removed. This is a clean installation.
+                    </div>
+                </div>
+            </div>
+
+            <div id="nothing-warning" class="warning-box" style="display: none;">
+                <div class="warning-icon">⚠</div>
+                <div class="warning-content">
+                    <div class="warning-title">Warning: All data will be removed</div>
+                    <div class="warning-text">
+                        If you choose this option, all your personal files, apps, and settings will be permanently deleted. Make sure you have backed up everything important before proceeding.
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(2)">Back</button>
+                <button onclick="goToCompatibilityCheck()">Next</button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Compatibility Check -->
+        <div id="screen-5" class="screen">
+            <h1>Checking compatibility</h1>
+            <p>We're making sure your PC meets the requirements for Windows 11.</p>
+
+            <div class="circular-progress" id="compat-scanning">
+                <div class="spinner"></div>
+                <div class="progress-status">Scanning your system...</div>
+            </div>
+
+            <div id="compat-results" style="display: none;">
+                <h2>Compatibility Results</h2>
+                <div class="compatibility-list" id="compat-list">
+                    <!-- Results will be inserted here by JavaScript -->
+                </div>
+
+                <button class="secondary" onclick="showDetailedReport()" style="margin-top: 20px;">
+                    View Detailed Report
+                </button>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(4)">Back</button>
+                <button id="compat-next" style="display: none;">Next</button>
+            </div>
+        </div>
+
+        <!-- Screen 6: Ready to Install -->
+        <div id="screen-6" class="screen">
+            <h1>Ready to install</h1>
+            <p>Setup is ready to install Windows 11. Here's a summary of what will happen:</p>
+
+            <div class="summary-box">
+                <div class="summary-item">
+                    <span class="summary-label">Edition:</span>
+                    <span class="summary-value">Windows 11 Pro</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">What to keep:</span>
+                    <span class="summary-value" id="keep-summary">Personal files and apps</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Estimated time:</span>
+                    <span class="summary-value">45-60 minutes</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Required restarts:</span>
+                    <span class="summary-value">2-3 times</span>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-icon">ℹ</div>
+                <div class="warning-content">
+                    <div class="warning-title">Before you begin</div>
+                    <div class="warning-text">
+                        • Make sure your PC is plugged into a power source<br>
+                        • Your PC will restart several times during installation<br>
+                        • Don't turn off your PC during the installation process<br>
+                        • The installation may take 45-60 minutes or longer
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(5)">Back</button>
+                <button onclick="startInstallation()">Install</button>
+            </div>
+        </div>
+
+        <!-- Screen 7: Installation Progress -->
+        <div id="screen-7" class="screen">
+            <h1>Installing Windows 11</h1>
+            <p>Please don't turn off your PC. Your PC will restart several times.</p>
+
+            <div class="circular-progress">
+                <div class="progress-percentage" id="install-percentage">0%</div>
+                <div class="progress-status" id="install-status">Preparing installation...</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="install-progress"></div>
+                </div>
+                <div class="progress-text">This may take a while</div>
+            </div>
+        </div>
+
+        <!-- Screen 8: Restart Simulation -->
+        <div id="screen-8" class="screen black-screen">
+            <div style="text-align: center;">
+                <div class="spinner"></div>
+                <div class="progress-status" style="margin-top: 30px;" id="restart-status">Restarting...</div>
+            </div>
+        </div>
+
+        <!-- Screen 9: Working on Updates -->
+        <div id="screen-9" class="screen">
+            <h1>Working on updates</h1>
+            <p style="font-size: 20px; text-align: center; margin-top: 60px;">Don't turn off your PC. This will take a while.</p>
+
+            <div class="circular-progress">
+                <div class="progress-percentage" id="update-percentage">0%</div>
+                <div class="progress-status">Configuring Windows updates...</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="updates-progress"></div>
+                </div>
+                <div class="progress-text">Your PC will restart automatically</div>
+            </div>
+        </div>
+
+        <!-- Screen 10: Final Configuration -->
+        <div id="screen-10" class="screen">
+            <h1>Hi there!</h1>
+            <p>Let's finish setting things up. Choose your privacy settings below.</p>
+
+            <div class="privacy-toggles">
+                <div class="toggle-item">
+                    <div class="toggle-content">
+                        <div class="toggle-title">Location</div>
+                        <div class="toggle-desc">Allow apps to use your location</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-item">
+                    <div class="toggle-content">
+                        <div class="toggle-title">Diagnostics</div>
+                        <div class="toggle-desc">Send diagnostic data to Microsoft</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-item">
+                    <div class="toggle-content">
+                        <div class="toggle-title">Tailored experiences</div>
+                        <div class="toggle-desc">Use diagnostic data for personalized experiences</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-item">
+                    <div class="toggle-content">
+                        <div class="toggle-title">Advertising ID</div>
+                        <div class="toggle-desc">Allow apps to use advertising ID for personalized ads</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary">Customize</button>
+                <button onclick="goToScreen(11)">Accept Defaults</button>
+            </div>
+        </div>
+
+        <!-- Screen 11: Complete -->
+        <div id="screen-11" class="screen">
+            <div class="success-box">
+                <div class="success-icon">✓</div>
+                <div class="success-title">Welcome to Windows 11</div>
+                <div class="success-message">Your upgrade was completed successfully!</div>
+
+                <div class="tips-box">
+                    <div class="tips-title">What's next?</div>
+                    <ul class="tips-list">
+                        <li>Check Windows Update for additional updates and drivers</li>
+                        <li>Review your privacy settings in Settings > Privacy & security</li>
+                        <li>Verify that all your apps are working correctly</li>
+                        <li>Explore new Windows 11 features like Snap Layouts and Widgets</li>
+                        <li>Set up Windows Hello for secure sign-in</li>
+                    </ul>
+                </div>
+
+                <div class="button-container" style="justify-content: center;">
+                    <button onclick="startQuiz()">Take Knowledge Check Quiz</button>
+                    <button class="secondary" onclick="goToScreen(0)">Restart Simulator</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 12: Compatibility Error (Insufficient Space) -->
+        <div id="screen-12" class="screen">
+            <h1>Installation cannot proceed</h1>
+
+            <div class="error-box">
+                <div class="error-icon">✕</div>
+                <div class="error-content">
+                    <div class="error-title">Not enough disk space</div>
+                    <div class="error-text">
+                        Windows 11 requires at least 20 GB of free disk space. Your system currently has only 12 GB available.
+                    </div>
+                </div>
+            </div>
+
+            <h2>How to resolve this issue:</h2>
+            <div class="tips-box">
+                <div class="tips-title">Steps to free up disk space:</div>
+                <ul class="tips-list">
+                    <li>Use Disk Cleanup to remove temporary files and system files</li>
+                    <li>Uninstall apps you no longer use</li>
+                    <li>Move personal files to an external drive or cloud storage</li>
+                    <li>Empty the Recycle Bin</li>
+                    <li>Remove old Windows installations (Windows.old folder)</li>
+                    <li>Delete downloads and temporary internet files</li>
+                </ul>
+            </div>
+
+            <div class="compatibility-list">
+                <div class="compatibility-item error">
+                    <div class="compatibility-icon">✕</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Disk Space</div>
+                        <div class="compatibility-detail">12 GB available / 20 GB required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(0)">Exit Setup</button>
+                <button onclick="resolveSpaceIssue()">Simulate Cleanup</button>
+            </div>
+        </div>
+
+        <!-- Screen 13: Space Resolved -->
+        <div id="screen-13" class="screen">
+            <h1>Disk space issue resolved</h1>
+
+            <div class="success-box" style="background: #d4edda; padding: 25px;">
+                <div style="font-size: 48px; color: #28a745; margin-bottom: 15px;">✓</div>
+                <div style="font-size: 24px; font-weight: 600; color: #155724; margin-bottom: 10px;">
+                    Cleanup successful
+                </div>
+                <div style="color: #155724;">
+                    You have freed up enough space to proceed with the installation.
+                </div>
+            </div>
+
+            <div class="compatibility-list">
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Disk Space</div>
+                        <div class="compatibility-detail">35 GB available / 20 GB required</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 30px;">You can now continue with the Windows 11 installation.</p>
+
+            <div class="button-container">
+                <button onclick="goToScreen(6)">Continue Installation</button>
+            </div>
+        </div>
+
+        <!-- Screen 14: Compatibility Blocked -->
+        <div id="screen-14" class="screen">
+            <h1>This PC doesn't meet requirements</h1>
+
+            <div class="error-box">
+                <div class="error-icon">✕</div>
+                <div class="error-content">
+                    <div class="error-title">Cannot install Windows 11</div>
+                    <div class="error-text">
+                        Your PC doesn't meet the minimum system requirements for Windows 11. The following issues were found:
+                    </div>
+                </div>
+            </div>
+
+            <div class="compatibility-list">
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Processor</div>
+                        <div class="compatibility-detail">Intel Core i5-8250U - Compatible</div>
+                    </div>
+                </div>
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Memory (RAM)</div>
+                        <div class="compatibility-detail">8 GB (4 GB required)</div>
+                    </div>
+                </div>
+                <div class="compatibility-item error">
+                    <div class="compatibility-icon">✕</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">TPM Version</div>
+                        <div class="compatibility-detail">TPM 1.2 detected - TPM 2.0 required</div>
+                    </div>
+                </div>
+                <div class="compatibility-item error">
+                    <div class="compatibility-icon">✕</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Secure Boot</div>
+                        <div class="compatibility-detail">Not enabled - Required for Windows 11</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <div class="tips-title">Possible solutions:</div>
+                <ul class="tips-list">
+                    <li>Check if TPM 2.0 can be enabled in UEFI/BIOS settings</li>
+                    <li>Enable Secure Boot in UEFI/BIOS settings</li>
+                    <li>Update your motherboard firmware (if available)</li>
+                    <li>Consider staying on Windows 10 (supported until October 2025)</li>
+                    <li>Upgrade hardware if necessary</li>
+                </ul>
+            </div>
+
+            <div class="button-container">
+                <button onclick="goToScreen(0)">Exit Setup</button>
+            </div>
+        </div>
+
+        <!-- Screen 15: Rollback Introduction -->
+        <div id="screen-15" class="screen">
+            <h1>Windows 11 Rollback</h1>
+            <p>After upgrading to Windows 11, you have 10 days to go back to your previous version of Windows if you're experiencing issues.</p>
+
+            <div class="warning-box">
+                <div class="warning-icon">ℹ</div>
+                <div class="warning-content">
+                    <div class="warning-title">Scenario: Rollback needed</div>
+                    <div class="warning-text">
+                        In this scenario, you've upgraded to Windows 11 but discovered that a critical business application is not compatible. You need to roll back to Windows 10.
+                    </div>
+                </div>
+            </div>
+
+            <h2>To initiate a rollback:</h2>
+            <div class="summary-box">
+                <div class="summary-item">
+                    <span class="summary-label">Step 1:</span>
+                    <span class="summary-value">Open Settings</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Step 2:</span>
+                    <span class="summary-value">Go to System > Recovery</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Step 3:</span>
+                    <span class="summary-value">Click "Go back" under Recovery options</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Time limit:</span>
+                    <span class="summary-value">10 days from upgrade</span>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(0)">Cancel</button>
+                <button onclick="goToScreen(16)">Start Rollback Process</button>
+            </div>
+        </div>
+
+        <!-- Screen 16: Rollback Reason -->
+        <div id="screen-16" class="screen">
+            <h1>Why are you going back?</h1>
+            <p>Help us understand why you want to go back to your previous version of Windows.</p>
+
+            <div class="radio-group">
+                <div class="radio-option" data-option="reason1">
+                    <div class="radio-label">
+                        <input type="radio" name="rollback-reason" value="reason1">
+                        My apps don't work on Windows 11
+                    </div>
+                </div>
+                <div class="radio-option" data-option="reason2">
+                    <div class="radio-label">
+                        <input type="radio" name="rollback-reason" value="reason2">
+                        Windows 11 seems slow or unstable
+                    </div>
+                </div>
+                <div class="radio-option" data-option="reason3">
+                    <div class="radio-label">
+                        <input type="radio" name="rollback-reason" value="reason3">
+                        I don't like the new interface
+                    </div>
+                </div>
+                <div class="radio-option" data-option="reason4">
+                    <div class="radio-label">
+                        <input type="radio" name="rollback-reason" value="reason4">
+                        Other reason
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-icon">⚠</div>
+                <div class="warning-content">
+                    <div class="warning-title">Before you continue</div>
+                    <div class="warning-text">
+                        • You'll need to reinstall some apps and programs<br>
+                        • Changes you made to settings will be lost<br>
+                        • Any apps installed after upgrading will be removed<br>
+                        • You'll need to install any updates that were applied after upgrading
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="secondary" onclick="goToScreen(15)">Cancel</button>
+                <button onclick="startRollback()">Go Back to Windows 10</button>
+            </div>
+        </div>
+
+        <!-- Screen 17: Rollback Progress -->
+        <div id="screen-17" class="screen">
+            <h1>Restoring your previous version of Windows</h1>
+            <p>This might take a while. Your PC will restart when we're done.</p>
+
+            <div class="circular-progress">
+                <div class="progress-percentage" id="rollback-percentage">0%</div>
+                <div class="progress-status" id="rollback-status">Preparing rollback...</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="rollback-progress"></div>
+                </div>
+                <div class="progress-text">Don't turn off your PC</div>
+            </div>
+        </div>
+
+        <!-- Screen 18: Rollback Complete -->
+        <div id="screen-18" class="screen">
+            <div class="success-box">
+                <div class="success-icon">✓</div>
+                <div class="success-title">Welcome back to Windows 10</div>
+                <div class="success-message">Your PC has been restored to the previous version of Windows.</div>
+
+                <div class="tips-box">
+                    <div class="tips-title">What to do next:</div>
+                    <ul class="tips-list">
+                        <li>Check that all your files are still in place</li>
+                        <li>Reinstall any apps that were removed</li>
+                        <li>Run Windows Update to get the latest updates</li>
+                        <li>Verify that your critical applications are working</li>
+                        <li>Review what caused the rollback to prevent future issues</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-icon">ℹ</div>
+                    <div class="warning-content">
+                        <div class="warning-title">CompTIA A+ Exam Tip</div>
+                        <div class="warning-text">
+                            The 10-day rollback window starts from the upgrade date. After this period, the Windows.old folder is automatically deleted to free up disk space. Always document upgrade dates and test critical applications immediately after an OS upgrade.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container" style="justify-content: center;">
+                    <button onclick="startQuiz()">Take Knowledge Check Quiz</button>
+                    <button class="secondary" onclick="goToScreen(0)">Restart Simulator</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 19: Quiz Mode -->
+        <div id="screen-19" class="screen">
+            <h1>Knowledge Check Quiz</h1>
+            <p>Test your understanding of the Windows upgrade process.</p>
+
+            <div class="quiz-container">
+                <!-- Question 1 -->
+                <div class="quiz-question">
+                    <div class="question-text">1. What is the minimum amount of free disk space required for Windows 11 installation?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="1" data-answer="wrong" onclick="checkAnswer(this, 1)">
+                            A) 10 GB
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="correct" onclick="checkAnswer(this, 1)">
+                            B) 20 GB
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="wrong" onclick="checkAnswer(this, 1)">
+                            C) 32 GB
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="wrong" onclick="checkAnswer(this, 1)">
+                            D) 64 GB
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-1"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-question">
+                    <div class="question-text">2. How many days do you have to roll back to your previous version of Windows after upgrading?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="2" data-answer="wrong" onclick="checkAnswer(this, 2)">
+                            A) 7 days
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="correct" onclick="checkAnswer(this, 2)">
+                            B) 10 days
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="wrong" onclick="checkAnswer(this, 2)">
+                            C) 30 days
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="wrong" onclick="checkAnswer(this, 2)">
+                            D) 90 days
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-2"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="quiz-question">
+                    <div class="question-text">3. Which upgrade option preserves both personal files and installed applications?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="3" data-answer="correct" onclick="checkAnswer(this, 3)">
+                            A) Keep personal files and apps
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="wrong" onclick="checkAnswer(this, 3)">
+                            B) Keep personal files only
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="wrong" onclick="checkAnswer(this, 3)">
+                            C) Nothing
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="wrong" onclick="checkAnswer(this, 3)">
+                            D) Custom installation
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-3"></div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="quiz-question">
+                    <div class="question-text">4. What TPM version is required for Windows 11?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="4" data-answer="wrong" onclick="checkAnswer(this, 4)">
+                            A) TPM 1.0
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="wrong" onclick="checkAnswer(this, 4)">
+                            B) TPM 1.2
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="correct" onclick="checkAnswer(this, 4)">
+                            C) TPM 2.0
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="wrong" onclick="checkAnswer(this, 4)">
+                            D) TPM is not required
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-4"></div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="quiz-question">
+                    <div class="question-text">5. Where would you go to initiate a rollback to a previous version of Windows?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="5" data-answer="wrong" onclick="checkAnswer(this, 5)">
+                            A) Control Panel > Programs and Features
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="correct" onclick="checkAnswer(this, 5)">
+                            B) Settings > System > Recovery
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="wrong" onclick="checkAnswer(this, 5)">
+                            C) Settings > Update & Security > Backup
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="wrong" onclick="checkAnswer(this, 5)">
+                            D) Device Manager
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-5"></div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button onclick="goToScreen(0)">Return to Start</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Report Modal -->
+    <div id="detailed-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>Detailed Compatibility Report</h2>
+
+            <div class="compatibility-list" style="margin-top: 30px;">
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Processor (CPU)</div>
+                        <div class="compatibility-detail">
+                            Intel Core i7-9700K @ 3.60GHz<br>
+                            8 cores, 8 logical processors<br>
+                            Meets Windows 11 requirements
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Memory (RAM)</div>
+                        <div class="compatibility-detail">
+                            16 GB DDR4 @ 3200 MHz<br>
+                            Minimum required: 4 GB<br>
+                            Recommended: 8 GB or more
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Storage</div>
+                        <div class="compatibility-detail">
+                            SSD: 512 GB (120 GB free)<br>
+                            Minimum required: 64 GB storage, 20 GB free<br>
+                            NVMe SSD provides optimal performance
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">TPM (Trusted Platform Module)</div>
+                        <div class="compatibility-detail">
+                            TPM 2.0 enabled<br>
+                            Required for Windows 11 security features<br>
+                            Supports BitLocker encryption
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Secure Boot</div>
+                        <div class="compatibility-detail">
+                            Enabled in UEFI firmware<br>
+                            Required for Windows 11<br>
+                            Protects against rootkits and bootkits
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item warning">
+                    <div class="compatibility-icon">⚠</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Graphics Driver</div>
+                        <div class="compatibility-detail">
+                            NVIDIA GeForce RTX 2060<br>
+                            Current driver: v472.12 (Released 2021)<br>
+                            Recommended: Update to latest driver (v528.49 or newer)<br>
+                            <strong>Action:</strong> Visit nvidia.com/drivers
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Display</div>
+                        <div class="compatibility-detail">
+                            1920 x 1080 resolution<br>
+                            Minimum required: 720p (1280 x 720)<br>
+                            DirectX 12 compatible
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item">
+                    <div class="compatibility-icon">✓</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">Applications</div>
+                        <div class="compatibility-detail">
+                            45 apps scanned<br>
+                            43 compatible with Windows 11<br>
+                            2 apps require updates (see below)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item warning">
+                    <div class="compatibility-icon">⚠</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">App: Adobe Photoshop CC 2018</div>
+                        <div class="compatibility-detail">
+                            May experience performance issues<br>
+                            <strong>Recommendation:</strong> Update to Adobe Photoshop 2022 or later
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compatibility-item warning">
+                    <div class="compatibility-icon">⚠</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">App: Antivirus Software</div>
+                        <div class="compatibility-detail">
+                            Norton 360 v21.0 detected<br>
+                            <strong>Recommendation:</strong> Update to v22.0 or later for full compatibility
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box" style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">Summary</h3>
+                <p>Your PC meets the minimum requirements for Windows 11. We recommend updating your graphics driver and the identified applications before upgrading for the best experience.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentScreen = 0;
+        let selectedScenario = null;
+        let keepOption = 'keep-all';
+        let quizAnswers = {};
+
+        // Scenario selection
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedScenario = this.dataset.scenario;
+                document.getElementById('start-scenario').disabled = false;
+            });
+        });
+
+        document.getElementById('start-scenario').addEventListener('click', function() {
+            goToScreen(1);
+        });
+
+        // Welcome screen radio options
+        document.querySelectorAll('#screen-1 .radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#screen-1 .radio-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                document.getElementById('welcome-next').disabled = false;
+            });
+        });
+
+        document.getElementById('welcome-next').addEventListener('click', function() {
+            goToScreen(2);
+        });
+
+        // License acceptance
+        function toggleCheckbox(id) {
+            const checkbox = document.getElementById(id);
+            checkbox.checked = !checkbox.checked;
+            document.getElementById('license-next').disabled = !checkbox.checked;
+        }
+
+        document.getElementById('license-accept').addEventListener('change', function() {
+            document.getElementById('license-next').disabled = !this.checked;
+        });
+
+        document.getElementById('license-next').addEventListener('click', function() {
+            goToScreen(3);
+            simulateUpdates();
+        });
+
+        // Getting updates simulation
+        function simulateUpdates() {
+            const statuses = [
+                'Checking for updates...',
+                'Connecting to update server...',
+                'Downloading updates...',
+                'Preparing updates...',
+                'Updates complete'
+            ];
+
+            let progress = 0;
+            let statusIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += 5;
+                document.getElementById('update-progress').style.width = progress + '%';
+
+                if (progress % 25 === 0 && statusIndex < statuses.length) {
+                    document.getElementById('update-status').textContent = statuses[statusIndex];
+                    statusIndex++;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => goToScreen(4), 1000);
+                }
+            }, 150);
+        }
+
+        // Choose what to keep
+        document.querySelectorAll('#screen-4 .radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#screen-4 .radio-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                keepOption = radio.value;
+
+                // Show warning for "Nothing" option
+                const warning = document.getElementById('nothing-warning');
+                if (keepOption === 'keep-nothing') {
+                    warning.style.display = 'flex';
+                } else {
+                    warning.style.display = 'none';
+                }
+            });
+        });
+
+        function goToCompatibilityCheck() {
+            goToScreen(5);
+
+            setTimeout(() => {
+                document.getElementById('compat-scanning').style.display = 'none';
+                document.getElementById('compat-results').style.display = 'block';
+
+                // Show appropriate results based on scenario
+                if (selectedScenario === 'space') {
+                    // Redirect to insufficient space screen
+                    setTimeout(() => goToScreen(12), 1500);
+                } else if (selectedScenario === 'compatibility') {
+                    // Redirect to compatibility blocked screen
+                    setTimeout(() => goToScreen(14), 1500);
+                } else {
+                    // Show successful compatibility check
+                    showCompatibilityResults();
+                }
+            }, 3000);
+        }
+
+        function showCompatibilityResults() {
+            const compatList = document.getElementById('compat-list');
+            const results = [
+                { icon: '✓', title: 'Processor', detail: 'Intel Core i7-9700K - Compatible', type: '' },
+                { icon: '✓', title: 'Memory', detail: '16 GB (4 GB required)', type: '' },
+                { icon: '✓', title: 'Disk Space', detail: '120 GB free (20 GB required)', type: '' },
+                { icon: '✓', title: 'TPM', detail: 'TPM 2.0 enabled', type: '' },
+                { icon: '✓', title: 'Secure Boot', detail: 'Enabled', type: '' },
+                { icon: '⚠', title: 'Graphics Driver', detail: 'May need update after installation', type: 'warning' },
+                { icon: '✓', title: 'Applications', detail: '45 compatible, 2 may need attention', type: '' }
+            ];
+
+            compatList.innerHTML = results.map(result => `
+                <div class="compatibility-item ${result.type}">
+                    <div class="compatibility-icon">${result.icon}</div>
+                    <div class="compatibility-content">
+                        <div class="compatibility-title">${result.title}</div>
+                        <div class="compatibility-detail">${result.detail}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('compat-next').style.display = 'inline-block';
+            document.getElementById('compat-next').onclick = () => goToScreen(6);
+        }
+
+        function showDetailedReport() {
+            document.getElementById('detailed-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailed-modal').classList.remove('active');
+        }
+
+        // Ready to install - update summary
+        function updateInstallSummary() {
+            const keepTexts = {
+                'keep-all': 'Personal files and apps',
+                'keep-files': 'Personal files only',
+                'keep-nothing': 'Nothing (clean install)'
+            };
+            document.getElementById('keep-summary').textContent = keepTexts[keepOption];
+        }
+
+        // Installation simulation
+        function startInstallation() {
+            updateInstallSummary();
+            goToScreen(7);
+
+            const phases = [
+                { end: 30, text: 'Copying files' },
+                { end: 60, text: 'Installing features and drivers' },
+                { end: 90, text: 'Configuring settings' },
+                { end: 100, text: 'Finalizing installation' }
+            ];
+
+            let progress = 0;
+            let phaseIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += 1;
+                document.getElementById('install-progress').style.width = progress + '%';
+                document.getElementById('install-percentage').textContent = progress + '%';
+
+                // Update phase text
+                if (phaseIndex < phases.length && progress >= phases[phaseIndex].end) {
+                    phaseIndex++;
+                }
+                if (phaseIndex < phases.length) {
+                    document.getElementById('install-status').textContent = phases[phaseIndex].text + ' (' + progress + '%)';
+                }
+
+                // Simulate restart at 50%
+                if (progress === 50) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        goToScreen(8);
+                        simulateRestart();
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        function simulateRestart() {
+            const statuses = [
+                'Restarting...',
+                'Starting services...',
+                'Please wait...'
+            ];
+
+            let index = 0;
+            const interval = setInterval(() => {
+                document.getElementById('restart-status').textContent = statuses[index % statuses.length];
+                index++;
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                goToScreen(9);
+                simulateUpdatesAfterRestart();
+            }, 4000);
+        }
+
+        function simulateUpdatesAfterRestart() {
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 2;
+                document.getElementById('updates-progress').style.width = progress + '%';
+                document.getElementById('update-percentage').textContent = progress + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => goToScreen(10), 1000);
+                }
+            }, 150);
+        }
+
+        // Insufficient space resolution
+        function resolveSpaceIssue() {
+            goToScreen(13);
+        }
+
+        // Rollback simulation
+        function startRollback() {
+            goToScreen(17);
+
+            const phases = [
+                'Preparing rollback...',
+                'Restoring system files...',
+                'Restoring settings...',
+                'Cleaning up...',
+                'Finalizing...'
+            ];
+
+            let progress = 0;
+            let phaseIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += 2;
+                document.getElementById('rollback-progress').style.width = progress + '%';
+                document.getElementById('rollback-percentage').textContent = progress + '%';
+
+                if (progress % 20 === 0 && phaseIndex < phases.length) {
+                    document.getElementById('rollback-status').textContent = phases[phaseIndex];
+                    phaseIndex++;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => goToScreen(18), 1000);
+                }
+            }, 100);
+        }
+
+        // Quiz functions
+        function startQuiz() {
+            quizAnswers = {};
+            // Reset all quiz options
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.quiz-feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+                fb.textContent = '';
+            });
+            goToScreen(19);
+        }
+
+        function checkAnswer(element, questionNum) {
+            // Prevent re-answering
+            if (quizAnswers[questionNum]) return;
+
+            const isCorrect = element.dataset.answer === 'correct';
+            quizAnswers[questionNum] = isCorrect;
+
+            // Mark all options for this question
+            const options = document.querySelectorAll(`[data-question="${questionNum}"]`);
+            options.forEach(opt => {
+                if (opt.dataset.answer === 'correct') {
+                    opt.classList.add('correct');
+                }
+                if (opt === element && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            // Show feedback
+            const feedback = document.getElementById(`feedback-${questionNum}`);
+            feedback.classList.add('show');
+
+            if (isCorrect) {
+                feedback.classList.add('correct');
+                feedback.innerHTML = '<strong>✓ Correct!</strong> ' + getExplanation(questionNum, true);
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.innerHTML = '<strong>✕ Incorrect.</strong> ' + getExplanation(questionNum, false);
+            }
+        }
+
+        function getExplanation(questionNum, isCorrect) {
+            const explanations = {
+                1: {
+                    correct: 'Windows 11 requires at least 20 GB of available disk space for installation.',
+                    incorrect: 'Windows 11 requires 20 GB of free disk space, not 10 GB. Always verify system requirements before upgrading.'
+                },
+                2: {
+                    correct: 'You have 10 days to roll back after upgrading. After this period, the Windows.old folder is automatically deleted.',
+                    incorrect: 'The correct answer is 10 days. This is a critical timeframe to test applications and system stability after an upgrade.'
+                },
+                3: {
+                    correct: 'This option performs an in-place upgrade, keeping both files and applications intact.',
+                    incorrect: 'The "Keep personal files and apps" option preserves both. Other options either remove apps or everything.'
+                },
+                4: {
+                    correct: 'TPM 2.0 is a hard requirement for Windows 11, providing enhanced security features.',
+                    incorrect: 'Windows 11 requires TPM 2.0 specifically. TPM 1.2 is insufficient for Windows 11 security requirements.'
+                },
+                5: {
+                    correct: 'The rollback option is located in Settings > System > Recovery within the first 10 days after upgrade.',
+                    incorrect: 'The correct path is Settings > System > Recovery. This is where you\'ll find the "Go back" option.'
+                }
+            };
+
+            return explanations[questionNum][isCorrect ? 'correct' : 'incorrect'];
+        }
+
+        // Screen navigation
+        function goToScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            // Handle scenario-specific routing
+            if (screenNum === 1 && selectedScenario === 'rollback') {
+                document.getElementById('screen-15').classList.add('active');
+                currentScreen = 15;
+                return;
+            }
+
+            document.getElementById(`screen-${screenNum}`).classList.add('active');
+            currentScreen = screenNum;
+
+            // Update summary when going to ready screen
+            if (screenNum === 6) {
+                updateInstallSummary();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial screen
+            goToScreen(0);
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailed-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>

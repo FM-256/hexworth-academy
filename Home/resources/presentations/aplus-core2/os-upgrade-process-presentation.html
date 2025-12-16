@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Upgrade Process - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #0078d4;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0078d4;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #0078d4;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #005a9e;
+            font-size: 1.6em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: #0078d4;
+            font-size: 1.3em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        ul, ol {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 25px;
+            right: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #005a9e;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* CompTIA A+ Branding Colors */
+        .aplus-badge {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .col {
+            padding: 20px;
+        }
+
+        /* Three Column Layout */
+        .three-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-card.warning {
+            border-left-color: #ffb900;
+            background: #fff4ce;
+        }
+
+        .info-card.success {
+            border-left-color: #107c10;
+            background: #f0fdf4;
+        }
+
+        .info-card.exam-tip {
+            border-left-color: #e52d27;
+            background: #fef2f2;
+        }
+
+        .info-card.critical {
+            border-left-color: #d13438;
+            background: #ffebee;
+        }
+
+        /* Feature Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight-box li, .highlight-box p {
+            color: white;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .command-box .prompt {
+            color: #6a9955;
+        }
+
+        .command-box .cmd {
+            color: #dcdcaa;
+        }
+
+        /* Upgrade Path Visual */
+        .upgrade-path {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .os-box {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.3em;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .os-box.old {
+            background: linear-gradient(135deg, #666, #444);
+        }
+
+        .os-box.current {
+            background: linear-gradient(135deg, #7fba00, #5e9000);
+        }
+
+        .arrow {
+            font-size: 2.5em;
+            color: #0078d4;
+            font-weight: bold;
+        }
+
+        .check-mark {
+            color: #107c10;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .x-mark {
+            color: #d13438;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #0078d4;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .checklist-item .checkbox {
+            font-size: 1.5em;
+            color: #0078d4;
+        }
+
+        /* Process Steps */
+        .process-step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #0078d4;
+            position: relative;
+            padding-left: 70px;
+        }
+
+        .process-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0078d4;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Requirements Grid */
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .req-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #0078d4;
+        }
+
+        .req-item h4 {
+            margin-top: 0;
+            color: #0078d4;
+        }
+
+        .req-item .spec {
+            font-weight: bold;
+            color: #107c10;
+            font-size: 1.1em;
+        }
+
+        /* Issue Box */
+        .issue-box {
+            background: #fff4ce;
+            border-left: 5px solid #ffb900;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .issue-box h4 {
+            margin-top: 0;
+            color: #c87000;
+        }
+
+        .solution {
+            color: #107c10;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Windows Logo Style */
+        .windows-logo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+
+        .windows-logo div {
+            background: #0078d4;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 20px 20px 20px 60px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: #0078d4;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px #0078d4;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .two-col,
+            .three-col,
+            .req-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.8em; }
+
+            .slide {
+                padding: 30px;
+            }
+
+            .upgrade-path {
+                flex-direction: column;
+            }
+        }
+
+        /* Speaker Notes (hidden by default) */
+        .speaker-notes {
+            display: none;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='../../../index.html'">&#8592; Back to Catalog</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="windows-logo">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h1>Operating System Upgrade Process</h1>
+            <p class="subtitle">Planning, Executing & Troubleshooting OS Upgrades</p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <span class="aplus-badge">CompTIA A+ 220-1102</span>
+            </div>
+
+            <div class="upgrade-path">
+                <div class="os-box old">Windows 7</div>
+                <div class="arrow">→</div>
+                <div class="os-box old">Windows 8.1</div>
+                <div class="arrow">→</div>
+                <div class="os-box">Windows 10</div>
+                <div class="arrow">→</div>
+                <div class="os-box current">Windows 11</div>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px; color: #666; font-size: 1.1em;">
+                Master the complete OS upgrade lifecycle from planning through post-upgrade verification
+            </p>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This presentation covers CompTIA A+ Core 2 objectives related to OS installation and upgrade processes. We'll walk through the entire upgrade lifecycle including planning, compatibility checks, execution methods, troubleshooting, and rollback options. This is critical knowledge for real-world IT support scenarios.
+            </div>
+
+            <span class="slide-number">Slide 1 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide">
+            <h2>Learning Objectives</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.9</p>
+
+            <div class="highlight-box">
+                <h3>By the end of this presentation, you will be able to:</h3>
+                <ul>
+                    <li>Plan an OS upgrade properly with comprehensive pre-upgrade checks</li>
+                    <li>Verify hardware and software compatibility before upgrading</li>
+                    <li>Execute in-place upgrade installations using multiple methods</li>
+                    <li>Troubleshoot common upgrade issues and failures</li>
+                    <li>Understand rollback options and recovery procedures</li>
+                    <li>Perform critical post-upgrade verification tasks</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Exam Coverage:</strong> OS installation and upgrade processes are heavily tested on A+ exams. Expect scenario-based questions about upgrade paths, compatibility requirements, and troubleshooting upgrade failures.
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Key Exam Tips:</strong> Know valid upgrade paths, Windows 11 hardware requirements (TPM 2.0, Secure Boot), backup importance, the 10-day rollback window, and Windows.old folder purpose.
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card critical">
+                <strong>Golden Rule of OS Upgrades:</strong> ALWAYS create a full system backup before starting any OS upgrade. No backup = no upgrade. This cannot be overstated!
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Emphasize that OS upgrades are high-stakes operations. A failed upgrade without backup can result in complete data loss. The learning objectives align with real-world IT support tasks - technicians must be able to recommend, plan, and execute upgrades safely. The 10-day rollback window and Windows.old folder are frequently tested concepts.
+            </div>
+
+            <span class="slide-number">Slide 2 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 3: Why Upgrade? -->
+        <div class="slide">
+            <h2>Why Upgrade Your Operating System?</h2>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card success">
+                        <h4>1. Security Updates & Patches</h4>
+                        <p>Older OS versions stop receiving security updates, leaving systems vulnerable to exploits and malware. Upgrading ensures continued security patch support.</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>2. New Features & Improvements</h4>
+                        <p>Modern OS versions include performance optimizations, new productivity features, better UI/UX, and enhanced capabilities.</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>3. Enhanced Hardware Support</h4>
+                        <p>Newer operating systems include updated drivers and support for modern hardware like NVMe drives, USB 4.0, Wi-Fi 6E, and newer CPUs/GPUs.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card warning">
+                        <h4>4. End of Support (EOL)</h4>
+                        <p><strong>Critical Dates:</strong></p>
+                        <ul style="font-size: 1em;">
+                            <li>Windows 7: January 14, 2020 (EOL)</li>
+                            <li>Windows 8.1: January 10, 2023 (EOL)</li>
+                            <li>Windows 10: October 14, 2025 (Approaching)</li>
+                        </ul>
+                        <p style="margin-top: 10px;">After EOL, no security patches are released, making systems increasingly vulnerable.</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>5. Software Compatibility Requirements</h4>
+                        <p>Many modern applications require newer OS versions. Older OS versions can't run the latest software versions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Justification</h3>
+                <p>Organizations upgrade for compliance requirements (HIPAA, PCI-DSS), vendor support contracts, and to reduce security risks. Running unsupported OS versions can violate industry regulations and insurance policies.</p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Remember that security is the PRIMARY driver for OS upgrades. If a scenario mentions an unsupported/EOL operating system, recommend immediate upgrade planning.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Security is the number one reason to upgrade. EOL operating systems receive ZERO security updates, making them vulnerable to all new exploits. Windows 10 EOL in October 2025 is approaching - organizations should be planning Windows 11 migrations now. Emphasize that "it still works" is not a valid reason to stay on unsupported OS - the security risks are too high.
+            </div>
+
+            <span class="slide-number">Slide 3 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 4: Upgrade vs Clean Install Decision -->
+        <div class="slide">
+            <h2>Upgrade vs Clean Install</h2>
+            <p class="subtitle">Choosing the Right Installation Method</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card success">
+                        <h3>In-Place Upgrade</h3>
+                        <p><strong>Preserves data, settings, and applications</strong></p>
+                        <h4>Advantages:</h4>
+                        <ul style="font-size: 1em;">
+                            <li>Faster process (no reinstallation)</li>
+                            <li>All programs remain installed</li>
+                            <li>User settings preserved</li>
+                            <li>Less user downtime</li>
+                            <li>No data migration needed</li>
+                        </ul>
+                        <h4>Disadvantages:</h4>
+                        <ul style="font-size: 1em;">
+                            <li>Carries over legacy issues/bloat</li>
+                            <li>Registry clutter remains</li>
+                            <li>May have compatibility problems</li>
+                            <li>Larger final installation size</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card warning">
+                        <h3>Clean Install</h3>
+                        <p><strong>Fresh start - wipes everything</strong></p>
+                        <h4>Advantages:</h4>
+                        <ul style="font-size: 1em;">
+                            <li>Eliminates all legacy problems</li>
+                            <li>Clean registry and file system</li>
+                            <li>Better performance</li>
+                            <li>Smaller installation footprint</li>
+                            <li>Forces cleanup of old software</li>
+                        </ul>
+                        <h4>Disadvantages:</h4>
+                        <ul style="font-size: 1em;">
+                            <li>Must reinstall all applications</li>
+                            <li>Manual data backup/restore required</li>
+                            <li>Reconfigure all settings</li>
+                            <li>More time-consuming</li>
+                            <li>Greater user downtime</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Decision Criteria</h3>
+                <div class="two-col">
+                    <div>
+                        <h4>Choose Upgrade When:</h4>
+                        <ul>
+                            <li>System is relatively clean and stable</li>
+                            <li>Time/downtime is limited</li>
+                            <li>Many applications to reinstall</li>
+                            <li>User needs immediate continuity</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Choose Clean Install When:</h4>
+                        <ul>
+                            <li>System has performance issues</li>
+                            <li>Persistent errors/corruption present</li>
+                            <li>Malware infection suspected</li>
+                            <li>Upgrading from 32-bit to 64-bit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h4>Hybrid Approach: Clean Install + Data Migration</h4>
+                <p>Back up user data, perform clean install, then restore data files (not applications). Provides clean OS with preserved user documents. Best of both worlds for problematic systems.</p>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> In-place upgrade is the most common method for business deployments due to time constraints. Clean install is preferred for problem systems or when maximum performance is needed. Note that 32-bit to 64-bit REQUIRES clean install - no upgrade path exists. The hybrid approach is often the best solution for home users with cluttered systems.
+            </div>
+
+            <span class="slide-number">Slide 4 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 5: Pre-Upgrade Planning -->
+        <div class="slide">
+            <h2>Pre-Upgrade Planning Checklist</h2>
+            <p class="subtitle">Critical Steps Before Starting Upgrade</p>
+
+            <div class="checklist">
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>1. Check System Requirements</strong><br>
+                        Verify hardware meets minimum and recommended specifications for target OS
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>2. Verify Hardware Compatibility</strong><br>
+                        Check CPU, TPM, Secure Boot, storage, and memory compatibility
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>3. Check Software Compatibility</strong><br>
+                        Verify critical applications will work on new OS version
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>4. Inventory Current Settings</strong><br>
+                        Document network settings, printer configurations, custom preferences
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>5. Document License Keys</strong><br>
+                        Record Windows product key, Office keys, and other software licenses
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>6. Create Full System Backup</strong><br>
+                        Complete system image + user data backup (MOST CRITICAL STEP!)
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>7. Free Up Disk Space</strong><br>
+                        Ensure adequate free space (minimum 20GB recommended)
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>8. Update Current Drivers</strong><br>
+                        Install latest drivers for current OS before upgrading
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card critical">
+                <strong>CRITICAL:</strong> Never skip the backup step! Even with the 10-day rollback option, backups are essential insurance against upgrade failures, hardware problems, or corruption.
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Backup is ALWAYS the first critical step. Any scenario asking about upgrade preparation should include full system backup as the primary answer.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This checklist should be followed religiously for every upgrade. The backup step cannot be emphasized enough - it's your only safety net if something goes wrong. Document license keys before upgrading, especially for older software that may not have cloud activation. Free disk space is often overlooked but critical - Windows needs substantial space for the upgrade process.
+            </div>
+
+            <span class="slide-number">Slide 5 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 6: Hardware Compatibility Check -->
+        <div class="slide">
+            <h2>Hardware Compatibility Check</h2>
+            <p class="subtitle">Windows 11 Specific Requirements</p>
+
+            <div class="info-card warning">
+                <p><strong>Windows 11 introduced strict hardware requirements</strong> that many older systems cannot meet. These requirements are enforced during upgrade.</p>
+            </div>
+
+            <div class="req-grid">
+                <div class="req-item">
+                    <h4>Processor (CPU)</h4>
+                    <p class="spec">1 GHz or faster with 2+ cores</p>
+                    <p class="spec">64-bit processor required</p>
+                    <p>Must be on Microsoft's compatible CPU list (8th gen Intel or newer, AMD Ryzen 2000 series or newer)</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>Memory (RAM)</h4>
+                    <p class="spec">4 GB minimum</p>
+                    <p class="spec">8 GB recommended</p>
+                    <p>More RAM improves multitasking performance</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>Storage</h4>
+                    <p class="spec">64 GB minimum</p>
+                    <p class="spec">128+ GB recommended</p>
+                    <p>SSD strongly recommended for best performance</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>TPM (Trusted Platform Module)</h4>
+                    <p class="spec">TPM 2.0 REQUIRED</p>
+                    <p>Hardware security chip for encryption/security features. Major blocker for older systems.</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>UEFI Firmware</h4>
+                    <p class="spec">UEFI, Secure Boot capable</p>
+                    <p>Legacy BIOS not supported. Must have UEFI with Secure Boot capability enabled.</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>Graphics Card</h4>
+                    <p class="spec">DirectX 12 compatible</p>
+                    <p class="spec">WDDM 2.0 driver</p>
+                    <p>Most cards from 2016+ meet this requirement</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>Display</h4>
+                    <p class="spec">720p resolution minimum</p>
+                    <p class="spec">8-bit color depth</p>
+                    <p>Diagonal screen size greater than 9 inches</p>
+                </div>
+
+                <div class="req-item">
+                    <h4>Internet Connection</h4>
+                    <p class="spec">Required for initial setup</p>
+                    <p>Windows 11 Home requires Microsoft account (Internet needed)</p>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Check TPM status from PowerShell</span><br>
+                <span class="cmd">Get-Tpm</span><br><br>
+                <span class="prompt"># Check Secure Boot status</span><br>
+                <span class="cmd">Confirm-SecureBootUEFI</span><br>
+                <span class="output"># Returns True if Secure Boot is enabled</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>PC Health Check Tool</h3>
+                <p>Microsoft provides the <strong>PC Health Check</strong> application to verify Windows 11 compatibility. Download from Microsoft.com and run to get a comprehensive compatibility report including specific issues blocking upgrade.</p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Memorize "TPM 2.0" and "Secure Boot" - these are the PRIMARY blockers for Windows 11 upgrades and appear frequently on exams. If a scenario describes an older PC failing Windows 11 upgrade, TPM/Secure Boot is likely the issue.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Windows 11's TPM 2.0 requirement is the biggest compatibility barrier. Many PCs from 2017 and earlier lack TPM 2.0 chips. Some systems have TPM but it's disabled in BIOS - enabling it can resolve compatibility. The CPU generation requirement also blocks many otherwise capable systems. PC Health Check tool is essential for pre-upgrade validation.
+            </div>
+
+            <span class="slide-number">Slide 6 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 7: Software Compatibility -->
+        <div class="slide">
+            <h2>Software Compatibility Verification</h2>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Critical Applications to Check</h3>
+                    <div class="info-card">
+                        <h4>Business-Critical Applications</h4>
+                        <p>Check vendor websites for compatibility statements with target OS. Contact vendors if information not available.</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Accounting software (QuickBooks, etc.)</li>
+                            <li>Industry-specific applications</li>
+                            <li>Custom/proprietary software</li>
+                            <li>Database applications</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card warning">
+                        <h4>Device Drivers</h4>
+                        <p>Download Windows 11-compatible drivers BEFORE upgrading:</p>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Graphics card (GPU)</strong> - Critical for display</li>
+                            <li><strong>Network adapter</strong> - Critical for connectivity</li>
+                            <li><strong>Chipset drivers</strong> - Core system functionality</li>
+                            <li><strong>Printer drivers</strong> - May not be compatible</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card">
+                        <h4>Antivirus Software</h4>
+                        <p>Verify your antivirus is Windows 11 compatible. Some older versions may block upgrade or cause boot issues.</p>
+                        <p><strong>Best Practice:</strong> Temporarily uninstall third-party antivirus before upgrade, use Windows Defender during upgrade, then reinstall updated version.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Peripheral Software</h4>
+                        <p>Check compatibility for:</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Printer management software</li>
+                            <li>Scanner software</li>
+                            <li>Webcam utilities</li>
+                            <li>Gaming peripheral software (RGB, macro)</li>
+                            <li>Backup software</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>Windows Compatibility Report</h4>
+                        <p>During upgrade, Windows generates compatibility report showing:</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Applications that must be uninstalled</li>
+                            <li>Drivers that may have issues</li>
+                            <li>Settings that will change</li>
+                        </ul>
+                        <p>Review this carefully before proceeding!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compatibility Testing Strategy</h3>
+                <ol>
+                    <li><strong>Create inventory</strong> of all installed software</li>
+                    <li><strong>Categorize by criticality</strong> (critical vs nice-to-have)</li>
+                    <li><strong>Check vendor websites</strong> for compatibility information</li>
+                    <li><strong>Test in VM if possible</strong> - upgrade test system first</li>
+                    <li><strong>Have alternatives ready</strong> for incompatible software</li>
+                    <li><strong>Plan for driver updates</strong> immediately post-upgrade</li>
+                </ol>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Driver compatibility (especially network and graphics) is a common upgrade issue. Questions may describe systems losing network connectivity after upgrade - answer would involve downloading compatible drivers beforehand or using different system to download drivers post-upgrade.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Software compatibility is often overlooked but can be a major blocker. Business-critical applications must be verified - if they won't work on Windows 11, the upgrade may need to be delayed. Antivirus software is a common culprit for upgrade failures - it may interfere with the upgrade process. Having driver packages downloaded beforehand is crucial insurance. Network drivers are especially critical - without working network, you can't download fixes.
+            </div>
+
+            <span class="slide-number">Slide 7 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 8: Backup Strategy -->
+        <div class="slide">
+            <h2>Backup Strategy</h2>
+            <p class="subtitle">CRITICAL - Never Skip This Step!</p>
+
+            <div class="info-card critical">
+                <h3>The Golden Rule</h3>
+                <p style="font-size: 1.3em; font-weight: bold;">NO BACKUP = NO UPGRADE</p>
+                <p>Even with Windows' built-in rollback features, a complete backup is your ultimate safety net. Hardware failures, power outages, or corruption during upgrade can make rollback impossible.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What to Back Up</h3>
+
+                    <div class="process-step" data-step="1">
+                        <h4>Full System Image Backup</h4>
+                        <p>Complete snapshot of entire system drive including OS, programs, and settings. Use Windows Backup, third-party tools (Macrium, Acronis), or drive cloning.</p>
+                    </div>
+
+                    <div class="process-step" data-step="2">
+                        <h4>User Data Files</h4>
+                        <p>Documents, pictures, videos, downloads, desktop files. Back up entire user profile folder (C:\Users\[username]).</p>
+                    </div>
+
+                    <div class="process-step" data-step="3">
+                        <h4>Application Settings</h4>
+                        <p>Browser bookmarks, email archives (Outlook PST files), application configurations, saved passwords (export from browser).</p>
+                    </div>
+
+                    <div class="process-step" data-step="4">
+                        <h4>Product Keys & Licenses</h4>
+                        <p>Windows product key, Microsoft Office keys, other software licenses. Use tools like ProduKey to extract keys.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Backup Methods</h3>
+
+                    <div class="info-card success">
+                        <h4>System Image (Recommended)</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Windows Backup and Restore</strong> (built-in)</li>
+                            <li><strong>Macrium Reflect</strong> (free version available)</li>
+                            <li><strong>Acronis True Image</strong> (paid)</li>
+                            <li><strong>Veeam Agent</strong> (free)</li>
+                        </ul>
+                        <p><strong>Advantage:</strong> Complete restoration to exact previous state</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>File-Level Backup</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Windows File History</strong></li>
+                            <li><strong>OneDrive/Cloud Sync</strong></li>
+                            <li><strong>External drive copy</strong></li>
+                            <li><strong>Network share</strong></li>
+                        </ul>
+                        <p><strong>Advantage:</strong> Easy selective restoration of files</p>
+                    </div>
+
+                    <div class="info-card warning">
+                        <h4>Best Practice: 3-2-1 Rule</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>3</strong> copies of data</li>
+                            <li><strong>2</strong> different media types</li>
+                            <li><strong>1</strong> copy offsite/cloud</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Critical: Test Your Backup!</h3>
+                <p>A backup you haven't tested is worthless. Before upgrading, verify you can:</p>
+                <ul>
+                    <li>Access backup files/image from external media</li>
+                    <li>Boot from recovery media and see backup image</li>
+                    <li>Restore at least one test file to verify backup integrity</li>
+                </ul>
+                <p><strong>An untested backup is not a backup - it's a hope!</strong></p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Any upgrade scenario question should include "create full system backup" as a first step. This is always the correct answer for "what should you do before upgrading?"
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Cannot overemphasize backup importance. System image backups provide complete rollback capability independent of Windows' built-in rollback. Backup testing is often forgotten - many people discover their backup was incomplete or corrupted only when they need it. Store backup on external drive, NOT same drive being upgraded. OneDrive/cloud backup is good for documents but not sufficient for system recovery.
+            </div>
+
+            <span class="slide-number">Slide 8 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 9: Windows Upgrade Paths -->
+        <div class="slide">
+            <h2>Valid Windows Upgrade Paths</h2>
+            <p class="subtitle">Supported In-Place Upgrade Scenarios</p>
+
+            <div class="upgrade-path">
+                <div class="os-box old">Windows 7</div>
+                <div class="arrow">→</div>
+                <div class="os-box">Windows 10</div>
+                <div class="check-mark">✓ Supported</div>
+            </div>
+
+            <div class="upgrade-path">
+                <div class="os-box old">Windows 8.1</div>
+                <div class="arrow">→</div>
+                <div class="os-box">Windows 10</div>
+                <div class="check-mark">✓ Supported</div>
+            </div>
+
+            <div class="upgrade-path">
+                <div class="os-box">Windows 10</div>
+                <div class="arrow">→</div>
+                <div class="os-box current">Windows 11</div>
+                <div class="check-mark">✓ Supported</div>
+            </div>
+
+            <div class="upgrade-path">
+                <div class="os-box old">Windows 7</div>
+                <div class="arrow">→</div>
+                <div class="os-box current">Windows 11</div>
+                <div class="x-mark">✗ NOT Supported</div>
+            </div>
+
+            <div class="info-card warning">
+                <h3>Important Upgrade Path Rules</h3>
+                <ul>
+                    <li><strong>Windows 7/8.1 → Windows 11:</strong> NOT supported for in-place upgrade. Must upgrade to Windows 10 first, THEN to Windows 11, OR perform clean install.</li>
+                    <li><strong>Windows 10 → Windows 11:</strong> Direct upgrade supported if hardware requirements met.</li>
+                    <li><strong>32-bit → 64-bit:</strong> NEVER supported for in-place upgrade. MUST perform clean install.</li>
+                    <li><strong>Older Windows versions:</strong> Windows Vista, XP, etc. have no upgrade path to modern Windows - clean install only.</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card success">
+                        <h3>Architecture Considerations</h3>
+                        <h4>Supported:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>32-bit Windows 7 → 32-bit Windows 10 <span class="check-mark">✓</span></li>
+                            <li>64-bit Windows 7 → 64-bit Windows 10 <span class="check-mark">✓</span></li>
+                            <li>64-bit Windows 10 → 64-bit Windows 11 <span class="check-mark">✓</span></li>
+                        </ul>
+                        <h4>NOT Supported:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>32-bit → 64-bit (any version) <span class="x-mark">✗</span></li>
+                            <li>64-bit → 32-bit (any version) <span class="x-mark">✗</span></li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Note:</strong> Windows 11 is 64-bit only - no 32-bit version exists.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card">
+                        <h3>Cross-Edition Upgrade Paths</h3>
+                        <p>Within same major version, you can upgrade editions:</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Home → Pro <span class="check-mark">✓</span></li>
+                            <li>Pro → Enterprise <span class="check-mark">✓</span></li>
+                            <li>Education ↔ Enterprise <span class="check-mark">✓</span></li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Cannot downgrade editions:</strong></p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Pro → Home <span class="x-mark">✗</span></li>
+                            <li>Enterprise → Pro <span class="x-mark">✗</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Remember: Windows 7/8.1 cannot directly upgrade to Windows 11. Must go to Windows 10 first. Also memorize that 32-bit to 64-bit ALWAYS requires clean install, never in-place upgrade. Windows 11 is 64-bit only!
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> The upgrade path from Windows 7/8.1 to Windows 11 is a common confusion point. You MUST go through Windows 10 first, or perform clean install. This is frequently tested. The 32-bit to 64-bit limitation is also heavily tested - many students forget this requires clean install. Emphasize that Windows 11 has no 32-bit version at all.
+            </div>
+
+            <span class="slide-number">Slide 9 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 10: Edition Upgrade Paths -->
+        <div class="slide">
+            <h2>Windows Edition Upgrade Paths</h2>
+            <p class="subtitle">Upgrading Between Home, Pro, Enterprise</p>
+
+            <div class="highlight-box">
+                <h3>Edition Upgrade Overview</h3>
+                <p>You can upgrade to a higher edition of Windows (Home → Pro → Enterprise) without reinstalling. However, you CANNOT downgrade editions without clean install.</p>
+            </div>
+
+            <div class="upgrade-path" style="flex-direction: column; align-items: center;">
+                <div class="os-box" style="background: linear-gradient(135deg, #00a4ef, #0078d4);">Windows Home</div>
+                <div class="arrow" style="transform: rotate(90deg); margin: 10px 0;">→</div>
+                <div class="os-box" style="background: linear-gradient(135deg, #7fba00, #5e9000);">Windows Pro</div>
+                <div class="arrow" style="transform: rotate(90deg); margin: 10px 0;">→</div>
+                <div class="os-box" style="background: linear-gradient(135deg, #ffb900, #d39300);">Windows Enterprise</div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Home → Pro Upgrade</h3>
+                    <div class="info-card success">
+                        <h4>Process:</h4>
+                        <ol style="font-size: 0.95em;">
+                            <li>Settings → System → Activation</li>
+                            <li>Click "Upgrade your edition of Windows"</li>
+                            <li>Click "Go to Store" or enter Pro product key</li>
+                            <li>Complete purchase/activation</li>
+                            <li>Restart when prompted</li>
+                        </ol>
+                        <p style="margin-top: 10px;"><strong>Result:</strong> Gain all Pro features (BitLocker, Domain Join, Group Policy, Remote Desktop Host, Hyper-V)</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Cost Consideration</h4>
+                        <p>Home → Pro upgrade costs ~$99 when purchased through Windows Store. Often cheaper to buy retail Pro license.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Pro → Enterprise Upgrade</h3>
+                    <div class="info-card success">
+                        <h4>Volume Licensing Only</h4>
+                        <p>Enterprise edition is NOT available for retail purchase. Requires:</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Volume Licensing agreement (EA, CSP, etc.)</li>
+                            <li>Minimum 5 licenses (typically)</li>
+                            <li>Enterprise product key or KMS activation</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Result:</strong> Gain Enterprise-exclusive features (AppLocker, DirectAccess, Credential Guard, etc.)</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Education Edition</h4>
+                        <p>Parallel to Enterprise, available only to academic institutions through academic volume licensing. Feature parity with Enterprise.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <h3>Downgrade Restrictions</h3>
+                <p><strong>You CANNOT downgrade editions via in-place upgrade:</strong></p>
+                <ul>
+                    <li>Pro → Home: NOT possible (requires clean install)</li>
+                    <li>Enterprise → Pro: NOT possible (requires clean install)</li>
+                    <li>Enterprise → Home: NOT possible (requires clean install)</li>
+                </ul>
+                <p style="margin-top: 10px;">Windows editions follow an additive model - you can only add features, not remove them, without clean install.</p>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Check current Windows edition</span><br>
+                <span class="cmd">winver</span><br>
+                <span class="output"># Or use PowerShell:</span><br>
+                <span class="cmd">Get-ComputerInfo | Select WindowsProductName, WindowsEditionId</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Remember that edition upgrades (Home→Pro→Enterprise) are one-way only. You can upgrade to higher edition, but cannot downgrade without clean install. Enterprise is volume-licensing only, not available retail.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Edition upgrades are simple and non-destructive - all data and programs remain intact. Home to Pro upgrade is common for users who later need business features. Pro to Enterprise requires volume licensing agreement - small businesses typically can't access Enterprise. Downgrading editions requires clean install because removing features could break dependencies.
+            </div>
+
+            <span class="slide-number">Slide 10 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 11: In-Place Upgrade Process -->
+        <div class="slide">
+            <h2>In-Place Upgrade Process</h2>
+            <p class="subtitle">Running Setup from Within Windows</p>
+
+            <div class="highlight-box">
+                <h3>In-Place Upgrade Overview</h3>
+                <p>In-place upgrade installs new Windows version while preserving files, settings, and applications. Setup.exe runs from within current Windows installation.</p>
+            </div>
+
+            <div class="process-step" data-step="1">
+                <h4>Download Installation Media</h4>
+                <p>Obtain Windows 10/11 installation files via Media Creation Tool, download ISO from Microsoft, or use installation DVD/USB. Verify download integrity.</p>
+            </div>
+
+            <div class="process-step" data-step="2">
+                <h4>Run Setup.exe from Running Windows</h4>
+                <p>Double-click setup.exe from installation media WHILE logged into current Windows. Do NOT boot from media - run from within Windows for in-place upgrade.</p>
+            </div>
+
+            <div class="process-step" data-step="3">
+                <h4>Choose "Keep Personal Files and Apps"</h4>
+                <p>Setup offers three options:<br>
+                • <strong>Keep personal files and apps</strong> (in-place upgrade) ← Choose this<br>
+                • Keep personal files only<br>
+                • Nothing (clean install)</p>
+            </div>
+
+            <div class="process-step" data-step="4">
+                <h4>System Compatibility Checks Run Automatically</h4>
+                <p>Windows setup verifies hardware requirements, checks for incompatible software, scans for driver issues. Compatibility report shows any blockers before proceeding.</p>
+            </div>
+
+            <div class="process-step" data-step="5">
+                <h4>Installation Proceeds Automatically</h4>
+                <p>Setup copies files, installs new Windows, migrates settings and applications. Progress indicator shows percentage complete. Process takes 30-90+ minutes depending on hardware.</p>
+            </div>
+
+            <div class="process-step" data-step="6">
+                <h4>Multiple Automatic Restarts</h4>
+                <p>System restarts several times during upgrade. Each restart is normal - do NOT interrupt! After final restart, Windows finishes configuration and first-time setup.</p>
+            </div>
+
+            <div class="info-card critical">
+                <h3>Critical Warnings</h3>
+                <ul>
+                    <li><strong>Do NOT interrupt power!</strong> Power loss during upgrade can corrupt Windows installation</li>
+                    <li><strong>Keep laptops plugged in!</strong> Do not run upgrade on battery power</li>
+                    <li><strong>Do NOT force restart!</strong> Progress may appear stuck but Windows is working - wait at least 2 hours before considering intervention</li>
+                    <li><strong>Disconnect unnecessary peripherals</strong> - Remove USB devices, external drives (except backup), printers</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Key phrase is "run setup.exe from within Windows" for in-place upgrade. If setup is run from boot media, it will offer clean install only. The "Keep personal files and apps" option is what makes it an in-place upgrade.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Running setup.exe from within Windows is the key to in-place upgrade. If you boot from USB/DVD and run setup, you'll get clean install options only. The compatibility check may identify incompatible software that must be uninstalled first. Multiple restarts are normal - some upgrades restart 5+ times. Patience is critical - perceived "stuck" upgrades are usually just slow.
+            </div>
+
+            <span class="slide-number">Slide 11 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 12: Windows Update Method -->
+        <div class="slide">
+            <h2>Upgrade via Windows Update</h2>
+            <p class="subtitle">Easiest Method for Most Users</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Process Overview</h3>
+                    <div class="process-step" data-step="1">
+                        <h4>Open Windows Update</h4>
+                        <p>Settings → Update & Security → Windows Update<br>(Windows 11: Settings → Windows Update)</p>
+                    </div>
+
+                    <div class="process-step" data-step="2">
+                        <h4>Check for Updates</h4>
+                        <p>Click "Check for updates" button. Windows contacts Microsoft servers to check for available feature updates.</p>
+                    </div>
+
+                    <div class="process-step" data-step="3">
+                        <h4>Feature Update Offered</h4>
+                        <p>If compatible, you'll see "Feature update to Windows 11" or similar. Click "Download and install".</p>
+                    </div>
+
+                    <div class="process-step" data-step="4">
+                        <h4>Download & Installation</h4>
+                        <p>Windows downloads upgrade files in background. Once downloaded, prompts to schedule installation or install now.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Advantages & Limitations</h3>
+                    <div class="info-card success">
+                        <h4>Advantages</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Simplest method - no media creation needed</li>
+                            <li>Automatic compatibility checking</li>
+                            <li>Downloads in background - no disruption</li>
+                            <li>Scheduled installation during off-hours</li>
+                            <li>Automatic rollback if major issues detected</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card warning">
+                        <h4>Limitations</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Requires Internet connection throughout</li>
+                            <li>Gradual rollout - may not be offered immediately</li>
+                            <li>Limited control over upgrade timing</li>
+                            <li>Can't perform offline upgrade</li>
+                            <li>May be delayed for incompatible systems</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Windows 11 Upgrade Offer in Windows Update</h3>
+                <p>Windows 10 users with compatible hardware will see "Windows 11 is ready - and it's free!" in Windows Update. This triggers the same in-place upgrade process but managed entirely through Windows Update interface.</p>
+                <ul>
+                    <li>Compatibility checked automatically before offering</li>
+                    <li>One-click upgrade initiation</li>
+                    <li>Download happens in background over time</li>
+                    <li>Installation scheduled during inactive hours</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Gradual Rollout Strategy</h3>
+                <p>Microsoft doesn't offer feature updates to all devices immediately. Updates roll out in phases:</p>
+                <ul style="font-size: 0.95em;">
+                    <li><strong>Phase 1:</strong> Newer, compatible devices (seekers)</li>
+                    <li><strong>Phase 2:</strong> Broader deployment to compatible devices</li>
+                    <li><strong>Phase 3:</strong> All remaining compatible devices</li>
+                    <li><strong>Blocked:</strong> Devices with known compatibility issues</li>
+                </ul>
+                <p style="margin-top: 10px;">If update not offered but you want to upgrade, use Media Creation Tool for immediate access.</p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Windows Update method is the recommended method for most users - simplest and safest. However, if scenario requires offline upgrade or immediate upgrade (not waiting for rollout), Media Creation Tool is the answer.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Windows Update is the "easy button" for upgrades. Microsoft controls rollout to prevent widespread issues - if they detect problems, they can pause rollout. Being in later rollout phases means more bugs will be fixed before you upgrade. Some devices may be blocked from Windows Update upgrade path due to compatibility issues - use PC Health Check to determine why.
+            </div>
+
+            <span class="slide-number">Slide 12 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 13: Media Creation Tool Method -->
+        <div class="slide">
+            <h2>Media Creation Tool Method</h2>
+            <p class="subtitle">Maximum Control and Offline Capability</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>When to Use This Method</h3>
+                    <div class="info-card success">
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Immediate upgrade needed</strong> - Don't want to wait for Windows Update rollout</li>
+                            <li><strong>Offline installation required</strong> - Limited or no Internet connectivity</li>
+                            <li><strong>Multiple upgrades</strong> - Same media can upgrade many PCs</li>
+                            <li><strong>More control</strong> - Choose exact upgrade timing and options</li>
+                            <li><strong>Troubleshooting</strong> - Windows Update upgrade failing</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Process Steps</h3>
+                    <div class="process-step" data-step="1">
+                        <h4>Download Media Creation Tool</h4>
+                        <p>Visit microsoft.com/software-download<br>Download appropriate tool (Windows 10 or Windows 11)</p>
+                    </div>
+
+                    <div class="process-step" data-step="2">
+                        <h4>Create Installation Media</h4>
+                        <p>Run tool, choose "Create installation media". Select USB flash drive (8GB+) or ISO file option.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="process-step" data-step="3">
+                        <h4>Choose Architecture & Edition</h4>
+                        <p>Select 64-bit, language, and edition. Use "recommended options" for current PC or customize for different system.</p>
+                    </div>
+
+                    <div class="process-step" data-step="4">
+                        <h4>Download & Create Media</h4>
+                        <p>Tool downloads Windows installation files (4-6 GB) and creates bootable USB or ISO file. Takes 20-60 minutes depending on Internet speed.</p>
+                    </div>
+
+                    <div class="process-step" data-step="5">
+                        <h4>Run Setup from Media</h4>
+                        <p>While logged into current Windows, open USB drive or mount ISO, run setup.exe. Choose "Keep personal files and apps" for in-place upgrade.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>ISO vs USB Drive</h4>
+                        <p><strong>USB:</strong> Directly bootable, convenient, portable<br>
+                        <strong>ISO:</strong> Can create multiple USBs, store for future use, mount in Windows without USB</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Advantages of Media Creation Tool</h3>
+                <ul>
+                    <li><strong>Latest version always:</strong> Tool downloads current Windows build, not whatever came with upgrade offer</li>
+                    <li><strong>Offline capability:</strong> Once created, media works without Internet connection</li>
+                    <li><strong>Reusable:</strong> Same USB can upgrade multiple PCs (within licensing terms)</li>
+                    <li><strong>Bypass blocks:</strong> Can bypass some Windows Update compatibility holds</li>
+                    <li><strong>Troubleshooting:</strong> Useful for repair installations if Windows Update path fails</li>
+                </ul>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Mount ISO file in Windows 10/11</span><br>
+                <span class="cmd">Right-click ISO → Mount</span><br><br>
+                <span class="prompt"># Or use PowerShell:</span><br>
+                <span class="cmd">Mount-DiskImage -ImagePath "C:\path\to\Windows11.iso"</span><br><br>
+                <span class="prompt"># After mounting, navigate to virtual drive and run setup.exe</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Media Creation Tool is the answer when scenario requires offline upgrade capability, immediate upgrade (not waiting for rollout), or upgrading multiple computers. It provides more control than Windows Update method.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Media Creation Tool is the IT professional's choice. It bypasses Microsoft's gradual rollout and provides consistent media for multiple deployments. ISO files can be stored and reused, making them valuable for IT departments. Remember: for in-place upgrade, you MUST run setup.exe from within Windows - booting from media gives clean install options only.
+            </div>
+
+            <span class="slide-number">Slide 13 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 14: During the Upgrade -->
+        <div class="slide">
+            <h2>During the Upgrade Process</h2>
+            <p class="subtitle">What to Expect and Critical Do's/Don'ts</p>
+
+            <div class="info-card critical">
+                <h3>GOLDEN RULE: DO NOT INTERRUPT!</h3>
+                <p style="font-size: 1.3em;">Once upgrade begins, interruption can corrupt the installation and make system unbootable. Exercise patience!</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Normal Upgrade Behavior</h3>
+                    <div class="info-card success">
+                        <h4>Multiple Restarts Are Normal</h4>
+                        <p>Expect 3-6 automatic restarts during upgrade process. Each restart is part of normal upgrade sequence.</p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Copying files phase</li>
+                            <li>Installing features and drivers</li>
+                            <li>Configuring settings</li>
+                            <li>Finalizing installation</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>Progress Percentage Shown</h4>
+                        <p>Windows displays percentage complete during most phases. Progress may appear to stall at certain percentages (especially 25%, 35%, 99%) - this is NORMAL!</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>Time Requirements</h4>
+                        <p><strong>Typical duration: 30-90+ minutes</strong></p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Fast SSD: 30-45 minutes</li>
+                            <li>Standard HDD: 60-90 minutes</li>
+                            <li>Slow HDD/older PC: 90+ minutes</li>
+                        </ul>
+                        <p>Wait at least <strong>2 hours</strong> before assuming upgrade has failed!</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Critical Do's and Don'ts</h3>
+                    <div class="info-card critical">
+                        <h4>DON'T</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>❌ Turn off or restart computer manually</strong></li>
+                            <li><strong>❌ Unplug laptop power</strong> - keep plugged in entire time</li>
+                            <li><strong>❌ Force shutdown</strong> if progress appears stuck</li>
+                            <li><strong>❌ Disconnect network</strong> during upgrade</li>
+                            <li><strong>❌ Click buttons or press keys</strong> - let it run</li>
+                            <li><strong>❌ Start using other apps</strong> during upgrade</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>DO</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>✓ Keep power connected</strong> (laptops especially)</li>
+                            <li><strong>✓ Be patient</strong> - progress may seem stuck but isn't</li>
+                            <li><strong>✓ Note time upgrade started</strong> - for tracking duration</li>
+                            <li><strong>✓ Monitor for error messages</strong> - take photos if any appear</li>
+                            <li><strong>✓ Ensure adequate ventilation</strong> - CPU will run hot</li>
+                            <li><strong>✓ Wait 2+ hours</strong> before assuming failure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <h3>Typical Upgrade Timeline</h3>
+                <div class="timeline-item">
+                    <strong>0-10 minutes:</strong> Downloading updates and preparing to install (if using Windows Update)
+                </div>
+                <div class="timeline-item">
+                    <strong>10-20 minutes:</strong> Copying files and preparing installation environment
+                </div>
+                <div class="timeline-item">
+                    <strong>20-40 minutes:</strong> Installing features, drivers, and updates (may appear stuck at 25-35%)
+                </div>
+                <div class="timeline-item">
+                    <strong>40-60 minutes:</strong> Configuring settings and migrating user data (several restarts)
+                </div>
+                <div class="timeline-item">
+                    <strong>60-90 minutes:</strong> Finalizing installation, applying personalization (may stall at 99%)
+                </div>
+                <div class="timeline-item">
+                    <strong>90+ minutes:</strong> First boot into new Windows, running post-upgrade tasks
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Common question theme: "User says upgrade is stuck at 35% for 20 minutes, what should you do?" Answer: Wait longer - this is normal. Only intervene after 2+ hours with no disk activity.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> User impatience causes many upgrade failures. The upgrade process can appear frozen at certain percentages but is actually working. Hard drive LED activity indicates work is happening. Only after 2+ hours with NO disk activity should you consider intervention. Power interruption during upgrade often results in unbootable system requiring recovery or clean install.
+            </div>
+
+            <span class="slide-number">Slide 14 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 15: Post-Upgrade Tasks -->
+        <div class="slide">
+            <h2>Post-Upgrade Verification Tasks</h2>
+            <p class="subtitle">Critical Checks After Successful Upgrade</p>
+
+            <div class="info-card success">
+                <h3>Congratulations! Upgrade Complete. Now verify everything works...</h3>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>1. Verify All Data Present</strong><br>
+                        Check Documents, Desktop, Pictures, Downloads folders. Confirm critical files accessible and intact.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>2. Test Application Functionality</strong><br>
+                        Launch critical applications - Office, business apps, email client. Verify they open and function correctly.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>3. Update Device Drivers</strong><br>
+                        Check Device Manager for issues. Update graphics, network, chipset drivers from manufacturer websites.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>4. Run Windows Update</strong><br>
+                        Check for and install any additional updates, patches, or drivers Microsoft has released post-upgrade.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>5. Reconfigure Settings If Needed</strong><br>
+                        Verify taskbar layout, default apps, privacy settings, power options. Some settings may reset to defaults.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>6. Test Printers and Peripherals</strong><br>
+                        Verify printers, scanners, external drives, webcams work. Reinstall drivers if necessary.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>7. Verify Network Connectivity</strong><br>
+                        Test Internet access, network shares, VPN connections, mapped drives. Confirm DNS resolution working.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>8. Check Windows Activation</strong><br>
+                        Settings → System → Activation. Verify Windows is activated. Reactivate if necessary.
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card warning">
+                        <h4>Common Post-Upgrade Issues</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Missing drivers:</strong> Check Device Manager for yellow exclamation marks</li>
+                            <li><strong>Activation issues:</strong> May need to re-enter product key</li>
+                            <li><strong>Performance degradation:</strong> Disable startup programs, check background apps</li>
+                            <li><strong>Default app changes:</strong> Reset file associations to preferred apps</li>
+                            <li><strong>Missing applications:</strong> Check Windows.old\Program Files for incompatible apps that weren't migrated</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="command-box">
+                        <span class="prompt"># Check Windows activation status</span><br>
+                        <span class="cmd">slmgr /xpr</span><br><br>
+                        <span class="prompt"># Check for device driver issues</span><br>
+                        <span class="cmd">devmgmt.msc</span><br><br>
+                        <span class="prompt"># View Windows version</span><br>
+                        <span class="cmd">winver</span><br><br>
+                        <span class="prompt"># Run Windows Update</span><br>
+                        <span class="cmd">Settings → Windows Update → Check for updates</span>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>Performance Optimization</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Disable unnecessary startup programs</li>
+                            <li>Clear Windows.old after verifying upgrade successful (saves ~20GB)</li>
+                            <li>Run Disk Cleanup</li>
+                            <li>Defragment HDD (not SSD!)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Post-upgrade driver updates are critical. Graphics and network drivers especially may need manual updates from manufacturer websites. Windows Update may not have latest versions.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Don't assume upgrade success until you've verified data and applications. Driver issues are the most common post-upgrade problem. Device Manager yellow exclamation marks indicate missing/problematic drivers. Some applications may have been blocked from migration due to incompatibility - these will remain in Windows.old folder. Windows activation occasionally requires re-entry of product key after major upgrades.
+            </div>
+
+            <span class="slide-number">Slide 15 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 16: Common Upgrade Issues -->
+        <div class="slide">
+            <h2>Common Upgrade Issues</h2>
+            <p class="subtitle">Frequently Encountered Problems During Upgrades</p>
+
+            <div class="issue-box">
+                <h4>1. Compatibility Errors</h4>
+                <p><strong>Symptom:</strong> "This PC can't run Windows 11" or setup blocks upgrade before starting.</p>
+                <p><strong>Common Causes:</strong> Missing TPM 2.0, Secure Boot disabled, CPU not on compatibility list, insufficient RAM/storage.</p>
+                <p class="solution">Solution: Run PC Health Check tool to identify specific blocker. Enable TPM/Secure Boot in BIOS, upgrade hardware, or stay on Windows 10 until hardware replacement.</p>
+            </div>
+
+            <div class="issue-box">
+                <h4>2. Insufficient Disk Space</h4>
+                <p><strong>Symptom:</strong> "Not enough disk space to install Windows" error during upgrade preparation.</p>
+                <p><strong>Common Causes:</strong> System drive too full, many large files, Windows.old from previous upgrade still present.</p>
+                <p class="solution">Solution: Free up space - run Disk Cleanup, delete Windows.old, move files to external drive, uninstall unused programs. Need minimum 20GB free.</p>
+            </div>
+
+            <div class="issue-box">
+                <h4>3. Driver Problems</h4>
+                <p><strong>Symptom:</strong> Upgrade completes but no network, no graphics, or device not working. Device Manager shows yellow exclamation marks.</p>
+                <p><strong>Common Causes:</strong> Incompatible drivers for new Windows version, outdated drivers, Windows doesn't include driver for specific hardware.</p>
+                <p class="solution">Solution: Download compatible drivers from manufacturer website BEFORE upgrade. Use another PC to download drivers if network driver fails. Install in Safe Mode if needed.</p>
+            </div>
+
+            <div class="issue-box">
+                <h4>4. Stuck at Percentage</h4>
+                <p><strong>Symptom:</strong> Upgrade appears frozen at specific percentage (commonly 25%, 35%, 99%) for extended time.</p>
+                <p><strong>Common Causes:</strong> Normal - upgrade performing intensive tasks. Could also be disk I/O bottleneck, background tasks, antivirus interference.</p>
+                <p class="solution">Solution: WAIT! Most "stuck" upgrades are just slow. Wait minimum 2 hours before intervening. Check for hard drive activity. Only force restart after 2+ hours with NO disk activity.</p>
+            </div>
+
+            <div class="issue-box">
+                <h4>5. Black Screen After Upgrade</h4>
+                <p><strong>Symptom:</strong> After upgrade and restart, screen is black. May or may not see cursor.</p>
+                <p><strong>Common Causes:</strong> Graphics driver issue, display configuration problem, fast startup conflict, multiple monitors confusing Windows.</p>
+                <p class="solution">Solution: Try Ctrl+Shift+Esc to open Task Manager. Try Win+P to change display mode. Disconnect extra monitors. Boot to Safe Mode and update graphics drivers. Disable fast startup.</p>
+            </div>
+
+            <div class="issue-box">
+                <h4>6. Missing Applications</h4>
+                <p><strong>Symptom:</strong> Some applications didn't carry over to new Windows installation.</p>
+                <p><strong>Common Causes:</strong> Application incompatible with new Windows version, Windows Setup removed incompatible software for safety.</p>
+                <p class="solution">Solution: Check Windows.old\Program Files for old installation. Reinstall application (newer version compatible with new Windows). Look for compatibility report from upgrade for list of removed apps.</p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> For "upgrade appears stuck" scenarios, correct answer is almost always "wait longer - normal behavior." For "no network after upgrade," answer involves downloading compatible network drivers beforehand or using another PC to download them.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These six issues represent 90% of upgrade problems encountered in real world. TPM/Secure Boot are the biggest blockers for Windows 11. Insufficient space is easily prevented with pre-upgrade cleanup. Driver problems are why pre-downloading drivers is critical. "Stuck" upgrades cause most user anxiety - educate users that 1-2 hours at same percentage is often normal. Black screen usually resolves with graphics driver update.
+            </div>
+
+            <span class="slide-number">Slide 16 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 17: Troubleshooting Upgrade Failures -->
+        <div class="slide">
+            <h2>Troubleshooting Upgrade Failures</h2>
+            <p class="subtitle">Advanced Troubleshooting Techniques</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Diagnostic Steps</h3>
+
+                    <div class="process-step" data-step="1">
+                        <h4>Check Error Codes</h4>
+                        <p>Windows Setup displays error codes on failure. Common codes:</p>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>0xC1900101:</strong> Driver compatibility issue</li>
+                            <li><strong>0x80070070:</strong> Insufficient disk space</li>
+                            <li><strong>0x80300024:</strong> Installation media error</li>
+                            <li><strong>0xC1900208:</strong> Incompatible app blocking upgrade</li>
+                        </ul>
+                    </div>
+
+                    <div class="process-step" data-step="2">
+                        <h4>Review Setup Logs</h4>
+                        <p>Windows maintains detailed upgrade logs:</p>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>C:\$Windows.~BT\Sources\Panther\setuperr.log</strong> - Errors</li>
+                            <li><strong>C:\Windows\Panther\setupact.log</strong> - Activity log</li>
+                        </ul>
+                        <p>Search logs for "Error" or "Failed" to identify issues.</p>
+                    </div>
+
+                    <div class="process-step" data-step="3">
+                        <h4>Free Up Disk Space</h4>
+                        <p>Run Disk Cleanup, delete Windows.old, clear temp files, uninstall unused programs. Need 20GB+ free space.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="process-step" data-step="4">
+                        <h4>Disconnect Peripherals</h4>
+                        <p>Remove ALL non-essential USB devices, external drives, printers, scanners. Leave only keyboard and mouse. Peripheral drivers can interfere with upgrade.</p>
+                    </div>
+
+                    <div class="process-step" data-step="5">
+                        <h4>Disable Antivirus Temporarily</h4>
+                        <p>Third-party antivirus can block upgrade process. Temporarily uninstall (don't just disable) antivirus before retry. Windows Defender will protect during upgrade.</p>
+                    </div>
+
+                    <div class="process-step" data-step="6">
+                        <h4>Update BIOS/UEFI</h4>
+                        <p>Outdated firmware can cause compatibility issues. Check manufacturer website for BIOS/UEFI updates. Apply updates before retrying upgrade.</p>
+                    </div>
+
+                    <div class="process-step" data-step="7">
+                        <h4>Try Different Upgrade Method</h4>
+                        <p>If Windows Update upgrade fails, try Media Creation Tool. If Media Creation Tool fails, try Windows Update. Different paths can bypass certain issues.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Run Windows Update Troubleshooter</span><br>
+                <span class="cmd">Settings → System → Troubleshoot → Other troubleshooters → Windows Update</span><br><br>
+                <span class="prompt"># View SetupDiag tool results (if available)</span><br>
+                <span class="cmd">C:\$Windows.~BT\Sources\Panther\setupdiag.log</span><br><br>
+                <span class="prompt"># Check disk space</span><br>
+                <span class="cmd">Get-PSDrive C</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Advanced Techniques</h3>
+                <ul>
+                    <li><strong>Clean Boot:</strong> Start Windows with minimal drivers/startup programs, then attempt upgrade</li>
+                    <li><strong>Uninstall Incompatible Apps:</strong> If compatibility report lists blockers, uninstall them before upgrade</li>
+                    <li><strong>Repair Current Installation:</strong> Run DISM and SFC to fix corruption before attempting upgrade</li>
+                    <li><strong>Use SetupDiag Tool:</strong> Microsoft tool that analyzes setup logs and identifies root cause of failures</li>
+                    <li><strong>Last Resort - Clean Install:</strong> If in-place upgrade repeatedly fails, perform clean install + data migration</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> For upgrade failure scenarios, remember the order: 1) Check error code, 2) Free disk space, 3) Disconnect peripherals, 4) Disable antivirus, 5) Update BIOS, 6) Try different upgrade method. If all else fails, clean install.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Setup logs are invaluable for diagnosing failures but are cryptic - search for obvious error messages. Error codes can be Googled for Microsoft documentation. Peripherals cause surprising number of upgrade failures - USB devices with problematic drivers can block entire upgrade. Antivirus is common culprit - it sees Windows replacing system files as threat. BIOS updates should be approached carefully - wrong BIOS can brick motherboard.
+            </div>
+
+            <span class="slide-number">Slide 17 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 18: Rollback Options -->
+        <div class="slide">
+            <h2>Rollback Options</h2>
+            <p class="subtitle">Reverting to Previous Windows Version</p>
+
+            <div class="highlight-box">
+                <h3>Windows Built-In Rollback Feature</h3>
+                <p>Windows automatically creates recovery option to uninstall updates and return to previous Windows version. This is your safety net if upgrade causes problems.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>"Go Back" Feature</h3>
+                    <div class="info-card success">
+                        <h4>How to Roll Back</h4>
+                        <p><strong>Windows 11/10:</strong></p>
+                        <p>Settings → System → Recovery → "Go back" (if available)</p>
+                        <p style="margin-top: 10px;"><strong>You'll be asked:</strong></p>
+                        <ul style="font-size: 0.95em;">
+                            <li>Why are you going back? (feedback for Microsoft)</li>
+                            <li>Check for updates instead? (try fixing issues first)</li>
+                            <li>What you need to know (warnings about changes)</li>
+                        </ul>
+                        <p style="margin-top: 10px;">Process takes 10-60 minutes and restores previous Windows installation.</p>
+                    </div>
+
+                    <div class="info-card critical">
+                        <h4>10-Day Rollback Window</h4>
+                        <p><strong>Default: 10 days from upgrade</strong></p>
+                        <p>After 10 days, "Go back" option disappears and rollback no longer possible (without system image backup).</p>
+                        <p style="margin-top: 10px;"><strong>Why 10 days?</strong> Windows.old folder deleted after 10 days to free disk space.</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card warning">
+                        <h4>Rollback Limitations</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Files added after upgrade:</strong> Remain intact (not lost)</li>
+                            <li><strong>Files deleted after upgrade:</strong> NOT restored</li>
+                            <li><strong>Apps installed after upgrade:</strong> Will be removed</li>
+                            <li><strong>Settings changes:</strong> Must reconfigure manually</li>
+                            <li><strong>Updates installed post-upgrade:</strong> Lost on rollback</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Extend Rollback Period</h4>
+                        <p>You can extend the 10-day window BEFORE it expires:</p>
+                        <div class="command-box" style="font-size: 0.85em;">
+                            <span class="prompt"># Extend to 60 days (must run within 10 days of upgrade)</span><br>
+                            <span class="cmd">DISM /Online /Set-OSUninstallWindow /Value:60</span><br><br>
+                            <span class="prompt"># Check current rollback window</span><br>
+                            <span class="cmd">DISM /Online /Get-OSUninstallWindow</span>
+                        </div>
+                        <p style="margin-top: 10px;"><strong>Note:</strong> This keeps Windows.old folder, consuming ~20GB disk space.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <h3>Alternative Rollback Methods</h3>
+                <ul>
+                    <li><strong>System Image Restore:</strong> If you created full system image backup before upgrade, restore from that. Most reliable method but requires prior preparation.</li>
+                    <li><strong>System Restore Point:</strong> If restore points exist from before upgrade, may work but less reliable than system image.</li>
+                    <li><strong>Clean Install Previous Version:</strong> Last resort - reinstall old Windows and restore data from backup. Time-consuming but always works.</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> The 10-day rollback window is frequently tested. Remember: After 10 days, built-in rollback is gone. Can extend to 60 days with DISM command. Windows.old folder enables the rollback feature.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> The 10-day window is surprisingly short - many users discover issues after that period. Extending to 60 days is wise for cautious users but consumes significant disk space. Rollback is not a perfect restore - settings changes and app installs after upgrade are affected. System image backup remains the gold standard for complete restoration. Emphasize that backup created BEFORE upgrade is insurance against rollback window expiring.
+            </div>
+
+            <span class="slide-number">Slide 18 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 19: Windows.old Folder -->
+        <div class="slide">
+            <h2>Windows.old Folder</h2>
+            <p class="subtitle">Understanding the Previous Installation Backup</p>
+
+            <div class="highlight-box">
+                <h3>What is Windows.old?</h3>
+                <p>Windows.old is a folder created during in-place upgrades that contains the complete previous Windows installation. It's your rollback insurance policy.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Contents of Windows.old</h3>
+                    <div class="info-card">
+                        <p><strong>Location:</strong> C:\Windows.old</p>
+                        <p style="margin-top: 10px;"><strong>Contains:</strong></p>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Previous Windows installation</strong> - All system files from old Windows version</li>
+                            <li><strong>Program Files</strong> - Applications from previous installation (if not migrated)</li>
+                            <li><strong>Users folder</strong> - User profiles, documents, settings</li>
+                            <li><strong>Windows folder</strong> - Old system files, drivers, registry</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Typical Size:</strong> 15-25 GB depending on previous installation</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h3>Purpose of Windows.old</h3>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Enable rollback:</strong> Allows "Go back" feature to work</li>
+                            <li><strong>File recovery:</strong> Retrieve files if something didn't migrate</li>
+                            <li><strong>Application recovery:</strong> Access old program data if app didn't carry over</li>
+                            <li><strong>Settings reference:</strong> Check old configuration if needed</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>When to Delete Windows.old</h3>
+                    <div class="info-card warning">
+                        <h4>Automatic Deletion</h4>
+                        <p>Windows <strong>automatically deletes Windows.old after 10 days</strong> (or extended period if you used DISM to extend rollback window).</p>
+                        <p style="margin-top: 10px;">Once deleted, rollback feature is permanently disabled.</p>
+                    </div>
+
+                    <div class="info-card success">
+                        <h4>Manual Deletion (Safe to Delete When)</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Upgrade is stable and verified working</li>
+                            <li>All applications tested and functional</li>
+                            <li>All data confirmed present</li>
+                            <li>No intention to roll back</li>
+                            <li>Need disk space</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Best Practice:</strong> Wait at least a week, verify everything works, THEN delete to reclaim space.</p>
+                    </div>
+
+                    <div class="command-box">
+                        <span class="prompt"># Delete Windows.old using Disk Cleanup</span><br>
+                        <span class="cmd">1. Right-click C: drive → Properties</span><br>
+                        <span class="cmd">2. Click "Disk Cleanup"</span><br>
+                        <span class="cmd">3. Click "Clean up system files"</span><br>
+                        <span class="cmd">4. Check "Previous Windows installation(s)"</span><br>
+                        <span class="cmd">5. Click OK → Delete Files</span><br><br>
+                        <span class="prompt"># PowerShell method (advanced)</span><br>
+                        <span class="cmd">Remove-Item -Path "C:\Windows.old" -Recurse -Force</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card critical">
+                <h3>CRITICAL WARNING</h3>
+                <p style="font-size: 1.2em;"><strong>Once Windows.old is deleted, rollback is IMPOSSIBLE using built-in Windows features.</strong></p>
+                <p>You would need system image backup to restore previous Windows version. Don't delete Windows.old until absolutely certain upgrade is successful and stable.</p>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Know that Windows.old enables rollback feature, is automatically deleted after 10 days, typically consumes ~20GB, and can be manually deleted via Disk Cleanup. Questions may ask "how to reclaim disk space after successful upgrade" - answer is delete Windows.old.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Windows.old is often misunderstood by users who see it consuming space but don't understand its purpose. It's the mechanism enabling the 10-day rollback window. Deleting Windows.old is permanent - no undo. Best practice is to verify upgrade success thoroughly before deleting. Can manually recover files from Windows.old by browsing to C:\Windows.old\Users\[username] and copying files. Once 10-day window expires, Windows.old is automatically removed.
+            </div>
+
+            <span class="slide-number">Slide 19 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 20: Exam Tips -->
+        <div class="slide">
+            <h2>CompTIA A+ Exam Tips</h2>
+            <p class="subtitle">Key Concepts for Test Success</p>
+
+            <div class="highlight-box">
+                <h3>Most Frequently Tested Concepts</h3>
+                <ol style="font-size: 1.1em;">
+                    <li><strong>Valid upgrade paths</strong> - Which versions can upgrade to which</li>
+                    <li><strong>Windows 11 hardware requirements</strong> - TPM 2.0, Secure Boot, CPU requirements</li>
+                    <li><strong>Backup importance</strong> - Always first step before upgrade</li>
+                    <li><strong>10-day rollback window</strong> - Default period for "Go back" feature</li>
+                    <li><strong>Windows.old folder purpose</strong> - Enables rollback, can be deleted to free space</li>
+                    <li><strong>In-place vs clean install decision</strong> - When to choose each method</li>
+                </ol>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Critical Facts to Memorize</h3>
+                    <div class="info-card exam-tip">
+                        <h4>Upgrade Paths</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Windows 7 → Windows 10 <span class="check-mark">✓</span></li>
+                            <li>Windows 8.1 → Windows 10 <span class="check-mark">✓</span></li>
+                            <li>Windows 10 → Windows 11 <span class="check-mark">✓</span></li>
+                            <li>Windows 7 → Windows 11 <span class="x-mark">✗</span> (must go through Win10)</li>
+                            <li>32-bit → 64-bit <span class="x-mark">✗</span> (clean install only)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card exam-tip">
+                        <h4>Windows 11 Requirements</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>TPM 2.0</strong> - REQUIRED</li>
+                            <li><strong>Secure Boot capable</strong> - UEFI required</li>
+                            <li><strong>4GB RAM minimum</strong></li>
+                            <li><strong>64GB storage minimum</strong></li>
+                            <li><strong>1GHz dual-core 64-bit CPU</strong></li>
+                            <li><strong>DirectX 12 GPU</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card exam-tip">
+                        <h4>Rollback Facts</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>10-day default window</strong></li>
+                            <li>Can extend to 60 days with DISM</li>
+                            <li>Enabled by Windows.old folder</li>
+                            <li>Settings → Recovery → "Go back"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Common Scenario Questions</h3>
+                    <div class="info-card">
+                        <h4>Scenario 1: Pre-Upgrade</h4>
+                        <p><strong>Q:</strong> "What should you do FIRST before upgrading Windows?"</p>
+                        <p><strong>A:</strong> Create full system backup</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Scenario 2: Compatibility Block</h4>
+                        <p><strong>Q:</strong> "User can't upgrade to Windows 11. What's most likely cause?"</p>
+                        <p><strong>A:</strong> Missing TPM 2.0 or Secure Boot disabled</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Scenario 3: Stuck Upgrade</h4>
+                        <p><strong>Q:</strong> "Upgrade stuck at 35% for 30 minutes. What do you do?"</p>
+                        <p><strong>A:</strong> Wait - this is normal. Allow up to 2 hours.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Scenario 4: No Network After Upgrade</h4>
+                        <p><strong>Q:</strong> "After upgrade, network doesn't work. What was mistake?"</p>
+                        <p><strong>A:</strong> Didn't download compatible network drivers before upgrade</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Scenario 5: Disk Space</h4>
+                        <p><strong>Q:</strong> "How to free space after successful upgrade?"</p>
+                        <p><strong>A:</strong> Delete Windows.old folder using Disk Cleanup</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Scenario 6: 32-bit to 64-bit</h4>
+                        <p><strong>Q:</strong> "User wants to upgrade 32-bit Windows 10 to 64-bit Windows 11. What method?"</p>
+                        <p><strong>A:</strong> Clean install only (no in-place upgrade path)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card critical">
+                <h3>Things That Always Require Clean Install</h3>
+                <ul>
+                    <li>32-bit to 64-bit architecture change</li>
+                    <li>Windows 7/8.1 directly to Windows 11 (or must go through Win10 first)</li>
+                    <li>Downgrading Windows editions (Pro to Home, etc.)</li>
+                    <li>Corrupted Windows installation beyond repair</li>
+                </ul>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These are the highest-yield exam topics for OS upgrades. Memorize the upgrade paths chart - it appears frequently. TPM 2.0 requirement is heavily tested for Windows 11 scenarios. Understand difference between running setup.exe from within Windows (in-place) vs booting from media (clean install). Backup as first step is almost always correct answer for "what should you do before..." questions.
+            </div>
+
+            <span class="slide-number">Slide 20 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 21: Upgrade Checklist Visual -->
+        <div class="slide">
+            <h2>Complete Upgrade Checklist</h2>
+            <p class="subtitle">Step-by-Step Process from Planning to Completion</p>
+
+            <div class="checklist">
+                <h3 style="text-align: center; margin-bottom: 20px; color: #0078d4;">Pre-Upgrade Phase</h3>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Check System Requirements</strong><br>
+                        Verify CPU, RAM, storage, TPM 2.0, Secure Boot capability meet Windows 11 requirements
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Verify Compatibility</strong><br>
+                        Run PC Health Check tool, verify applications compatible, download necessary drivers
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Create Full System Backup</strong><br>
+                        System image + user data backup. Test backup restoration capability!
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Document Current Settings</strong><br>
+                        Network settings, printer configs, license keys, application settings, bookmarks
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Free Up Disk Space</strong><br>
+                        Ensure 20GB+ free space. Run Disk Cleanup, delete Windows.old, move large files
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Update Current Drivers & BIOS</strong><br>
+                        Install latest drivers for current OS, update BIOS/UEFI if available
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; margin: 30px 0 20px 0; color: #0078d4;">Upgrade Phase</h3>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Start Upgrade Process</strong><br>
+                        Via Windows Update OR Media Creation Tool. Choose "Keep personal files and apps"
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Monitor Progress (Don't Interrupt!)</strong><br>
+                        Wait patiently, keep power connected, allow multiple restarts. Expect 30-90+ minutes
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; margin: 30px 0 20px 0; color: #0078d4;">Post-Upgrade Phase</h3>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Verify Data Integrity</strong><br>
+                        Check Documents, Desktop, Pictures folders. Confirm all files present and accessible
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Test Applications</strong><br>
+                        Launch and test all critical applications. Verify functionality of business apps
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Update Drivers</strong><br>
+                        Install latest drivers from manufacturers. Check Device Manager for issues
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Run Windows Update</strong><br>
+                        Install any post-upgrade updates, patches, and additional drivers
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Test Peripherals</strong><br>
+                        Verify printers, scanners, webcams, external drives all working correctly
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Reconfigure Settings</strong><br>
+                        Adjust taskbar, default apps, privacy settings, power options as needed
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Monitor Stability for 7-10 Days</strong><br>
+                        Watch for issues before deleting Windows.old. Keep rollback option available
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <div>
+                        <strong>Delete Windows.old (Optional)</strong><br>
+                        After verifying stability, free ~20GB by deleting Windows.old via Disk Cleanup
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This comprehensive checklist covers the entire upgrade lifecycle. Use this as a practical guide for real-world upgrades. Pre-upgrade preparation prevents most problems. The upgrade phase requires patience and non-intervention. Post-upgrade verification catches issues within rollback window. Waiting 7-10 days before deleting Windows.old provides safety buffer.
+            </div>
+
+            <span class="slide-number">Slide 21 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 22: Key Takeaways & Review -->
+        <div class="slide">
+            <h2>Key Takeaways & Review</h2>
+            <p class="subtitle">Essential Concepts for CompTIA A+ Success</p>
+
+            <div class="highlight-box">
+                <h3>The Five Pillars of Successful OS Upgrades</h3>
+                <div class="two-col">
+                    <div>
+                        <h4>1. PLAN Thoroughly</h4>
+                        <ul>
+                            <li>Verify hardware compatibility</li>
+                            <li>Check software compatibility</li>
+                            <li>Document current state</li>
+                            <li>Choose upgrade method</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>2. BACKUP Everything</h4>
+                        <ul>
+                            <li>Full system image (CRITICAL!)</li>
+                            <li>User data files</li>
+                            <li>License keys</li>
+                            <li>TEST backup before upgrade</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div>
+                        <h4>3. EXECUTE Carefully</h4>
+                        <ul>
+                            <li>Don't interrupt power</li>
+                            <li>Be patient (30-90+ minutes)</li>
+                            <li>Multiple restarts normal</li>
+                            <li>Let Windows work</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>4. VERIFY Thoroughly</h4>
+                        <ul>
+                            <li>Check all data present</li>
+                            <li>Test applications</li>
+                            <li>Update drivers</li>
+                            <li>Test peripherals</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <h4>5. MAINTAIN Rollback Options</h4>
+                    <ul style="display: inline-block; text-align: left;">
+                        <li>10-day rollback window (extendable to 60)</li>
+                        <li>Don't delete Windows.old prematurely</li>
+                        <li>Keep system image backup until stable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="three-col">
+                <div class="info-card exam-tip">
+                    <h4>Remember: Upgrade Paths</h4>
+                    <p style="font-size: 0.9em;">
+                        ✓ Win7 → Win10<br>
+                        ✓ Win8.1 → Win10<br>
+                        ✓ Win10 → Win11<br>
+                        ✗ Win7 → Win11 direct<br>
+                        ✗ 32-bit → 64-bit
+                    </p>
+                </div>
+
+                <div class="info-card exam-tip">
+                    <h4>Remember: Win11 Blockers</h4>
+                    <p style="font-size: 0.9em;">
+                        <strong>Most Common:</strong><br>
+                        • No TPM 2.0<br>
+                        • Secure Boot disabled<br>
+                        • Incompatible CPU<br>
+                        • Insufficient RAM/storage
+                    </p>
+                </div>
+
+                <div class="info-card exam-tip">
+                    <h4>Remember: Rollback</h4>
+                    <p style="font-size: 0.9em;">
+                        • 10-day default window<br>
+                        • Enabled by Windows.old<br>
+                        • Settings → Recovery<br>
+                        • Extend with DISM<br>
+                        • Backup is ultimate safety
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-card critical">
+                <h3>The Most Important Rule</h3>
+                <p style="font-size: 1.4em; text-align: center; font-weight: bold;">
+                    NO BACKUP = NO UPGRADE
+                </p>
+                <p style="text-align: center; font-size: 1.1em;">
+                    A full system backup is your insurance policy. Even with Windows' built-in rollback features, hardware failures or corruption can make rollback impossible. ALWAYS back up before upgrading!
+                </p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card success">
+                        <h4>What Makes Upgrades Succeed</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Thorough pre-upgrade planning</li>
+                            <li>Complete backups tested beforehand</li>
+                            <li>Compatible hardware and software</li>
+                            <li>Adequate disk space (20GB+)</li>
+                            <li>Patience during installation</li>
+                            <li>Post-upgrade verification</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="info-card warning">
+                        <h4>What Makes Upgrades Fail</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Skipping compatibility checks</li>
+                            <li>No backup before starting</li>
+                            <li>Insufficient disk space</li>
+                            <li>Power interruption during upgrade</li>
+                            <li>Incompatible antivirus/drivers</li>
+                            <li>User impatience (forcing restart)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Final Exam Preparation Tips</h3>
+                <ul style="font-size: 1.1em;">
+                    <li>Understand the DIFFERENCE between in-place upgrade and clean install</li>
+                    <li>Memorize Windows 11 hardware requirements (TPM 2.0 is heavily tested!)</li>
+                    <li>Know valid upgrade paths - which versions can upgrade to which</li>
+                    <li>Remember the 10-day rollback window and Windows.old folder purpose</li>
+                    <li>Understand troubleshooting steps: error codes, logs, free space, peripherals</li>
+                    <li>Practice scenario-based thinking: "What should you do first?" → Backup!</li>
+                </ul>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This summary ties together all critical concepts. Emphasize that OS upgrades are manageable when approached methodically. The five pillars framework helps students remember the complete process. Backup importance cannot be overstated - it's the safety net for everything else. Encourage students to practice upgrades in virtual machines or test systems before attempting on production machines. Real-world experience is invaluable for exam success.
+            </div>
+
+            <span class="slide-number">Slide 22 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592; Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next &#8594;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            } else if (e.key === 'n' || e.key === 'N') {
+                // Toggle speaker notes
+                const currentSlideEl = slides[currentSlide];
+                const notes = currentSlideEl.querySelector('.speaker-notes');
+                if (notes) {
+                    notes.style.display = notes.style.display === 'none' || notes.style.display === '' ? 'block' : 'none';
+                }
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add console tip for speaker notes
+        console.log('%cSpeaker Notes: Press "N" to toggle speaker notes on current slide', 'color: #0078d4; font-size: 14px; font-weight: bold;');
+    </script>
+</body>
+</html>

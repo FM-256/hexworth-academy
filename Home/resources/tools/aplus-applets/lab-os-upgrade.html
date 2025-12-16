@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab: OS Upgrade Planning and Verification - CompTIA A+ Core 2</title>
+    <style>
+        /* ===== CSS CUSTOM PROPERTIES ===== */
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #1a1f3a;
+            --bg-tertiary: #252b4a;
+            --bg-input: #1e2442;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #0099cc;
+            --accent-success: #00ff88;
+            --accent-warning: #ffaa00;
+            --text-primary: #e0e6ff;
+            --text-secondary: #a0a8c8;
+            --text-muted: #6b7299;
+            --border-color: #2a3355;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --transition-fast: 0.2s ease;
+            --transition-medium: 0.3s ease;
+        }
+
+        /* ===== GLOBAL RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d1230 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #1a1f3a 0%, #252b4a 100%);
+            padding: 30px;
+            border-bottom: 3px solid var(--accent-primary);
+            position: relative;
+        }
+
+        .nav-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .nav-home:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .badge-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .aplus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e30613 0%, #ff4444 100%);
+            color: white;
+            font-weight: 900;
+            font-size: 24px;
+            padding: 15px 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            letter-spacing: 2px;
+            border: 3px solid white;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+            text-shadow: 0 2px 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .meta-item {
+            background: var(--bg-tertiary);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .meta-label {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--accent-primary);
+            font-size: 1.1em;
+        }
+
+        /* ===== OBJECTIVES SECTION ===== */
+        .objectives-section {
+            background: var(--bg-tertiary);
+            padding: 25px 30px;
+            margin: 20px;
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--accent-success);
+        }
+
+        .objectives-section h2 {
+            color: var(--accent-success);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .objectives-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives-section li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .objectives-section li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-success);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            margin: 20px;
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: var(--radius-md);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .progress-bar-bg {
+            background: var(--bg-input);
+            height: 30px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ===== EXERCISE SECTIONS ===== */
+        .exercises-container {
+            padding: 20px;
+        }
+
+        .exercise {
+            background: var(--bg-tertiary);
+            margin-bottom: 25px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            transition: all var(--transition-medium);
+        }
+
+        .exercise:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .exercise-header {
+            background: linear-gradient(135deg, #1e2442 0%, #252b4a 100%);
+            padding: 20px 25px;
+            border-bottom: 2px solid var(--accent-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .exercise-header:hover {
+            background: linear-gradient(135deg, #252b4a 0%, #2d3458 100%);
+        }
+
+        .exercise-title {
+            font-size: 1.4em;
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .exercise-toggle {
+            font-size: 1.5em;
+            color: var(--accent-primary);
+            transition: transform var(--transition-fast);
+        }
+
+        .exercise.collapsed .exercise-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .exercise-content {
+            padding: 25px;
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .exercise.collapsed .exercise-content {
+            max-height: 0;
+            padding: 0 25px;
+        }
+
+        /* ===== TASKS ===== */
+        .task {
+            background: var(--bg-secondary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        .task-header {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-number {
+            background: var(--accent-secondary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        .task-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: var(--radius-sm);
+            font-size: 1em;
+            transition: all var(--transition-fast);
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .checkbox-group:hover {
+            background: #242a4a;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        .checkbox-label {
+            color: var(--text-primary);
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        .radio-label {
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* ===== CODE/COMMAND STYLING ===== */
+        .code-block {
+            background: var(--bg-primary);
+            color: var(--accent-success);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-family: 'Consolas', 'Courier New', monospace;
+            border: 1px solid var(--border-color);
+            margin: 10px 0;
+            font-size: 0.95em;
+        }
+
+        .inline-code {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        /* ===== DOCUMENTATION CHALLENGE ===== */
+        .documentation-section {
+            background: linear-gradient(135deg, #2d1a3a 0%, #1a1f3a 100%);
+            padding: 25px;
+            margin: 20px;
+            border-radius: var(--radius-md);
+            border: 2px solid #8844ff;
+        }
+
+        .documentation-section h2 {
+            color: #bb88ff;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .documentation-section textarea {
+            width: 100%;
+            min-height: 80px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 1em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+            transition: all var(--transition-fast);
+        }
+
+        .documentation-section textarea:focus {
+            outline: none;
+            border-color: #bb88ff;
+            box-shadow: 0 0 0 3px rgba(187, 136, 255, 0.1);
+        }
+
+        /* ===== BUTTONS ===== */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #cc0000 0%, #ff3333 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            text-align: center;
+            border: 3px solid var(--accent-success);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 2em;
+            color: var(--accent-success);
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            border-top: 2px solid var(--border-color);
+        }
+
+        .footer-links {
+            margin-top: 10px;
+        }
+
+        .footer-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--accent-success);
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 80px 20px 20px 20px;
+            }
+
+            .nav-home {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .header-title {
+                font-size: 1.5em;
+            }
+
+            .aplus-badge {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+
+            .header-meta {
+                gap: 15px;
+            }
+
+            .meta-item {
+                padding: 8px 15px;
+            }
+
+            .exercise-title {
+                font-size: 1.1em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .nav-home,
+            .button-group,
+            .progress-container {
+                display: none;
+            }
+
+            .exercise {
+                page-break-inside: avoid;
+            }
+
+            .exercise-content {
+                max-height: none !important;
+                padding: 25px !important;
+            }
+        }
+
+        /* ===== WARNING/NOTE BOXES ===== */
+        .warning-box {
+            background: rgba(255, 170, 0, 0.1);
+            border: 2px solid var(--accent-warning);
+            border-left: 5px solid var(--accent-warning);
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            margin: 15px 0;
+        }
+
+        .warning-box strong {
+            color: var(--accent-warning);
+        }
+
+        .note-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--accent-primary);
+            border-left: 5px solid var(--accent-primary);
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            margin: 15px 0;
+        }
+
+        .note-box strong {
+            color: var(--accent-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <a href="../../../index.html" class="nav-home">← Home</a>
+
+            <div class="badge-container">
+                <div class="aplus-badge">CompTIA A+</div>
+            </div>
+
+            <h1 class="header-title">Lab: OS Upgrade Planning and Verification</h1>
+
+            <div class="header-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Estimated Time</span>
+                    <span class="meta-value">45-60 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty</span>
+                    <span class="meta-value">Intermediate</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Prerequisites</span>
+                    <span class="meta-value">Windows 10/11 computer</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- OBJECTIVES -->
+        <section class="objectives-section">
+            <h2>Lab Objectives</h2>
+            <ul>
+                <li>Verify system meets upgrade requirements</li>
+                <li>Check application compatibility</li>
+                <li>Create backup documentation</li>
+                <li>Explore upgrade and rollback options</li>
+                <li>Practice pre-upgrade checklist</li>
+            </ul>
+        </section>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Overall Progress</span>
+                <span id="progress-text">0 / 28 tasks completed (0%)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar">0%</div>
+            </div>
+        </div>
+
+        <!-- EXERCISES -->
+        <div class="exercises-container">
+
+            <!-- EXERCISE 1: System Requirements Verification -->
+            <div class="exercise" data-exercise="1">
+                <div class="exercise-header" onclick="toggleExercise(1)">
+                    <h2 class="exercise-title">Exercise 1: System Requirements Verification</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>Run PC Health Check (for Windows 11)</span>
+                        </div>
+                        <div class="task-description">
+                            Download and run the PC Health Check tool from Microsoft, or check requirements manually using the following steps.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-1-1" class="checkbox-input task-checkbox" data-task="1-1">
+                            <label for="task-1-1" class="checkbox-label">Ran PC Health Check or verified requirements manually</label>
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Check Specific Requirements</span>
+                        </div>
+                        <div class="task-description">
+                            Verify your system meets the minimum hardware requirements for upgrade.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">TPM Version (Run <span class="inline-code">tpm.msc</span>):</label>
+                            <input type="text" class="form-input" id="task-1-2-tpm" placeholder="e.g., 2.0" data-task="1-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Is Secure Boot enabled?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-1-2-sb-yes" name="secure-boot" class="radio-input" value="yes" data-task="1-2">
+                                    <label for="task-1-2-sb-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-1-2-sb-no" name="secure-boot" class="radio-input" value="no" data-task="1-2">
+                                    <label for="task-1-2-sb-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">RAM installed (GB):</label>
+                            <input type="text" class="form-input" id="task-1-2-ram" placeholder="e.g., 16" data-task="1-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Free disk space (GB):</label>
+                            <input type="text" class="form-input" id="task-1-2-disk" placeholder="e.g., 120" data-task="1-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Processor architecture:</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-1-2-32bit" name="proc-arch" class="radio-input" value="32-bit" data-task="1-2">
+                                    <label for="task-1-2-32bit" class="radio-label">32-bit</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-1-2-64bit" name="proc-arch" class="radio-input" value="64-bit" data-task="1-2">
+                                    <label for="task-1-2-64bit" class="radio-label">64-bit</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>Document Current OS</span>
+                        </div>
+                        <div class="task-description">
+                            Record information about your current Windows installation.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Current Windows version (e.g., Windows 10 Pro):</label>
+                            <input type="text" class="form-input" id="task-1-3-version" placeholder="e.g., Windows 10 Pro" data-task="1-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Build number (Run <span class="inline-code">winver</span>):</label>
+                            <input type="text" class="form-input" id="task-1-3-build" placeholder="e.g., 19045.3803" data-task="1-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Edition:</label>
+                            <input type="text" class="form-input" id="task-1-3-edition" placeholder="e.g., Pro, Home, Enterprise" data-task="1-3">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- EXERCISE 2: Compatibility Assessment -->
+            <div class="exercise" data-exercise="2">
+                <div class="exercise-header" onclick="toggleExercise(2)">
+                    <h2 class="exercise-title">Exercise 2: Compatibility Assessment</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>Check Installed Applications</span>
+                        </div>
+                        <div class="task-description">
+                            Review your installed applications to identify potential compatibility issues.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-2-1-apps" class="checkbox-input task-checkbox" data-task="2-1">
+                            <label for="task-2-1-apps" class="checkbox-label">Opened Settings > Apps > Installed apps</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Count of installed applications:</label>
+                            <input type="text" class="form-input" id="task-2-1-count" placeholder="e.g., 85" data-task="2-1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">List 3 critical applications you use:</label>
+                            <input type="text" class="form-input" id="task-2-1-critical" placeholder="e.g., Microsoft Office, Adobe Photoshop, Slack" data-task="2-1">
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Driver Inventory</span>
+                        </div>
+                        <div class="task-description">
+                            Check Device Manager for any hardware issues that might affect the upgrade.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-2-2-devmgr" class="checkbox-input task-checkbox" data-task="2-2">
+                            <label for="task-2-2-devmgr" class="checkbox-label">Opened Device Manager</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Any devices with warnings/errors?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-2-2-err-yes" name="device-errors" class="radio-input" value="yes" data-task="2-2">
+                                    <label for="task-2-2-err-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-2-2-err-no" name="device-errors" class="radio-input" value="no" data-task="2-2">
+                                    <label for="task-2-2-err-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Graphics adapter name:</label>
+                            <input type="text" class="form-input" id="task-2-2-gpu" placeholder="e.g., NVIDIA GeForce RTX 3060" data-task="2-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Network adapter name:</label>
+                            <input type="text" class="form-input" id="task-2-2-nic" placeholder="e.g., Intel Wi-Fi 6 AX201" data-task="2-2">
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>Known Incompatibilities</span>
+                        </div>
+                        <div class="note-box">
+                            <strong>Note:</strong> Older applications may not work after upgrading. Check manufacturer websites for compatibility information before proceeding with any upgrade.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-2-3-ack" class="checkbox-input task-checkbox" data-task="2-3">
+                            <label for="task-2-3-ack" class="checkbox-label">I understand I should check manufacturer websites for compatibility</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- WARNING BOX -->
+            <div class="warning-box" style="margin: 20px;">
+                <strong>WARNING:</strong> Do NOT proceed with an actual upgrade during this lab. We are only preparing and documenting.
+            </div>
+
+            <!-- EXERCISE 3: Backup Documentation -->
+            <div class="exercise" data-exercise="3">
+                <div class="exercise-header" onclick="toggleExercise(3)">
+                    <h2 class="exercise-title">Exercise 3: Backup Documentation</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>Identify Data to Backup</span>
+                        </div>
+                        <div class="task-description">
+                            Document the locations and status of your important data.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Documents folder location:</label>
+                            <input type="text" class="form-input" id="task-3-1-docs" placeholder="e.g., C:\Users\YourName\Documents" data-task="3-1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pictures folder location:</label>
+                            <input type="text" class="form-input" id="task-3-1-pics" placeholder="e.g., C:\Users\YourName\Pictures" data-task="3-1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Desktop items count:</label>
+                            <input type="text" class="form-input" id="task-3-1-desktop" placeholder="e.g., 23 items" data-task="3-1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Are OneDrive/cloud backups enabled?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-1-cloud-yes" name="cloud-backup" class="radio-input" value="yes" data-task="3-1">
+                                    <label for="task-3-1-cloud-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-1-cloud-no" name="cloud-backup" class="radio-input" value="no" data-task="3-1">
+                                    <label for="task-3-1-cloud-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Record Important Settings</span>
+                        </div>
+                        <div class="task-description">
+                            Document current system settings that you may need to reconfigure after an upgrade.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Network name (SSID) you're connected to:</label>
+                            <input type="text" class="form-input" id="task-3-2-ssid" placeholder="e.g., MyHomeNetwork" data-task="3-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Are printers installed?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-2-printers-yes" name="printers-installed" class="radio-input" value="yes" data-task="3-2">
+                                    <label for="task-3-2-printers-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-2-printers-no" name="printers-installed" class="radio-input" value="no" data-task="3-2">
+                                    <label for="task-3-2-printers-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">How many printers?</label>
+                            <input type="text" class="form-input" id="task-3-2-printer-count" placeholder="e.g., 2" data-task="3-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Is BitLocker enabled?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-2-bl-yes" name="bitlocker-enabled" class="radio-input" value="yes" data-task="3-2">
+                                    <label for="task-3-2-bl-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-2-bl-no" name="bitlocker-enabled" class="radio-input" value="no" data-task="3-2">
+                                    <label for="task-3-2-bl-no" class="radio-label">No</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-2-bl-dk" name="bitlocker-enabled" class="radio-input" value="dont-know" data-task="3-2">
+                                    <label for="task-3-2-bl-dk" class="radio-label">Don't know</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>License Key Inventory</span>
+                        </div>
+                        <div class="note-box">
+                            <strong>Note:</strong> Store license keys in a safe location before any upgrade. Use tools like ProduKey or Belarc Advisor to find them.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Windows license type:</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-lic-digital" name="windows-license" class="radio-input" value="digital" data-task="3-3">
+                                    <label for="task-3-3-lic-digital" class="radio-label">Digital</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-lic-key" name="windows-license" class="radio-input" value="product-key" data-task="3-3">
+                                    <label for="task-3-3-lic-key" class="radio-label">Product Key</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-lic-vol" name="windows-license" class="radio-input" value="volume" data-task="3-3">
+                                    <label for="task-3-3-lic-vol" class="radio-label">Volume</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Office license type:</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-off-365" name="office-license" class="radio-input" value="m365" data-task="3-3">
+                                    <label for="task-3-3-off-365" class="radio-label">Microsoft 365</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-off-stand" name="office-license" class="radio-input" value="standalone" data-task="3-3">
+                                    <label for="task-3-3-off-stand" class="radio-label">Standalone</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-3-3-off-none" name="office-license" class="radio-input" value="none" data-task="3-3">
+                                    <label for="task-3-3-off-none" class="radio-label">None</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Any other software requiring license keys?</label>
+                            <input type="text" class="form-input" id="task-3-3-other" placeholder="e.g., Adobe Creative Cloud, AutoCAD, etc." data-task="3-3">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- EXERCISE 4: Explore Upgrade Options -->
+            <div class="exercise" data-exercise="4">
+                <div class="exercise-header" onclick="toggleExercise(4)">
+                    <h2 class="exercise-title">Exercise 4: Explore Upgrade Options</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>Check Windows Update</span>
+                        </div>
+                        <div class="task-description">
+                            Navigate to Settings > Windows Update to see available updates.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-4-1-wu" class="checkbox-input task-checkbox" data-task="4-1">
+                            <label for="task-4-1-wu" class="checkbox-label">Opened Settings > Windows Update</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Any feature updates available?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-1-avail-yes" name="feature-update-avail" class="radio-input" value="yes" data-task="4-1">
+                                    <label for="task-4-1-avail-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-1-avail-no" name="feature-update-avail" class="radio-input" value="no" data-task="4-1">
+                                    <label for="task-4-1-avail-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Current update status:</label>
+                            <input type="text" class="form-input" id="task-4-1-status" placeholder="e.g., Up to date, Pending restart, etc." data-task="4-1">
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Understand Upgrade Paths</span>
+                        </div>
+                        <div class="task-description">
+                            Test your knowledge of Windows upgrade paths.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Can Windows 10 Home upgrade to Windows 11 Home?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q1-yes" name="upgrade-q1" class="radio-input" value="yes" data-task="4-2">
+                                    <label for="task-4-2-q1-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q1-no" name="upgrade-q1" class="radio-input" value="no" data-task="4-2">
+                                    <label for="task-4-2-q1-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Can Windows 10 Home upgrade directly to Windows 11 Pro?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q2-yes" name="upgrade-q2" class="radio-input" value="yes" data-task="4-2">
+                                    <label for="task-4-2-q2-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q2-no" name="upgrade-q2" class="radio-input" value="no" data-task="4-2">
+                                    <label for="task-4-2-q2-no" class="radio-label">No (needs edition upgrade too)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Can 32-bit Windows upgrade to 64-bit Windows?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q3-yes" name="upgrade-q3" class="radio-input" value="yes" data-task="4-2">
+                                    <label for="task-4-2-q3-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-4-2-q3-no" name="upgrade-q3" class="radio-input" value="no" data-task="4-2">
+                                    <label for="task-4-2-q3-no" class="radio-label">No (clean install required)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>Media Creation Tool (Research Only)</span>
+                        </div>
+                        <div class="task-description">
+                            Answer questions about the Windows Media Creation Tool.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">What tool creates Windows installation media?</label>
+                            <input type="text" class="form-input" id="task-4-3-tool" placeholder="Media Creation Tool" data-task="4-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Minimum USB size needed:</label>
+                            <input type="text" class="form-input" id="task-4-3-usb" placeholder="8GB" data-task="4-3">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- EXERCISE 5: Recovery Options -->
+            <div class="exercise" data-exercise="5">
+                <div class="exercise-header" onclick="toggleExercise(5)">
+                    <h2 class="exercise-title">Exercise 5: Recovery Options</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>View Recovery Settings</span>
+                        </div>
+                        <div class="task-description">
+                            Navigate to Settings > System > Recovery to view available recovery options.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-5-1-recovery" class="checkbox-input task-checkbox" data-task="5-1">
+                            <label for="task-5-1-recovery" class="checkbox-label">Opened Settings > System > Recovery</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Is "Go back" option available?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-1-gb-yes" name="go-back-avail" class="radio-input" value="yes" data-task="5-1">
+                                    <label for="task-5-1-gb-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-1-gb-no" name="go-back-avail" class="radio-input" value="no" data-task="5-1">
+                                    <label for="task-5-1-gb-no" class="radio-label">No</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-1-gb-na" name="go-back-avail" class="radio-input" value="na" data-task="5-1">
+                                    <label for="task-5-1-gb-na" class="radio-label">N/A</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">If yes, how many days remaining?</label>
+                            <input type="text" class="form-input" id="task-5-1-days" placeholder="e.g., 7 days" data-task="5-1">
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Windows.old Folder</span>
+                        </div>
+                        <div class="task-description">
+                            Check if the Windows.old folder exists on your C: drive.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Does C:\Windows.old exist?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-2-exists-yes" name="winold-exists" class="radio-input" value="yes" data-task="5-2">
+                                    <label for="task-5-2-exists-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-2-exists-no" name="winold-exists" class="radio-input" value="no" data-task="5-2">
+                                    <label for="task-5-2-exists-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">If yes, approximate size:</label>
+                            <input type="text" class="form-input" id="task-5-2-size" placeholder="e.g., 25 GB" data-task="5-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Purpose of Windows.old:</label>
+                            <input type="text" class="form-input" id="task-5-2-purpose" placeholder="Stores previous Windows for rollback" data-task="5-2">
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>Create Recovery Drive (Documentation Only)</span>
+                        </div>
+                        <div class="task-description">
+                            Answer questions about creating a Windows recovery drive.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">What tool creates a recovery drive?</label>
+                            <input type="text" class="form-input" id="task-5-3-tool" placeholder="Recovery Drive / recoverydrive.exe" data-task="5-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Minimum USB size for recovery drive:</label>
+                            <input type="text" class="form-input" id="task-5-3-usb" placeholder="16GB recommended" data-task="5-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Does recovery drive include system files option?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-3-sysfiles-yes" name="recovery-sysfiles" class="radio-input" value="yes" data-task="5-3">
+                                    <label for="task-5-3-sysfiles-yes" class="radio-label">Yes</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="task-5-3-sysfiles-no" name="recovery-sysfiles" class="radio-input" value="no" data-task="5-3">
+                                    <label for="task-5-3-sysfiles-no" class="radio-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- EXERCISE 6: Pre-Upgrade Checklist Completion -->
+            <div class="exercise" data-exercise="6">
+                <div class="exercise-header" onclick="toggleExercise(6)">
+                    <h2 class="exercise-title">Exercise 6: Pre-Upgrade Checklist Completion</h2>
+                    <span class="exercise-toggle">▼</span>
+                </div>
+                <div class="exercise-content">
+
+                    <!-- Task 1 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">1</span>
+                            <span>Final Verification (Check All That Apply)</span>
+                        </div>
+                        <div class="task-description">
+                            Confirm you have completed all pre-upgrade preparation steps.
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-req" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-req" class="checkbox-label">System meets minimum requirements</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-backup" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-backup" class="checkbox-label">Important data is backed up</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-keys" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-keys" class="checkbox-label">License keys are documented</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-compat" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-compat" class="checkbox-label">Critical apps are compatible</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-drivers" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-drivers" class="checkbox-label">Drivers are up to date</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-space" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-space" class="checkbox-label">Enough free disk space</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task-6-1-power" class="checkbox-input task-checkbox" data-task="6-1">
+                            <label for="task-6-1-power" class="checkbox-label">Power supply stable (laptops plugged in)</label>
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">2</span>
+                            <span>Post-Upgrade Plan</span>
+                        </div>
+                        <div class="task-description">
+                            Document your plan for verifying the upgrade was successful.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">First thing to verify after upgrade:</label>
+                            <input type="text" class="form-input" id="task-6-2-verify" placeholder="e.g., Check network connectivity, verify user files" data-task="6-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Applications to test immediately:</label>
+                            <input type="text" class="form-input" id="task-6-2-apps" placeholder="e.g., Office, web browser, critical business apps" data-task="6-2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Who to contact if issues occur:</label>
+                            <input type="text" class="form-input" id="task-6-2-contact" placeholder="e.g., IT Help Desk, System Administrator" data-task="6-2">
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="task">
+                        <div class="task-header">
+                            <span class="task-number">3</span>
+                            <span>Rollback Plan</span>
+                        </div>
+                        <div class="task-description">
+                            Document your understanding of the rollback process.
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">How long is rollback available by default?</label>
+                            <input type="text" class="form-input" id="task-6-3-default" placeholder="10 days" data-task="6-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Command to extend rollback period:</label>
+                            <input type="text" class="form-input" id="task-6-3-cmd" placeholder="DISM /Online /Set-OSUninstallWindow /Value:60" data-task="6-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alternative if rollback unavailable:</label>
+                            <input type="text" class="form-input" id="task-6-3-alt" placeholder="Restore from backup / clean install" data-task="6-3">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DOCUMENTATION CHALLENGE -->
+        <section class="documentation-section">
+            <h2>Documentation Challenge</h2>
+            <p>Reflect on your lab experience by answering the following questions:</p>
+
+            <div class="form-group">
+                <label class="form-label">List the Windows 11 hardware requirements:</label>
+                <textarea id="doc-requirements" placeholder="Example: TPM 2.0, Secure Boot, 4GB RAM, 64GB storage, UEFI firmware..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">What is the purpose of the Windows.old folder?</label>
+                <textarea id="doc-winold" placeholder="Explain what Windows.old is used for..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">How long do you have to rollback after an upgrade?</label>
+                <textarea id="doc-rollback" placeholder="Explain the default rollback period and how it can be extended..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">What should you ALWAYS do before starting an upgrade?</label>
+                <textarea id="doc-always" placeholder="List critical steps that must be completed before any OS upgrade..."></textarea>
+            </div>
+        </section>
+
+        <!-- BUTTONS -->
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="validateCompletion()">Complete Lab</button>
+            <button class="btn btn-secondary" onclick="printLab()">Print Lab Sheet</button>
+            <button class="btn btn-danger" onclick="resetLab()">Reset Lab</button>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>&copy; 2025 CompTIA A+ Training Materials | OS Upgrade Planning Lab</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Windows Upgrade Reference</a>
+                <a href="../../../index.html" class="footer-link">Home</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- COMPLETION MODAL -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">Lab Complete!</h2>
+            <p class="modal-message">
+                Congratulations! You've successfully completed the OS Upgrade Planning and Verification lab.
+                You now understand the critical steps required before performing an OS upgrade.
+            </p>
+            <button class="btn btn-primary" onclick="closeModal()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONSTANTS =====
+        const TOTAL_TASKS = 28;
+        const STORAGE_KEY = 'aplus-lab-os-upgrade';
+
+        // ===== STATE MANAGEMENT =====
+        let labState = {
+            tasks: {},
+            documentation: {}
+        };
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLabState();
+            attachEventListeners();
+            updateProgress();
+        });
+
+        // ===== LOAD & SAVE STATE =====
+        function loadLabState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    labState = JSON.parse(saved);
+                    restoreFormData();
+                } catch (e) {
+                    console.error('Error loading saved state:', e);
+                }
+            }
+        }
+
+        function saveLabState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(labState));
+        }
+
+        function restoreFormData() {
+            // Restore checkboxes
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                const taskId = checkbox.dataset.task;
+                if (labState.tasks[taskId] && labState.tasks[taskId].checked) {
+                    checkbox.checked = true;
+                }
+            });
+
+            // Restore text inputs
+            document.querySelectorAll('.form-input').forEach(input => {
+                const taskId = input.dataset.task;
+                const inputId = input.id;
+                if (labState.tasks[taskId] && labState.tasks[taskId].inputs) {
+                    const savedValue = labState.tasks[taskId].inputs[inputId];
+                    if (savedValue) {
+                        input.value = savedValue;
+                    }
+                }
+            });
+
+            // Restore radio buttons
+            document.querySelectorAll('.radio-input').forEach(radio => {
+                const taskId = radio.dataset.task;
+                const radioName = radio.name;
+                if (labState.tasks[taskId] && labState.tasks[taskId].radios) {
+                    const savedValue = labState.tasks[taskId].radios[radioName];
+                    if (savedValue === radio.value) {
+                        radio.checked = true;
+                    }
+                }
+            });
+
+            // Restore documentation textareas
+            Object.keys(labState.documentation).forEach(key => {
+                const textarea = document.getElementById(key);
+                if (textarea) {
+                    textarea.value = labState.documentation[key];
+                }
+            });
+        }
+
+        // ===== EVENT LISTENERS =====
+        function attachEventListeners() {
+            // Checkboxes
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskId = this.dataset.task;
+                    if (!labState.tasks[taskId]) {
+                        labState.tasks[taskId] = {};
+                    }
+                    labState.tasks[taskId].checked = this.checked;
+                    saveLabState();
+                    updateProgress();
+                });
+            });
+
+            // Text inputs
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const taskId = this.dataset.task;
+                    const inputId = this.id;
+                    if (!labState.tasks[taskId]) {
+                        labState.tasks[taskId] = { inputs: {} };
+                    }
+                    if (!labState.tasks[taskId].inputs) {
+                        labState.tasks[taskId].inputs = {};
+                    }
+                    labState.tasks[taskId].inputs[inputId] = this.value;
+                    saveLabState();
+                    updateProgress();
+                });
+            });
+
+            // Radio buttons
+            document.querySelectorAll('.radio-input').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const taskId = this.dataset.task;
+                    const radioName = this.name;
+                    if (!labState.tasks[taskId]) {
+                        labState.tasks[taskId] = { radios: {} };
+                    }
+                    if (!labState.tasks[taskId].radios) {
+                        labState.tasks[taskId].radios = {};
+                    }
+                    labState.tasks[taskId].radios[radioName] = this.value;
+                    saveLabState();
+                    updateProgress();
+                });
+            });
+
+            // Documentation textareas
+            ['doc-requirements', 'doc-winold', 'doc-rollback', 'doc-always'].forEach(id => {
+                const textarea = document.getElementById(id);
+                if (textarea) {
+                    textarea.addEventListener('input', function() {
+                        labState.documentation[id] = this.value;
+                        saveLabState();
+                    });
+                }
+            });
+        }
+
+        // ===== PROGRESS TRACKING =====
+        function updateProgress() {
+            const completedTasks = countCompletedTasks();
+            const percentage = Math.round((completedTasks / TOTAL_TASKS) * 100);
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+            progressText.textContent = `${completedTasks} / ${TOTAL_TASKS} tasks completed (${percentage}%)`;
+        }
+
+        function countCompletedTasks() {
+            let count = 0;
+
+            // Count completed tasks based on their requirements
+            const taskRequirements = {
+                '1-1': () => {
+                    const checkbox = document.getElementById('task-1-1');
+                    return checkbox && checkbox.checked;
+                },
+                '1-2': () => {
+                    const inputs = ['task-1-2-tpm', 'task-1-2-ram', 'task-1-2-disk'];
+                    const radios = ['secure-boot', 'proc-arch'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    }) && radios.every(name => document.querySelector(`input[name="${name}"]:checked`));
+                },
+                '1-3': () => {
+                    const inputs = ['task-1-3-version', 'task-1-3-build', 'task-1-3-edition'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                },
+                '2-1': () => {
+                    const checkbox = document.getElementById('task-2-1-apps');
+                    const inputs = ['task-2-1-count', 'task-2-1-critical'];
+                    return checkbox && checkbox.checked && inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                },
+                '2-2': () => {
+                    const checkbox = document.getElementById('task-2-2-devmgr');
+                    const inputs = ['task-2-2-gpu', 'task-2-2-nic'];
+                    const radio = document.querySelector('input[name="device-errors"]:checked');
+                    return checkbox && checkbox.checked && radio && inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                },
+                '2-3': () => {
+                    const checkbox = document.getElementById('task-2-3-ack');
+                    return checkbox && checkbox.checked;
+                },
+                '3-1': () => {
+                    const inputs = ['task-3-1-docs', 'task-3-1-pics', 'task-3-1-desktop'];
+                    const radio = document.querySelector('input[name="cloud-backup"]:checked');
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    }) && radio;
+                },
+                '3-2': () => {
+                    const inputs = ['task-3-2-ssid', 'task-3-2-printer-count'];
+                    const radios = ['printers-installed', 'bitlocker-enabled'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    }) && radios.every(name => document.querySelector(`input[name="${name}"]:checked`));
+                },
+                '3-3': () => {
+                    const input = document.getElementById('task-3-3-other');
+                    const radios = ['windows-license', 'office-license'];
+                    return input && input.value.trim() !== '' && radios.every(name => document.querySelector(`input[name="${name}"]:checked`));
+                },
+                '4-1': () => {
+                    const checkbox = document.getElementById('task-4-1-wu');
+                    const input = document.getElementById('task-4-1-status');
+                    const radio = document.querySelector('input[name="feature-update-avail"]:checked');
+                    return checkbox && checkbox.checked && input && input.value.trim() !== '' && radio;
+                },
+                '4-2': () => {
+                    const radios = ['upgrade-q1', 'upgrade-q2', 'upgrade-q3'];
+                    return radios.every(name => document.querySelector(`input[name="${name}"]:checked`));
+                },
+                '4-3': () => {
+                    const inputs = ['task-4-3-tool', 'task-4-3-usb'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                },
+                '5-1': () => {
+                    const checkbox = document.getElementById('task-5-1-recovery');
+                    const input = document.getElementById('task-5-1-days');
+                    const radio = document.querySelector('input[name="go-back-avail"]:checked');
+                    return checkbox && checkbox.checked && input && input.value.trim() !== '' && radio;
+                },
+                '5-2': () => {
+                    const inputs = ['task-5-2-size', 'task-5-2-purpose'];
+                    const radio = document.querySelector('input[name="winold-exists"]:checked');
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    }) && radio;
+                },
+                '5-3': () => {
+                    const inputs = ['task-5-3-tool', 'task-5-3-usb'];
+                    const radio = document.querySelector('input[name="recovery-sysfiles"]:checked');
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    }) && radio;
+                },
+                '6-1': () => {
+                    const checkboxes = ['task-6-1-req', 'task-6-1-backup', 'task-6-1-keys', 'task-6-1-compat', 'task-6-1-drivers', 'task-6-1-space', 'task-6-1-power'];
+                    return checkboxes.every(id => {
+                        const checkbox = document.getElementById(id);
+                        return checkbox && checkbox.checked;
+                    });
+                },
+                '6-2': () => {
+                    const inputs = ['task-6-2-verify', 'task-6-2-apps', 'task-6-2-contact'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                },
+                '6-3': () => {
+                    const inputs = ['task-6-3-default', 'task-6-3-cmd', 'task-6-3-alt'];
+                    return inputs.every(id => {
+                        const input = document.getElementById(id);
+                        return input && input.value.trim() !== '';
+                    });
+                }
+            };
+
+            // Count completed tasks
+            Object.keys(taskRequirements).forEach(taskId => {
+                if (taskRequirements[taskId]()) {
+                    count++;
+                }
+            });
+
+            return count;
+        }
+
+        // ===== EXERCISE COLLAPSE/EXPAND =====
+        function toggleExercise(exerciseNum) {
+            const exercise = document.querySelector(`.exercise[data-exercise="${exerciseNum}"]`);
+            if (exercise) {
+                exercise.classList.toggle('collapsed');
+            }
+        }
+
+        // ===== LAB COMPLETION =====
+        function validateCompletion() {
+            const completedTasks = countCompletedTasks();
+            const percentage = Math.round((completedTasks / TOTAL_TASKS) * 100);
+
+            if (percentage === 100) {
+                showCompletionModal();
+            } else {
+                alert(`Lab Progress: ${completedTasks} / ${TOTAL_TASKS} tasks completed (${percentage}%)\n\nPlease complete all tasks before finishing the lab.`);
+            }
+        }
+
+        function showCompletionModal() {
+            const modal = document.getElementById('completion-modal');
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('completion-modal');
+            modal.classList.remove('active');
+        }
+
+        // ===== RESET LAB =====
+        function resetLab() {
+            if (confirm('Are you sure you want to reset all lab data? This action cannot be undone.')) {
+                // Clear localStorage
+                localStorage.removeItem(STORAGE_KEY);
+
+                // Clear all checkboxes
+                document.querySelectorAll('.task-checkbox').forEach(cb => cb.checked = false);
+
+                // Clear all text inputs
+                document.querySelectorAll('.form-input').forEach(input => input.value = '');
+
+                // Clear all radio buttons
+                document.querySelectorAll('.radio-input').forEach(radio => radio.checked = false);
+
+                // Clear all textareas
+                document.querySelectorAll('textarea').forEach(textarea => textarea.value = '');
+
+                // Reset state
+                labState = { tasks: {}, documentation: {} };
+
+                // Update progress
+                updateProgress();
+
+                alert('Lab has been reset successfully!');
+            }
+        }
+
+        // ===== PRINT LAB =====
+        function printLab() {
+            window.print();
+        }
+
+        // ===== CLOSE MODAL ON OUTSIDE CLICK =====
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('completion-modal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>

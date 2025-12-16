@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Installation Types - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #0078d4;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0078d4;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #0078d4;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #005a9e;
+            font-size: 1.6em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        ol {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 25px;
+            right: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #005a9e;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* CompTIA A+ Branding Colors */
+        .aplus-badge {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .col {
+            padding: 20px;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-card.warning {
+            border-left-color: #ffb900;
+            background: #fff4ce;
+        }
+
+        .info-card.success {
+            border-left-color: #107c10;
+            background: #f0fdf4;
+        }
+
+        .info-card.exam-tip {
+            border-left-color: #e52d27;
+            background: #fef2f2;
+        }
+
+        .info-card.danger {
+            border-left-color: #d13438;
+            background: #fee;
+        }
+
+        /* Feature Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight-box li {
+            color: white;
+        }
+
+        .highlight-box p {
+            color: white;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #0078d4;
+        }
+
+        .feature-box h4 {
+            color: #0078d4;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature-box p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Process Steps */
+        .process-steps {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .process-steps ol {
+            margin-left: 25px;
+        }
+
+        .process-steps li {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: #0078d4;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* Installation Type Cards */
+        .install-card {
+            background: #f8f9fa;
+            border-left: 5px solid #0078d4;
+            padding: 25px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .install-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .install-card.clean {
+            border-left-color: #00a4ef;
+        }
+
+        .install-card.upgrade {
+            border-left-color: #7fba00;
+        }
+
+        .install-card.multiboot {
+            border-left-color: #ffb900;
+        }
+
+        .install-card.network {
+            border-left-color: #f25022;
+        }
+
+        .install-card.image {
+            border-left-color: #737373;
+        }
+
+        .install-card.repair {
+            border-left-color: #00b294;
+        }
+
+        /* Flowchart */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .flow-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #0078d4;
+            font-size: 1.1em;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #0078d4;
+        }
+
+        /* Icon Styles */
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .command-box .prompt {
+            color: #6a9955;
+        }
+
+        .command-box .cmd {
+            color: #dcdcaa;
+        }
+
+        /* Requirements Box */
+        .requirements-box {
+            background: #fff4ce;
+            border: 2px solid #ffb900;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .requirements-box h4 {
+            color: #d39300;
+            margin-bottom: 10px;
+        }
+
+        /* Key Points List */
+        .key-points {
+            background: #e8f4fd;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .two-col,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.8em; }
+
+            .slide {
+                padding: 30px;
+            }
+        }
+
+        /* Windows Logo Style */
+        .windows-logo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+
+        .windows-logo div {
+            background: #0078d4;
+        }
+
+        /* Speaker Notes (hidden by default) */
+        .speaker-notes {
+            display: none;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='../../../../index.html'">&#8592; Back to Catalog</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="windows-logo">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h1>Operating System Installation Types</h1>
+            <p class="subtitle">Clean, Upgrade, Migration & Recovery Methods</p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <span class="aplus-badge">CompTIA A+ 220-1102</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3 style="text-align: center;">Installation Methods Covered</h3>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div>
+                        <ul>
+                            <li>Clean Install</li>
+                            <li>Upgrade Install</li>
+                            <li>Multiboot / Dual Boot</li>
+                            <li>Remote Network Installation</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>Image Deployment</li>
+                            <li>Repair Installation</li>
+                            <li>Recovery Options</li>
+                            <li>Boot Media Types</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px; color: #666;">
+                CompTIA A+ 220-1102 Objective 1.9 - OS Installation Methods
+            </p>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Welcome to OS Installation Types. This presentation covers CompTIA A+ Core 2 Objective 1.9. Understanding different installation methods is critical for choosing the right approach based on scenario requirements. Clean installs provide fresh starts, upgrades preserve data, and image deployments scale to many machines.
+            </div>
+
+            <span class="slide-number">Slide 1 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide">
+            <h2>Learning Objectives</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.9</p>
+
+            <div class="highlight-box">
+                <h3>By the end of this presentation, you will be able to:</h3>
+                <ul>
+                    <li>Differentiate between installation types and their use cases</li>
+                    <li>Understand when to use clean, upgrade, or repair installations</li>
+                    <li>Identify appropriate boot media options for different scenarios</li>
+                    <li>Understand partitioning schemes (MBR vs GPT) and file systems</li>
+                    <li>Explain network-based installation methods (PXE, WDS)</li>
+                    <li>Describe image-based deployment workflows</li>
+                    <li>Configure multiboot/dual boot systems</li>
+                    <li>Utilize Windows recovery and repair options</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Exam Coverage:</strong> This topic appears frequently on A+ exams. Expect scenario-based questions about which installation type to recommend based on specific requirements and constraints.
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Key Exam Tip:</strong> Know when to use each method. Clean install = data loss. Upgrade = preserves data. Repair = fixes system files. Image = mass deployment. Network = multiple computers.
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These learning objectives align with CompTIA A+ 220-1102 Objective 1.9. Focus on decision-making - the exam tests your ability to choose the right installation method for specific scenarios. Pay attention to prerequisites, requirements, and outcomes of each method.
+            </div>
+
+            <span class="slide-number">Slide 2 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 3: Types of OS Installations Overview -->
+        <div class="slide">
+            <h2>Types of OS Installations Overview</h2>
+            <p>Understanding the different installation methods available for deploying operating systems.</p>
+
+            <div class="install-card clean">
+                <h3>Clean Install</h3>
+                <p>Fresh OS installation that formats the drive and replaces all existing data. Best for new hardware or major system problems.</p>
+            </div>
+
+            <div class="install-card upgrade">
+                <h3>Upgrade Install</h3>
+                <p>Installs newer OS version over existing OS, preserving files, settings, and most applications. Faster than clean install.</p>
+            </div>
+
+            <div class="install-card multiboot">
+                <h3>Multiboot / Dual Boot</h3>
+                <p>Multiple operating systems installed on separate partitions. Boot manager allows selection at startup.</p>
+            </div>
+
+            <div class="install-card network">
+                <h3>Remote Network Installation</h3>
+                <p>Boot from network adapter using PXE. Installation files hosted on server. Great for multiple computers.</p>
+            </div>
+
+            <div class="install-card image">
+                <h3>Image Deployment</h3>
+                <p>Capture configured system as image file and deploy to multiple computers. Fast, consistent deployments.</p>
+            </div>
+
+            <div class="install-card repair">
+                <h3>Repair Installation & Recovery</h3>
+                <p>Reinstalls OS files or restores to previous state. Keeps user data. Fixes corrupted system files.</p>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This overview provides a quick reference to all installation types. Each method serves specific use cases. Clean installs are most thorough but time-consuming. Upgrades balance speed with data preservation. Network and image deployments scale well for IT departments managing many machines.
+            </div>
+
+            <span class="slide-number">Slide 3 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 4: Clean Install -->
+        <div class="slide">
+            <h2>Clean Install</h2>
+            <p class="subtitle">Fresh OS Installation - The Nuclear Option</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is a Clean Install?</h3>
+                    <p>A <strong>clean install</strong> is a fresh operating system installation that formats the target drive and removes all existing data, resulting in a factory-fresh system.</p>
+
+                    <h3 style="margin-top: 20px;">Characteristics</h3>
+                    <ul>
+                        <li><strong>Formats/replaces existing data</strong> - All files deleted</li>
+                        <li><strong>Creates new partitions</strong> - Fresh partition scheme</li>
+                        <li><strong>No legacy issues</strong> - No carried-over problems</li>
+                        <li><strong>Optimal performance</strong> - Cleanest system state</li>
+                        <li><strong>Time-consuming</strong> - Requires reinstalling everything</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>When to Use Clean Install</h3>
+                    <div class="info-card success">
+                        <strong>New Hardware</strong><br>
+                        Fresh computer or new hard drive installation
+                    </div>
+                    <div class="info-card success">
+                        <strong>Major System Issues</strong><br>
+                        Severe corruption, malware infection, or instability
+                    </div>
+                    <div class="info-card success">
+                        <strong>OS Architecture Change</strong><br>
+                        Switching from 32-bit to 64-bit (upgrade not possible)
+                    </div>
+                    <div class="info-card success">
+                        <strong>Repurposing Computer</strong><br>
+                        Wiping system for new user or different purpose
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card danger">
+                <strong>CRITICAL WARNING:</strong> Clean install will delete ALL data on the target drive. Always backup important files to external storage before proceeding. Recovery is impossible after formatting!
+            </div>
+
+            <div class="key-points">
+                <h4>Benefits vs Drawbacks</h4>
+                <div class="two-col">
+                    <div>
+                        <strong>Benefits:</strong>
+                        <ul>
+                            <li>Factory-fresh performance</li>
+                            <li>No legacy issues or conflicts</li>
+                            <li>Clean partition scheme</li>
+                            <li>Guaranteed clean system</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>Drawbacks:</strong>
+                        <ul>
+                            <li>Requires data backup/restore</li>
+                            <li>Reinstall all applications</li>
+                            <li>Reconfigure all settings</li>
+                            <li>Time-consuming process</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Clean install is the most thorough method but also the most disruptive. Emphasize the importance of backing up data first. It's the best choice when upgrading isn't possible (32-bit to 64-bit) or when the system has severe issues. Results in optimal performance but requires significant time investment to restore productivity.
+            </div>
+
+            <span class="slide-number">Slide 4 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 5: Clean Install Process -->
+        <div class="slide">
+            <h2>Clean Install Process</h2>
+            <p class="subtitle">Step-by-Step Installation Workflow</p>
+
+            <div class="process-steps">
+                <h3>Clean Installation Steps</h3>
+                <ol>
+                    <li><strong>Backup Data</strong> - Copy all important files to external storage or cloud backup</li>
+                    <li><strong>Create Installation Media</strong> - USB drive or DVD with OS installation files</li>
+                    <li><strong>Boot from Installation Media</strong> - Configure BIOS/UEFI to boot from USB/DVD first</li>
+                    <li><strong>Delete Existing Partitions</strong> - Remove old partition structure (optional but recommended)</li>
+                    <li><strong>Create New Partitions</strong> - Set up partition scheme (GPT for UEFI, MBR for Legacy)</li>
+                    <li><strong>Format Partitions</strong> - Format with appropriate file system (NTFS for Windows)</li>
+                    <li><strong>Install Operating System</strong> - Copy OS files and configure boot loader</li>
+                    <li><strong>Initial Configuration</strong> - Language, region, user account, network settings</li>
+                    <li><strong>Install Drivers</strong> - Hardware drivers for proper device functionality</li>
+                    <li><strong>Windows Updates</strong> - Download and install latest security patches</li>
+                    <li><strong>Install Applications</strong> - Reinstall needed software programs</li>
+                    <li><strong>Restore User Data</strong> - Copy backed-up files back to system</li>
+                </ol>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Boot Order:</strong> During installation, you may need to access BIOS/UEFI firmware settings (usually F2, F12, Del, or Esc during startup) to change boot priority. Set USB or DVD drive as first boot device.
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Typical Timeline:</strong>
+                        <ul>
+                            <li>OS Installation: 20-45 minutes</li>
+                            <li>Driver Installation: 15-30 minutes</li>
+                            <li>Windows Updates: 30-90 minutes</li>
+                            <li>Application Reinstall: 1-3 hours</li>
+                            <li>Data Restore: Varies by size</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Exam Tip:</strong> Know that clean install requires booting from external media, formatting drives, and reinstalling everything. If a question mentions "preserving applications," clean install is NOT the answer.
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Walk through the complete clean install process. Emphasize backup as step one - data loss is irreversible. Boot media creation and BIOS configuration are common troubleshooting areas. Deleting partitions is optional but recommended for truly clean installation. Post-install steps (drivers, updates, applications) often take longer than the OS installation itself.
+            </div>
+
+            <span class="slide-number">Slide 5 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 6: Upgrade Install -->
+        <div class="slide">
+            <h2>Upgrade Install</h2>
+            <p class="subtitle">In-Place OS Upgrade - Preserve Your Data</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is an Upgrade Install?</h3>
+                    <p>An <strong>upgrade install</strong> (in-place upgrade) installs a newer OS version over the existing OS while preserving files, settings, and most applications.</p>
+
+                    <h3 style="margin-top: 20px;">Characteristics</h3>
+                    <ul>
+                        <li><strong>Preserves user files</strong> - Documents, photos, etc.</li>
+                        <li><strong>Keeps settings</strong> - User preferences maintained</li>
+                        <li><strong>Retains apps</strong> - Most applications remain installed</li>
+                        <li><strong>Faster than clean</strong> - No need to reinstall everything</li>
+                        <li><strong>May carry problems</strong> - Existing issues can persist</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Requirements</h3>
+                    <div class="requirements-box">
+                        <h4>Upgrade Prerequisites</h4>
+                        <ul>
+                            <li>Compatible source OS version</li>
+                            <li>Same architecture (64-bit to 64-bit)</li>
+                            <li>Same or higher edition tier</li>
+                            <li>Sufficient disk space (20GB+ free)</li>
+                            <li>Meet new OS hardware requirements</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">When to Use</h3>
+                    <ul>
+                        <li>Updating to newer Windows version</li>
+                        <li>System is stable and working well</li>
+                        <li>Want to preserve data and apps</li>
+                        <li>Limited time for reinstallation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="key-points">
+                <h4>Benefits vs Drawbacks</h4>
+                <div class="two-col">
+                    <div>
+                        <strong>Benefits:</strong>
+                        <ul>
+                            <li>Preserves files and settings</li>
+                            <li>Most apps remain functional</li>
+                            <li>Faster than clean install</li>
+                            <li>Less manual reconfiguration</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>Drawbacks:</strong>
+                        <ul>
+                            <li>May carry over existing problems</li>
+                            <li>Some apps may be incompatible</li>
+                            <li>Not possible for all OS transitions</li>
+                            <li>Requires compatible source OS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Upgrade install preserves data (usually). Clean install does NOT. If scenario requires keeping user files and applications, recommend upgrade. If 32-bit to 64-bit, upgrade is impossible - must use clean install.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Upgrade install is the middle ground between clean install and doing nothing. It preserves user data while updating the OS. Emphasize compatibility requirements - not all OS versions can upgrade to all other versions. 32-bit cannot upgrade to 64-bit. Some editions cannot upgrade to lower editions. Always backup before upgrading as a safety measure.
+            </div>
+
+            <span class="slide-number">Slide 6 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 7: Upgrade Compatibility -->
+        <div class="slide">
+            <h2>Upgrade Compatibility</h2>
+            <p class="subtitle">Understanding Upgrade Paths and Requirements</p>
+
+            <div class="highlight-box">
+                <h3>Valid Windows Upgrade Paths</h3>
+                <div class="two-col">
+                    <div>
+                        <h4 style="color: white; font-size: 1.3em;">To Windows 10</h4>
+                        <ul>
+                            <li>Windows 7 (SP1) → Windows 10</li>
+                            <li>Windows 8.1 → Windows 10</li>
+                            <li>Windows 10 → Windows 10 (feature update)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: white; font-size: 1.3em;">To Windows 11</h4>
+                        <ul>
+                            <li>Windows 10 (20H1 or later) → Windows 11</li>
+                            <li>Must meet Windows 11 hardware requirements</li>
+                            <li>Windows 7/8.1 → Windows 11 requires clean install</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Windows 11 Requirements</h3>
+                    <div class="requirements-box">
+                        <h4>Hardware Requirements</h4>
+                        <ul>
+                            <li><strong>TPM 2.0</strong> - Trusted Platform Module 2.0</li>
+                            <li><strong>Secure Boot</strong> - UEFI firmware with Secure Boot capable</li>
+                            <li><strong>64-bit CPU</strong> - 1 GHz or faster, 2+ cores, compatible processor</li>
+                            <li><strong>4 GB RAM</strong> minimum (8 GB recommended)</li>
+                            <li><strong>64 GB storage</strong> minimum</li>
+                            <li><strong>UEFI firmware</strong> - No Legacy BIOS support</li>
+                            <li><strong>DirectX 12</strong> compatible graphics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Edition Upgrade Rules</h3>
+                    <div class="info-card">
+                        <strong>Edition Compatibility:</strong>
+                        <ul>
+                            <li>Home → Home (valid)</li>
+                            <li>Pro → Pro (valid)</li>
+                            <li>Home → Pro (valid with license upgrade)</li>
+                            <li>Pro → Home (NOT VALID - requires clean)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card warning">
+                        <strong>Architecture Limitation:</strong><br>
+                        32-bit Windows CANNOT upgrade to 64-bit Windows. Must perform clean install to change architecture.
+                    </div>
+
+                    <div class="info-card">
+                        <strong>Use PC Health Check Tool:</strong><br>
+                        Microsoft provides PC Health Check app to verify Windows 11 compatibility before attempting upgrade.
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Memorize Windows 11 requirements: TPM 2.0, Secure Boot, UEFI, 64-bit CPU. If scenario mentions "old BIOS system" or "no TPM chip," Windows 11 upgrade is not possible without hardware changes. 32-bit to 64-bit always requires clean install.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Windows 11 introduced strict hardware requirements that block many older computers from upgrading. TPM 2.0 and Secure Boot are the most common blockers. Edition rules matter - you can't downgrade editions via upgrade path. Architecture is fixed during upgrade - changing from 32-bit to 64-bit requires clean install. Always run compatibility checker before attempting upgrade.
+            </div>
+
+            <span class="slide-number">Slide 7 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 8: In-Place Upgrade vs Feature Update -->
+        <div class="slide">
+            <h2>In-Place Upgrade vs Feature Update</h2>
+            <p class="subtitle">Understanding Different Types of Windows Updates</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>In-Place Upgrade</h3>
+                    <div class="install-card upgrade">
+                        <strong>Definition:</strong> Major version change from one OS version to another (e.g., Windows 10 → Windows 11)
+                    </div>
+                    <h4>Characteristics:</h4>
+                    <ul>
+                        <li>Major OS version change</li>
+                        <li>Windows 7/8.1 → Windows 10</li>
+                        <li>Windows 10 → Windows 11</li>
+                        <li>Requires installation media or upgrade assistant</li>
+                        <li>Preserves files, settings, apps</li>
+                        <li>May require license upgrade</li>
+                        <li>Takes 30-90 minutes typically</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Feature Update</h3>
+                    <div class="install-card clean">
+                        <strong>Definition:</strong> Semi-annual update within same Windows version (e.g., Windows 10 21H2 → 22H2)
+                    </div>
+                    <h4>Characteristics:</h4>
+                    <ul>
+                        <li>Same OS, new features</li>
+                        <li>Windows 10: 21H2 → 22H2 → etc.</li>
+                        <li>Windows 11: 22H2 → 23H2 → etc.</li>
+                        <li>Delivered via Windows Update</li>
+                        <li>Preserves all data and settings</li>
+                        <li>No license change needed</li>
+                        <li>Takes 20-45 minutes typically</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Both Methods Preserve Data</h3>
+                <p>Both in-place upgrades and feature updates preserve user files, applications, and settings. The difference is scope: in-place upgrades change OS version entirely, while feature updates add new features to existing OS version.</p>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>In-Place Upgrade</th>
+                        <th>Feature Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OS Version</strong></td>
+                        <td>Changes major version (Win 10 → 11)</td>
+                        <td>Same version (Win 10 21H2 → 22H2)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivery Method</strong></td>
+                        <td>Installation media / Upgrade Assistant</td>
+                        <td>Windows Update</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Frequency</strong></td>
+                        <td>Occasional (every few years)</td>
+                        <td>Regular (twice yearly for Win 10)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>License</strong></td>
+                        <td>May require new license</td>
+                        <td>Same license</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Preservation</strong></td>
+                        <td>Yes (files, settings, apps)</td>
+                        <td>Yes (files, settings, apps)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time Required</strong></td>
+                        <td>30-90 minutes</td>
+                        <td>20-45 minutes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Both in-place upgrade and feature update preserve data. The key difference is scope: in-place changes OS version, feature update adds features to current version. Feature updates come through Windows Update automatically.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Clarify the distinction between these terms. In-place upgrade is major OS version change (10 to 11). Feature update is within-version update (Windows 10 21H2 to 22H2). Both preserve data, but in-place upgrades may require new license and have stricter hardware requirements. Feature updates are routine maintenance delivered via Windows Update.
+            </div>
+
+            <span class="slide-number">Slide 8 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 9: Multiboot / Dual Boot -->
+        <div class="slide">
+            <h2>Multiboot / Dual Boot</h2>
+            <p class="subtitle">Multiple Operating Systems on One Computer</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Multiboot?</h3>
+                    <p>A <strong>multiboot</strong> or <strong>dual boot</strong> configuration allows multiple operating systems to be installed on a single computer, each on its own partition. A boot manager lets you choose which OS to load at startup.</p>
+
+                    <h3 style="margin-top: 20px;">Key Concepts</h3>
+                    <ul>
+                        <li><strong>Separate Partitions</strong> - Each OS on dedicated partition</li>
+                        <li><strong>Boot Manager</strong> - Menu to select OS at startup</li>
+                        <li><strong>One OS at a Time</strong> - Cannot run simultaneously (unlike VMs)</li>
+                        <li><strong>Shared Hardware</strong> - All OS share same physical resources</li>
+                        <li><strong>Requires Reboot</strong> - Must restart to switch OS</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Common Use Cases</h3>
+                    <div class="info-card">
+                        <strong>Testing & Development</strong><br>
+                        Test software on different OS versions without separate hardware
+                    </div>
+                    <div class="info-card">
+                        <strong>Compatibility</strong><br>
+                        Run legacy applications requiring older OS
+                    </div>
+                    <div class="info-card">
+                        <strong>Linux & Windows</strong><br>
+                        Dual boot Windows for games, Linux for development
+                    </div>
+                    <div class="info-card">
+                        <strong>Work & Personal</strong><br>
+                        Separate OS for work vs personal use
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-points">
+                <h4>Considerations for Multiboot</h4>
+                <ul>
+                    <li><strong>Disk Space</strong> - Each OS requires 20-50GB minimum, plus space for applications and files</li>
+                    <li><strong>Boot Order</strong> - Boot manager configuration determines default OS and timeout</li>
+                    <li><strong>File System Compatibility</strong> - Windows uses NTFS, Linux uses ext4 (cross-access may be limited)</li>
+                    <li><strong>Partition Scheme</strong> - GPT recommended for UEFI systems, supports more partitions than MBR</li>
+                    <li><strong>Maintenance</strong> - Each OS needs separate updates, patches, and antivirus</li>
+                </ul>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Important:</strong> Install older operating systems first, then newer ones. Newer OS boot managers are usually backward-compatible and will detect older OS installations. Installing older OS last may overwrite newer boot manager.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Multiboot allows multiple OS on one computer via separate partitions. Unlike virtual machines, only one OS runs at a time - requires reboot to switch. Common for developers and enthusiasts. Key considerations: sufficient disk space (each OS needs 20-50GB+), partition planning, and boot manager configuration. Install older OS first to avoid boot manager conflicts.
+            </div>
+
+            <span class="slide-number">Slide 9 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 10: Setting Up Dual Boot -->
+        <div class="slide">
+            <h2>Setting Up Dual Boot</h2>
+            <p class="subtitle">Step-by-Step Dual Boot Configuration</p>
+
+            <div class="process-steps">
+                <h3>Dual Boot Installation Process</h3>
+                <ol>
+                    <li><strong>Backup All Data</strong> - Partitioning carries risk of data loss</li>
+                    <li><strong>Install First OS</strong> - Usually the older OS (e.g., Windows 10 before Windows 11)</li>
+                    <li><strong>Shrink Existing Partition</strong> - Free up space for second OS
+                        <ul>
+                            <li>Windows: Disk Management → Shrink Volume</li>
+                            <li>Allocate 50-100GB for second OS</li>
+                        </ul>
+                    </li>
+                    <li><strong>Create New Partition</strong> - Use unallocated space for second OS</li>
+                    <li><strong>Install Second OS</strong> - Boot from installation media, select new partition
+                        <ul>
+                            <li>Installer should detect first OS automatically</li>
+                            <li>Do NOT format existing OS partition</li>
+                        </ul>
+                    </li>
+                    <li><strong>Boot Manager Auto-Configures</strong> - Modern installers create boot menu automatically</li>
+                    <li><strong>Configure Boot Options</strong> - Set default OS and timeout (optional)</li>
+                </ol>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Windows Boot Manager</h3>
+                    <div class="command-box">
+<span class="prompt"># View boot configuration (Windows)</span>
+<span class="cmd">bcdedit</span>
+
+<span class="prompt"># Set default OS by identifier</span>
+<span class="cmd">bcdedit /default {identifier}</span>
+
+<span class="prompt"># Set boot menu timeout (seconds)</span>
+<span class="cmd">bcdedit /timeout 30</span>
+
+<span class="prompt"># Rename OS display name</span>
+<span class="cmd">bcdedit /set {identifier} description "Windows 11 Pro"</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Common Issues</h3>
+                    <div class="info-card warning">
+                        <strong>Boot Menu Missing</strong><br>
+                        If second OS doesn't appear, use bcdedit or EasyBCD to rebuild boot configuration.
+                    </div>
+                    <div class="info-card warning">
+                        <strong>Wrong OS Boots Default</strong><br>
+                        Change default OS with: bcdedit /default {id}
+                    </div>
+                    <div class="info-card warning">
+                        <strong>Partition Not Visible</strong><br>
+                        Ensure partition is marked as "active" or has correct flags set.
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> For dual boot setup: shrink existing partition to create space, install second OS to new partition, boot manager auto-configures. Use bcdedit command to manage Windows boot configuration. Install older OS first to avoid boot manager conflicts.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Dual boot setup requires careful partition management. Shrinking partitions carries some risk, so backup first. Modern OS installers automatically detect existing OS and configure boot manager. bcdedit is the command-line tool for managing Windows boot configuration. Third-party tools like EasyBCD provide GUI for boot management. Always install older OS first - newer boot managers detect older OS better than vice versa.
+            </div>
+
+            <span class="slide-number">Slide 10 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 11: Network/Remote Installation -->
+        <div class="slide">
+            <h2>Network / Remote Installation</h2>
+            <p class="subtitle">PXE Boot and Windows Deployment Services</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>PXE (Preboot Execution Environment)</h3>
+                    <p><strong>PXE</strong> allows computers to boot from network adapter instead of local storage, loading OS installation files from a server.</p>
+
+                    <h3 style="margin-top: 20px;">How PXE Works</h3>
+                    <ol>
+                        <li>Computer powers on, network card initializes</li>
+                        <li>PXE ROM sends DHCP request</li>
+                        <li>DHCP server responds with IP and boot server address</li>
+                        <li>Client downloads boot image via TFTP</li>
+                        <li>Boot image loads installation environment</li>
+                        <li>OS installation proceeds from network share</li>
+                    </ol>
+                </div>
+
+                <div class="col">
+                    <h3>Windows Deployment Services (WDS)</h3>
+                    <p><strong>WDS</strong> is Microsoft's server role that provides PXE-based network installation of Windows operating systems.</p>
+
+                    <h3 style="margin-top: 20px;">WDS Components</h3>
+                    <ul>
+                        <li><strong>PXE Server</strong> - Responds to client boot requests</li>
+                        <li><strong>TFTP Server</strong> - Transfers boot files</li>
+                        <li><strong>Boot Images</strong> - Windows PE environment</li>
+                        <li><strong>Install Images</strong> - Full OS installation files</li>
+                        <li><strong>Multicast Support</strong> - Deploy to many PCs simultaneously</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Benefits of Network Installation</h3>
+                <ul>
+                    <li><strong>Centralized Management</strong> - All installation files on server, easy updates</li>
+                    <li><strong>No Physical Media</strong> - No need to create/distribute USB drives or DVDs</li>
+                    <li><strong>Multiple Simultaneous Installs</strong> - Deploy to many computers at once</li>
+                    <li><strong>Consistent Deployments</strong> - Same image for all computers</li>
+                    <li><strong>Remote Locations</strong> - Install OS on computers anywhere on network</li>
+                </ul>
+            </div>
+
+            <div class="requirements-box">
+                <h4>PXE Requirements</h4>
+                <ul>
+                    <li>Network adapter with PXE support (most modern NICs)</li>
+                    <li>PXE boot enabled in BIOS/UEFI</li>
+                    <li>DHCP server on network</li>
+                    <li>WDS server (or other PXE server) hosting installation files</li>
+                    <li>Network connectivity to server during installation</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> PXE = network boot. If scenario mentions "installing OS on multiple computers without physical media" or "network-based installation," the answer is PXE/WDS. Requires network adapter support and server infrastructure.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> PXE network installation is ideal for IT departments managing many computers. Client boots from network adapter (no local media needed), downloads installation files from server. WDS is Microsoft's implementation for Windows deployments. Multicast feature allows deploying to hundreds of computers simultaneously. Requires infrastructure: DHCP server, WDS server, network connectivity. Enable PXE in BIOS and set network boot priority.
+            </div>
+
+            <span class="slide-number">Slide 11 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 12: Image-Based Deployment -->
+        <div class="slide">
+            <h2>Image-Based Deployment</h2>
+            <p class="subtitle">Capture, Customize, and Deploy System Images</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Image Deployment?</h3>
+                    <p><strong>Image deployment</strong> captures a fully configured computer as a system image file, then deploys that image to multiple computers for fast, consistent installations.</p>
+
+                    <h3 style="margin-top: 20px;">Image Deployment Process</h3>
+                    <ol>
+                        <li><strong>Build Reference Computer</strong> - Install and configure OS, drivers, apps</li>
+                        <li><strong>Generalize with Sysprep</strong> - Remove unique identifiers (SID, computer name)</li>
+                        <li><strong>Capture Image</strong> - Create WIM or VHD file of entire system</li>
+                        <li><strong>Store on Server</strong> - Place image on network share or WDS server</li>
+                        <li><strong>Deploy to Targets</strong> - Apply image to destination computers</li>
+                        <li><strong>Specialize on Boot</strong> - Generate new SID, computer name, join domain</li>
+                    </ol>
+                </div>
+
+                <div class="col">
+                    <h3>Tools for Image Deployment</h3>
+                    <div class="feature-box">
+                        <h4>DISM (Deployment Image Servicing)</h4>
+                        <p>Command-line tool for capturing and applying Windows images (.wim files)</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>MDT (Microsoft Deployment Toolkit)</h4>
+                        <p>Free deployment solution with GUI for managing images and deployments</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>SCCM (System Center Configuration Manager)</h4>
+                        <p>Enterprise deployment and management platform (now called Microsoft Endpoint Manager)</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>Sysprep</h4>
+                        <p>System Preparation tool to generalize Windows before imaging</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+<span class="prompt"># Generalize system with Sysprep (before capture)</span>
+<span class="cmd">C:\Windows\System32\Sysprep\sysprep.exe /generalize /oobe /shutdown</span>
+
+<span class="prompt"># Capture image with DISM (from Windows PE)</span>
+<span class="cmd">DISM /Capture-Image /ImageFile:C:\install.wim /CaptureDir:D:\ /Name:"Windows 10 Corporate"</span>
+
+<span class="prompt"># Apply image to drive with DISM</span>
+<span class="cmd">DISM /Apply-Image /ImageFile:C:\install.wim /Index:1 /ApplyDir:C:\</span>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Critical:</strong> Always run Sysprep before capturing an image. Sysprep removes unique system identifiers (SID, computer name, etc.). Deploying non-generalized images causes duplicate SIDs and network conflicts.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Image deployment is the standard for enterprise OS deployment. Build one reference computer with all needed software, run Sysprep to generalize it, capture as image, deploy to many computers. Sysprep is critical - it removes unique identifiers so each deployed computer gets new SID/name. DISM is built into Windows for capture/apply. MDT adds GUI and automation. SCCM is full enterprise solution. Much faster than individual installations.
+            </div>
+
+            <span class="slide-number">Slide 12 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 13: Repair Installation -->
+        <div class="slide">
+            <h2>Repair Installation</h2>
+            <p class="subtitle">Fix System Files Without Losing Data</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Repair Installation?</h3>
+                    <p>A <strong>repair installation</strong> reinstalls Windows system files without deleting user data, settings, or applications. It fixes corrupted OS files while preserving personal files.</p>
+
+                    <h3 style="margin-top: 20px;">Types of Repair</h3>
+                    <div class="install-card repair">
+                        <strong>In-Place Upgrade Repair</strong><br>
+                        Run Windows installer over existing installation. Keeps everything.
+                    </div>
+                    <div class="install-card repair">
+                        <strong>Reset This PC (Keep Files)</strong><br>
+                        Reinstalls Windows but keeps personal files. Removes apps.
+                    </div>
+                    <div class="install-card repair">
+                        <strong>SFC / DISM Repair</strong><br>
+                        Command-line tools to repair system files in-place.
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>When to Use Repair</h3>
+                    <ul>
+                        <li><strong>Corrupted System Files</strong> - Missing or damaged OS files</li>
+                        <li><strong>Boot Problems</strong> - Windows won't start properly</li>
+                        <li><strong>Feature Malfunctions</strong> - Core Windows features broken</li>
+                        <li><strong>After Malware Removal</strong> - Restore system integrity</li>
+                        <li><strong>Update Failures</strong> - Fixing failed update installations</li>
+                    </ul>
+
+                    <h3 style="margin-top: 20px;">Benefits</h3>
+                    <ul>
+                        <li>Keeps user files (documents, photos, etc.)</li>
+                        <li>Faster than clean install</li>
+                        <li>No need to reinstall everything</li>
+                        <li>Fixes most system file corruption</li>
+                        <li>Less disruptive than clean install</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-box">
+<span class="prompt"># System File Checker - scans and repairs system files</span>
+<span class="cmd">sfc /scannow</span>
+
+<span class="prompt"># DISM - repair Windows image source files</span>
+<span class="cmd">DISM /Online /Cleanup-Image /RestoreHealth</span>
+
+<span class="prompt"># Recommended: Run DISM first, then SFC</span>
+<span class="cmd">DISM /Online /Cleanup-Image /RestoreHealth && sfc /scannow</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Reset This PC (Keep My Files)</h3>
+                <p>Windows 10/11 includes "Reset this PC" feature:</p>
+                <ul>
+                    <li><strong>Settings → System → Recovery → Reset this PC</strong></li>
+                    <li>Choose "Keep my files" option</li>
+                    <li>Reinstalls Windows while preserving personal files</li>
+                    <li>Removes installed applications (built-in apps remain)</li>
+                    <li>Resets settings to defaults</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Repair installation keeps user data. Clean install does NOT. If scenario says "fix system issues without losing files," recommend repair installation or Reset PC (Keep files). SFC and DISM are first-line repair tools.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Repair installation fixes system problems while preserving user data. Three main methods: in-place upgrade repair (reinstall same Windows version), Reset PC with "Keep files," or SFC/DISM commands. SFC scans and repairs system files. DISM repairs the Windows image that SFC uses as reference. Always run DISM before SFC for best results. Reset PC is user-friendly but removes applications. In-place repair keeps everything.
+            </div>
+
+            <span class="slide-number">Slide 13 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 14: Recovery Options -->
+        <div class="slide">
+            <h2>Recovery Options</h2>
+            <p class="subtitle">Windows Recovery Environment and Restore Methods</p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Reset This PC</h4>
+                    <p><strong>Keep my files:</strong> Reinstalls Windows, keeps personal files, removes apps</p>
+                    <p><strong>Remove everything:</strong> Equivalent to clean install</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>System Restore</h4>
+                    <p>Reverts system files and settings to previous restore point. Does not affect personal files. Reverses recent changes.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>System Image Recovery</h4>
+                    <p>Restores entire system from full backup image created earlier. Returns computer to exact state when image was created.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Recovery Drive</h4>
+                    <p>Bootable USB drive containing Windows Recovery Environment. Used to troubleshoot when Windows won't boot.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Startup Repair</h4>
+                    <p>Automatically fixes common boot problems like corrupted BCD, missing boot files, or boot sector issues.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Command Prompt (WinRE)</h4>
+                    <p>Access command line from recovery to run DISM, SFC, bootrec, diskpart, and other repair commands.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Windows Recovery Environment (WinRE)</h3>
+                <p>WinRE is a minimal OS environment for troubleshooting and recovery when Windows won't boot normally.</p>
+                <h4 style="color: white; margin-top: 15px;">Ways to Access WinRE:</h4>
+                <ul>
+                    <li><strong>Settings → Update & Security → Recovery → Restart now</strong> (Advanced startup)</li>
+                    <li><strong>Shift + Restart</strong> from Start menu power options</li>
+                    <li><strong>Boot from installation media</strong> → Repair your computer</li>
+                    <li><strong>Three failed boot attempts</strong> triggers automatic WinRE</li>
+                    <li><strong>Boot from Recovery Drive</strong> USB created earlier</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Creating Recovery Drive:</strong>
+                        <ol>
+                            <li>Search "Recovery Drive" in Windows</li>
+                            <li>Connect USB drive (16GB+ recommended)</li>
+                            <li>Check "Back up system files"</li>
+                            <li>Follow wizard to create bootable USB</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Exam Tip:</strong> System Restore = revert to restore point. System Image Recovery = restore full backup. Reset PC = reinstall Windows. Recovery Drive = bootable troubleshooting USB. Know the differences!
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Windows provides multiple recovery options. Reset PC reinstalls Windows (optionally keeping files). System Restore rolls back to restore point without affecting personal files. System Image Recovery restores entire drive from backup. WinRE is recovery environment for troubleshooting boot issues. Recovery Drive is bootable USB with WinRE. Access WinRE via Settings, Shift+Restart, installation media, or automatic trigger after failed boots.
+            </div>
+
+            <span class="slide-number">Slide 14 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 15: Boot Media Types -->
+        <div class="slide">
+            <h2>Boot Media Types</h2>
+            <p class="subtitle">Installation Media Options and Use Cases</p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>USB Flash Drive</h4>
+                    <p><strong>Most Common:</strong> Fast, reusable, widely supported. Minimum 8GB for Windows. Easy to create with Media Creation Tool or Rufus.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>DVD / Blu-ray Disc</h4>
+                    <p><strong>Traditional:</strong> Slower than USB but universal. DVD (4.7GB) sufficient for Windows. Read-only ensures integrity. Becoming less common.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Network (PXE)</h4>
+                    <p><strong>Enterprise:</strong> Boot from network adapter. No physical media needed. Ideal for multiple deployments. Requires PXE server infrastructure.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>SD Card</h4>
+                    <p><strong>Portable Devices:</strong> Common for tablets and small form-factor PCs. Works like USB drive but may be slower depending on card class.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>External Hard Drive</h4>
+                    <p><strong>Large Capacity:</strong> Useful when storing multiple OS images. Can hold various tools and drivers. Faster than optical media.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>ISO File (Virtual)</h4>
+                    <p><strong>Virtual Machines:</strong> Mount ISO directly in VM software. Also used to burn to physical media. Download format from Microsoft.</p>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Media Type</th>
+                        <th>Speed</th>
+                        <th>Reusable</th>
+                        <th>Typical Size</th>
+                        <th>Best Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>USB Flash Drive</strong></td>
+                        <td>Fast (USB 3.0+)</td>
+                        <td>Yes</td>
+                        <td>8-32 GB</td>
+                        <td>General purpose, field technician</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DVD/Blu-ray</strong></td>
+                        <td>Slow</td>
+                        <td>No (writeable: once)</td>
+                        <td>4.7 GB / 25 GB</td>
+                        <td>Archival, older systems</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network (PXE)</strong></td>
+                        <td>Fast (gigabit)</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>Multiple deployments, enterprise</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SD Card</strong></td>
+                        <td>Moderate</td>
+                        <td>Yes</td>
+                        <td>8-128 GB</td>
+                        <td>Tablets, small devices</td>
+                    </tr>
+                    <tr>
+                        <td><strong>External HDD</strong></td>
+                        <td>Fast</td>
+                        <td>Yes</td>
+                        <td>500 GB+</td>
+                        <td>Multiple images, technician toolkit</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> USB flash drive is most common for modern installations - fast, reusable, widely supported. PXE/network boot is for enterprise environments with multiple computers. DVD is legacy but still valid. ISO is download format that must be written to physical media or mounted in VM.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> USB flash drives have replaced optical media as primary installation medium - they're faster, reusable, and easier to create. Minimum 8GB for Windows installation. Network PXE boot eliminates physical media entirely but requires infrastructure. DVDs still work but are slow and single-use. External drives can hold multiple OS images and tools. ISO files are downloaded then burned to media or mounted in VMs.
+            </div>
+
+            <span class="slide-number">Slide 15 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 16: Creating Installation Media -->
+        <div class="slide">
+            <h2>Creating Installation Media</h2>
+            <p class="subtitle">Tools and Methods for Bootable USB Creation</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Media Creation Tool (Official)</h3>
+                    <p>Microsoft's official tool for creating Windows 10/11 installation media.</p>
+
+                    <div class="process-steps">
+                        <h4>Using Media Creation Tool:</h4>
+                        <ol>
+                            <li>Download from Microsoft website</li>
+                            <li>Run MediaCreationTool.exe</li>
+                            <li>Accept license terms</li>
+                            <li>Choose "Create installation media"</li>
+                            <li>Select language, edition, architecture</li>
+                            <li>Choose USB flash drive or ISO file</li>
+                            <li>Select target USB drive (8GB+)</li>
+                            <li>Tool downloads Windows and creates bootable USB</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-card success">
+                        <strong>Advantages:</strong> Official Microsoft tool, downloads latest Windows version, automatic process, includes license compliance.
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Rufus (Third-Party)</h3>
+                    <p>Popular third-party tool for creating bootable USB drives from ISO files.</p>
+
+                    <div class="process-steps">
+                        <h4>Using Rufus:</h4>
+                        <ol>
+                            <li>Download Rufus from rufus.ie</li>
+                            <li>Download Windows ISO separately</li>
+                            <li>Insert USB drive (8GB+)</li>
+                            <li>Launch Rufus</li>
+                            <li>Select USB device</li>
+                            <li>Click SELECT and choose ISO file</li>
+                            <li>Set partition scheme:
+                                <ul>
+                                    <li>GPT for UEFI systems</li>
+                                    <li>MBR for Legacy BIOS</li>
+                                </ul>
+                            </li>
+                            <li>Click START to create bootable USB</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-card success">
+                        <strong>Advantages:</strong> Fast, flexible, supports multiple partition schemes, works with various OS (Windows, Linux), advanced options.
+                    </div>
+                </div>
+            </div>
+
+            <div class="requirements-box">
+                <h4>Bootable USB Requirements</h4>
+                <ul>
+                    <li><strong>Minimum 8 GB USB drive</strong> (16 GB recommended for Windows 11)</li>
+                    <li><strong>USB drive will be formatted</strong> - backup any existing data first!</li>
+                    <li><strong>USB 3.0 recommended</strong> - significantly faster than USB 2.0</li>
+                    <li><strong>Match partition scheme to firmware:</strong> GPT for UEFI, MBR for Legacy BIOS</li>
+                </ul>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Important:</strong> Creating bootable media ERASES all data on the USB drive. Back up any files before proceeding. USB drive must be at least 8GB for Windows installation.
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Media Creation Tool is official Microsoft method. Rufus is third-party alternative with more options. Both create bootable USB. GPT partition scheme for UEFI systems, MBR for Legacy BIOS. Minimum 8GB USB drive required.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Two main methods: Microsoft's Media Creation Tool (easiest, official) and Rufus (more control, third-party). Media Creation Tool downloads Windows automatically and creates USB in one process. Rufus requires separate ISO download but offers more options like partition scheme selection. Always backup USB drive first - creation process formats it. Match partition scheme to firmware: GPT for UEFI, MBR for Legacy BIOS.
+            </div>
+
+            <span class="slide-number">Slide 16 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 17: Partitioning Basics -->
+        <div class="slide">
+            <h2>Partitioning Basics</h2>
+            <p class="subtitle">MBR vs GPT and Partition Types</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>MBR (Master Boot Record)</h3>
+                    <div class="install-card clean">
+                        <strong>Legacy Partitioning Scheme</strong><br>
+                        Used with Legacy BIOS systems
+                    </div>
+
+                    <h4>MBR Characteristics:</h4>
+                    <ul>
+                        <li><strong>Maximum 4 primary partitions</strong> (or 3 primary + 1 extended)</li>
+                        <li><strong>Extended partition</strong> can contain unlimited logical drives</li>
+                        <li><strong>2 TB maximum disk size</strong> per partition</li>
+                        <li><strong>32-bit partition table</strong></li>
+                        <li><strong>Legacy BIOS</strong> compatibility</li>
+                        <li><strong>Boot sector</strong> at beginning of disk</li>
+                    </ul>
+
+                    <h4 style="margin-top: 20px;">Partition Types in MBR:</h4>
+                    <ul>
+                        <li><strong>Primary</strong> - Bootable, max 4 total</li>
+                        <li><strong>Extended</strong> - Container for logical drives</li>
+                        <li><strong>Logical</strong> - Partitions within extended partition</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>GPT (GUID Partition Table)</h3>
+                    <div class="install-card upgrade">
+                        <strong>Modern Partitioning Scheme</strong><br>
+                        Required for UEFI systems and Windows 11
+                    </div>
+
+                    <h4>GPT Characteristics:</h4>
+                    <ul>
+                        <li><strong>Up to 128 partitions</strong> on Windows (no primary/extended distinction)</li>
+                        <li><strong>9.4 ZB maximum disk size</strong> (essentially unlimited)</li>
+                        <li><strong>64-bit partition table</strong></li>
+                        <li><strong>UEFI firmware</strong> required (but can work with BIOS in CSM mode)</li>
+                        <li><strong>Redundant partition table</strong> for reliability</li>
+                        <li><strong>CRC error detection</strong> for data integrity</li>
+                    </ul>
+
+                    <h4 style="margin-top: 20px;">Special GPT Partitions:</h4>
+                    <ul>
+                        <li><strong>EFI System Partition (ESP)</strong> - Stores boot loaders (FAT32, 100-500MB)</li>
+                        <li><strong>MSR (Microsoft Reserved)</strong> - Reserved space (16-128MB)</li>
+                        <li><strong>Recovery Partition</strong> - Windows Recovery Environment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>MBR</th>
+                        <th>GPT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Maximum Partitions</strong></td>
+                        <td>4 primary (or 3 + extended)</td>
+                        <td>128 partitions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maximum Disk Size</strong></td>
+                        <td>2 TB</td>
+                        <td>9.4 ZB (essentially unlimited)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firmware Compatibility</strong></td>
+                        <td>Legacy BIOS</td>
+                        <td>UEFI (required for Windows 11)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Protection</strong></td>
+                        <td>Single partition table</td>
+                        <td>Redundant table + CRC checks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows 11 Support</strong></td>
+                        <td>No</td>
+                        <td>Yes (required)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> GPT required for UEFI systems and Windows 11. MBR for Legacy BIOS. MBR limited to 4 primary partitions and 2TB disks. GPT supports 128 partitions and huge disks. Remember: MBR = 4 partitions max, 2TB max. GPT = 128 partitions, 9.4ZB max.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> MBR is legacy scheme with 4 partition limit and 2TB disk limit. GPT is modern standard required for UEFI and Windows 11, supporting 128 partitions and massive disks. GPT includes redundancy and error checking MBR lacks. Windows 11 requires GPT. If converting between schemes, backup data first - conversion typically requires reformatting. Use diskpart or Disk Management to view/modify partitions.
+            </div>
+
+            <span class="slide-number">Slide 17 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 18: File Systems -->
+        <div class="slide">
+            <h2>File Systems</h2>
+            <p class="subtitle">Understanding Different File System Types</p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>NTFS (New Technology File System)</h4>
+                    <p><strong>Windows Standard:</strong> Default for Windows. Supports large files, permissions, encryption, compression. Maximum file size: 16 EB. Best for Windows installations.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>FAT32 (File Allocation Table 32)</h4>
+                    <p><strong>Legacy Compatibility:</strong> Universal compatibility across OS. 4 GB max file size. 32 GB max partition (Windows). Good for USB drives, older devices.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>exFAT (Extended FAT)</h4>
+                    <p><strong>Removable Media:</strong> Designed for flash drives. No 4GB file limit. Cross-platform compatible. Ideal for large files on external drives (videos, backups).</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>ext4 (Fourth Extended File System)</h4>
+                    <p><strong>Linux Standard:</strong> Default Linux file system. Journaling for reliability. Not natively supported by Windows. Maximum file size: 16 TB. Excellent performance.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>APFS (Apple File System)</h4>
+                    <p><strong>macOS Standard:</strong> Modern macOS/iOS file system. Optimized for SSDs. Encryption, snapshots, space sharing. Not accessible from Windows without third-party tools.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>ReFS (Resilient File System)</h4>
+                    <p><strong>Windows Server:</strong> Enhanced reliability for servers and workstations. Built-in resilience. Available in Pro for Workstations and Server editions only.</p>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>File System</th>
+                        <th>Max File Size</th>
+                        <th>Max Volume Size</th>
+                        <th>Primary Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NTFS</strong></td>
+                        <td>16 EB</td>
+                        <td>16 EB</td>
+                        <td>Windows OS installations, internal drives</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FAT32</strong></td>
+                        <td>4 GB</td>
+                        <td>32 GB (Windows), 2 TB (spec)</td>
+                        <td>USB drives, cross-platform compatibility</td>
+                    </tr>
+                    <tr>
+                        <td><strong>exFAT</strong></td>
+                        <td>16 EB</td>
+                        <td>128 PB</td>
+                        <td>Large files on removable media (external HDD, SD cards)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ext4</strong></td>
+                        <td>16 TB</td>
+                        <td>1 EB</td>
+                        <td>Linux OS installations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>APFS</strong></td>
+                        <td>8 EB</td>
+                        <td>8 EB</td>
+                        <td>macOS installations (macOS 10.13+)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-points">
+                <h4>Choosing the Right File System</h4>
+                <ul>
+                    <li><strong>Windows installation:</strong> NTFS (only option for modern Windows)</li>
+                    <li><strong>Cross-platform USB drive (small files):</strong> FAT32</li>
+                    <li><strong>Large files on external drive:</strong> exFAT</li>
+                    <li><strong>Linux installation:</strong> ext4 (or btrfs, xfs)</li>
+                    <li><strong>macOS installation:</strong> APFS</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> NTFS is Windows standard (supports large files, security, encryption). FAT32 has 4GB file size limit (common issue with large videos). exFAT for removable media with large files. ext4 for Linux. APFS for macOS. Know file size limitations!
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> File systems determine how data is stored on disk. NTFS is Windows standard with full feature support. FAT32 is legacy with 4GB file size limit but universal compatibility - common issue when copying large files. exFAT solves FAT32 file size problem for removable media. ext4 is Linux default. APFS is modern macOS. Windows installations must use NTFS. USB drives often use FAT32 or exFAT depending on file sizes.
+            </div>
+
+            <span class="slide-number">Slide 18 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 19: Unattended Installation -->
+        <div class="slide">
+            <h2>Unattended Installation</h2>
+            <p class="subtitle">Automated OS Deployment with Answer Files</p>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>What is Unattended Installation?</h3>
+                    <p>An <strong>unattended installation</strong> uses an answer file to automatically provide responses to installation prompts, allowing OS deployment without user interaction.</p>
+
+                    <h3 style="margin-top: 20px;">Components</h3>
+                    <ul>
+                        <li><strong>Answer File (unattend.xml)</strong> - XML file with installation settings</li>
+                        <li><strong>Windows SIM</strong> - System Image Manager to create answer files</li>
+                        <li><strong>Windows ADK</strong> - Assessment and Deployment Kit (contains SIM)</li>
+                        <li><strong>Configuration Passes</strong> - Different stages of installation</li>
+                    </ul>
+
+                    <h3 style="margin-top: 20px;">Benefits</h3>
+                    <ul>
+                        <li>No user interaction needed</li>
+                        <li>Consistent configurations</li>
+                        <li>Mass deployment efficiency</li>
+                        <li>Standardized settings</li>
+                        <li>Reduced human error</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>What Can Be Automated?</h3>
+                    <div class="info-card">
+                        <strong>Installation Settings:</strong>
+                        <ul>
+                            <li>Language and region</li>
+                            <li>Product key</li>
+                            <li>Partition configuration</li>
+                            <li>User accounts</li>
+                            <li>Computer name</li>
+                            <li>Network settings</li>
+                            <li>Domain join credentials</li>
+                            <li>Time zone</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <strong>Post-Installation:</strong>
+                        <ul>
+                            <li>Install drivers</li>
+                            <li>Install applications</li>
+                            <li>Configure Windows settings</li>
+                            <li>Run scripts</li>
+                            <li>Apply Group Policies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+<span class="prompt"># Answer file location options for unattended install</span>
+<span class="cmd">\autounattend.xml</span>   <span class="prompt"># Root of installation media</span>
+<span class="cmd">\unattend.xml</span>        <span class="prompt"># Root of installation media (alternative)</span>
+<span class="cmd">A:\autounattend.xml</span> <span class="prompt"># Floppy drive (legacy)</span>
+
+<span class="prompt"># Windows Setup searches these locations automatically</span>
+<span class="prompt"># Create answer file with Windows System Image Manager (SIM)</span>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Typical Use Cases</h3>
+                <ul>
+                    <li><strong>Enterprise Deployments</strong> - Deploy hundreds of computers with identical settings</li>
+                    <li><strong>OEM Manufacturing</strong> - Pre-configure computers before shipping to customers</li>
+                    <li><strong>Standardization</strong> - Ensure all computers have consistent configuration</li>
+                    <li><strong>Testing</strong> - Rapidly deploy test environments without manual setup</li>
+                </ul>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Unattended installation uses answer file (unattend.xml) to automate setup. No user interaction needed. Windows SIM creates answer files. Useful for mass deployment. If scenario mentions "deploy to many computers without interaction," recommend unattended installation.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Unattended installation automates OS deployment using XML answer file (unattend.xml). Windows System Image Manager (SIM) in Windows ADK creates answer files. File contains all installation choices: language, product key, partitioning, user accounts, etc. Place answer file on installation media root as autounattend.xml - setup finds it automatically. Critical for enterprise deployments where hundreds of identical installations are needed. Eliminates manual interaction and ensures consistency.
+            </div>
+
+            <span class="slide-number">Slide 19 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 20: Exam Tips -->
+        <div class="slide">
+            <h2>Exam Tips</h2>
+            <p class="subtitle">Key Points for CompTIA A+ Success</p>
+
+            <div class="highlight-box">
+                <h3>Critical Distinctions to Memorize</h3>
+                <div class="two-col">
+                    <div>
+                        <ul>
+                            <li><strong>Clean install</strong> = data loss without backup</li>
+                            <li><strong>Upgrade install</strong> = preserves data (usually)</li>
+                            <li><strong>Repair install</strong> = fixes system, keeps user files</li>
+                            <li><strong>PXE</strong> = network boot</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><strong>GPT</strong> for UEFI, <strong>MBR</strong> for Legacy BIOS</li>
+                            <li><strong>MBR</strong> = max 4 partitions, 2TB limit</li>
+                            <li><strong>GPT</strong> = 128 partitions, essentially unlimited size</li>
+                            <li><strong>Windows 11</strong> requires GPT + UEFI + TPM 2.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Installation Type Decision Tree</h3>
+                    <div class="info-card">
+                        <strong>New PC or fresh start?</strong><br>
+                        → Clean install
+                    </div>
+                    <div class="info-card">
+                        <strong>Keep data and apps?</strong><br>
+                        → Upgrade install (if compatible)
+                    </div>
+                    <div class="info-card">
+                        <strong>Fix system issues, keep files?</strong><br>
+                        → Repair installation
+                    </div>
+                    <div class="info-card">
+                        <strong>Multiple OS needed?</strong><br>
+                        → Dual boot / multiboot
+                    </div>
+                    <div class="info-card">
+                        <strong>Many computers to deploy?</strong><br>
+                        → Image deployment or PXE
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Common Exam Scenarios</h3>
+                    <div class="info-card exam-tip">
+                        <strong>"User wants to keep all files and settings"</strong><br>
+                        Answer: Upgrade install (NOT clean)
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>"32-bit to 64-bit Windows"</strong><br>
+                        Answer: Clean install (upgrade impossible)
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>"Install 100 computers with same config"</strong><br>
+                        Answer: Image deployment or PXE/WDS
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>"Boot from network without media"</strong><br>
+                        Answer: PXE boot
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>"Fix corrupted system files, keep data"</strong><br>
+                        Answer: Repair installation or SFC/DISM
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-points">
+                <h4>File System & Partition Scheme Quick Reference</h4>
+                <ul>
+                    <li><strong>NTFS:</strong> Windows installations, supports large files, encryption, permissions</li>
+                    <li><strong>FAT32:</strong> Cross-platform compatibility, 4GB file size limit (common issue!)</li>
+                    <li><strong>exFAT:</strong> Large files on removable media (external drives, SD cards)</li>
+                    <li><strong>GPT:</strong> Required for UEFI and Windows 11, supports 128 partitions</li>
+                    <li><strong>MBR:</strong> Legacy BIOS only, max 4 primary partitions, 2TB disk limit</li>
+                </ul>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Remember:</strong> Always backup data before clean install, upgrade, or partition changes. Data loss is irreversible! This is a common exam theme - proper preparation and backup procedures.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Focus on decision-making for exam success. Know when to use each installation type based on scenario requirements. Memorize limitations: MBR 4 partition/2TB limit, FAT32 4GB file limit, upgrade cannot change architecture. Windows 11 requirements (TPM 2.0, UEFI, GPT) appear frequently. Practice scenario questions where you must recommend installation method based on requirements.
+            </div>
+
+            <span class="slide-number">Slide 20 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 21: Decision Flowchart -->
+        <div class="slide">
+            <h2>Installation Type Decision Flowchart</h2>
+            <p class="subtitle">Visual Guide to Choosing the Right Method</p>
+
+            <div class="flowchart">
+                <div class="flow-item">
+                    <strong>START:</strong> Need to install or repair operating system
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-item">
+                    <strong>Question 1:</strong> Is this a new computer or new hard drive?<br>
+                    <strong>YES</strong> → <span style="color: #00a4ef; font-weight: bold;">CLEAN INSTALL</span> (no data to preserve)
+                </div>
+                <div class="flow-arrow">↓ NO</div>
+                <div class="flow-item">
+                    <strong>Question 2:</strong> Do you need to preserve user files and applications?<br>
+                    <strong>NO</strong> → <span style="color: #00a4ef; font-weight: bold;">CLEAN INSTALL</span> (fresh start, best performance)
+                </div>
+                <div class="flow-arrow">↓ YES</div>
+                <div class="flow-item">
+                    <strong>Question 3:</strong> Is the current OS compatible for upgrade to target OS?<br>
+                    <strong>NO</strong> → <span style="color: #00a4ef; font-weight: bold;">CLEAN INSTALL</span> (e.g., 32-bit → 64-bit, old OS version)
+                </div>
+                <div class="flow-arrow">↓ YES</div>
+                <div class="flow-item">
+                    <strong>Question 4:</strong> Is the system currently stable and working well?<br>
+                    <strong>NO</strong> → <span style="color: #00b294; font-weight: bold;">REPAIR INSTALLATION</span> or <span style="color: #00a4ef; font-weight: bold;">CLEAN INSTALL</span> if severely corrupted
+                </div>
+                <div class="flow-arrow">↓ YES</div>
+                <div class="flow-item">
+                    <strong>Question 5:</strong> Are you deploying to multiple computers (10+)?<br>
+                    <strong>YES</strong> → <span style="color: #737373; font-weight: bold;">IMAGE DEPLOYMENT</span> or <span style="color: #f25022; font-weight: bold;">PXE/NETWORK INSTALL</span>
+                </div>
+                <div class="flow-arrow">↓ NO</div>
+                <div class="flow-item">
+                    <strong>Question 6:</strong> Do you need multiple operating systems on same computer?<br>
+                    <strong>YES</strong> → <span style="color: #ffb900; font-weight: bold;">DUAL BOOT / MULTIBOOT</span>
+                </div>
+                <div class="flow-arrow">↓ NO</div>
+                <div class="flow-item" style="background: #e8f4fd; border-left-color: #7fba00;">
+                    <strong>RECOMMENDED:</strong> <span style="color: #7fba00; font-weight: bold;">UPGRADE INSTALL</span><br>
+                    Preserves files and apps, faster than clean install
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Pro Tip:</strong> On the exam, work through scenarios systematically. Identify requirements (preserve data? multiple PCs? compatible OS?), then eliminate impossible options. Use this flowchart logic to narrow down to correct answer.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This flowchart provides systematic decision-making process for choosing installation method. Start with basic questions: new hardware, data preservation needs, OS compatibility, system stability, deployment scale, multi-OS requirements. Each answer narrows options. Key decision points: data preservation rules out clean install, incompatible source OS requires clean install, multiple computers suggest image/PXE deployment.
+            </div>
+
+            <span class="slide-number">Slide 21 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 22: Key Takeaways & Review -->
+        <div class="slide">
+            <h2>Key Takeaways & Review</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.9</p>
+
+            <div class="highlight-box">
+                <h3>Essential Installation Types Summary</h3>
+                <div class="two-col">
+                    <div>
+                        <h4 style="color: white;">Installation Methods</h4>
+                        <ul>
+                            <li><strong>Clean Install:</strong> Fresh start, data loss, best performance</li>
+                            <li><strong>Upgrade Install:</strong> Preserves data, same architecture only</li>
+                            <li><strong>Repair Install:</strong> Fixes system files, keeps user data</li>
+                            <li><strong>Dual Boot:</strong> Multiple OS, separate partitions</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: white;">Deployment Methods</h4>
+                        <ul>
+                            <li><strong>Image Deployment:</strong> Capture and deploy, mass rollout</li>
+                            <li><strong>PXE/Network:</strong> Boot from network, no physical media</li>
+                            <li><strong>Unattended:</strong> Answer file automation</li>
+                            <li><strong>Recovery:</strong> Restore points, reset, system image</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Critical Concepts</h3>
+                    <div class="key-points">
+                        <h4>Partitioning & File Systems</h4>
+                        <ul>
+                            <li>MBR: Legacy, 4 partitions, 2TB max</li>
+                            <li>GPT: Modern, 128 partitions, required for Win11</li>
+                            <li>NTFS: Windows standard</li>
+                            <li>FAT32: 4GB file limit (know this!)</li>
+                            <li>exFAT: Large files, removable media</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>Boot Media</h4>
+                        <ul>
+                            <li>USB flash drive: most common</li>
+                            <li>DVD: legacy but still valid</li>
+                            <li>PXE: network boot for enterprise</li>
+                            <li>ISO: download format for burning</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Exam Success Strategies</h3>
+                    <div class="info-card exam-tip">
+                        <strong>Read Scenarios Carefully!</strong> Look for key words:
+                        <ul>
+                            <li>"Keep files" → Upgrade or Repair</li>
+                            <li>"Fresh start" → Clean Install</li>
+                            <li>"Multiple computers" → Image or PXE</li>
+                            <li>"32-bit to 64-bit" → Clean Install only</li>
+                            <li>"Network boot" → PXE</li>
+                            <li>"Fix system issues" → Repair</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card success">
+                        <strong>Remember the Tools:</strong>
+                        <ul>
+                            <li>Media Creation Tool: official USB creator</li>
+                            <li>Rufus: third-party bootable USB</li>
+                            <li>Sysprep: generalize before imaging</li>
+                            <li>DISM: capture/apply images</li>
+                            <li>SFC: repair system files</li>
+                            <li>bcdedit: manage boot configuration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Final Reminder:</strong> Always backup data before ANY installation or major change. This principle appears repeatedly on the exam. Proper planning prevents data loss and is a core A+ competency.
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: #e8f4fd; border-radius: 10px;">
+                <h3 style="color: #0078d4;">You are now prepared for OS Installation Types questions!</h3>
+                <p style="font-size: 1.1em; color: #005a9e;">Practice scenario-based questions and apply this decision-making framework.</p>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This final slide reinforces key concepts. Emphasize decision-making process: identify requirements, eliminate incompatible methods, choose best option. Know limitations (MBR, FAT32, upgrade paths). Understand tools (Media Creation Tool, Sysprep, DISM). Most importantly, recognize scenario keywords that indicate specific installation types. Practice applying this knowledge to exam-style scenarios.
+            </div>
+
+            <span class="slide-number">Slide 22 of 22</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592; Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next &#8594;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            } else if (e.key === 'n' || e.key === 'N') {
+                // Toggle speaker notes
+                const currentSlideEl = slides[currentSlide];
+                const notes = currentSlideEl.querySelector('.speaker-notes');
+                if (notes) {
+                    notes.style.display = notes.style.display === 'none' || notes.style.display === '' ? 'block' : 'none';
+                }
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add console tip for speaker notes
+        console.log('%cSpeaker Notes: Press "N" to toggle speaker notes on current slide', 'color: #0078d4; font-size: 14px; font-weight: bold;');
+    </script>
+</body>
+</html>

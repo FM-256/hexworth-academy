@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workgroup vs Domain - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #e52d27;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #e52d27;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #e52d27;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #b31217;
+            font-size: 1.6em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 25px;
+            right: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 50px;
+            font-size: 1em;
+            color: #666;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #e52d27;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #b31217;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* CompTIA A+ Branding Colors */
+        .aplus-badge {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Network Model Cards */
+        .network-card {
+            background: #f8f9fa;
+            border-left: 5px solid #e52d27;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .network-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .network-card.workgroup {
+            border-left-color: #0078d4;
+        }
+
+        .network-card.domain {
+            border-left-color: #7fba00;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .col {
+            padding: 20px;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: #e52d27;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .comparison-table td.workgroup-col {
+            background: #e3f2fd;
+        }
+
+        .comparison-table td.domain-col {
+            background: #f1f8e9;
+        }
+
+        /* Feature Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight-box li {
+            color: white;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #e52d27;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-card.warning {
+            border-left-color: #ffb900;
+            background: #fff4ce;
+        }
+
+        .info-card.success {
+            border-left-color: #107c10;
+            background: #f0fdf4;
+        }
+
+        .info-card.exam-tip {
+            border-left-color: #e52d27;
+            background: #fef2f2;
+        }
+
+        .info-card.workgroup {
+            border-left-color: #0078d4;
+            background: #e3f2fd;
+        }
+
+        .info-card.domain {
+            border-left-color: #7fba00;
+            background: #f1f8e9;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e52d27;
+        }
+
+        .feature-box h4 {
+            color: #e52d27;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature-box p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Icon Styles */
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Diagram Styles */
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .diagram-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .diagram-box {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            min-width: 150px;
+            transition: transform 0.3s;
+        }
+
+        .diagram-box:hover {
+            transform: scale(1.05);
+        }
+
+        .diagram-box.server {
+            background: linear-gradient(135deg, #7fba00, #5e9000);
+        }
+
+        .diagram-box.pc {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+        }
+
+        .diagram-box.user {
+            background: linear-gradient(135deg, #e52d27, #b31217);
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #666;
+        }
+
+        /* Steps/Instructions */
+        .steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .command-box .prompt {
+            color: #6a9955;
+        }
+
+        .command-box .cmd {
+            color: #dcdcaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .two-col,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.8em; }
+
+            .slide {
+                padding: 30px;
+            }
+        }
+
+        /* Visual Network Icons */
+        .network-visual {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .network-model {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 200px;
+        }
+
+        .network-model.workgroup-bg {
+            background: linear-gradient(135deg, #0078d4, #005a9e);
+            color: white;
+        }
+
+        .network-model.domain-bg {
+            background: linear-gradient(135deg, #7fba00, #5e9000);
+            color: white;
+        }
+
+        .network-model h3 {
+            color: white;
+            margin-top: 10px;
+        }
+
+        /* Speaker Notes (hidden by default) */
+        .speaker-notes {
+            display: none;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='../../../../index.html'">&#8592; Back to Catalog</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Workgroup vs Domain Networks</h1>
+            <p class="subtitle">Understanding Network Organization Models for CompTIA A+ Core 2</p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <span class="aplus-badge">CompTIA A+ 220-1102</span>
+            </div>
+
+            <div class="network-visual">
+                <div class="network-model workgroup-bg">
+                    <span class="icon">👥</span>
+                    <h3>Workgroup</h3>
+                    <p style="color: white; opacity: 0.9;">Peer-to-Peer Model</p>
+                </div>
+                <div class="network-model domain-bg">
+                    <span class="icon">🏢</span>
+                    <h3>Domain</h3>
+                    <p style="color: white; opacity: 0.9;">Client-Server Model</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px; color: #666;">
+                CompTIA A+ 220-1102 Objective 1.6 - Microsoft Windows Networking
+            </p>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Welcome to Workgroup vs Domain presentation. This topic covers CompTIA A+ Core 2 Objective 1.6 on Microsoft Windows networking models. Understanding the difference between workgroups and domains is essential for configuring Windows networks, troubleshooting authentication issues, and recommending appropriate network models for different organization sizes.
+            </div>
+
+            <span class="slide-number">Slide 1 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide">
+            <h2>Learning Objectives</h2>
+            <p class="subtitle">CompTIA A+ 220-1102 Objective 1.6</p>
+
+            <div class="highlight-box">
+                <h3>By the end of this presentation, you will be able to:</h3>
+                <ul>
+                    <li>Define workgroups and domains and explain their fundamental differences</li>
+                    <li>Compare authentication models: local vs centralized</li>
+                    <li>Identify appropriate use cases for workgroup and domain networks</li>
+                    <li>Understand Active Directory basics and domain controller roles</li>
+                    <li>Join Windows computers to workgroups and domains</li>
+                    <li>Explain Group Policy and its role in domain management</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="info-card">
+                        <strong>Exam Coverage:</strong> Workgroup vs Domain is a key topic on A+ Core 2. Expect questions about when to use each model, domain joining requirements, and authentication differences.
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-card exam-tip">
+                        <strong>Key Exam Tip:</strong> Remember the 20-computer guideline for workgroups. Beyond that size, domains become necessary for effective management.
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These objectives align with CompTIA A+ 220-1102 Objective 1.6 on Microsoft Windows networking. Focus on practical scenarios - when would you recommend a workgroup vs a domain? What are the administrative implications? The exam often presents scenarios requiring you to identify which model is appropriate based on organization size and requirements.
+            </div>
+
+            <span class="slide-number">Slide 2 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 3: What is a Workgroup? -->
+        <div class="slide">
+            <h2>What is a Workgroup?</h2>
+            <p class="subtitle">Peer-to-Peer Network Model</p>
+
+            <div class="highlight-box">
+                <h3>Workgroup Definition</h3>
+                <p>A <strong>workgroup</strong> is a peer-to-peer network model where each computer manages its own security, user accounts, and resources independently. No central server is required.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Key Characteristics</h3>
+                    <ul>
+                        <li><strong>Peer-to-Peer Model</strong> - All computers are equal</li>
+                        <li><strong>Decentralized Management</strong> - Each PC is independent</li>
+                        <li><strong>Local User Accounts</strong> - Stored on each individual computer</li>
+                        <li><strong>No Central Server</strong> - No domain controller required</li>
+                        <li><strong>Simple File Sharing</strong> - Share folders and printers locally</li>
+                        <li><strong>Small Scale</strong> - Recommended maximum of ~20 computers</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Visual Representation</h3>
+                    <div class="diagram">
+                        <div class="diagram-row">
+                            <div class="diagram-box pc">PC 1<br>Local Accounts</div>
+                            <div class="diagram-box pc">PC 2<br>Local Accounts</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↕</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box pc">PC 3<br>Local Accounts</div>
+                            <div class="diagram-box pc">PC 4<br>Local Accounts</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px;">Each computer manages its own users and resources</p>
+                </div>
+            </div>
+
+            <div class="info-card workgroup">
+                <strong>Important:</strong> In a workgroup, if a user needs access to resources on multiple computers, they must have a separate user account created on EACH computer. There is no account synchronization.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Emphasize that workgroups are peer-to-peer - no computer has authority over others. This is fundamentally different from domains. The 20-computer limitation is not a technical hard limit, but a practical guideline. Managing more than 20 computers in a workgroup becomes administratively burdensome because you must configure each computer individually.
+            </div>
+
+            <span class="slide-number">Slide 3 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 4: Workgroup Characteristics -->
+        <div class="slide">
+            <h2>Workgroup Characteristics</h2>
+            <p class="subtitle">How Workgroups Operate</p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>🔓 Decentralized Management</h4>
+                    <p>Each computer administrator manages their own computer independently. No centralized control or policies.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>👤 Local User Accounts</h4>
+                    <p>User accounts exist only on individual computers. Must create separate accounts on each PC users need to access.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📁 Simple File/Printer Sharing</h4>
+                    <p>Share folders and printers using simple sharing settings. Access controlled by local permissions.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>❌ No Single Sign-On</h4>
+                    <p>Users must authenticate separately to each computer. No unified login credentials across the network.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>💰 Zero Additional Cost</h4>
+                    <p>No server licenses or additional software required. Uses built-in Windows features only.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>⚙️ Individual Configuration</h4>
+                    <p>Security policies, updates, and settings must be configured on each computer separately.</p>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Administrative Challenge:</strong> In a 10-computer workgroup, creating a new user requires creating 10 separate accounts (one on each computer). Changing a password requires updating it on all 10 computers manually. This doesn't scale well!
+            </div>
+
+            <div class="network-card workgroup">
+                <strong>Example Scenario:</strong> A small dental office with 5 computers. The dentist, office manager, and 2 assistants each need access to the scheduling computer and their own workstation. A workgroup is appropriate here - simple setup, minimal IT knowledge required, and the small number of computers makes manual management feasible.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> The key limitation of workgroups is administrative overhead. While technically you could have more than 20 computers in a workgroup, the management burden becomes impractical. Each computer must be configured individually, accounts must be created multiple times, and there's no way to enforce consistent security policies across all computers.
+            </div>
+
+            <span class="slide-number">Slide 4 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 5: What is a Domain? -->
+        <div class="slide">
+            <h2>What is a Domain?</h2>
+            <p class="subtitle">Client-Server Network Model</p>
+
+            <div class="highlight-box">
+                <h3>Domain Definition</h3>
+                <p>A <strong>domain</strong> is a client-server network model where a central server (Domain Controller) manages authentication, user accounts, and security policies for all computers and users in the network.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Key Characteristics</h3>
+                    <ul>
+                        <li><strong>Client-Server Model</strong> - Central authority structure</li>
+                        <li><strong>Centralized Management</strong> - Managed from Domain Controller</li>
+                        <li><strong>Active Directory</strong> - Directory service storing all accounts</li>
+                        <li><strong>Domain Controller (DC)</strong> - Server providing authentication</li>
+                        <li><strong>Single Sign-On</strong> - One account works on all domain computers</li>
+                        <li><strong>Enterprise Scale</strong> - Supports thousands of computers</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Visual Representation</h3>
+                    <div class="diagram">
+                        <div class="diagram-row">
+                            <div class="diagram-box server">Domain Controller<br>Active Directory<br>Central Authentication</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↓</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box pc">Client PC 1</div>
+                            <div class="diagram-box pc">Client PC 2</div>
+                            <div class="diagram-box pc">Client PC 3</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px;">All computers authenticate against the central Domain Controller</p>
+                </div>
+            </div>
+
+            <div class="info-card domain">
+                <strong>Important:</strong> In a domain, user accounts are created ONCE in Active Directory and work on ALL domain-joined computers. Users can log in to any domain computer with the same credentials.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domains represent a fundamental shift from peer-to-peer to client-server architecture. The Domain Controller is the central authority that all other computers trust for authentication decisions. Active Directory is the database that stores all user accounts, computer accounts, groups, and organizational structure. This centralized model enables single sign-on - create a user once, they can access any domain resource.
+            </div>
+
+            <span class="slide-number">Slide 5 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 6: Domain Characteristics -->
+        <div class="slide">
+            <h2>Domain Characteristics</h2>
+            <p class="subtitle">How Domains Operate</p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>🔐 Centralized Authentication</h4>
+                    <p>Domain Controller validates all user logins. Single source of truth for user credentials across the entire network.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📋 Group Policy Management</h4>
+                    <p>Administrators can enforce security settings, configurations, and restrictions across all domain computers from one location.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🎫 Single Sign-On (SSO)</h4>
+                    <p>Users log in once with domain credentials and gain access to all authorized network resources without re-authenticating.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📈 Scalable Architecture</h4>
+                    <p>Supports thousands of computers and users. Enterprise organizations commonly have 10,000+ domain-joined devices.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🔄 Automatic Replication</h4>
+                    <p>Multiple Domain Controllers can replicate Active Directory data for redundancy and distributed authentication.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🛡️ Enhanced Security</h4>
+                    <p>Kerberos authentication protocol, password policies, account lockout, audit logging, and fine-grained security controls.</p>
+                </div>
+            </div>
+
+            <div class="info-card success">
+                <strong>Administrative Efficiency:</strong> In a 1,000-computer domain, creating a new user requires ONE action in Active Directory. That user can immediately log in to any of the 1,000 domain computers. Password changes take effect instantly across the entire network.
+            </div>
+
+            <div class="network-card domain">
+                <strong>Example Scenario:</strong> A corporate office with 200 employees and 250 computers. Users move between conference rooms, hot-desk in different areas, and need access to shared network drives and printers. A domain is essential here - centralized account management, consistent security policies, and single sign-on across all resources.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domains excel at scale and centralized control. Group Policy alone is a game-changer - deploy software, enforce security settings, configure desktop environments, all from a central management console. Kerberos provides mutual authentication and is more secure than the NTLM used in workgroups. The trade-off is complexity and cost - you need Windows Server licenses and IT expertise to maintain the infrastructure.
+            </div>
+
+            <span class="slide-number">Slide 6 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 7: Active Directory Overview -->
+        <div class="slide">
+            <h2>Active Directory Overview</h2>
+            <p class="subtitle">Microsoft's Directory Service</p>
+
+            <div class="highlight-box">
+                <h3>What is Active Directory?</h3>
+                <p><strong>Active Directory (AD)</strong> is Microsoft's directory service that stores information about network objects (users, computers, groups, printers) in a hierarchical database and makes this information available for authentication and resource access.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Active Directory Components</h3>
+                    <ul>
+                        <li><strong>Objects</strong> - Users, computers, groups, OUs, printers</li>
+                        <li><strong>Schema</strong> - Defines what types of objects can exist</li>
+                        <li><strong>Domain</strong> - Administrative boundary and namespace</li>
+                        <li><strong>Tree</strong> - Collection of domains in a hierarchy</li>
+                        <li><strong>Forest</strong> - Collection of trees (highest level)</li>
+                        <li><strong>Organizational Units (OUs)</strong> - Containers for organizing objects</li>
+                        <li><strong>LDAP</strong> - Lightweight Directory Access Protocol (query protocol)</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Hierarchical Structure</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>Forest</strong> (Top Level)<br>Example: Company.com forest</li>
+                            <li><strong>Domain</strong> (Within Forest)<br>Example: Sales.Company.com, IT.Company.com</li>
+                            <li><strong>Organizational Units (OUs)</strong><br>Example: Marketing OU, HR OU, Engineering OU</li>
+                            <li><strong>Objects</strong> (Bottom Level)<br>Example: User accounts, computer accounts, groups</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card domain">
+                <strong>Example Active Directory Path:</strong><br>
+                CN=John Smith,OU=Marketing,OU=Employees,DC=company,DC=local<br>
+                <em>Translation: User "John Smith" in the Marketing OU, which is inside the Employees OU, in the company.local domain</em>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Active Directory uses LDAP (Lightweight Directory Access Protocol) for queries. LDAP runs on port 389 (unencrypted) or port 636 (LDAPS - encrypted). Know that AD is the Microsoft implementation of directory services.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Active Directory is the foundation of Windows domain networking. The hierarchical structure (Forest > Domain > OU > Objects) allows for organized management and delegation of administrative tasks. OUs are containers used to organize objects and apply Group Policies. The forest is the security boundary - all domains within a forest trust each other by default. LDAP is the query protocol used to search and modify AD objects.
+            </div>
+
+            <span class="slide-number">Slide 7 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 8: Domain Controller -->
+        <div class="slide">
+            <h2>Domain Controller (DC)</h2>
+            <p class="subtitle">The Heart of Active Directory Domains</p>
+
+            <div class="highlight-box">
+                <h3>What is a Domain Controller?</h3>
+                <p>A <strong>Domain Controller (DC)</strong> is a Windows Server running the Active Directory Domain Services (AD DS) role. It authenticates users and computers, stores the Active Directory database, and enforces security policies.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Domain Controller Functions</h3>
+                    <ul>
+                        <li><strong>Authentication</strong> - Validates user and computer logons using Kerberos</li>
+                        <li><strong>Authorization</strong> - Determines what resources users can access</li>
+                        <li><strong>Directory Storage</strong> - Hosts the Active Directory database (NTDS.dit)</li>
+                        <li><strong>Replication</strong> - Synchronizes AD data with other DCs in the domain</li>
+                        <li><strong>Group Policy Processing</strong> - Provides policies to client computers</li>
+                        <li><strong>DNS Integration</strong> - Usually also runs DNS server for domain resolution</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>FSMO Roles</h3>
+                    <p><strong>Flexible Single Master Operations (FSMO)</strong> are specialized roles assigned to Domain Controllers:</p>
+                    <div class="info-card">
+                        <strong>Forest-Wide Roles (1 per Forest):</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li><strong>Schema Master</strong> - Controls schema modifications</li>
+                            <li><strong>Domain Naming Master</strong> - Controls adding/removing domains</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <strong>Domain-Wide Roles (1 per Domain):</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li><strong>PDC Emulator</strong> - Primary DC, password changes, time sync</li>
+                            <li><strong>RID Master</strong> - Allocates unique IDs for new objects</li>
+                            <li><strong>Infrastructure Master</strong> - Updates cross-domain references</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Best Practice:</strong> Always have at least TWO Domain Controllers for redundancy. If the only DC fails, no one can log in and the entire domain becomes inaccessible. Multiple DCs provide fault tolerance and load balancing.
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Know that Domain Controllers require Windows Server (not Windows 10/11). The PDC Emulator is the most important FSMO role - it handles password changes and acts as the authoritative time source.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domain Controllers are critical infrastructure - they're the authentication gatekeepers. The NTDS.dit file contains the entire AD database. FSMO roles are unique responsibilities that can only be performed by one DC at a time (to prevent conflicts). The PDC Emulator gets priority for password changes - when you change your password, it's immediately replicated to the PDC Emulator so you can log in with it right away.
+            </div>
+
+            <span class="slide-number">Slide 8 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 9: Comparison Chart -->
+        <div class="slide">
+            <h2>Workgroup vs Domain: Side-by-Side Comparison</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Workgroup</th>
+                        <th>Domain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Network Size</strong></td>
+                        <td class="workgroup-col">Small (&lt;20 computers recommended)</td>
+                        <td class="domain-col">Large (1,000s of computers supported)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Management Model</strong></td>
+                        <td class="workgroup-col">Decentralized - Each computer managed individually</td>
+                        <td class="domain-col">Centralized - Managed from Domain Controller</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Authentication</strong></td>
+                        <td class="workgroup-col">Local accounts stored on each PC</td>
+                        <td class="domain-col">Domain accounts stored in Active Directory</td>
+                    </tr>
+                    <tr>
+                        <td><strong>User Accounts</strong></td>
+                        <td class="workgroup-col">Must create separately on each computer</td>
+                        <td class="domain-col">Create once, works on all domain computers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Single Sign-On</strong></td>
+                        <td class="workgroup-col">No - Must authenticate to each computer</td>
+                        <td class="domain-col">Yes - One login for all resources</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Policy</strong></td>
+                        <td class="workgroup-col">No centralized policies (local only)</td>
+                        <td class="domain-col">Yes - Centralized policy enforcement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security</strong></td>
+                        <td class="workgroup-col">NTLM authentication (less secure)</td>
+                        <td class="domain-col">Kerberos authentication (more secure)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost</strong></td>
+                        <td class="workgroup-col">Free - No additional licensing</td>
+                        <td class="domain-col">Requires Windows Server licenses</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administration Complexity</strong></td>
+                        <td class="workgroup-col">Low - Simple to set up and maintain</td>
+                        <td class="domain-col">High - Requires IT expertise</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Password Policies</strong></td>
+                        <td class="workgroup-col">Configured per computer</td>
+                        <td class="domain-col">Enforced domain-wide</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resource Sharing</strong></td>
+                        <td class="workgroup-col">Simple file/printer sharing</td>
+                        <td class="domain-col">Centralized file servers, managed sharing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scalability</strong></td>
+                        <td class="workgroup-col">Poor - Difficult beyond 20 computers</td>
+                        <td class="domain-col">Excellent - Designed for enterprise scale</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> If a scenario describes a network with more than 20 computers, needs centralized management, or requires enforced security policies, the answer is DOMAIN. Workgroups are only suitable for small, simple networks.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This comparison table is essential for exam preparation. Focus on the decision factors: size (20-computer guideline), management model (decentralized vs centralized), and features (Group Policy, single sign-on). The cost difference is significant - workgroups are free, domains require Windows Server CALs (Client Access Licenses) and server hardware.
+            </div>
+
+            <span class="slide-number">Slide 9 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 10: Authentication - Workgroup -->
+        <div class="slide">
+            <h2>Authentication: Workgroup Model</h2>
+            <p class="subtitle">Local Authentication Process</p>
+
+            <div class="highlight-box">
+                <h3>How Workgroup Authentication Works</h3>
+                <p>In a workgroup, each computer maintains its own Security Accounts Manager (SAM) database containing local user accounts. Authentication is performed locally against this database.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Authentication Process</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>User enters credentials</strong> (username/password) at login screen</li>
+                            <li><strong>Local Security Authority (LSA)</strong> receives the credentials</li>
+                            <li><strong>SAM database</strong> is queried for matching username</li>
+                            <li><strong>Password hash</strong> is compared against stored hash</li>
+                            <li><strong>Access token</strong> is created if authentication succeeds</li>
+                            <li><strong>User logs in</strong> to the local computer only</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Key Limitations</h3>
+                    <ul>
+                        <li>No password synchronization between computers</li>
+                        <li>Each computer has independent user accounts</li>
+                        <li>Passwords can differ on each computer</li>
+                        <li>No centralized password policy enforcement</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Authentication Diagram</h3>
+                    <div class="diagram">
+                        <div class="diagram-row">
+                            <div class="diagram-box user">User Login<br>JohnDoe / Password123</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↓</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box pc">Local Computer<br>SAM Database<br>Local Accounts Only</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↓</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box" style="background: linear-gradient(135deg, #107c10, #0e6b0e); color: white;">
+                                ✓ Authentication Success<br>Access to THIS computer only
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Problem Scenario:</strong> John needs access to 5 computers in a workgroup. The administrator must create the "John" account 5 separate times (once on each computer). If John changes his password, he must remember to change it on all 5 computers or passwords become out of sync.
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># View local user accounts (Workgroup)</span><br>
+                <span class="cmd">net user</span><br><br>
+                <span class="prompt"># Create local user account</span><br>
+                <span class="cmd">net user JohnDoe Password123 /add</span><br><br>
+                <span class="prompt"># View SAM database location (cannot directly read - encrypted)</span><br>
+                <span class="cmd">C:\Windows\System32\config\SAM</span>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> The SAM database is encrypted and cannot be directly accessed while Windows is running. Each Windows computer has its own SAM with local accounts. Workgroup authentication uses NTLM (NT LAN Manager) protocol. The lack of centralized account management is the biggest weakness of workgroups - it's administratively intensive and error-prone at scale.
+            </div>
+
+            <span class="slide-number">Slide 10 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 11: Authentication - Domain -->
+        <div class="slide">
+            <h2>Authentication: Domain Model</h2>
+            <p class="subtitle">Centralized Kerberos Authentication</p>
+
+            <div class="highlight-box">
+                <h3>How Domain Authentication Works</h3>
+                <p>In a domain, user credentials are stored in Active Directory on the Domain Controller. Authentication uses the Kerberos protocol, which provides secure, ticket-based authentication with mutual verification.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Kerberos Authentication Process</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>User enters domain credentials</strong> (DOMAIN\username or user@domain.com)</li>
+                            <li><strong>Client contacts Domain Controller</strong> to request Ticket Granting Ticket (TGT)</li>
+                            <li><strong>DC verifies credentials</strong> against Active Directory database</li>
+                            <li><strong>TGT is issued</strong> and cached on client (valid for 10 hours default)</li>
+                            <li><strong>Client uses TGT</strong> to request service tickets for resources</li>
+                            <li><strong>Single sign-on achieved</strong> - No re-authentication needed for domain resources</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Key Advantages</h3>
+                    <ul>
+                        <li>Mutual authentication (client and server verify each other)</li>
+                        <li>Passwords never sent over the network</li>
+                        <li>Ticket-based system prevents replay attacks</li>
+                        <li>Single sign-on to all domain resources</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Authentication Diagram</h3>
+                    <div class="diagram">
+                        <div class="diagram-row">
+                            <div class="diagram-box user">User Login<br>COMPANY\JohnDoe</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↓</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box server">Domain Controller<br>Active Directory<br>Kerberos (Port 88)</div>
+                        </div>
+                        <div class="arrow" style="text-align: center;">↓</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box" style="background: linear-gradient(135deg, #107c10, #0e6b0e); color: white;">
+                                ✓ TGT Issued<br>Access to ALL domain resources
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; font-size: 0.95em;">Credentials stored centrally - work on any domain computer</p>
+                </div>
+            </div>
+
+            <div class="info-card success">
+                <strong>Benefit Scenario:</strong> John logs in to ANY domain-joined computer with his domain credentials. Active Directory authenticates him, issues a TGT, and now he can access file servers, printers, email, and any other domain resource without re-entering credentials. One account, unlimited access.
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># View cached Kerberos tickets on client</span><br>
+                <span class="cmd">klist</span><br><br>
+                <span class="prompt"># Purge Kerberos tickets (force re-authentication)</span><br>
+                <span class="cmd">klist purge</span><br><br>
+                <span class="prompt"># View domain user info</span><br>
+                <span class="cmd">net user JohnDoe /domain</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Kerberos uses port 88 (TCP/UDP). Default TGT lifetime is 10 hours, max renewal is 7 days. If a scenario mentions centralized authentication, ticket-based authentication, or Single Sign-On, the answer involves domain/Kerberos.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Kerberos is significantly more secure than NTLM. The TGT (Ticket Granting Ticket) acts as proof of authentication - clients present it to request service tickets for specific resources. Passwords are never sent over the network - only hashed credentials. The Domain Controller is called the Key Distribution Center (KDC) in Kerberos terminology. Time synchronization is critical - if client and DC clocks differ by more than 5 minutes, authentication fails.
+            </div>
+
+            <span class="slide-number">Slide 11 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 12: Joining a Workgroup -->
+        <div class="slide">
+            <h2>Joining a Workgroup</h2>
+            <p class="subtitle">How to Configure Workgroup Membership</p>
+
+            <div class="highlight-box">
+                <h3>Workgroup Configuration</h3>
+                <p>Joining a workgroup is simple and requires no server infrastructure. All Windows editions (Home, Pro, Enterprise) can join workgroups.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Steps to Join a Workgroup</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>Open System Properties</strong><br>Right-click This PC → Properties</li>
+                            <li><strong>Click "Change settings"</strong> next to Computer name</li>
+                            <li><strong>Click "Change" button</strong> in System Properties dialog</li>
+                            <li><strong>Select "Workgroup" radio button</strong></li>
+                            <li><strong>Enter workgroup name</strong> (e.g., "WORKGROUP", "OFFICE")</li>
+                            <li><strong>Click OK</strong> and restart the computer</li>
+                            <li><strong>Computer is now in the workgroup</strong></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Important Notes</h3>
+                    <div class="info-card workgroup">
+                        <strong>Workgroup Names:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>Default workgroup name is "WORKGROUP"</li>
+                            <li>Case-insensitive (WORKGROUP = workgroup)</li>
+                            <li>All computers must use the SAME workgroup name to see each other in Network</li>
+                            <li>No server validation - just a label</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <strong>Requirements:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>Local administrator access required</li>
+                            <li>Restart required after change</li>
+                            <li>No server needed</li>
+                            <li>Works on all Windows editions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Join workgroup via command line (requires restart)</span><br>
+                <span class="cmd">wmic computersystem where name="%computername%" call joindomainorworkgroup name="WORKGROUP"</span><br><br>
+                <span class="prompt"># View current workgroup/domain membership</span><br>
+                <span class="cmd">systeminfo | findstr /B /C:"Domain"</span><br><br>
+                <span class="prompt"># PowerShell method to join workgroup</span><br>
+                <span class="cmd">Add-Computer -WorkgroupName "WORKGROUP" -Restart</span>
+            </div>
+
+            <div class="info-card warning">
+                <strong>Common Mistake:</strong> Computers in different workgroups can still communicate on the network, but they won't appear in the Network folder browsing list. The workgroup name is primarily for organization in Network Neighborhood - it's not a security boundary.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Joining a workgroup is straightforward and doesn't require any credentials or server contact. The workgroup name is just a label for network browsing organization. Unlike domains, there's no validation - you can type any workgroup name and Windows accepts it. The system must restart for the change to take effect. Remember that Windows Home edition can ONLY join workgroups, not domains.
+            </div>
+
+            <span class="slide-number">Slide 12 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 13: Joining a Domain -->
+        <div class="slide">
+            <h2>Joining a Domain</h2>
+            <p class="subtitle">How to Configure Domain Membership</p>
+
+            <div class="highlight-box">
+                <h3>Domain Join Requirements</h3>
+                <p>Joining a domain requires Windows Pro or higher, network connectivity to a Domain Controller, and domain administrator credentials.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Steps to Join a Domain</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>Verify Windows edition</strong><br>Must be Pro, Enterprise, or Education</li>
+                            <li><strong>Configure DNS</strong><br>Point to Domain Controller's IP address</li>
+                            <li><strong>Open System Properties</strong><br>Right-click This PC → Properties</li>
+                            <li><strong>Click "Change settings"</strong> then "Change" button</li>
+                            <li><strong>Select "Domain" radio button</strong></li>
+                            <li><strong>Enter domain name</strong> (e.g., "company.local")</li>
+                            <li><strong>Provide domain admin credentials</strong> when prompted</li>
+                            <li><strong>Welcome message appears</strong> if successful</li>
+                            <li><strong>Restart computer</strong> to complete domain join</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Prerequisites</h3>
+                    <div class="info-card domain">
+                        <strong>Required:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>Windows Pro, Enterprise, or Education (NOT Home)</li>
+                            <li>Network connectivity to Domain Controller</li>
+                            <li>DNS configured to point to DC</li>
+                            <li>Domain administrator credentials</li>
+                            <li>Unique computer name (no duplicates in domain)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card warning">
+                        <strong>Common Issues:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>"Domain could not be contacted" - DNS misconfiguration</li>
+                            <li>"Access denied" - Insufficient credentials</li>
+                            <li>"Computer name already exists" - Name conflict in AD</li>
+                            <li>Windows Home error - Edition doesn't support domain join</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Join domain via PowerShell (requires restart)</span><br>
+                <span class="cmd">Add-Computer -DomainName "company.local" -Credential COMPANY\Administrator -Restart</span><br><br>
+                <span class="prompt"># Join domain with specific OU</span><br>
+                <span class="cmd">Add-Computer -DomainName "company.local" -OUPath "OU=Computers,OU=IT,DC=company,DC=local" -Restart</span><br><br>
+                <span class="prompt"># Verify domain membership</span><br>
+                <span class="cmd">systeminfo | findstr /B /C:"Domain"</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> If a question states a computer cannot join a domain, check: 1) Windows edition (must be Pro+), 2) DNS configuration (must point to DC), 3) Network connectivity, 4) Valid admin credentials. These are the most common causes of domain join failures.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domain joining requires proper DNS configuration - this is the most common failure point. The client must resolve the domain name to find Domain Controllers. During join, the computer account is created in Active Directory (in the default Computers container unless specified). Domain admins can also pre-create computer accounts in specific OUs. After joining, users can log in with "DOMAIN\username" or "username@domain.com" format.
+            </div>
+
+            <span class="slide-number">Slide 13 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 14: Group Policy -->
+        <div class="slide">
+            <h2>Group Policy (Domain Feature)</h2>
+            <p class="subtitle">Centralized Configuration Management</p>
+
+            <div class="highlight-box">
+                <h3>What is Group Policy?</h3>
+                <p><strong>Group Policy</strong> is a Windows feature that allows administrators to centrally manage and configure operating systems, applications, and user settings across the domain. It's one of the most powerful features exclusive to domain environments.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Group Policy Capabilities</h3>
+                    <ul>
+                        <li><strong>Security Settings</strong><br>Password policies, account lockout, firewall, BitLocker, Windows Defender</li>
+                        <li><strong>Software Deployment</strong><br>Automatically install applications to users or computers</li>
+                        <li><strong>Desktop Configuration</strong><br>Wallpaper, screensaver, Start menu, taskbar customization</li>
+                        <li><strong>Restrictions</strong><br>Disable Control Panel, USB drives, registry editing, cmd.exe</li>
+                        <li><strong>Scripts</strong><br>Startup/shutdown (computer), logon/logoff (user) scripts</li>
+                        <li><strong>Folder Redirection</strong><br>Redirect Documents, Desktop to network location</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Policy Application Scope</h3>
+                    <div class="info-card domain">
+                        <strong>Computer Policies:</strong><br>
+                        Applied to computer regardless of who logs in. Examples: Windows Update settings, startup scripts, computer security settings.
+                    </div>
+                    <div class="info-card domain">
+                        <strong>User Policies:</strong><br>
+                        Applied to user regardless of which computer they use. Examples: desktop settings, mapped drives, application settings.
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Policy Processing Order (LSDOU)</h3>
+                    <div class="steps">
+                        <ol>
+                            <li><strong>L</strong>ocal - Computer's local policy</li>
+                            <li><strong>S</strong>ite - Active Directory site policies</li>
+                            <li><strong>D</strong>omain - Domain-level policies</li>
+                            <li><strong>O</strong>U - Organizational Unit policies (wins)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <span class="prompt"># Refresh Group Policy from client (force update)</span><br>
+                <span class="cmd">gpupdate /force</span><br><br>
+                <span class="prompt"># View applied Group Policies</span><br>
+                <span class="cmd">gpresult /r</span><br><br>
+                <span class="prompt"># Generate detailed HTML Group Policy report</span><br>
+                <span class="cmd">gpresult /h C:\GPReport.html</span>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Group Policy is DOMAIN-ONLY. Workgroups cannot use centralized Group Policy (only local policies per computer). If a scenario requires enforcing settings across multiple computers from a central location, it requires a DOMAIN.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Group Policy is a game-changer for IT administration. Create a policy once, apply it to thousands of computers. Policies refresh every 90 minutes by default (plus random 0-30 minute offset). The LSDOU order means OU policies override domain policies, which override site policies, etc. "Last applied wins" unless policy is set to "Enforced" (then it cannot be overridden). Group Policy Objects (GPOs) are created and managed on Domain Controllers using GPMC (Group Policy Management Console).
+            </div>
+
+            <span class="slide-number">Slide 14 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 15: When to Use Workgroup -->
+        <div class="slide">
+            <h2>When to Use a Workgroup</h2>
+            <p class="subtitle">Appropriate Use Cases for Workgroup Networks</p>
+
+            <div class="highlight-box">
+                <h3>Workgroup Decision Criteria</h3>
+                <p>Workgroups are appropriate for small, simple networks with minimal management requirements and limited budgets.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>🏠 Home Networks</h4>
+                    <p>Personal home networks with family computers. No centralized management needed, simple file/printer sharing between rooms.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🏪 Small Office (<10 Computers)</h4>
+                    <p>Very small businesses with fewer than 10 computers. Minimal IT complexity, basic resource sharing, tight budget constraints.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>👤 No IT Staff</h4>
+                    <p>Environments without dedicated IT personnel. Non-technical users can manage workgroups with basic training.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>💰 Budget Constraints</h4>
+                    <p>Organizations that cannot afford Windows Server licensing and server hardware. Zero additional cost for workgroup functionality.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>⚡ Temporary Networks</h4>
+                    <p>Ad-hoc or temporary networks for events, conferences, or short-term projects. Quick setup, no infrastructure required.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🧪 Testing/Lab Environments</h4>
+                    <p>Simple lab setups for learning or testing where centralized management isn't needed.</p>
+                </div>
+            </div>
+
+            <div class="network-card workgroup">
+                <strong>Example Scenarios:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Dental Practice:</strong> 1 front desk computer, 2 exam room computers, 1 office computer. Share patient scheduling software and printer. 4 total computers - workgroup is perfect.</li>
+                    <li><strong>Home Network:</strong> Parent's laptop, 2 kids' computers, media PC. Share photos and printer. Basic needs, no IT staff - workgroup works well.</li>
+                    <li><strong>Freelance Studio:</strong> 3 graphic designers sharing project files. Simple collaboration, minimal security needs - workgroup sufficient.</li>
+                </ul>
+            </div>
+
+            <div class="info-card warning">
+                <strong>When Workgroups Become Problematic:</strong> Beyond 10-20 computers, administrative overhead increases dramatically. Managing 20 separate user accounts per user, inconsistent security policies, and lack of centralized control become major issues. At that point, domain investment becomes worthwhile.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Workgroups excel in simplicity and cost. The 20-computer guideline is practical, not technical. You could have 50 computers in a workgroup, but managing them would be a nightmare. For exam questions, if the scenario describes a small office (under 10-15 computers), no IT staff, limited budget, or home environment, workgroup is likely the answer. If it mentions growth plans, security requirements, or current size above 20 computers, recommend domain.
+            </div>
+
+            <span class="slide-number">Slide 15 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 16: When to Use Domain -->
+        <div class="slide">
+            <h2>When to Use a Domain</h2>
+            <p class="subtitle">Appropriate Use Cases for Domain Networks</p>
+
+            <div class="highlight-box">
+                <h3>Domain Decision Criteria</h3>
+                <p>Domains are essential for business environments requiring centralized management, security, scalability, and single sign-on capabilities.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>🏢 Business Environments</h4>
+                    <p>Any professional business environment with employees, shared resources, and productivity requirements. Standard for corporate IT infrastructure.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📊 10+ Computers</h4>
+                    <p>Networks with 10 or more computers benefit from centralized management. Domain overhead becomes worthwhile at this scale.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🎛️ Centralized Management Need</h4>
+                    <p>Organizations requiring uniform configuration, software deployment, and consistent security settings across all computers.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>🛡️ Security/Compliance Requirements</h4>
+                    <p>Industries with regulatory compliance (HIPAA, PCI-DSS, SOX). Centralized security policies, audit logging, password enforcement required.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>👨‍💼 IT Staff Available</h4>
+                    <p>Organizations with dedicated IT personnel who can manage Active Directory, Domain Controllers, and Group Policy infrastructure.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>📈 Growth Plans</h4>
+                    <p>Small businesses planning to grow beyond 20 employees. Better to implement domain early than migrate later.</p>
+                </div>
+            </div>
+
+            <div class="network-card domain">
+                <strong>Example Scenarios:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Law Firm:</strong> 50 employees, strict confidentiality requirements, document management system, compliance regulations. Domain with Active Directory, Group Policy security, centralized file servers.</li>
+                    <li><strong>Medical Practice:</strong> 30 staff members, HIPAA compliance, electronic health records, multiple locations. Domain required for centralized authentication, audit logging, encrypted file access.</li>
+                    <li><strong>Manufacturing Company:</strong> 200 employees across office and factory floor. Need centralized user management, software deployment, roaming profiles so users can log in at any workstation.</li>
+                </ul>
+            </div>
+
+            <div class="info-card success">
+                <strong>Domain ROI (Return on Investment):</strong> While domains have upfront costs (server hardware, Windows Server licenses, IT expertise), they provide massive time savings in administration, improved security posture, and better user experience through single sign-on. For organizations with 20+ computers, domains typically pay for themselves within the first year.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Domains are the standard for business IT. The 10-computer threshold is when centralized management becomes cost-effective. For exam scenarios, if the organization has compliance requirements, needs centralized security, has IT staff, or is larger than 20 computers, recommend domain. Key indicators: "enforce security policies," "centralized management," "single sign-on," "compliance requirements" - these all point to domain.
+            </div>
+
+            <span class="slide-number">Slide 16 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 17: Hybrid Scenarios -->
+        <div class="slide">
+            <h2>Hybrid Scenarios: Azure AD & Cloud Identity</h2>
+            <p class="subtitle">Modern Cloud-Based Domain Alternatives</p>
+
+            <div class="highlight-box">
+                <h3>Azure Active Directory (Azure AD / Microsoft Entra ID)</h3>
+                <p><strong>Azure AD</strong> (now called Microsoft Entra ID) is Microsoft's cloud-based identity and access management service. It provides domain-like capabilities without on-premises servers.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Azure AD Join</h3>
+                    <p>Connect Windows 10/11 Pro+ devices directly to Azure AD without traditional domain controllers.</p>
+                    <div class="info-card domain">
+                        <strong>Benefits:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>No on-premises servers required</li>
+                            <li>Cloud-based authentication</li>
+                            <li>Single sign-on to Microsoft 365</li>
+                            <li>Mobile Device Management (Intune)</li>
+                            <li>Conditional Access policies</li>
+                            <li>Multi-Factor Authentication (MFA)</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <strong>Best For:</strong> Small businesses, remote workforces, cloud-first organizations, startups without on-premises infrastructure.
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Hybrid Azure AD Join</h3>
+                    <p>Computers joined to both on-premises Active Directory AND Azure AD simultaneously.</p>
+                    <div class="info-card success">
+                        <strong>Benefits:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>Best of both worlds - on-prem + cloud</li>
+                            <li>Access to on-premises file servers</li>
+                            <li>Access to Microsoft 365 cloud services</li>
+                            <li>SSO to both environments</li>
+                            <li>Cloud backup for authentication</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <strong>Best For:</strong> Enterprises transitioning to cloud, organizations with existing AD infrastructure, hybrid work environments.
+                    </div>
+                </div>
+            </div>
+
+            <div class="diagram" style="max-width: 900px;">
+                <div class="diagram-row">
+                    <div class="diagram-box" style="background: linear-gradient(135deg, #00a4ef, #0078d4); color: white;">
+                        Azure AD (Cloud)<br>Microsoft 365, Intune, SaaS Apps
+                    </div>
+                </div>
+                <div class="arrow" style="text-align: center;">↕ Azure AD Connect</div>
+                <div class="diagram-row">
+                    <div class="diagram-box server">On-Premises AD<br>Traditional Domain Controller
+                    </div>
+                </div>
+                <div class="arrow" style="text-align: center;">↓</div>
+                <div class="diagram-row">
+                    <div class="diagram-box pc">Hybrid Joined<br>Clients</div>
+                </div>
+            </div>
+
+            <div class="info-card exam-tip">
+                <strong>Exam Tip:</strong> Azure AD is a KEY topic for modern A+ exams. Know that Azure AD Join requires Windows 10/11 Pro+ (like traditional domains). It's Microsoft's cloud alternative to on-premises Active Directory. Hybrid Join combines both for organizations transitioning to cloud.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Azure AD (Entra ID) is increasingly important as organizations move to cloud. It provides identity services without physical servers. Azure AD Join is similar to traditional domain join but authenticates against cloud. Hybrid Join is common during cloud migration - sync on-premises AD to Azure AD using Azure AD Connect tool. This provides authentication redundancy and enables cloud services while maintaining on-premises resources.
+            </div>
+
+            <span class="slide-number">Slide 17 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 18: Exam Tips -->
+        <div class="slide">
+            <h2>CompTIA A+ Exam Tips</h2>
+            <p class="subtitle">Key Points for Exam Success</p>
+
+            <div class="highlight-box">
+                <h3>High-Yield Exam Topics</h3>
+                <p>Focus on these frequently tested concepts related to workgroups and domains:</p>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Critical Facts to Memorize</h3>
+                    <div class="info-card exam-tip">
+                        <strong>The 20-Computer Guideline</strong><br>
+                        Workgroups recommended for ~20 computers or fewer. Beyond this, domains become necessary for manageable administration.
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>Domain Controller Role</strong><br>
+                        Windows Server running AD DS. Authenticates users, stores Active Directory, enforces Group Policy.
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>Group Policy = Domain Only</strong><br>
+                        Centralized Group Policy requires a domain. Workgroups only have local policy (per computer).
+                    </div>
+                    <div class="info-card exam-tip">
+                        <strong>Windows Home Limitation</strong><br>
+                        Windows Home CANNOT join domains - only workgroups. Pro/Enterprise/Education required for domain join.
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3>Account Types</h3>
+                    <div class="info-card workgroup">
+                        <strong>Local Accounts:</strong><br>
+                        Stored in SAM database on individual computer. Format: ComputerName\Username. Used in workgroups.
+                    </div>
+                    <div class="info-card domain">
+                        <strong>Domain Accounts:</strong><br>
+                        Stored in Active Directory on Domain Controller. Format: DOMAIN\Username or username@domain.com. Used in domains.
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Useful Commands</h3>
+                    <div class="command-box">
+                        <span class="cmd">net use</span> - Map network drives<br>
+                        <span class="cmd">net user</span> - Manage local users<br>
+                        <span class="cmd">net user /domain</span> - View domain user<br>
+                        <span class="cmd">gpupdate /force</span> - Refresh policies<br>
+                        <span class="cmd">systeminfo</span> - Check domain status
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>If the scenario mentions...</th>
+                            <th>The answer involves...</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>"Less than 20 computers" or "small office"</td>
+                            <td>Workgroup (likely appropriate)</td>
+                        </tr>
+                        <tr>
+                            <td>"Centralized management" or "enforce policies"</td>
+                            <td>Domain + Group Policy</td>
+                        </tr>
+                        <tr>
+                            <td>"Single sign-on" or "one password for all computers"</td>
+                            <td>Domain (Active Directory)</td>
+                        </tr>
+                        <tr>
+                            <td>"Cannot join domain" error</td>
+                            <td>Check Windows edition (needs Pro+) or DNS configuration</td>
+                        </tr>
+                        <tr>
+                            <td>"Deploy software to all computers centrally"</td>
+                            <td>Domain with Group Policy software deployment</td>
+                        </tr>
+                        <tr>
+                            <td>"Windows Home" and "domain"</td>
+                            <td>Impossible - Home cannot join domains</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> These exam tips are based on common A+ question patterns. Scenario-based questions often describe an environment and ask you to recommend workgroup or domain. Look for keywords: size, management requirements, budget constraints, security needs. Practice identifying whether the scenario needs simple peer-to-peer (workgroup) or centralized management (domain).
+            </div>
+
+            <span class="slide-number">Slide 18 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 19: Key Takeaways -->
+        <div class="slide">
+            <h2>Key Takeaways</h2>
+            <p class="subtitle">Essential Concepts Summary</p>
+
+            <div class="highlight-box">
+                <h3>Core Concepts to Remember</h3>
+                <ul style="font-size: 1.15em;">
+                    <li><strong>Workgroup = Simple, Small, Decentralized</strong> - Peer-to-peer model, local accounts, no central server, best for small networks</li>
+                    <li><strong>Domain = Scalable, Managed, Centralized</strong> - Client-server model, Active Directory, central authentication, enterprise-ready</li>
+                    <li><strong>Choose Based on Size and Needs</strong> - Under 20 computers with simple needs = workgroup; business environment with management requirements = domain</li>
+                    <li><strong>Active Directory is the Heart of Domains</strong> - Stores accounts, policies, and organizational structure; enables single sign-on</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <div class="network-card workgroup">
+                        <h3>Workgroup Summary</h3>
+                        <ul style="margin-top: 15px;">
+                            <li>No server required</li>
+                            <li>Local accounts per computer</li>
+                            <li>Decentralized management</li>
+                            <li>Simple file/printer sharing</li>
+                            <li>~20 computer maximum (practical limit)</li>
+                            <li>Zero additional cost</li>
+                            <li>All Windows editions supported</li>
+                            <li>Best for: Home, small office, budget-limited</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="network-card domain">
+                        <h3>Domain Summary</h3>
+                        <ul style="margin-top: 15px;">
+                            <li>Requires Domain Controller (Windows Server)</li>
+                            <li>Domain accounts in Active Directory</li>
+                            <li>Centralized management via Group Policy</li>
+                            <li>Single sign-on capability</li>
+                            <li>Scales to thousands of computers</li>
+                            <li>Server licensing costs</li>
+                            <li>Requires Pro/Enterprise/Education edition</li>
+                            <li>Best for: Business, compliance, 10+ computers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Decision Factor: Size</h4>
+                    <p>&lt;20 computers → Workgroup<br>10+ computers (business) → Domain</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Decision Factor: Management</h4>
+                    <p>Individual PC management → Workgroup<br>Centralized control needed → Domain</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Decision Factor: Budget</h4>
+                    <p>Limited/no IT budget → Workgroup<br>IT infrastructure investment → Domain</p>
+                </div>
+                <div class="feature-box">
+                    <h4>Decision Factor: Security</h4>
+                    <p>Basic security needs → Workgroup<br>Compliance/policies required → Domain</p>
+                </div>
+            </div>
+
+            <div class="info-card success">
+                <strong>Final Thought:</strong> There's no "better" model - workgroups and domains serve different purposes. Choose based on organization size, management requirements, security needs, and available resources. Both have their place in IT infrastructure.
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> This summary reinforces the key decision factors. For the exam, remember that neither model is inherently superior - appropriateness depends on context. Small organizations benefit from workgroup simplicity; larger organizations require domain capabilities. The transition point is typically around 10-20 computers where administrative overhead of workgroups exceeds domain setup costs.
+            </div>
+
+            <span class="slide-number">Slide 19 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+
+        <!-- Slide 20: Questions/Review -->
+        <div class="slide">
+            <h2>Questions & Review</h2>
+            <p class="subtitle">Practice Scenarios and Discussion</p>
+
+            <div class="highlight-box">
+                <h3>Practice Scenarios - What Would You Recommend?</h3>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Scenario 1: Home User</h4>
+                    <p><strong>Situation:</strong> Family with 4 computers wants to share a printer and photos between rooms.</p>
+                    <p style="margin-top: 10px;"><strong>Answer:</strong> Workgroup - Simple home network, no centralized management needed.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Scenario 2: Growing Business</h4>
+                    <p><strong>Situation:</strong> 15-person accounting firm, hiring 10 more staff next year, needs HIPAA compliance.</p>
+                    <p style="margin-top: 10px;"><strong>Answer:</strong> Domain - Growth plans, compliance requirements, business environment.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Scenario 3: Cannot Join Domain</h4>
+                    <p><strong>Situation:</strong> User gets "domain could not be contacted" error when trying to join company.local domain.</p>
+                    <p style="margin-top: 10px;"><strong>Answer:</strong> Check DNS settings - must point to Domain Controller IP address.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Scenario 4: Edition Issue</h4>
+                    <p><strong>Situation:</strong> IT purchases Windows Home laptops for employees. Can they join the corporate domain?</p>
+                    <p style="margin-top: 10px;"><strong>Answer:</strong> No - Windows Home cannot join domains. Need Pro or higher.</p>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="col">
+                    <h3>Discussion Questions</h3>
+                    <ul>
+                        <li>What happens if a Domain Controller fails in a domain with only one DC?</li>
+                        <li>Can computers in different workgroups communicate?</li>
+                        <li>How does Group Policy improve security posture?</li>
+                        <li>What are the benefits of Kerberos over NTLM?</li>
+                        <li>When would Azure AD Join be better than traditional domain?</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Review Checklist</h3>
+                    <div class="info-card">
+                        <strong>Can you explain:</strong>
+                        <ul style="font-size: 0.95em; margin-top: 10px;">
+                            <li>✓ Difference between workgroup and domain?</li>
+                            <li>✓ When to use each model?</li>
+                            <li>✓ What Active Directory does?</li>
+                            <li>✓ Role of a Domain Controller?</li>
+                            <li>✓ How to join workgroups and domains?</li>
+                            <li>✓ What Group Policy does?</li>
+                            <li>✓ Local vs domain authentication?</li>
+                            <li>✓ Windows edition requirements for domains?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <h1 style="font-size: 2.5em; color: #e52d27;">Thank You!</h1>
+                <p style="font-size: 1.3em; margin-top: 20px;">Questions? Ready for the CompTIA A+ Core 2 Exam?</p>
+                <div style="margin-top: 30px;">
+                    <span class="aplus-badge" style="font-size: 1.2em; padding: 10px 25px;">CompTIA A+ 220-1102 Objective 1.6</span>
+                </div>
+            </div>
+
+            <div class="speaker-notes">
+                <strong>Speaker Notes:</strong> Use these practice scenarios to engage students and check understanding. The discussion questions encourage critical thinking beyond memorization. Emphasize that real-world decision-making involves balancing technical requirements, budget constraints, and organizational needs. Encourage students to practice the commands and try joining workgroups/domains in a lab environment.
+            </div>
+
+            <span class="slide-number">Slide 20 of 20</span>
+            <span class="prepared-by">CompTIA A+ Core 2</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592; Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next &#8594;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            // Scroll to top of slide
+            slides[currentSlide].scrollTop = 0;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            } else if (e.key === 'n' || e.key === 'N') {
+                // Toggle speaker notes
+                const currentSlideEl = slides[currentSlide];
+                const notes = currentSlideEl.querySelector('.speaker-notes');
+                if (notes) {
+                    notes.style.display = notes.style.display === 'none' || notes.style.display === '' ? 'block' : 'none';
+                }
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add console tip for speaker notes
+        console.log('%cSpeaker Notes: Press "N" to toggle speaker notes on current slide', 'color: #e52d27; font-size: 14px; font-weight: bold;');
+    </script>
+</body>
+</html>

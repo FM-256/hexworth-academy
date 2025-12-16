@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Installation Decision Tree - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00d9ff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #00d9ff;
+            transition: all 0.3s;
+        }
+
+        .home-link:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #00ffc8);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        .step-counter {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #00d9ff;
+        }
+
+        /* Main Content Area */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-button {
+            background: rgba(0, 217, 255, 0.1);
+            border: 2px solid #00d9ff;
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .option-button:hover::before {
+            left: 100%;
+        }
+
+        .option-button:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+        }
+
+        .option-button:active {
+            transform: translateX(5px) scale(0.98);
+        }
+
+        /* Path History Panel */
+        .path-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .path-title {
+            font-size: 1.2rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .path-step {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 3px solid #00d9ff;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .path-step-question {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+
+        .path-step-answer {
+            color: #00ffc8;
+            font-weight: 600;
+        }
+
+        /* Result Card */
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #00d9ff;
+            animation: slideIn 0.5s ease;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .result-subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+        }
+
+        .result-section {
+            margin-bottom: 25px;
+        }
+
+        .result-section-title {
+            font-size: 1.2rem;
+            color: #00ffc8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-content {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #00d9ff;
+        }
+
+        .result-content p {
+            margin-bottom: 10px;
+        }
+
+        .result-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .result-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .result-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ffc8;
+            font-weight: bold;
+        }
+
+        .result-list.cons li::before {
+            content: '✗';
+            color: #ff6b6b;
+        }
+
+        .checklist {
+            background: rgba(0, 217, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #00d9ff;
+        }
+
+        .checklist-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist-item::before {
+            content: '☐';
+            font-size: 1.2rem;
+            color: #00d9ff;
+        }
+
+        /* Control Buttons */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #a0a0a0;
+            color: #a0a0a0;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+        }
+
+        .btn-reset {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 107, 107, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-start-over {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00d9ff;
+            color: #00d9ff;
+        }
+
+        .btn-start-over:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #ffc107;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Flowchart Visualization */
+        .flowchart {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .flowchart-node {
+            background: rgba(0, 217, 255, 0.1);
+            border: 2px solid #00d9ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+
+        .flowchart-node.active {
+            background: rgba(0, 217, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+        }
+
+        .flowchart-arrow {
+            color: #00ffc8;
+            margin: 0 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .question-title {
+                font-size: 1.2rem;
+            }
+
+            .question-text {
+                font-size: 1rem;
+            }
+
+            .option-button {
+                padding: 15px;
+            }
+
+            .result-title {
+                font-size: 1.5rem;
+            }
+
+            .path-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OS Installation Decision Tree</h1>
+            <div class="subtitle">CompTIA A+ Core 2 (220-1102) - Interactive Installation Type Selector</div>
+            <a href="../../../index.html" class="home-link">← Back to Home</a>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">Decision Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="step-counter" id="stepCounter">Question 1 of 6</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- Question Area -->
+            <div id="questionArea"></div>
+
+            <!-- Path History Panel -->
+            <div class="path-panel">
+                <div class="path-title">
+                    <span>📋</span>
+                    <span>Your Decision Path</span>
+                </div>
+                <div id="pathHistory">
+                    <p style="color: #a0a0a0; font-style: italic;">Your answers will appear here...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="controls">
+            <button class="control-btn btn-back hidden" id="backBtn">← Back</button>
+            <button class="control-btn btn-reset" id="resetBtn">↺ Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // Decision Tree Structure
+        const decisionTree = {
+            start: {
+                id: 'start',
+                question: 'What is your starting point?',
+                options: [
+                    { text: 'New/blank computer or empty hard drive', next: 'q2', answer: 'New/blank computer' },
+                    { text: 'Existing Windows installation', next: 'q3', answer: 'Existing Windows' },
+                    { text: 'Need to run multiple operating systems', next: 'result_dualboot', answer: 'Multiple OS needed' },
+                    { text: 'Deploying to multiple computers (5+)', next: 'q5', answer: 'Multiple computers' }
+                ]
+            },
+            q2: {
+                id: 'q2',
+                question: 'Do you have an existing OS or data to preserve?',
+                options: [
+                    { text: 'No, fresh start on empty/new drive', next: 'result_clean', answer: 'No existing data' },
+                    { text: 'Yes, but I want a fresh start (I have backups)', next: 'result_clean_backup', answer: 'Fresh start with backup' }
+                ]
+            },
+            q3: {
+                id: 'q3',
+                question: 'What do you want to do with your current Windows installation?',
+                options: [
+                    { text: 'Keep files and apps, upgrade to newer Windows version', next: 'q4', answer: 'Keep data and upgrade' },
+                    { text: 'Start completely fresh, don\'t need old data', next: 'result_clean', answer: 'Start fresh' },
+                    { text: 'Fix problems/corruption without losing data', next: 'result_repair', answer: 'Repair installation' },
+                    { text: 'Add another OS alongside Windows', next: 'result_dualboot', answer: 'Dual boot setup' }
+                ]
+            },
+            q4: {
+                id: 'q4',
+                question: 'Is your hardware compatible with the new OS version?',
+                options: [
+                    { text: 'Yes, meets all system requirements', next: 'result_upgrade', answer: 'Hardware compatible' },
+                    { text: 'No, or not sure about compatibility', next: 'result_incompatible', answer: 'Compatibility uncertain' }
+                ]
+            },
+            q5: {
+                id: 'q5',
+                question: 'Do you have deployment infrastructure (WDS, SCCM, MDT)?',
+                options: [
+                    { text: 'Yes, we have enterprise deployment tools', next: 'result_image', answer: 'Have deployment infrastructure' },
+                    { text: 'No, but we have a network', next: 'result_network', answer: 'Network available only' },
+                    { text: 'No infrastructure, manual installation needed', next: 'result_clean_multiple', answer: 'Manual deployment' }
+                ]
+            }
+        };
+
+        // Installation Type Results
+        const results = {
+            result_clean: {
+                icon: '🆕',
+                title: 'Clean Install',
+                subtitle: 'Fresh installation on a formatted drive',
+                description: 'A clean installation completely erases the target drive and installs the operating system from scratch. This is the recommended method for optimal performance and stability.',
+                pros: [
+                    'Cleanest, fastest system performance',
+                    'No leftover files, registry entries, or conflicts',
+                    'Eliminates malware and system corruption',
+                    'Establishes known-good baseline configuration',
+                    'Smaller installation footprint'
+                ],
+                cons: [
+                    'All data on the drive will be erased',
+                    'Must reinstall all applications',
+                    'Need to reconfigure system settings',
+                    'Requires driver installation',
+                    'Time-consuming setup process'
+                ],
+                whenToUse: [
+                    'New computer or new hard drive',
+                    'Severe system corruption or malware infection',
+                    'Preparing computer for resale or transfer',
+                    'Major hardware changes (new motherboard)',
+                    'Maximum performance is priority'
+                ],
+                checklist: [
+                    'Backup all important files and data',
+                    'Document installed applications and licenses',
+                    'Save browser bookmarks and passwords',
+                    'Note custom settings and configurations',
+                    'Create bootable installation media (USB/DVD)',
+                    'Download necessary drivers in advance',
+                    'Verify Windows product key availability',
+                    'Ensure adequate time for installation (2-4 hours)'
+                ]
+            },
+            result_clean_backup: {
+                icon: '🆕',
+                title: 'Clean Install',
+                subtitle: 'Fresh installation after backing up data',
+                description: 'You\'ve chosen to start fresh while preserving your important data through backups. This approach gives you the benefits of a clean install while keeping your files safe.',
+                pros: [
+                    'Cleanest system performance',
+                    'No leftover conflicts or bloatware',
+                    'Fresh start without legacy issues',
+                    'Optimal system stability'
+                ],
+                cons: [
+                    'Must restore data after installation',
+                    'Need to reinstall all applications',
+                    'Settings must be reconfigured',
+                    'Time-consuming process'
+                ],
+                whenToUse: [
+                    'System is slow or unstable',
+                    'Want to eliminate accumulated clutter',
+                    'Upgrading to significantly different OS version',
+                    'Have reliable backup solution in place'
+                ],
+                checklist: [
+                    'Complete full backup to external drive or cloud',
+                    'Verify backup integrity - test restore a file',
+                    'Export browser bookmarks and passwords',
+                    'Save application settings and license keys',
+                    'Document network and email configurations',
+                    'Create list of installed programs',
+                    'Prepare installation media (USB/DVD)',
+                    'Download drivers for new OS version'
+                ],
+                warning: 'CRITICAL: Verify your backup is complete and accessible BEFORE proceeding with the clean install. Test restoring at least one file to confirm the backup works.'
+            },
+            result_upgrade: {
+                icon: '⬆️',
+                title: 'Upgrade Install (In-Place Upgrade)',
+                subtitle: 'Upgrade to newer Windows version keeping files and apps',
+                description: 'An upgrade installation updates your operating system to a newer version while preserving your files, settings, and most applications. This is the easiest migration path for compatible systems.',
+                pros: [
+                    'Keeps all personal files and documents',
+                    'Preserves most installed applications',
+                    'Maintains user settings and preferences',
+                    'Faster than clean install + restore',
+                    'No need for extensive reconfiguration'
+                ],
+                cons: [
+                    'May carry over system issues or conflicts',
+                    'Can inherit legacy registry problems',
+                    'Larger installation footprint',
+                    'Some applications may become incompatible',
+                    'Slightly slower performance vs clean install'
+                ],
+                whenToUse: [
+                    'Upgrading Windows 10 to Windows 11',
+                    'System is stable and working well',
+                    'Hardware meets new OS requirements',
+                    'Want to minimize downtime and reconfiguration',
+                    'Many installed applications to preserve'
+                ],
+                checklist: [
+                    'Run Windows Update and install all updates',
+                    'Verify hardware compatibility with new OS',
+                    'Check application compatibility (manufacturer websites)',
+                    'Create full system backup as safety measure',
+                    'Free up at least 20GB of disk space',
+                    'Disconnect unnecessary peripherals',
+                    'Disable antivirus temporarily during upgrade',
+                    'Run built-in troubleshooters to fix existing issues',
+                    'Document current activation status',
+                    'Ensure stable power supply (laptop on AC power)'
+                ]
+            },
+            result_repair: {
+                icon: '🔧',
+                title: 'Repair Install (In-Place Repair)',
+                subtitle: 'Fix Windows without losing files or apps',
+                description: 'A repair installation reinstalls Windows system files while preserving all your personal data, applications, and settings. This fixes corruption and system file damage without the need for a clean slate.',
+                pros: [
+                    'Repairs corrupted system files',
+                    'Fixes Windows Update issues',
+                    'Keeps all files, apps, and settings',
+                    'No data loss or backup needed',
+                    'Resolves many boot and stability problems'
+                ],
+                cons: [
+                    'May not fix all types of problems',
+                    'Won\'t remove malware or third-party issues',
+                    'Requires same or newer OS version',
+                    'Takes 1-2 hours to complete',
+                    'Some apps may need reactivation'
+                ],
+                whenToUse: [
+                    'Windows Update repeatedly fails',
+                    'System file corruption detected (SFC errors)',
+                    'Startup or boot issues',
+                    'Windows features not working properly',
+                    'After failed update or incomplete installation'
+                ],
+                checklist: [
+                    'Download Windows installation media (same or newer version)',
+                    'Create restore point if possible',
+                    'Backup critical data as precaution',
+                    'Close all running applications',
+                    'Disconnect from VPN or domain network',
+                    'Run as Administrator',
+                    'Ensure laptop is plugged in',
+                    'Allow 1-2 hours for completion',
+                    'Do NOT interrupt process once started'
+                ],
+                warning: 'A repair install requires installation media for the SAME or NEWER version of Windows. You cannot repair Windows 11 using Windows 10 media.'
+            },
+            result_dualboot: {
+                icon: '🔀',
+                title: 'Dual Boot Installation',
+                subtitle: 'Multiple operating systems on one computer',
+                description: 'Dual boot configuration allows you to install multiple operating systems on the same computer, choosing which one to run at startup. This is ideal for testing, development, or using OS-specific software.',
+                pros: [
+                    'Run multiple operating systems on one machine',
+                    'Switch between OS at boot time',
+                    'No virtualization performance overhead',
+                    'Full hardware access for each OS',
+                    'Great for testing and development'
+                ],
+                cons: [
+                    'Requires separate disk partitions',
+                    'Must reboot to switch OS',
+                    'Complex setup and partition management',
+                    'Boot loader conflicts possible',
+                    'Each OS needs separate disk space',
+                    'Potential for bootloader corruption'
+                ],
+                whenToUse: [
+                    'Need Windows and Linux on same machine',
+                    'Software development requiring multiple environments',
+                    'Testing different OS versions',
+                    'Learning or training purposes',
+                    'OS-specific applications needed'
+                ],
+                checklist: [
+                    'Backup all existing data completely',
+                    'Verify sufficient disk space (50GB+ per OS minimum)',
+                    'Create separate partition for new OS (use Disk Management)',
+                    'Disable BitLocker/encryption if enabled',
+                    'Disable Secure Boot in UEFI (may be required for Linux)',
+                    'Download installation media for new OS',
+                    'Research boot loader options (GRUB for Linux, Windows Boot Manager)',
+                    'Document current partition layout',
+                    'Create recovery media for existing OS',
+                    'Plan partition sizes carefully (hard to change later)'
+                ],
+                warning: 'Installing a dual boot configuration modifies your boot loader. Always install Windows FIRST, then Linux second, as Windows may overwrite other boot loaders. Keep recovery media for both operating systems.'
+            },
+            result_image: {
+                icon: '💾',
+                title: 'Image Deployment',
+                subtitle: 'Enterprise deployment using system images',
+                description: 'Image deployment involves creating a master installation image and deploying it to multiple computers simultaneously using tools like Windows Deployment Services (WDS), SCCM, or MDT. This is the standard method for enterprise environments.',
+                pros: [
+                    'Deploy to many computers simultaneously',
+                    'Consistent configuration across all systems',
+                    'Includes pre-installed applications and settings',
+                    'Fastest method for large deployments',
+                    'Centralized management and updates',
+                    'Reduced manual configuration errors'
+                ],
+                cons: [
+                    'Requires significant initial setup',
+                    'Needs server infrastructure (WDS/SCCM)',
+                    'Complex to configure and maintain',
+                    'Licensing considerations for volume deployment',
+                    'Images must be updated periodically',
+                    'Hardware-specific drivers may be needed'
+                ],
+                whenToUse: [
+                    'Deploying 10+ computers with identical setup',
+                    'Corporate/enterprise environment',
+                    'Available IT infrastructure and staff',
+                    'Need standardized configurations',
+                    'Regular computer refreshes or replacements'
+                ],
+                checklist: [
+                    'Set up Windows Deployment Services (WDS) server',
+                    'Create reference computer with desired configuration',
+                    'Install all required applications and updates',
+                    'Sysprep the reference computer to generalize',
+                    'Capture image using DISM or deployment tools',
+                    'Test image deployment on pilot computer',
+                    'Prepare driver packages for different hardware',
+                    'Configure answer files (unattend.xml) for automation',
+                    'Set up PXE boot on target computers',
+                    'Verify network infrastructure (DHCP, sufficient bandwidth)',
+                    'Plan deployment schedule to minimize disruption'
+                ]
+            },
+            result_network: {
+                icon: '🌐',
+                title: 'Network/PXE Installation',
+                subtitle: 'Install over network without deployment server',
+                description: 'Network installation uses PXE (Preboot Execution Environment) to boot computers from the network and install the OS from a shared location. This is simpler than full image deployment but still efficient for multiple computers.',
+                pros: [
+                    'No USB drives or DVDs needed',
+                    'Install multiple computers from one source',
+                    'Faster than individual USB installations',
+                    'Centralized installation files',
+                    'Easier to update installation media'
+                ],
+                cons: [
+                    'Requires network infrastructure setup',
+                    'Slower than local media installation',
+                    'Network issues can interrupt installation',
+                    'Each install still requires time',
+                    'BIOS/UEFI must support PXE boot',
+                    'More complex than USB installation'
+                ],
+                whenToUse: [
+                    'Installing 5-20 computers',
+                    'Network available but no WDS/SCCM',
+                    'Don\'t want to create multiple USB drives',
+                    'Computers support PXE boot',
+                    'Small business or lab environment'
+                ],
+                checklist: [
+                    'Configure DHCP server with PXE boot options',
+                    'Set up TFTP server for boot files',
+                    'Share Windows installation files on network',
+                    'Configure router/network for PXE traffic',
+                    'Enable PXE boot in computer BIOS/UEFI',
+                    'Test PXE boot with one computer first',
+                    'Ensure sufficient network bandwidth',
+                    'Prepare answer files for unattended setup',
+                    'Document installation process',
+                    'Have USB backup media ready in case of network issues'
+                ]
+            },
+            result_clean_multiple: {
+                icon: '🔄',
+                title: 'Multiple Clean Installs',
+                subtitle: 'Individual USB-based installations',
+                description: 'Installing Windows individually on each computer using bootable USB drives. While more time-consuming than network methods, this requires no infrastructure and works in any environment.',
+                pros: [
+                    'No server infrastructure needed',
+                    'Works in any environment',
+                    'Simple and straightforward process',
+                    'No network dependencies',
+                    'Individual control over each installation'
+                ],
+                cons: [
+                    'Time-consuming for many computers',
+                    'Requires physical access to each computer',
+                    'Manual configuration per machine',
+                    'More room for human error',
+                    'Must manage multiple USB drives'
+                ],
+                whenToUse: [
+                    'Small number of computers (less than 10)',
+                    'No network infrastructure available',
+                    'Computers in different locations',
+                    'One-time deployment scenario',
+                    'Budget constraints prevent server setup'
+                ],
+                checklist: [
+                    'Create bootable USB installation media',
+                    'Prepare multiple USB drives if available (speeds up process)',
+                    'Download and organize driver packages',
+                    'Create checklist of post-install configurations',
+                    'Document standard settings and configurations',
+                    'Prepare application installation files',
+                    'Schedule installation time for each computer',
+                    'Create Windows answer file (unattend.xml) for automation',
+                    'Test installation process on one computer first',
+                    'Plan for 2-4 hours per computer including setup'
+                ]
+            },
+            result_incompatible: {
+                icon: '⚠️',
+                title: 'Compatibility Issue Detected',
+                subtitle: 'Hardware may not support upgrade',
+                description: 'Your hardware may not meet the requirements for an in-place upgrade. An upgrade install requires compatible hardware to ensure system stability and functionality.',
+                pros: [],
+                cons: [],
+                whenToUse: [],
+                checklist: [
+                    'Run PC Health Check tool (for Windows 11)',
+                    'Check minimum system requirements for target OS',
+                    'Verify CPU compatibility on Microsoft website',
+                    'Check TPM 2.0 availability (required for Windows 11)',
+                    'Verify Secure Boot capability in UEFI',
+                    'Check RAM requirements (4GB minimum, 8GB recommended)',
+                    'Verify storage space (64GB+ available)',
+                    'If incompatible: Consider clean install of current OS version',
+                    'If compatible: Proceed with upgrade install',
+                    'Alternative: Upgrade hardware components if feasible'
+                ],
+                warning: 'Windows 11 requires TPM 2.0, Secure Boot, and compatible CPU. If your hardware doesn\'t meet these requirements, you cannot perform an in-place upgrade. Consider a clean install of Windows 10, or upgrade hardware components.'
+            }
+        };
+
+        // State Management
+        let currentQuestion = 'start';
+        let history = [];
+        let totalSteps = 6;
+
+        // DOM Elements
+        const questionArea = document.getElementById('questionArea');
+        const pathHistory = document.getElementById('pathHistory');
+        const progressFill = document.getElementById('progressFill');
+        const stepCounter = document.getElementById('stepCounter');
+        const backBtn = document.getElementById('backBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Initialize
+        function init() {
+            showQuestion('start');
+            updateProgress();
+
+            backBtn.addEventListener('click', goBack);
+            resetBtn.addEventListener('click', reset);
+        }
+
+        // Show Question
+        function showQuestion(questionId) {
+            const question = decisionTree[questionId];
+            if (!question) return;
+
+            currentQuestion = questionId;
+
+            questionArea.innerHTML = `
+                <div class="question-card">
+                    <div class="question-title">Question ${history.length + 1}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-container" id="optionsContainer"></div>
+                </div>
+            `;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option.text;
+                button.addEventListener('click', () => selectOption(option));
+
+                // Add slight delay for staggered animation
+                setTimeout(() => {
+                    button.style.animation = 'slideIn 0.5s ease';
+                }, index * 100);
+
+                optionsContainer.appendChild(button);
+            });
+
+            updateProgress();
+            updateBackButton();
+        }
+
+        // Select Option
+        function selectOption(option) {
+            // Add to history
+            history.push({
+                question: decisionTree[currentQuestion].question,
+                answer: option.answer,
+                questionId: currentQuestion
+            });
+
+            updatePathHistory();
+
+            // Check if next is a result or question
+            if (option.next.startsWith('result_')) {
+                showResult(option.next);
+            } else {
+                showQuestion(option.next);
+            }
+        }
+
+        // Show Result
+        function showResult(resultId) {
+            const result = results[resultId];
+            if (!result) return;
+
+            let prosHTML = '';
+            if (result.pros && result.pros.length > 0) {
+                prosHTML = `
+                    <div class="result-section">
+                        <div class="result-section-title">
+                            <span>✅</span>
+                            <span>Advantages</span>
+                        </div>
+                        <div class="result-content">
+                            <ul class="result-list">
+                                ${result.pros.map(pro => `<li>${pro}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let consHTML = '';
+            if (result.cons && result.cons.length > 0) {
+                consHTML = `
+                    <div class="result-section">
+                        <div class="result-section-title">
+                            <span>⚠️</span>
+                            <span>Disadvantages</span>
+                        </div>
+                        <div class="result-content">
+                            <ul class="result-list cons">
+                                ${result.cons.map(con => `<li>${con}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let whenHTML = '';
+            if (result.whenToUse && result.whenToUse.length > 0) {
+                whenHTML = `
+                    <div class="result-section">
+                        <div class="result-section-title">
+                            <span>💡</span>
+                            <span>Best Used When</span>
+                        </div>
+                        <div class="result-content">
+                            <ul class="result-list">
+                                ${result.whenToUse.map(when => `<li>${when}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let warningHTML = '';
+            if (result.warning) {
+                warningHTML = `
+                    <div class="warning-box">
+                        <strong>⚠️ Important Warning:</strong>
+                        ${result.warning}
+                    </div>
+                `;
+            }
+
+            questionArea.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-icon">${result.icon}</div>
+                        <div class="result-title">${result.title}</div>
+                        <div class="result-subtitle">${result.subtitle}</div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-section-title">
+                            <span>📝</span>
+                            <span>Description</span>
+                        </div>
+                        <div class="result-content">
+                            <p>${result.description}</p>
+                        </div>
+                    </div>
+
+                    ${prosHTML}
+                    ${consHTML}
+                    ${whenHTML}
+
+                    <div class="result-section">
+                        <div class="result-section-title">
+                            <span>✓</span>
+                            <span>Pre-Installation Checklist</span>
+                        </div>
+                        <div class="checklist">
+                            ${result.checklist.map(item => `<div class="checklist-item">${item}</div>`).join('')}
+                        </div>
+                    </div>
+
+                    ${warningHTML}
+                </div>
+            `;
+
+            progressFill.style.width = '100%';
+            stepCounter.textContent = 'Complete!';
+            updateBackButton();
+        }
+
+        // Update Path History
+        function updatePathHistory() {
+            if (history.length === 0) {
+                pathHistory.innerHTML = '<p style="color: #a0a0a0; font-style: italic;">Your answers will appear here...</p>';
+                return;
+            }
+
+            pathHistory.innerHTML = history.map((item, index) => `
+                <div class="path-step">
+                    <div class="path-step-question">Q${index + 1}: ${item.question}</div>
+                    <div class="path-step-answer">${item.answer}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update Progress
+        function updateProgress() {
+            const progress = (history.length / totalSteps) * 100;
+            progressFill.style.width = Math.min(progress, 100) + '%';
+
+            if (history.length < totalSteps) {
+                stepCounter.textContent = `Question ${history.length + 1} of ${totalSteps}`;
+            }
+        }
+
+        // Update Back Button
+        function updateBackButton() {
+            if (history.length > 0) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
+        }
+
+        // Go Back
+        function goBack() {
+            if (history.length === 0) return;
+
+            const lastItem = history.pop();
+            updatePathHistory();
+            showQuestion(lastItem.questionId);
+        }
+
+        // Reset
+        function reset() {
+            history = [];
+            currentQuestion = 'start';
+            updatePathHistory();
+            showQuestion('start');
+            progressFill.style.width = '0%';
+            stepCounter.textContent = 'Question 1 of 6';
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>

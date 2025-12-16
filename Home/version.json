@@ -1,13 +1,17 @@
 {
-  "version": "7.7.0",
+  "version": "7.8.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: House of the Cloud (Cloud Computing) with sky blue/silver theme",
-    "Added: House of the Code (Programming) with emerald/mint theme",
-    "Added: House of the Key (Cryptography) with violet/gold theme",
-    "Added: House of the Eye (Monitoring & Analytics) with indigo/cyan theme",
-    "Updated: Sorting quiz now includes all 8 houses with 8 answer options per question",
-    "Updated: House selection portal displays all 8 houses"
+    "Added: macOS/Linux Terminal Commands Lab with interactive exercises",
+    "Added: Workgroup vs Domain comprehensive presentation (40+ slides)",
+    "Added: Workgroup vs Domain interactive quiz with 15 questions",
+    "Added: Workgroup vs Domain hands-on lab with 24 tasks",
+    "Added: OS Installation Types presentation covering boot methods, partitioning, and drivers",
+    "Added: OS Installation Decision Tree interactive tool",
+    "Added: OS Installation hands-on lab with guided exercises",
+    "Added: OS Upgrade Process presentation with upgrade paths and troubleshooting",
+    "Added: OS Upgrade Simulator interactive tool",
+    "Added: OS Upgrade hands-on lab with practical exercises"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
