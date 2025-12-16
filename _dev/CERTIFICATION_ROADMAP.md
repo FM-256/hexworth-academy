@@ -1,25 +1,28 @@
 # Network Essentials Certification Coverage Roadmap
 
-**Project Vision:** Comprehensive Interactive Learning Catalog for Network+ & CCNA
+**Project Vision:** Comprehensive Interactive Learning Catalog for Network+, CCNA & AWS Cloud Practitioner
 **Methodology:** Agile (Sprint-based development)
 **Created:** December 8, 2025
-**Maintained by:** CCode-Gamma (Claude Code Opus 4.5)
+**Maintained by:** CCode-Theta (Claude Code Opus 4.5)
 
 ---
 
 ## Executive Summary
 
-This roadmap outlines the expansion of the Network Essentials catalog to provide **complete coverage** of both:
+This roadmap outlines the expansion of the Network Essentials catalog to provide **complete coverage** of:
 - **CompTIA Network+ (N10-008)** - 5 domains, 25 chapters
 - **Cisco CCNA (200-301)** - 6 domains, comprehensive Cisco-specific content
+- **AWS Cloud Practitioner (CLF-C02)** - 4 domains, 12 chapters ✅ **COMPLETE**
 
 Our approach: **Break down complex topics and make them interactive and easy to understand** for beginner-level students, avoiding "white paper speak" and using grounded, real-world analogies.
 
-### Current State (v3.3)
+### Current State (v7.10.0)
 - 12 Interactive Presentations (218 slides)
 - 9 Speaker Notes (550+ pages)
 - 4 Interactive Tools (2 simulators + OSPF & STP Visualizers)
 - 6 Cumulative Labs
+- **25 AWS Cloud Practitioner Applets** (NEW!)
+- **Cloud Lab Simulator** (NEW!)
 
 ### Target State (v5.0+)
 - 40+ Interactive Presentations
@@ -53,6 +56,18 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 | **4.0 IP Services** | 10% | NAT, NTP, DHCP, DNS, SNMP, QoS | 🟡 Partial |
 | **5.0 Security Fundamentals** | 15% | Security Concepts, VPNs, ACLs, Layer 2 Security | 🟡 Partial |
 | **6.0 Automation & Programmability** | 10% | REST APIs, Config Management, JSON/XML | 🔴 Not Started |
+
+### AWS Cloud Practitioner CLF-C02 (4 Domains) 🆕
+
+| Domain | Weight | Topics | Status |
+|--------|--------|--------|--------|
+| **1.0 Cloud Concepts** | 24% | Cloud value proposition, design principles, migration | 🟢 **COMPLETE** |
+| **2.0 Security & Compliance** | 30% | Shared responsibility, IAM, security services | 🟢 **COMPLETE** |
+| **3.0 Cloud Technology & Services** | 34% | Compute, storage, database, networking services | 🟢 **COMPLETE** |
+| **4.0 Billing, Pricing & Support** | 12% | Pricing models, account structures, support plans | 🟢 **COMPLETE** |
+
+**AWS Applets Created:** 25 interactive tools covering all 12 chapters
+**Location:** `resources/tools/cloud-applets/`
 
 ---
 
@@ -201,15 +216,17 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 | NTP Presentation | Presentation | Medium |
 | Network Services Visualizer | Interactive Tool | High |
 
-### Sprint 10: Cloud & Datacenter
-**Covers:** Network+ 1.7, 1.8
+### Sprint 10: Cloud & Datacenter ✅ COMPLETE
+**Covers:** Network+ 1.7, 1.8 | CCNA 1.1, 1.2
 
-| Task | Type | Priority |
-|------|------|----------|
-| Cloud Concepts Presentation (18 slides) | Presentation | High |
-| Cloud Speaker Notes | Documentation | High |
-| Datacenter Architecture Presentation | Presentation | High |
-| Cloud Visualizer - IaaS/PaaS/SaaS | Interactive Tool | Medium |
+| Task | Type | Status |
+|------|------|--------|
+| Cloud Concepts Presentation (20 slides) | Presentation | ✅ Done |
+| Cloud Speaker Notes (75+ pages) | Documentation | ✅ Done |
+| Datacenter Architecture Presentation (18 slides) | Presentation | ✅ Done |
+| Cloud Visualizer - IaaS/PaaS/SaaS (6 tabs) | Interactive Tool | ✅ Done |
+
+**Completed:** December 8, 2025 (CCode-Delta)
 
 ### Sprint 11: Network Devices
 **Covers:** Network+ 2.1
@@ -389,7 +406,97 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 
 ---
 
-## PHASE 6: Gamification Layer (Sprints 29-32)
+## PHASE 6: AWS Cloud Practitioner CLF-C02 (Cloud Sprints 1-4) ✅ COMPLETE
+*Complete coverage of AWS Cloud Practitioner certification - ALL SPRINTS DONE!*
+
+### Cloud Sprint 1: Cloud Concepts & AWS Fundamentals ✅ COMPLETE
+**Covers:** CLF-C02 Domain 1 (Chapters 1-4)
+**Completed:** December 16, 2025
+
+| Task | Type | Status |
+|------|------|--------|
+| Ch 1: Cloud Models Visualizer | Interactive Tool | ✅ Done |
+| Ch 1: Cloud Fundamentals Quiz | Quiz | ✅ Done |
+| Ch 2: AWS Account Explorer | Interactive Tool | ✅ Done |
+| Ch 3: Support Plans Visualizer | Interactive Tool | ✅ Done |
+| Ch 4: AWS Regions Explorer | Interactive Tool | ✅ Done |
+
+**Applets Created:** 5 | **Location:** `resources/tools/cloud-applets/ch01-ch04*`
+
+### Cloud Sprint 2: Security & Compliance ✅ COMPLETE
+**Covers:** CLF-C02 Domain 2 (Chapters 5-6)
+**Completed:** December 16, 2025
+
+| Task | Type | Status |
+|------|------|--------|
+| Ch 5: Security Visualizer (IAM, Shared Responsibility) | Interactive Tool | ✅ Done |
+| Ch 5: IAM Security Quiz | Quiz | ✅ Done |
+| Ch 6: AWS Tools Explorer (Console, CLI, SDK) | Interactive Tool | ✅ Done |
+
+**Applets Created:** 3 | **Location:** `resources/tools/cloud-applets/ch05-ch06*`
+
+### Cloud Sprint 3: Core Services ✅ COMPLETE
+**Covers:** CLF-C02 Domain 3 (Chapters 7-9)
+**Completed:** December 16, 2025
+
+| Task | Type | Status |
+|------|------|--------|
+| Ch 7: Compute Services Explorer (EC2, Lambda, ECS) | Interactive Tool | ✅ Done |
+| Ch 7: EC2 Instance Visualizer | Interactive Tool | ✅ Done |
+| Ch 8: Storage Services Explorer (S3, EBS, EFS) | Interactive Tool | ✅ Done |
+| Ch 8: Storage Quiz | Quiz | ✅ Done |
+| Ch 9: Database Services Explorer (RDS, DynamoDB) | Interactive Tool | ✅ Done |
+| Ch 9: Database Quiz | Quiz | ✅ Done |
+
+**Applets Created:** 6 | **Location:** `resources/tools/cloud-applets/ch07-ch09*`
+
+### Cloud Sprint 4: Networking & Architecture ✅ COMPLETE
+**Covers:** CLF-C02 Domain 4 (Chapters 10-12)
+**Completed:** December 16, 2025
+
+| Task | Type | Status |
+|------|------|--------|
+| Ch 10: VPC Networking Visualizer | Interactive Tool | ✅ Done |
+| Ch 10: Networking Quiz | Quiz | ✅ Done |
+| Ch 11: Automation Explorer (CloudFormation, IaC) | Interactive Tool | ✅ Done |
+| Ch 12: Use Cases Visualizer (Well-Architected) | Interactive Tool | ✅ Done |
+| Ch 12: AWS Practitioner Final Quiz (Exam Prep) | Quiz | ✅ Done |
+
+**Applets Created:** 5 | **Location:** `resources/tools/cloud-applets/ch10-ch12*`
+
+### Cloud Sprint 5: Bonus Tools ✅ COMPLETE
+**Extra tools for comprehensive AWS coverage**
+**Completed:** December 16, 2025
+
+| Task | Type | Status |
+|------|------|--------|
+| AWS Service Explorer (All Services by Category) | Interactive Tool | ✅ Done |
+| Cloud Architecture Designer (Drag-and-Drop) | Interactive Tool | ✅ Done |
+| Cloud Provider Comparison (AWS vs Azure vs GCP) | Interactive Tool | ✅ Done |
+| Cloud Lab Simulator | Lab | ✅ Done |
+| AWS Fundamentals Presentation | Presentation | ✅ Done |
+| Azure Fundamentals Presentation | Presentation | ✅ Done |
+
+**Applets Created:** 6 | **Location:** `resources/tools/cloud-applets/` & `resources/presentations/`
+
+---
+
+### AWS Cloud Practitioner Summary
+
+| Sprint | Chapters | Applets | Status |
+|--------|----------|---------|--------|
+| Cloud Sprint 1 | Ch 1-4 (Cloud Concepts) | 5 | ✅ Complete |
+| Cloud Sprint 2 | Ch 5-6 (Security) | 3 | ✅ Complete |
+| Cloud Sprint 3 | Ch 7-9 (Core Services) | 6 | ✅ Complete |
+| Cloud Sprint 4 | Ch 10-12 (Networking) | 5 | ✅ Complete |
+| Cloud Sprint 5 | Bonus Tools | 6 | ✅ Complete |
+| **TOTAL** | **12 Chapters** | **25 Applets** | **✅ 100% Complete** |
+
+**Certification Status:** AWS Cloud Practitioner CLF-C02 - **FULL COVERAGE**
+
+---
+
+## PHASE 7: Gamification Layer (Sprints 29-32)
 *Add engagement and progress tracking*
 
 ### Sprint 29: Progress Tracking System
@@ -501,14 +608,16 @@ Located: `/home/eq/Ai content creation/network-essentials/CCNA/`
 
 ## Version Milestones
 
-| Version | Milestone | Est. Completion |
-|---------|-----------|-----------------|
-| v3.3 | Current (OSPF + STP Visualizers) | ✅ Complete |
+| Version | Milestone | Status |
+|---------|-----------|--------|
+| v3.3 | OSPF + STP Visualizers | ✅ Complete |
 | v4.0 | Phase 1 Complete (Foundation) | TBD |
 | v4.5 | Phase 2 Complete (Network+ Core) | TBD |
 | v5.0 | Network+ Full Coverage | TBD |
 | v5.5 | CCNA Full Coverage | TBD |
 | v6.0 | Gamification Complete | TBD |
+| **v7.10.0** | **AWS Cloud Practitioner CLF-C02 Complete** | **✅ Complete (Dec 16, 2025)** |
+| v8.0 | All Certifications Complete | TBD |
 
 ---
 
@@ -535,5 +644,6 @@ Located: `/home/eq/Ai content creation/network-essentials/CCNA/`
 
 *This roadmap is a living document. Update after each sprint completion.*
 
-**Last Updated:** December 8, 2025
-**Maintainer:** CCode-Gamma
+**Last Updated:** December 16, 2025
+**Maintainer:** CCode-Theta
+**Recent Changes:** Added AWS Cloud Practitioner CLF-C02 (Phase 6) - 5 Cloud Sprints Complete
