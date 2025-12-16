@@ -1,10 +1,10 @@
 {
-  "version": "7.9.4",
+  "version": "7.9.5",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Fixed: FastEthernet interface selection (int fa0/2, fa0/3, etc. now work)",
-    "Fixed: Interface range command (int range fa0/1-4 now works correctly)",
-    "Improved: Interface search now uses normalized matching for reliability"
+    "Fixed: 'int range' command now works (was being caught by generic 'int' handler)",
+    "Fixed: FastEthernet interface selection (int fa0/2, fa0/3, etc.)",
+    "Improved: Interface matching uses normalized comparison"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json"

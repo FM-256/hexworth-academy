@@ -8425,7 +8425,26 @@
                 updateCLIPrompt(promptEl, selectedDevice.name);
                 output.innerHTML += `<div style="color: #0ff;">Returning to privileged mode</div>`;
             }
-            // ========== INTERFACE ==========
+            // ========== INTERFACE RANGE (must check BEFORE single interface!) ==========
+            else if (lowerCmd.startsWith('int range ') || lowerCmd.startsWith('interface range ')) {
+                const rangeStr = cmd.substring(cmd.indexOf('range ') + 6).trim();
+                const interfaces = parseInterfaceRange(rangeStr, selectedDevice);
+
+                if (interfaces && interfaces.length > 0) {
+                    currentInterfaceRange = interfaces;
+                    currentInterface = null; // Clear single interface
+                    cliMode = 'config-if';
+                    updateCLIPrompt(promptEl, selectedDevice.name);
+                    output.innerHTML += `<div style="color: #0f0;">✓ Interface range selected (${interfaces.length} interfaces)</div>`;
+                    interfaces.forEach(intfName => {
+                        output.innerHTML += `<div style="color: #0ff;">  - ${intfName}</div>`;
+                    });
+                } else {
+                    output.innerHTML += `<div style="color: #ff0;">% Invalid interface range: ${rangeStr}</div>`;
+                    output.innerHTML += `<div style="color: #ff0;">  Examples: int range fa0/1-4, int range Gi0/1-2</div>`;
+                }
+            }
+            // ========== INTERFACE (single) ==========
             else if (lowerCmd.startsWith('interface ') || lowerCmd.startsWith('int ')) {
                 const intfName = cmd.substring(cmd.indexOf(' ') + 1).trim();
                 handleInterface(intfName, output, promptEl, selectedDevice);
@@ -8681,25 +8700,6 @@
             // ========== SHOW COMMANDS ==========
             else if (lowerCmd.startsWith('show ')) {
                 handleShowCommand(lowerCmd, output, selectedDevice);
-            }
-            // ========== INT RANGE ==========
-            else if (lowerCmd.startsWith('int range ') || lowerCmd.startsWith('interface range ')) {
-                const rangeStr = cmd.substring(cmd.indexOf('range ') + 6).trim();
-                const interfaces = parseInterfaceRange(rangeStr, selectedDevice);
-
-                if (interfaces && interfaces.length > 0) {
-                    currentInterfaceRange = interfaces;
-                    currentInterface = null; // Clear single interface
-                    cliMode = 'config-if';
-                    updateCLIPrompt(promptEl, selectedDevice.name);
-                    output.innerHTML += `<div style="color: #0f0;">✓ Interface range selected (${interfaces.length} interfaces)</div>`;
-                    interfaces.forEach(intfName => {
-                        output.innerHTML += `<div style="color: #0ff;">  - ${intfName}</div>`;
-                    });
-                } else {
-                    output.innerHTML += `<div style="color: #ff0;">% Invalid interface range: ${rangeStr}</div>`;
-                    output.innerHTML += `<div style="color: #ff0;">  Examples: int range fa0/1-4, int range Gi0/1-2</div>`;
-                }
             }
             // ========== LOOPBACK ==========
             else if (lowerCmd.startsWith('int loopback') || lowerCmd.startsWith('interface loopback')) {
