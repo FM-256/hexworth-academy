@@ -1,0 +1,12 @@
+{
+  "version": "7.6.1",
+  "releaseDate": "2025-12-15",
+  "releaseNotes": [
+    "Fixed: Broken Back to Catalog navigation buttons across 18 presentations",
+    "Fixed: admin-tools.html home button placeholders (15 instances)",
+    "Fixed: Navigation links in 18 visualizers and tools",
+    "Fixed: All navigation links now correctly point to index.html"
+  ],
+  "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
+  "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
+}

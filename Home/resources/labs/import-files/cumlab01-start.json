@@ -1,0 +1,190 @@
+{
+  "version": "3.9",
+  "description": "Lab 1: Static Routes Foundation - Starting State (Fresh topology)",
+  "lab": {
+    "title": "Static Routes Foundation",
+    "id": "cumlab01",
+    "type": "cumulative"
+  },
+  "devices": [
+    {
+      "id": "Edge-R1",
+      "type": "router",
+      "name": "Edge-Router",
+      "x": 400,
+      "y": 80,
+      "interfaces": [
+        {"name": "GigabitEthernet0/0", "ip": "", "mask": "", "status": "down"},
+        {"name": "GigabitEthernet0/1", "ip": "", "mask": "", "status": "down"},
+        {"name": "GigabitEthernet0/2", "ip": "", "mask": "", "status": "down"},
+        {"name": "Serial0/0/0", "ip": "", "mask": "", "status": "down"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Core-SW1",
+      "type": "l3switch",
+      "name": "Core-SW1",
+      "x": 250,
+      "y": 200,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "Vlan1", "ip": "", "mask": "", "status": "down"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Core-SW2",
+      "type": "l3switch",
+      "name": "Core-SW2",
+      "x": 550,
+      "y": 200,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "Vlan1", "ip": "", "mask": "", "status": "down"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Access-SW1",
+      "type": "l2switch",
+      "name": "Access-SW1",
+      "x": 150,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Access-SW2",
+      "type": "l2switch",
+      "name": "Access-SW2",
+      "x": 350,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Access-SW3",
+      "type": "l2switch",
+      "name": "Access-SW3",
+      "x": 450,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "Access-SW4",
+      "type": "l2switch",
+      "name": "Access-SW4",
+      "x": 650,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up"}
+      ],
+      "config": {"vlans": {}, "staticRoutes": [], "ospf": null, "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}}
+    },
+    {
+      "id": "PC1",
+      "type": "pc",
+      "name": "Sales-PC1",
+      "x": 100,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    },
+    {
+      "id": "PC2",
+      "type": "pc",
+      "name": "Sales-PC2",
+      "x": 200,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    },
+    {
+      "id": "PC3",
+      "type": "pc",
+      "name": "Eng-PC1",
+      "x": 350,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    },
+    {
+      "id": "PC4",
+      "type": "pc",
+      "name": "Eng-PC2",
+      "x": 450,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    },
+    {
+      "id": "SRV1",
+      "type": "server",
+      "name": "Web-Server",
+      "x": 550,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    },
+    {
+      "id": "SRV2",
+      "type": "server",
+      "name": "DB-Server",
+      "x": 700,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "", "mask": "", "gateway": "", "status": "up"}]
+    }
+  ],
+  "connections": [
+    {"id": "conn-1", "device1": "Edge-R1", "device2": "Core-SW1", "color": "#06b6d4"},
+    {"id": "conn-2", "device1": "Core-SW1", "device2": "Access-SW1", "color": "#9333ea"},
+    {"id": "conn-3", "device1": "Core-SW1", "device2": "Access-SW2", "color": "#9333ea"},
+    {"id": "conn-4", "device1": "Core-SW2", "device2": "Access-SW3", "color": "#9333ea"},
+    {"id": "conn-5", "device1": "Core-SW2", "device2": "Access-SW4", "color": "#9333ea"},
+    {"id": "conn-6", "device1": "Access-SW1", "device2": "PC1", "color": "#f59e0b"},
+    {"id": "conn-7", "device1": "Access-SW1", "device2": "PC2", "color": "#f59e0b"},
+    {"id": "conn-8", "device1": "Access-SW2", "device2": "PC3", "color": "#f59e0b"},
+    {"id": "conn-9", "device1": "Access-SW3", "device2": "PC4", "color": "#f59e0b"},
+    {"id": "conn-10", "device1": "Access-SW4", "device2": "SRV1", "color": "#ec4899"},
+    {"id": "conn-11", "device1": "Access-SW4", "device2": "SRV2", "color": "#ec4899"}
+  ]
+}

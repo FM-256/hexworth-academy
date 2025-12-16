@@ -1,0 +1,264 @@
+{
+  "version": "3.9",
+  "description": "Lab 5: EIGRP and Redistribution - Starting State (Lab 4 Completed with OSPF)",
+  "lab": {
+    "title": "EIGRP and Redistribution",
+    "id": "cumlab05",
+    "type": "cumulative"
+  },
+  "devices": [
+    {
+      "id": "Edge-R1",
+      "type": "router",
+      "name": "Edge-Router",
+      "x": 400,
+      "y": 80,
+      "interfaces": [
+        {"name": "GigabitEthernet0/0", "ip": "203.0.113.2", "mask": "255.255.255.252", "status": "up"},
+        {"name": "GigabitEthernet0/1", "ip": "10.0.0.1", "mask": "255.255.255.252", "status": "up"},
+        {"name": "GigabitEthernet0/2", "ip": "", "mask": "", "status": "down"},
+        {"name": "Serial0/0/0", "ip": "", "mask": "", "status": "down"},
+        {"name": "Loopback0", "ip": "1.1.1.1", "mask": "255.255.255.255", "status": "up"}
+      ],
+      "config": {
+        "vlans": {},
+        "staticRoutes": [{"network": "0.0.0.0", "mask": "0.0.0.0", "nextHop": "203.0.113.1"}],
+        "ospf": {
+          "processId": 1,
+          "routerId": "1.1.1.1",
+          "networks": [
+            {"network": "10.0.0.0", "wildcard": "0.0.0.3", "area": 0},
+            {"network": "203.0.113.0", "wildcard": "0.0.0.3", "area": 0}
+          ],
+          "passiveInterfaces": ["GigabitEthernet0/0"],
+          "referenceBandwidth": 10000
+        },
+        "eigrp": null, "hsrp": {}, "acls": {}, "stpPriority": {}
+      }
+    },
+    {
+      "id": "Core-SW1",
+      "type": "l3switch",
+      "name": "Core-SW1",
+      "x": 250,
+      "y": 200,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up", "ip": "10.0.0.2", "mask": "255.255.255.252"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "Vlan1", "ip": "", "mask": "", "status": "down"},
+        {"name": "Vlan10", "ip": "192.168.10.1", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Vlan20", "ip": "192.168.20.1", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Vlan30", "ip": "192.168.30.1", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Loopback0", "ip": "2.2.2.2", "mask": "255.255.255.255", "status": "up"}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "staticRoutes": [],
+        "ospf": {
+          "processId": 1,
+          "routerId": "2.2.2.2",
+          "networks": [
+            {"network": "10.0.0.0", "wildcard": "0.0.0.3", "area": 0},
+            {"network": "192.168.10.0", "wildcard": "0.0.0.255", "area": 0},
+            {"network": "192.168.20.0", "wildcard": "0.0.0.255", "area": 0},
+            {"network": "192.168.30.0", "wildcard": "0.0.0.255", "area": 0}
+          ],
+          "passiveInterfaces": ["Vlan10", "Vlan20", "Vlan30"],
+          "referenceBandwidth": 10000
+        },
+        "eigrp": null, "hsrp": {}, "acls": {},
+        "stpPriority": {"10": 4096, "20": 4096},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "Core-SW2",
+      "type": "l3switch",
+      "name": "Core-SW2",
+      "x": 550,
+      "y": 200,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "Vlan1", "ip": "", "mask": "", "status": "down"},
+        {"name": "Vlan10", "ip": "192.168.10.2", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Vlan20", "ip": "192.168.20.2", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Vlan30", "ip": "192.168.30.2", "mask": "255.255.255.0", "status": "up"},
+        {"name": "Loopback0", "ip": "3.3.3.3", "mask": "255.255.255.255", "status": "up"}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "staticRoutes": [],
+        "ospf": {
+          "processId": 1,
+          "routerId": "3.3.3.3",
+          "networks": [
+            {"network": "192.168.10.0", "wildcard": "0.0.0.255", "area": 0},
+            {"network": "192.168.20.0", "wildcard": "0.0.0.255", "area": 0},
+            {"network": "192.168.30.0", "wildcard": "0.0.0.255", "area": 0}
+          ],
+          "passiveInterfaces": ["Vlan10", "Vlan20", "Vlan30"],
+          "referenceBandwidth": 10000
+        },
+        "eigrp": null, "hsrp": {}, "acls": {},
+        "stpPriority": {"30": 4096},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "Access-SW1",
+      "type": "l2switch",
+      "name": "Access-SW1",
+      "x": 150,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 10, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/2", "vlan": 10, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "Access-SW2",
+      "type": "l2switch",
+      "name": "Access-SW2",
+      "x": 350,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 20, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "Access-SW3",
+      "type": "l2switch",
+      "name": "Access-SW3",
+      "x": 450,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 20, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/2", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "Access-SW4",
+      "type": "l2switch",
+      "name": "Access-SW4",
+      "x": 650,
+      "y": 350,
+      "interfaces": [
+        {"name": "FastEthernet0/1", "vlan": 30, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/2", "vlan": 30, "status": "up", "switchportMode": "access", "portfast": true, "bpduguard": true},
+        {"name": "FastEthernet0/3", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/4", "vlan": 1, "status": "up"},
+        {"name": "FastEthernet0/5", "vlan": 1, "status": "up"},
+        {"name": "GigabitEthernet0/1", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99},
+        {"name": "GigabitEthernet0/2", "vlan": 1, "status": "up", "switchportMode": "trunk", "nativeVlan": 99}
+      ],
+      "config": {
+        "vlans": {"10": {"id": "10", "name": "Sales"}, "20": {"id": "20", "name": "Engineering"}, "30": {"id": "30", "name": "Servers"}, "99": {"id": "99", "name": "Native"}},
+        "stpMode": "rapid-pvst"
+      }
+    },
+    {
+      "id": "PC1",
+      "type": "pc",
+      "name": "Sales-PC1",
+      "x": 100,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.10.10", "mask": "255.255.255.0", "gateway": "192.168.10.1", "status": "up"}]
+    },
+    {
+      "id": "PC2",
+      "type": "pc",
+      "name": "Sales-PC2",
+      "x": 200,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.10.11", "mask": "255.255.255.0", "gateway": "192.168.10.1", "status": "up"}]
+    },
+    {
+      "id": "PC3",
+      "type": "pc",
+      "name": "Eng-PC1",
+      "x": 350,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.20.10", "mask": "255.255.255.0", "gateway": "192.168.20.1", "status": "up"}]
+    },
+    {
+      "id": "PC4",
+      "type": "pc",
+      "name": "Eng-PC2",
+      "x": 450,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.20.11", "mask": "255.255.255.0", "gateway": "192.168.20.1", "status": "up"}]
+    },
+    {
+      "id": "SRV1",
+      "type": "server",
+      "name": "Web-Server",
+      "x": 550,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.30.10", "mask": "255.255.255.0", "gateway": "192.168.30.1", "status": "up"}]
+    },
+    {
+      "id": "SRV2",
+      "type": "server",
+      "name": "DB-Server",
+      "x": 700,
+      "y": 500,
+      "interfaces": [{"name": "Ethernet0", "ip": "192.168.30.11", "mask": "255.255.255.0", "gateway": "192.168.30.1", "status": "up"}]
+    }
+  ],
+  "connections": [
+    {"id": "conn-1", "device1": "Edge-R1", "device2": "Core-SW1", "color": "#06b6d4"},
+    {"id": "conn-2", "device1": "Edge-R1", "device2": "Core-SW2", "color": "#06b6d4"},
+    {"id": "conn-3", "device1": "Core-SW1", "device2": "Core-SW2", "color": "#10b981"},
+    {"id": "conn-4", "device1": "Core-SW1", "device2": "Access-SW1", "color": "#9333ea"},
+    {"id": "conn-5", "device1": "Core-SW1", "device2": "Access-SW2", "color": "#9333ea"},
+    {"id": "conn-6", "device1": "Core-SW2", "device2": "Access-SW3", "color": "#9333ea"},
+    {"id": "conn-7", "device1": "Core-SW2", "device2": "Access-SW4", "color": "#9333ea"},
+    {"id": "conn-8", "device1": "Access-SW1", "device2": "Access-SW2", "color": "#9333ea"},
+    {"id": "conn-9", "device1": "Access-SW3", "device2": "Access-SW4", "color": "#9333ea"},
+    {"id": "conn-10", "device1": "Access-SW1", "device2": "PC1", "color": "#f59e0b"},
+    {"id": "conn-11", "device1": "Access-SW1", "device2": "PC2", "color": "#f59e0b"},
+    {"id": "conn-12", "device1": "Access-SW2", "device2": "PC3", "color": "#f59e0b"},
+    {"id": "conn-13", "device1": "Access-SW3", "device2": "PC4", "color": "#f59e0b"},
+    {"id": "conn-14", "device1": "Access-SW4", "device2": "SRV1", "color": "#ec4899"},
+    {"id": "conn-15", "device1": "Access-SW4", "device2": "SRV2", "color": "#ec4899"}
+  ]
+}

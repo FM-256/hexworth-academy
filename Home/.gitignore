@@ -1,0 +1,26 @@
+# Python
+*.py
+*.pyc
+__pycache__/
+*.pyo
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+*Zone.Identifier
+
+# Backups
+*.backup
+*.bak
+*-old.*
+
+# IDE
+.vscode/
+.idea/
+
+# Large packages (download separately)
+*.zip
+
+# Logs
+*.log

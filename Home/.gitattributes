@@ -1,0 +1,3 @@
+# Exclude these files from GitHub zip downloads
+.gitignore export-ignore
+.gitattributes export-ignore

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Administrative Tools - CompTIA A+ Core 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-height: 700px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Header Styling */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #0078d4;
+        }
+
+        .aplus-badge {
+            background: #0078d4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .aplus-badge::before {
+            content: "✓";
+            background: white;
+            color: #0078d4;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .home-button {
+            background: #f3f3f3;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .home-button:hover {
+            background: #0078d4;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Title Slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 600px;
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .title-slide h2 {
+            font-size: 1.8em;
+            color: #0078d4;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .title-slide .note {
+            font-size: 1.3em;
+            color: #666;
+            font-style: italic;
+            margin-top: 30px;
+        }
+
+        /* Content Slides */
+        h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #0078d4;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+
+        h3 {
+            color: #2a5298;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        /* Exam Tips */
+        .exam-tip {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-left: 5px solid #f39c12;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .exam-tip::before {
+            content: "💡 EXAM TIP: ";
+            font-weight: bold;
+            color: #d35400;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #0078d4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* Code/Command Styling */
+        code, .command {
+            background: #f5f5f5;
+            color: #0078d4;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* Grid Layout for Content */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .column-box h3 {
+            margin-top: 0;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            color: #666;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        /* Footer */
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 60px;
+            color: #999;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        /* Highlight important terms */
+        strong {
+            color: #0078d4;
+        }
+
+        /* List styling variations */
+        .numbered-list {
+            counter-reset: item;
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .numbered-list li {
+            counter-increment: item;
+            margin-bottom: 15px;
+        }
+
+        .numbered-list li::before {
+            content: counter(item) ". ";
+            color: #0078d4;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        /* Event levels styling */
+        .event-levels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .event-level {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .event-level.info {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .event-level.warning {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .event-level.error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .event-level.critical {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        /* Service status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .status-badge.running {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status-badge.stopped {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .status-badge.auto {
+            background: #bbdefb;
+            color: #1565c0;
+        }
+
+        .status-badge.manual {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .status-badge.disabled {
+            background: #e0e0e0;
+            color: #616161;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+                min-height: 500px;
+            }
+
+            .title-slide h1 {
+                font-size: 2em;
+            }
+
+            .title-slide h2 {
+                font-size: 1.3em;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <div class="title-slide">
+                <h1>Windows Administrative Tools</h1>
+                <h2>CompTIA A+ Core 2 - Objective 1.4</h2>
+                <p class="note">The IT Pro's Toolbox</p>
+            </div>
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Overview - What Are Administrative Tools?</h1>
+
+            <p>Administrative Tools are a <strong>collection of advanced system management utilities</strong> built into Windows for IT professionals and power users.</p>
+
+            <h3>How to Access:</h3>
+            <ul>
+                <li><strong>Windows 10:</strong> Control Panel > Administrative Tools</li>
+                <li><strong>Windows 11:</strong> Now called <strong>"Windows Tools"</strong></li>
+                <li><strong>Quick Access:</strong> Search for "Windows Tools" or specific tool names</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Key Characteristics:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Most tools use <strong>MMC (Microsoft Management Console)</strong> framework</li>
+                    <li>Run commands typically end in <code>.msc</code> extension</li>
+                    <li>Require administrator privileges for full functionality</li>
+                </ul>
+            </div>
+
+            <div class="exam-tip">
+                Know the difference between Windows 10 "Administrative Tools" and Windows 11 "Windows Tools" - same tools, different name!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 3: Microsoft Management Console (MMC) -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Microsoft Management Console (MMC)</h1>
+
+            <h2>What is MMC?</h2>
+            <p>MMC is a <strong>framework that hosts administrative snap-ins</strong>. It's not a tool itself, but a container for other tools.</p>
+
+            <div class="info-box">
+                <strong>Run Command:</strong> <code>mmc.exe</code>
+                <p style="margin-top: 10px;">You can create custom consoles by adding multiple snap-ins to a single MMC window!</p>
+            </div>
+
+            <h2>Common MMC Snap-ins:</h2>
+            <ul>
+                <li><code>devmgmt.msc</code> - <strong>Device Manager</strong> (hardware management)</li>
+                <li><code>diskmgmt.msc</code> - <strong>Disk Management</strong> (partition and drive management)</li>
+                <li><code>compmgmt.msc</code> - <strong>Computer Management</strong> (all-in-one console)</li>
+                <li><code>services.msc</code> - <strong>Services</strong> (background process management)</li>
+            </ul>
+
+            <div class="exam-tip">
+                Understand that MMC is the host framework for snap-ins. When you open Device Manager or Disk Management, you're using MMC snap-ins!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 4: Computer Management -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Computer Management</h1>
+            <p><code>compmgmt.msc</code></p>
+
+            <div class="info-box">
+                <strong>Quick Access:</strong> Right-click Start button > Computer Management
+            </div>
+
+            <h2>Three Main Sections:</h2>
+
+            <div class="column-box" style="margin: 20px 0;">
+                <h3 style="color: #0078d4;">1. System Tools</h3>
+                <ul style="margin-top: 10px;">
+                    <li>Event Viewer - View system logs</li>
+                    <li>Shared Folders - Network share management</li>
+                    <li>Local Users and Groups - Account management</li>
+                    <li>Performance - System monitoring</li>
+                    <li>Device Manager - Hardware devices</li>
+                    <li>Task Scheduler - Automated tasks</li>
+                </ul>
+            </div>
+
+            <div class="two-column">
+                <div class="column-box">
+                    <h3 style="color: #0078d4;">2. Storage</h3>
+                    <ul>
+                        <li>Disk Management</li>
+                    </ul>
+                </div>
+                <div class="column-box">
+                    <h3 style="color: #0078d4;">3. Services and Applications</h3>
+                    <ul>
+                        <li>Services</li>
+                        <li>WMI Control</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="exam-tip">
+                Computer Management is your one-stop shop for many administrative tasks. Know that it consolidates multiple tools in one interface!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 5: Event Viewer -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Event Viewer</h1>
+            <p><code>eventvwr.msc</code></p>
+
+            <h2>Purpose:</h2>
+            <p>View detailed <strong>system, application, and security logs</strong> for troubleshooting and auditing.</p>
+
+            <h2>Four Main Log Types:</h2>
+            <ul>
+                <li><strong>Application:</strong> Software events (crashes, errors, warnings)</li>
+                <li><strong>Security:</strong> Audit events (logon attempts, file access, policy changes)</li>
+                <li><strong>Setup:</strong> Installation and update events</li>
+                <li><strong>System:</strong> Operating system and driver events</li>
+            </ul>
+
+            <h2>Event Severity Levels:</h2>
+            <div class="event-levels">
+                <div class="event-level info">Information</div>
+                <div class="event-level warning">Warning</div>
+                <div class="event-level error">Error</div>
+                <div class="event-level critical">Critical</div>
+            </div>
+
+            <div class="exam-tip">
+                Event Viewer should be your FIRST stop when troubleshooting mysterious system issues, crashes, or security incidents!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 6: Event Viewer - Using Logs -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Event Viewer - Using Logs</h1>
+
+            <h2>Key Features:</h2>
+            <ul>
+                <li><strong>Filter logs</strong> by level, date, source, and Event ID</li>
+                <li><strong>Create custom views</strong> for frequently monitored events</li>
+                <li><strong>Export logs</strong> in .evtx format for analysis or archiving</li>
+            </ul>
+
+            <h2>Common Event IDs to Know:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Log Type</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>4624</strong></td>
+                        <td>Security</td>
+                        <td>Successful user logon</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4625</strong></td>
+                        <td>Security</td>
+                        <td>Failed logon attempt</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6005</strong></td>
+                        <td>System</td>
+                        <td>Event log started (system boot)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6006</strong></td>
+                        <td>System</td>
+                        <td>Event log stopped (clean shutdown)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>41</strong></td>
+                        <td>System</td>
+                        <td>Kernel-Power (unexpected shutdown)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="exam-tip">
+                Event ID 41 (Kernel-Power) indicates unexpected shutdown - often hardware issues like power supply or overheating!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 7: Disk Management -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Disk Management</h1>
+            <p><code>diskmgmt.msc</code></p>
+
+            <h2>Purpose:</h2>
+            <p>View and manage all <strong>drives, partitions, and volumes</strong> on the system.</p>
+
+            <h2>Key Functions:</h2>
+            <ul>
+                <li><strong>Initialize new disks</strong> (choose GPT vs MBR partition style)</li>
+                <li><strong>Create, delete, and format</strong> partitions</li>
+                <li><strong>Extend volumes</strong> (add space to existing partition)</li>
+                <li><strong>Shrink volumes</strong> (free up space from partition)</li>
+                <li><strong>Change drive letters</strong> and paths</li>
+                <li><strong>Convert between Basic and Dynamic</strong> disks</li>
+            </ul>
+
+            <h2>Common Status Indicators:</h2>
+            <div class="two-column">
+                <div class="column-box">
+                    <ul>
+                        <li><span class="status-badge running">Healthy</span> - Working normally</li>
+                        <li><span class="status-badge running">Online</span> - Dynamic disk available</li>
+                    </ul>
+                </div>
+                <div class="column-box">
+                    <ul>
+                        <li><span class="status-badge stopped">Failed</span> - Disk error</li>
+                        <li><span class="status-badge stopped">Offline</span> - Not accessible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="exam-tip">
+                You CANNOT extend a volume into non-contiguous (non-adjacent) space. The free space must be directly after the partition!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 8: Task Scheduler -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Task Scheduler</h1>
+            <p><code>taskschd.msc</code></p>
+
+            <h2>Purpose:</h2>
+            <p>Automate tasks to run on <strong>schedules or in response to triggers</strong>.</p>
+
+            <h2>Trigger Types:</h2>
+            <div class="two-column">
+                <div class="column-box">
+                    <h3>Time-Based Triggers</h3>
+                    <ul>
+                        <li>One time</li>
+                        <li>Daily</li>
+                        <li>Weekly</li>
+                        <li>Monthly</li>
+                    </ul>
+                </div>
+                <div class="column-box">
+                    <h3>Event-Based Triggers</h3>
+                    <ul>
+                        <li>At startup</li>
+                        <li>At user logon</li>
+                        <li>On specific Event ID</li>
+                        <li>On idle</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Action Types:</h2>
+            <ul>
+                <li><strong>Start a program</strong> (most common - run .exe, script, batch file)</li>
+                <li><strong>Send an email</strong> (deprecated in newer Windows versions)</li>
+                <li><strong>Display a message</strong> (deprecated in newer Windows versions)</li>
+            </ul>
+
+            <h2>Conditions:</h2>
+            <p>Optional requirements: Idle time, AC power, network available</p>
+
+            <div class="exam-tip">
+                Malware often uses Task Scheduler for persistence! Always check scheduled tasks when investigating infections.
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 9: Services Console -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Services Console</h1>
+            <p><code>services.msc</code></p>
+
+            <h2>Purpose:</h2>
+            <p>Manage Windows <strong>services (background processes)</strong> that run without user interaction.</p>
+
+            <h2>Service Startup Types:</h2>
+            <ul>
+                <li><span class="status-badge auto">Automatic</span> - Starts at system boot</li>
+                <li><span class="status-badge auto">Automatic (Delayed Start)</span> - Starts after boot completes</li>
+                <li><span class="status-badge manual">Manual</span> - Starts when needed by application or user</li>
+                <li><span class="status-badge disabled">Disabled</span> - Cannot start at all</li>
+            </ul>
+
+            <h2>Service Status:</h2>
+            <ul>
+                <li><span class="status-badge running">Running</span> - Currently active</li>
+                <li><span class="status-badge stopped">Stopped</span> - Not running</li>
+                <li><span class="status-badge manual">Paused</span> - Temporarily suspended</li>
+            </ul>
+
+            <h2>Common Important Services:</h2>
+            <ul>
+                <li><strong>Print Spooler:</strong> Manages print jobs</li>
+                <li><strong>Windows Update:</strong> Automatic updates</li>
+                <li><strong>DNS Client:</strong> DNS resolution caching</li>
+                <li><strong>DHCP Client:</strong> IP address assignment</li>
+            </ul>
+
+            <div class="exam-tip">
+                Disable unused services to reduce attack surface and improve performance. Always research a service before disabling it!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 10: Local Users and Groups -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Local Users and Groups</h1>
+            <p><code>lusrmgr.msc</code></p>
+
+            <div class="warning-box">
+                <strong>⚠️ Edition Requirement:</strong> Available on Windows Pro, Enterprise, and Education only. <strong>NOT available on Windows Home!</strong>
+            </div>
+
+            <h2>Purpose:</h2>
+            <p>Manage <strong>local user accounts and group memberships</strong> on the computer.</p>
+
+            <h2>Key Functions:</h2>
+            <ul>
+                <li>Create, modify, and delete local user accounts</li>
+                <li>Set passwords and password requirements</li>
+                <li>Add users to groups for permission management</li>
+                <li>Enable/disable accounts</li>
+                <li>Set account expiration dates</li>
+            </ul>
+
+            <h2>Built-in Groups:</h2>
+            <ul>
+                <li><strong>Administrators:</strong> Full system control</li>
+                <li><strong>Users:</strong> Standard user permissions</li>
+                <li><strong>Guests:</strong> Minimal permissions (often disabled)</li>
+                <li><strong>Remote Desktop Users:</strong> Can connect via RDP</li>
+                <li><strong>Power Users:</strong> Legacy group (limited use in modern Windows)</li>
+            </ul>
+
+            <div class="exam-tip">
+                Remember: lusrmgr.msc is NOT available in Windows Home edition! You must use Settings > Accounts instead.
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 11: Local Security Policy -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Local Security Policy</h1>
+            <p><code>secpol.msc</code></p>
+
+            <div class="warning-box">
+                <strong>⚠️ Edition Requirement:</strong> Available on Windows Pro, Enterprise, and Education only. <strong>NOT available on Windows Home!</strong>
+            </div>
+
+            <h2>Purpose:</h2>
+            <p>Configure <strong>security settings and policies</strong> for the local computer.</p>
+
+            <h2>Key Policy Areas:</h2>
+            <ul>
+                <li><strong>Account Policies:</strong> Password requirements, account lockout policies</li>
+                <li><strong>Local Policies:</strong> Audit policies, user rights assignments, security options</li>
+                <li><strong>Windows Firewall:</strong> Firewall rules and settings</li>
+                <li><strong>Advanced Audit Policy:</strong> Detailed auditing configuration</li>
+            </ul>
+
+            <h2>Common Password Policy Settings:</h2>
+            <ul>
+                <li><strong>Minimum password length</strong> (e.g., 8 characters)</li>
+                <li><strong>Password complexity requirements</strong> (upper, lower, numbers, symbols)</li>
+                <li><strong>Password history</strong> (prevent reuse of X previous passwords)</li>
+                <li><strong>Maximum password age</strong> (force password changes)</li>
+                <li><strong>Account lockout threshold</strong> (lock after X failed attempts)</li>
+            </ul>
+
+            <div class="exam-tip">
+                Domain Group Policy overrides Local Security Policy! If the computer is domain-joined, domain policies take precedence.
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 12: Group Policy Editor -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Group Policy Editor</h1>
+            <p><code>gpedit.msc</code></p>
+
+            <div class="warning-box">
+                <strong>⚠️ Edition Requirement:</strong> Available on Windows Pro, Enterprise, and Education only. <strong>NOT available on Windows Home!</strong>
+            </div>
+
+            <h2>Purpose:</h2>
+            <p>Configure <strong>system and user policies</strong> that control Windows behavior and features.</p>
+
+            <h2>Two Main Sections:</h2>
+            <div class="two-column">
+                <div class="column-box">
+                    <h3>Computer Configuration</h3>
+                    <p>System-wide settings that apply regardless of who logs in</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Windows Settings</li>
+                        <li>Administrative Templates</li>
+                    </ul>
+                </div>
+                <div class="column-box">
+                    <h3>User Configuration</h3>
+                    <p>Settings that apply to specific users</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Windows Settings</li>
+                        <li>Administrative Templates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Common Policy Uses:</h2>
+            <ul>
+                <li>Disable removable storage (USB drives)</li>
+                <li>Configure Windows Update behavior</li>
+                <li>Set default wallpaper or lock screen</li>
+                <li>Disable access to Control Panel or Settings</li>
+                <li>Configure password policies</li>
+                <li>Restrict software installation</li>
+            </ul>
+
+            <div class="exam-tip">
+                gpedit.msc is NOT available on Windows Home edition! This is a common exam question - know the edition limitations!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 13: Performance Monitor -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Performance Monitor</h1>
+            <p><code>perfmon.msc</code></p>
+
+            <h2>Purpose:</h2>
+            <p><strong>Real-time and historical system performance monitoring</strong> for diagnosing bottlenecks.</p>
+
+            <h2>Key Performance Counters:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Counter</th>
+                        <th>What It Measures</th>
+                        <th>High Value Indicates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>% Processor Time</strong></td>
+                        <td>CPU usage</td>
+                        <td>CPU bottleneck</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Available MBytes</strong></td>
+                        <td>Free RAM</td>
+                        <td>Low = memory shortage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disk Queue Length</strong></td>
+                        <td>Pending disk I/O</td>
+                        <td>Storage bottleneck</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pages/sec</strong></td>
+                        <td>Memory paging rate</td>
+                        <td>Insufficient RAM</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Additional Tools:</h2>
+            <ul>
+                <li><strong>Data Collector Sets:</strong> Record performance data over time for analysis</li>
+                <li><strong>Resource Monitor:</strong> Detailed real-time view of CPU, Memory, Disk, Network</li>
+            </ul>
+
+            <div class="exam-tip">
+                High Pages/sec consistently over time = system needs more RAM! Memory paging to disk is much slower than using physical RAM.
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 14: System Configuration -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>System Configuration</h1>
+            <p><code>msconfig</code></p>
+
+            <div class="info-box">
+                <strong>Note:</strong> Unlike other administrative tools, this one does NOT end in .msc - it's just <code>msconfig</code>!
+            </div>
+
+            <h2>Purpose:</h2>
+            <p>Configure <strong>boot options and startup behavior</strong> for troubleshooting.</p>
+
+            <h2>Five Main Tabs:</h2>
+
+            <ol class="numbered-list">
+                <li><strong>General:</strong> Startup selection (Normal, Diagnostic, Selective boot)</li>
+                <li><strong>Boot:</strong> Safe mode options, boot timeout, advanced options (number of processors, max memory)</li>
+                <li><strong>Services:</strong> Enable/disable services, option to hide Microsoft services</li>
+                <li><strong>Startup:</strong> Opens Task Manager startup tab (in Windows 10/11)</li>
+                <li><strong>Tools:</strong> Quick access to common administrative tools</li>
+            </ol>
+
+            <h2>Common Use Case: Clean Boot</h2>
+            <div class="info-box">
+                <p><strong>Clean Boot Process:</strong></p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>Services tab: Hide Microsoft services, Disable all</li>
+                    <li>Startup tab: Open Task Manager, disable all startup items</li>
+                    <li>Restart and test if issue persists</li>
+                    <li>Re-enable services/startup items one by one to identify culprit</li>
+                </ol>
+            </div>
+
+            <div class="exam-tip">
+                Use msconfig for clean boot troubleshooting when apps conflict or system behaves strangely!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 15: Summary Table -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="aplus-badge">CompTIA A+ Core 2</div>
+                <a href="../../../index.html" class="home-button">🏠 Home</a>
+            </div>
+            <h1>Summary - Administrative Tools Quick Reference</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tool</th>
+                        <th>Run Command</th>
+                        <th>Key Purpose</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Computer Management</strong></td>
+                        <td><code>compmgmt.msc</code></td>
+                        <td>All-in-one admin console</td>
+                        <td>Consolidates many tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Event Viewer</strong></td>
+                        <td><code>eventvwr.msc</code></td>
+                        <td>View system logs</td>
+                        <td>First stop for troubleshooting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disk Management</strong></td>
+                        <td><code>diskmgmt.msc</code></td>
+                        <td>Manage drives/partitions</td>
+                        <td>Extend only to adjacent space</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Task Scheduler</strong></td>
+                        <td><code>taskschd.msc</code></td>
+                        <td>Automate tasks</td>
+                        <td>Check for malware persistence</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Services</strong></td>
+                        <td><code>services.msc</code></td>
+                        <td>Manage services</td>
+                        <td>Background processes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Local Users & Groups</strong></td>
+                        <td><code>lusrmgr.msc</code></td>
+                        <td>User account management</td>
+                        <td><strong>Pro/Enterprise only</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Local Security Policy</strong></td>
+                        <td><code>secpol.msc</code></td>
+                        <td>Security settings</td>
+                        <td><strong>Pro/Enterprise only</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Policy Editor</strong></td>
+                        <td><code>gpedit.msc</code></td>
+                        <td>System policies</td>
+                        <td><strong>Pro/Enterprise only</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance Monitor</strong></td>
+                        <td><code>perfmon.msc</code></td>
+                        <td>Performance data</td>
+                        <td>Monitor bottlenecks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>System Configuration</strong></td>
+                        <td><code>msconfig</code></td>
+                        <td>Boot/startup config</td>
+                        <td>Clean boot troubleshooting</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="exam-tip">
+                Remember: Most commands end in .msc (MMC snap-ins), EXCEPT msconfig! Also know which tools require Pro/Enterprise editions!
+            </div>
+
+            <div class="slide-footer">Prepared by: Hexworth Academy</div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <span class="slide-counter">
+                Slide <span id="currentSlide">1</span> of <span id="totalSlides">15</span>
+            </span>
+            <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        updateSlideDisplay();
+
+        // Navigation function
+        function changeSlide(direction) {
+            slides[currentSlideIndex].classList.remove('active');
+            currentSlideIndex += direction;
+
+            // Wrap around
+            if (currentSlideIndex >= totalSlides) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex < 0) {
+                currentSlideIndex = totalSlides - 1;
+            }
+
+            slides[currentSlideIndex].classList.add('active');
+            updateSlideDisplay();
+        }
+
+        // Update slide counter and button states
+        function updateSlideDisplay() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                if (currentSlideIndex > 0) changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                if (currentSlideIndex < totalSlides - 1) changeSlide(1);
+            } else if (event.key === 'Home') {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = 0;
+                slides[currentSlideIndex].classList.add('active');
+                updateSlideDisplay();
+            } else if (event.key === 'End') {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = totalSlides - 1;
+                slides[currentSlideIndex].classList.add('active');
+                updateSlideDisplay();
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left - next slide
+                if (currentSlideIndex < totalSlides - 1) changeSlide(1);
+            }
+            if (touchEndX > touchStartX + 50) {
+                // Swipe right - previous slide
+                if (currentSlideIndex > 0) changeSlide(-1);
+            }
+        }
+    </script>
+</body>
+</html>
