@@ -1,11 +1,11 @@
 {
-  "version": "7.9.0",
+  "version": "7.9.1",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: My House tab - personalized learning paths for all 8 houses",
-    "Added: House-specific content recommendations and curated resources",
-    "Added: Auto-selection of user's house from Sorting Quiz results",
-    "Feature: Each house now has tailored presentations, tools, and labs"
+    "Added: Alternative OSI mnemonics slide with 6 memory tricks",
+    "Added: DOD Model deep dive with alternative layer names",
+    "Added: Protocol mapping table for TCP/IP layers",
+    "Enhanced: Exam tips for CompTIA certification prep"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
