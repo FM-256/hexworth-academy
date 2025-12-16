@@ -1,58 +1,26 @@
-# Network Essentials - Git Ignore File
+# Python
+*.py
+*.pyc
+__pycache__/
+*.pyo
+.venv/
 
-# Package files (regenerated automatically)
-*.zip
-package-backups/
-
-# Windows security tags
-*.Identifier
-*.Zone.Identifier
-
-# macOS files
+# OS files
 .DS_Store
-.AppleDouble
-.LSOverride
+Thumbs.db
+*Zone.Identifier
 
-# Temporary files
-*~
-*.tmp
-*.temp
-*.swp
-*.swo
+# Backups
+*.backup
+*.bak
+*-old.*
 
-# Editor files
+# IDE
 .vscode/
 .idea/
-*.sublime-*
 
-# Backup files
-*-old.*
-*-backup.*
-*.bak
+# Large packages (download separately)
+*.zip
 
-# Log files
+# Logs
 *.log
-
-# Node modules (if any JS tools used)
-node_modules/
-
-# Python cache (if any Python tools used)
-__pycache__/
-*.pyc
-
-# Test files
-test/
-tests/
-*.test.html
-
-# Archive directory
-archive/
-
-# Development notes
-TODO.md
-NOTES.md
-SCRATCHPAD.md
-
-# System files
-Thumbs.db
-desktop.ini

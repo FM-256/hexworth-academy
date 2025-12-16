@@ -1,0 +1,15 @@
+{
+  "version": "7.6.0",
+  "releaseDate": "2025-12-15",
+  "releaseNotes": [
+    "Added: CompTIA A+ Core 2 Sprint 1 - Operating Systems (Domain 1, 31% of exam)",
+    "Added: 5 presentations covering Windows Editions, Settings, Control Panel, Admin Tools, System Features",
+    "Added: 5 interactive simulators with guided tasks and quiz modes",
+    "Added: 5 hands-on labs with progress tracking and localStorage persistence",
+    "Added: Windows System Tools Reference with 19 essential utilities",
+    "Added: Control Panel Simulator with authentic Windows interface",
+    "Added: Admin Tools Simulator (Event Viewer, Disk Management, Services, Task Scheduler)"
+  ],
+  "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
+  "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
+}
