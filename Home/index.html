@@ -2402,7 +2402,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.8.0</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.9.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2421,7 +2421,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.8.0</div>
+                        <div class="value" id="modalCurrentVersion">7.9.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -2490,6 +2490,10 @@
             <button class="tab-btn" role="tab" data-tab="handouts" aria-selected="false">
                 <span class="tab-icon">📄</span>
                 <span class="tab-label">Handouts</span>
+            </button>
+            <button class="tab-btn" role="tab" data-tab="house" aria-selected="false">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">My House</span>
             </button>
         </nav>
 
@@ -7675,6 +7679,378 @@
         </div>
         </div> <!-- End Tab Panel: Handouts -->
 
+        <!-- Tab Panel: House Content -->
+        <div class="tab-panel" id="panel-house" role="tabpanel">
+        <div class="section">
+            <h2 style="color: var(--primary); margin-bottom: 20px;">🏠 House-Specific Learning Paths</h2>
+            <div class="section-description">
+                Content curated for your house specialty. Select a house to see recommended resources and learning paths.
+            </div>
+
+            <!-- House Selector -->
+            <div class="house-content-selector" style="display: flex; flex-wrap: wrap; gap: 10px; margin: 25px 0; justify-content: center;">
+                <button class="house-select-btn active" data-house="web" style="padding: 12px 20px; border: 2px solid #1e3a8a; background: linear-gradient(135deg, #1e3a8a, #0ea5e9); color: white; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>🌐</span> House of the Web
+                </button>
+                <button class="house-select-btn" data-house="shield" style="padding: 12px 20px; border: 2px solid #991b1b; background: rgba(153, 27, 27, 0.1); color: #991b1b; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>🛡️</span> House of the Shield
+                </button>
+                <button class="house-select-btn" data-house="forge" style="padding: 12px 20px; border: 2px solid #c2410c; background: rgba(194, 65, 12, 0.1); color: #c2410c; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>⚙️</span> House of the Forge
+                </button>
+                <button class="house-select-btn" data-house="script" style="padding: 12px 20px; border: 2px solid #166534; background: rgba(22, 101, 52, 0.1); color: #166534; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>💻</span> House of the Script
+                </button>
+                <button class="house-select-btn" data-house="cloud" style="padding: 12px 20px; border: 2px solid #0284c7; background: rgba(2, 132, 199, 0.1); color: #0284c7; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>☁️</span> House of the Cloud
+                </button>
+                <button class="house-select-btn" data-house="code" style="padding: 12px 20px; border: 2px solid #059669; background: rgba(5, 150, 105, 0.1); color: #059669; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>📜</span> House of the Code
+                </button>
+                <button class="house-select-btn" data-house="key" style="padding: 12px 20px; border: 2px solid #7c3aed; background: rgba(124, 58, 237, 0.1); color: #7c3aed; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>🔑</span> House of the Key
+                </button>
+                <button class="house-select-btn" data-house="eye" style="padding: 12px 20px; border: 2px solid #4f46e5; background: rgba(79, 70, 229, 0.1); color: #4f46e5; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                    <span>👁️</span> House of the Eye
+                </button>
+            </div>
+
+            <!-- House Content Containers -->
+            <!-- House of the Web -->
+            <div class="house-content-panel" id="house-content-web" style="display: block;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #1e3a8a, #0ea5e9); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">🌐</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Web</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"We Connect All Things"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Networking</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🌐</div><div class="card-title">OSI Model Mastery</div></div>
+                        <div class="card-description">Foundation of all networking - understand the 7 layers that make communication possible.</div>
+                        <a href="resources/presentations/network-essentials/osi.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔌</div><div class="card-title">Network Topologies</div></div>
+                        <div class="card-description">Learn how networks are structured - star, mesh, bus, ring, and hybrid designs.</div>
+                        <a href="resources/presentations/network-essentials/topologies.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📡</div><div class="card-title">Network Devices</div></div>
+                        <div class="card-description">Master switches, routers, firewalls, and other essential network hardware.</div>
+                        <a href="resources/presentations/network-essentials/devices.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔢</div><div class="card-title">IP Addressing & Subnetting</div></div>
+                        <div class="card-description">The mathematical heart of networking - calculate subnets like a pro.</div>
+                        <a href="resources/tools/subnet-calculator.html" class="btn">Practice Tool</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🧮</div><div class="card-title">Subnet Calculator</div></div>
+                        <div class="card-description">Interactive tool for calculating subnets, CIDR notation, and IP ranges.</div>
+                        <a href="resources/tools/subnet-calculator.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📊</div><div class="card-title">Packet Tracer Lite</div></div>
+                        <div class="card-description">Build and simulate network topologies directly in your browser.</div>
+                        <a href="resources/tools/packet-tracer-lite-v3.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Shield -->
+            <div class="house-content-panel" id="house-content-shield" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #991b1b, #dc2626); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">🛡️</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Shield</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"Trust Nothing, Verify Everything"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Cybersecurity</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔒</div><div class="card-title">Access Control Lists</div></div>
+                        <div class="card-description">Master network security through ACLs - the gatekeepers of network traffic.</div>
+                        <a href="resources/presentations/network-essentials/acl.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🛡️</div><div class="card-title">Firewall Fundamentals</div></div>
+                        <div class="card-description">Understand how firewalls protect networks from threats.</div>
+                        <a href="resources/presentations/network-essentials/devices.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔐</div><div class="card-title">Port Security</div></div>
+                        <div class="card-description">Learn switch-level security to prevent unauthorized access.</div>
+                        <a href="resources/presentations/network-essentials/switch-operations.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🎯</div><div class="card-title">ACL Wildcard Calculator</div></div>
+                        <div class="card-description">Calculate wildcard masks for precise ACL configuration.</div>
+                        <a href="resources/tools/acl-wildcard-calculator.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📋</div><div class="card-title">ACL Visualizer</div></div>
+                        <div class="card-description">Visualize how ACL rules filter network traffic.</div>
+                        <a href="resources/tools/acl-visualizer.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Forge -->
+            <div class="house-content-panel" id="house-content-forge" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #c2410c, #ea580c); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">⚙️</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Forge</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"We Build What Others Dream"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Hardware</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔌</div><div class="card-title">Network Cabling</div></div>
+                        <div class="card-description">Master the physical layer - copper, fiber, and connector types.</div>
+                        <a href="resources/presentations/network-essentials/cables.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🖥️</div><div class="card-title">Windows Editions & Features</div></div>
+                        <div class="card-description">Understand Windows editions and their hardware requirements.</div>
+                        <a href="resources/presentations/aplus-core2/windows-editions.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📡</div><div class="card-title">Network Hardware</div></div>
+                        <div class="card-description">Deep dive into switches, routers, and network appliances.</div>
+                        <a href="resources/presentations/network-essentials/devices.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📊</div><div class="card-title">Windows Editions Matrix</div></div>
+                        <div class="card-description">Compare Windows editions and their feature sets.</div>
+                        <a href="resources/tools/aplus-applets/windows-editions-matrix.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔧</div><div class="card-title">System Tools Explorer</div></div>
+                        <div class="card-description">Interactive guide to Windows system utilities.</div>
+                        <a href="resources/tools/aplus-applets/windows-system-tools.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Script -->
+            <div class="house-content-panel" id="house-content-script" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #166534, #22c55e); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">💻</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Script</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"Logic Is Our Spell"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Software</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🐧</div><div class="card-title">macOS/Linux Basics</div></div>
+                        <div class="card-description">Master terminal commands and shell scripting fundamentals.</div>
+                        <a href="resources/presentations/aplus-core2/macos-linux-basics.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">⌨️</div><div class="card-title">Command Line Mastery</div></div>
+                        <div class="card-description">Hands-on lab for terminal commands across Windows, macOS, and Linux.</div>
+                        <a href="resources/tools/aplus-applets/lab-macos-linux.html" class="btn">Start Lab</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔄</div><div class="card-title">Command Translator</div></div>
+                        <div class="card-description">Translate commands between Windows, macOS, and Linux.</div>
+                        <a href="resources/tools/aplus-applets/command-translator.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔀</div><div class="card-title">Command Translator</div></div>
+                        <div class="card-description">Convert commands between different operating systems.</div>
+                        <a href="resources/tools/aplus-applets/command-translator.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🧪</div><div class="card-title">Terminal Lab</div></div>
+                        <div class="card-description">Practice command-line skills in a guided environment.</div>
+                        <a href="resources/tools/aplus-applets/lab-macos-linux.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Cloud -->
+            <div class="house-content-panel" id="house-content-cloud" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #0284c7, #38bdf8); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">☁️</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Cloud</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"We Scale Without Limits"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Cloud Computing</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">☁️</div><div class="card-title">Cloud Fundamentals</div></div>
+                        <div class="card-description">IaaS, PaaS, SaaS - understand cloud service models and deployment.</div>
+                        <a href="resources/presentations/network-essentials/cloud.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🏢</div><div class="card-title">Data Centers</div></div>
+                        <div class="card-description">Physical infrastructure behind the cloud - cooling, power, redundancy.</div>
+                        <a href="resources/presentations/network-essentials/datacenter.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🌐</div><div class="card-title">Virtualization</div></div>
+                        <div class="card-description">VMs, containers, and hypervisors that power cloud infrastructure.</div>
+                        <a href="resources/presentations/network-essentials/cloud.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📊</div><div class="card-title">Cloud Visualizer</div></div>
+                        <div class="card-description">Interactive visualization of cloud architectures.</div>
+                        <a href="resources/tools/cloud-visualizer.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">☁️</div><div class="card-title">Cisco DevNet</div></div>
+                        <div class="card-description">Access cloud sandboxes for hands-on practice.</div>
+                        <a href="resources/handouts/cisco-devnet-guide.pdf" class="btn">View Guide</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Code -->
+            <div class="house-content-panel" id="house-content-code" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #059669, #34d399); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">📜</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Code</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"We Automate Everything"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Programming & DevOps</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🐧</div><div class="card-title">Linux Administration</div></div>
+                        <div class="card-description">Server management, package managers, and automation scripts.</div>
+                        <a href="resources/presentations/aplus-core2/macos-linux-basics.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔧</div><div class="card-title">Administrative Tools</div></div>
+                        <div class="card-description">Windows admin tools for system management and automation.</div>
+                        <a href="resources/presentations/aplus-core2/admin-tools.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">⚙️</div><div class="card-title">OS Installation Automation</div></div>
+                        <div class="card-description">PXE boot, image deployment, and unattended installations.</div>
+                        <a href="resources/presentations/aplus-core2/os-installation-types-presentation.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔧</div><div class="card-title">Admin Tools Simulator</div></div>
+                        <div class="card-description">Practice with Windows administrative tools.</div>
+                        <a href="resources/tools/aplus-applets/admin-tools-simulator.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔀</div><div class="card-title">Command Translator</div></div>
+                        <div class="card-description">Automate cross-platform command translation.</div>
+                        <a href="resources/tools/aplus-applets/command-translator.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Key -->
+            <div class="house-content-panel" id="house-content-key" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">🔑</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Key</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"Secrets Are Our Currency"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Cryptography</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔒</div><div class="card-title">Network Security</div></div>
+                        <div class="card-description">ACLs, encryption, and secure communication protocols.</div>
+                        <a href="resources/presentations/network-essentials/acl.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🏢</div><div class="card-title">Workgroup vs Domain Security</div></div>
+                        <div class="card-description">Authentication methods and domain security architecture.</div>
+                        <a href="resources/presentations/aplus-core2/workgroup-vs-domain.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔐</div><div class="card-title">Secure Protocols</div></div>
+                        <div class="card-description">TLS, SSH, VPN - secure communications fundamentals.</div>
+                        <a href="resources/presentations/network-essentials/tcp.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🎯</div><div class="card-title">ACL Security Lab</div></div>
+                        <div class="card-description">Practice configuring secure access control lists.</div>
+                        <a href="resources/tools/acl-wildcard-calculator.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔐</div><div class="card-title">Workgroup/Domain Quiz</div></div>
+                        <div class="card-description">Test your knowledge of authentication security.</div>
+                        <a href="resources/tools/aplus-applets/quiz-workgroup-domain.html" class="btn">Take Quiz</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- House of the Eye -->
+            <div class="house-content-panel" id="house-content-eye" style="display: none;">
+                <div class="house-content-header" style="background: linear-gradient(135deg, #4f46e5, #818cf8); padding: 25px; border-radius: 12px; color: white; margin-bottom: 25px; text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">👁️</div>
+                    <h3 style="margin: 0; font-size: 1.8em;">House of the Eye</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9; font-style: italic;">"We See All, We Know All"</p>
+                    <p style="margin: 10px 0 0; font-size: 0.95em;">Domain: <strong>Monitoring & Analytics</strong></p>
+                </div>
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📚 Core Learning Path</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📊</div><div class="card-title">Network Monitoring</div></div>
+                        <div class="card-description">SNMP, syslog, and network management protocols.</div>
+                        <a href="resources/presentations/network-essentials/ntp.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔍</div><div class="card-title">Troubleshooting Methodology</div></div>
+                        <div class="card-description">Systematic approaches to diagnosing network issues.</div>
+                        <a href="resources/tools/lab-troubleshooting-guide.html" class="btn">Study Now</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📈</div><div class="card-title">Performance Analysis</div></div>
+                        <div class="card-description">Windows performance tools and system monitoring.</div>
+                        <a href="resources/presentations/aplus-core2/admin-tools.html" class="btn">Study Now</a>
+                    </div>
+                </div>
+                <h4 style="color: var(--primary); margin: 25px 0 15px;">🛠️ Recommended Tools</h4>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">🔧</div><div class="card-title">Troubleshooting Guide</div></div>
+                        <div class="card-description">Interactive troubleshooting flowcharts and diagnostic tools.</div>
+                        <a href="resources/tools/lab-troubleshooting-guide.html" class="btn">Open Tool</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-icon">📊</div><div class="card-title">System Tools Explorer</div></div>
+                        <div class="card-description">Explore Windows monitoring and diagnostic utilities.</div>
+                        <a href="resources/tools/aplus-applets/windows-system-tools.html" class="btn">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <!-- End Tab Panel: House Content -->
+
         <!-- Footer -->
         <footer>
             <div style="font-size: 1.2em; margin-bottom: 15px;">
@@ -7742,6 +8118,88 @@
 
         // Initialize tabs when DOM is ready
         document.addEventListener('DOMContentLoaded', initTabs);
+    </script>
+
+    <!-- House Content Selector JavaScript -->
+    <script>
+        function initHouseContentSelector() {
+            const houseButtons = document.querySelectorAll('.house-select-btn');
+            const housePanels = document.querySelectorAll('.house-content-panel');
+
+            // Get saved house from localStorage (from sorting quiz)
+            const savedHouse = localStorage.getItem('hexworthHouse');
+
+            houseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const house = button.dataset.house;
+
+                    // Update button states
+                    houseButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        const houseKey = btn.dataset.house;
+                        const colors = getHouseColors(houseKey);
+                        btn.style.background = `rgba(${hexToRgb(colors.primary)}, 0.1)`;
+                        btn.style.color = colors.primary;
+                    });
+
+                    // Activate selected button
+                    button.classList.add('active');
+                    const colors = getHouseColors(house);
+                    button.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.accent})`;
+                    button.style.color = 'white';
+
+                    // Show corresponding panel
+                    housePanels.forEach(panel => {
+                        panel.style.display = 'none';
+                    });
+                    const activePanel = document.getElementById(`house-content-${house}`);
+                    if (activePanel) {
+                        activePanel.style.display = 'block';
+                    }
+
+                    // Save selection
+                    localStorage.setItem('houseContentSelection', house);
+                });
+            });
+
+            // Auto-select user's house if they've been sorted
+            if (savedHouse) {
+                const houseButton = document.querySelector(`.house-select-btn[data-house="${savedHouse}"]`);
+                if (houseButton) {
+                    houseButton.click();
+                }
+            } else {
+                // Check if there's a saved selection
+                const savedSelection = localStorage.getItem('houseContentSelection');
+                if (savedSelection) {
+                    const savedButton = document.querySelector(`.house-select-btn[data-house="${savedSelection}"]`);
+                    if (savedButton) {
+                        savedButton.click();
+                    }
+                }
+            }
+        }
+
+        function getHouseColors(house) {
+            const colors = {
+                web: { primary: '#1e3a8a', accent: '#0ea5e9' },
+                shield: { primary: '#991b1b', accent: '#dc2626' },
+                forge: { primary: '#c2410c', accent: '#ea580c' },
+                script: { primary: '#166534', accent: '#22c55e' },
+                cloud: { primary: '#0284c7', accent: '#38bdf8' },
+                code: { primary: '#059669', accent: '#34d399' },
+                key: { primary: '#7c3aed', accent: '#a78bfa' },
+                eye: { primary: '#4f46e5', accent: '#818cf8' }
+            };
+            return colors[house] || colors.web;
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
+        }
+
+        document.addEventListener('DOMContentLoaded', initHouseContentSelector);
     </script>
 
     <!-- Collapsible Sections JavaScript (legacy - kept for compatibility) -->
@@ -8738,7 +9196,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.8.0',
+            currentVersion: '7.9.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds

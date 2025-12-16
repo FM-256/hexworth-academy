@@ -1,17 +1,11 @@
 {
-  "version": "7.8.0",
+  "version": "7.9.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: macOS/Linux Terminal Commands Lab with interactive exercises",
-    "Added: Workgroup vs Domain comprehensive presentation (40+ slides)",
-    "Added: Workgroup vs Domain interactive quiz with 15 questions",
-    "Added: Workgroup vs Domain hands-on lab with 24 tasks",
-    "Added: OS Installation Types presentation covering boot methods, partitioning, and drivers",
-    "Added: OS Installation Decision Tree interactive tool",
-    "Added: OS Installation hands-on lab with guided exercises",
-    "Added: OS Upgrade Process presentation with upgrade paths and troubleshooting",
-    "Added: OS Upgrade Simulator interactive tool",
-    "Added: OS Upgrade hands-on lab with practical exercises"
+    "Added: My House tab - personalized learning paths for all 8 houses",
+    "Added: House-specific content recommendations and curated resources",
+    "Added: Auto-selection of user's house from Sorting Quiz results",
+    "Feature: Each house now has tailored presentations, tools, and labs"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/version.json"
