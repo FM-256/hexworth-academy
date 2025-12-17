@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QoS - Quality of Service Basics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #7c3aed;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #7c3aed;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #a855f7;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #6d28d9;
+            font-size: 1.8em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        ul, ol {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .prepared-by {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
+            transition: width 0.3s;
+            z-index: 2000;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #6d28d9;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .info-box {
+            background: #ede9fe;
+            border-left: 5px solid #a855f7;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #a855f7;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-size: 1.1em;
+        }
+
+        th {
+            background: #7c3aed;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #faf5ff;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-box {
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .comparison-box.policing {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .comparison-box.shaping {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .icon-large {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .config-steps {
+            counter-reset: step;
+        }
+
+        .config-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .config-step::before {
+            counter-increment: step;
+            content: counter(step);
+            background: #7c3aed;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .dscp-visual {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .dscp-card {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .dscp-card.ef {
+            background: #ef4444;
+        }
+
+        .dscp-card.af4 {
+            background: #f59e0b;
+        }
+
+        .dscp-card.af3 {
+            background: #eab308;
+        }
+
+        .dscp-card.af2 {
+            background: #10b981;
+        }
+
+        .dscp-card.af1 {
+            background: #3b82f6;
+        }
+
+        .dscp-card.default {
+            background: #6b7280;
+        }
+
+        .queue-visual {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .queue-box {
+            border: 3px solid #7c3aed;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .queue-label {
+            font-weight: bold;
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+
+        .packet {
+            width: 40px;
+            height: 30px;
+            margin: 5px auto;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        .trust-boundary-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .device-box {
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        .device-box.trusted {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+
+        .device-box.untrusted {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            color: white;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #7c3aed;
+        }
+
+        @media (max-width: 900px) {
+            .comparison-grid, .dscp-visual {
+                grid-template-columns: 1fr;
+            }
+
+            .queue-visual, .trust-boundary-diagram {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="icon-large">🎯</div>
+            <h1>QoS - Quality of Service</h1>
+            <p class="subtitle">Prioritizing Network Traffic for Optimal Performance</p>
+            <div class="key-point" style="text-align: center; margin-top: 40px;">
+                <p style="color: white; margin: 0;">CCNA 200-301 Sprint 26</p>
+                <p style="color: #e9d5ff; margin: 10px 0 0 0; font-size: 0.9em;">
+                    Understand QoS concepts, classification, marking, queuing, and traffic shaping<br>
+                    Essential for voice, video, and real-time applications
+                </p>
+            </div>
+            <div class="slide-number">Slide 1 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 2: Why QoS? -->
+        <div class="slide">
+            <h2>Why Do We Need QoS?</h2>
+            <p>Modern networks carry different types of traffic with different requirements:</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #ef4444; background: #fef2f2;">
+                    <h3 style="color: #dc2626;">🎤 Voice (VoIP)</h3>
+                    <ul>
+                        <li><strong>Latency:</strong> &lt;150ms (one-way)</li>
+                        <li><strong>Jitter:</strong> &lt;30ms</li>
+                        <li><strong>Packet Loss:</strong> &lt;1%</li>
+                        <li><strong>Bandwidth:</strong> Low (~30-128 Kbps)</li>
+                        <li>Extremely delay-sensitive</li>
+                    </ul>
+                </div>
+                <div class="comparison-box" style="border-color: #3b82f6; background: #eff6ff;">
+                    <h3 style="color: #2563eb;">📹 Video</h3>
+                    <ul>
+                        <li><strong>Latency:</strong> &lt;200ms</li>
+                        <li><strong>Jitter:</strong> &lt;50ms</li>
+                        <li><strong>Packet Loss:</strong> &lt;0.5%</li>
+                        <li><strong>Bandwidth:</strong> High (384 Kbps - 20 Mbps)</li>
+                        <li>Bursty, delay-sensitive</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #10b981; background: #f0fdf4;">
+                    <h3 style="color: #059669;">💼 Business Apps</h3>
+                    <ul>
+                        <li>Mission-critical data</li>
+                        <li>ERP, CRM systems</li>
+                        <li>Database transactions</li>
+                        <li>Moderate delay tolerance</li>
+                    </ul>
+                </div>
+                <div class="comparison-box" style="border-color: #6b7280; background: #f9fafb;">
+                    <h3 style="color: #374151;">🌐 Best-Effort Traffic</h3>
+                    <ul>
+                        <li>Web browsing</li>
+                        <li>Email</li>
+                        <li>File downloads</li>
+                        <li>No special treatment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <strong>The Problem:</strong> Without QoS, all traffic is treated equally. A large file download can starve a VoIP call, causing choppy audio and dropped calls!
+            </div>
+            <div class="slide-number">Slide 2 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 3: What is QoS? -->
+        <div class="slide">
+            <h2>What is Quality of Service (QoS)?</h2>
+            <p>QoS is a set of techniques to manage network resources and provide different priority to different applications, users, or data flows.</p>
+
+            <div class="key-point">
+                <strong>QoS Goal:</strong> Ensure that time-sensitive and mission-critical traffic gets preferential treatment over less important traffic, especially during network congestion.
+            </div>
+
+            <h3>QoS Can Manage:</h3>
+            <div class="config-steps">
+                <div class="config-step">
+                    <div>
+                        <strong>Bandwidth</strong><br>
+                        Allocate minimum guaranteed bandwidth to critical applications
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>Delay (Latency)</strong><br>
+                        Prioritize low-latency traffic (voice, video) over bulk data
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>Jitter</strong><br>
+                        Reduce variation in packet arrival times for real-time traffic
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>Packet Loss</strong><br>
+                        Preferentially drop less important traffic during congestion
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Key Concept:</strong> QoS doesn't create bandwidth - it manages existing bandwidth more intelligently. You can't QoS your way out of an undersized link!
+            </div>
+            <div class="slide-number">Slide 3 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 4: QoS Models -->
+        <div class="slide">
+            <h2>Three QoS Models</h2>
+
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>Description</th>
+                    <th>When to Use</th>
+                </tr>
+                <tr>
+                    <td><strong>Best Effort</strong></td>
+                    <td>No QoS - all traffic treated equally (default)</td>
+                    <td>Small networks, non-critical traffic only</td>
+                </tr>
+                <tr>
+                    <td><strong>Integrated Services (IntServ)</strong></td>
+                    <td>Per-flow reservation using RSVP (Resource Reservation Protocol)<br>Guaranteed bandwidth for each flow</td>
+                    <td>Legacy - rarely used today (too complex)</td>
+                </tr>
+                <tr>
+                    <td><strong>Differentiated Services (DiffServ)</strong></td>
+                    <td>Class-based QoS using DSCP markings<br>Scalable, industry standard</td>
+                    <td><strong>CCNA Focus - Used in modern networks</strong></td>
+                </tr>
+            </table>
+
+            <div class="success-box">
+                <h3 style="color: #059669;">DiffServ is the Standard</h3>
+                <p>DiffServ is the most common QoS model used today. It classifies traffic into classes and treats each class differently based on policies.</p>
+                <ul>
+                    <li><strong>Scalable:</strong> Works across large networks</li>
+                    <li><strong>Flexible:</strong> Multiple service levels</li>
+                    <li><strong>Efficient:</strong> No per-flow state tracking</li>
+                </ul>
+            </div>
+
+            <div class="key-point">
+                <strong>CCNA Focus:</strong> You need to understand DiffServ concepts, DSCP markings, and how to configure basic class-based QoS.
+            </div>
+            <div class="slide-number">Slide 4 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 5: QoS Process -->
+        <div class="slide">
+            <h2>The QoS Process - Three Steps</h2>
+            <p>QoS implementation follows three fundamental steps:</p>
+
+            <div class="config-steps">
+                <div class="config-step">
+                    <div>
+                        <strong>1. Classification</strong><br>
+                        Identify which packets belong to which traffic class<br>
+                        <em>Tools: ACLs, NBAR, DSCP values, CoS, ports</em>
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>2. Marking</strong><br>
+                        Tag packets with QoS markings for downstream devices<br>
+                        <em>Tools: DSCP (Layer 3), CoS (Layer 2)</em>
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>3. Queuing & Congestion Management</strong><br>
+                        Prioritize, queue, drop, or shape traffic based on markings<br>
+                        <em>Tools: LLQ, CBWFQ, WRED, policing, shaping</em>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Analogy:</strong> Think of an airport:
+                <ul>
+                    <li><strong>Classification:</strong> TSA checks your ticket to see if you're First Class or Economy</li>
+                    <li><strong>Marking:</strong> You get a boarding group number (1, 2, 3, etc.)</li>
+                    <li><strong>Queuing:</strong> Group 1 boards first, Group 2 waits, Group 3 waits longer</li>
+                </ul>
+            </div>
+
+            <div class="key-point">
+                Classification and Marking happen at the network edge (access layer)<br>
+                Queuing and congestion management happen wherever congestion occurs (typically WAN links)
+            </div>
+            <div class="slide-number">Slide 5 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 6: Classification -->
+        <div class="slide">
+            <h2>Classification - Identifying Traffic</h2>
+            <p>Classification is the process of examining packets and putting them into traffic classes.</p>
+
+            <h3>Classification Methods:</h3>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Layer</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><strong>DSCP</strong></td>
+                    <td>Layer 3</td>
+                    <td>6-bit field in IP header (most common)</td>
+                </tr>
+                <tr>
+                    <td><strong>IP Precedence</strong></td>
+                    <td>Layer 3</td>
+                    <td>3-bit field in IP header (legacy, replaced by DSCP)</td>
+                </tr>
+                <tr>
+                    <td><strong>CoS (Class of Service)</strong></td>
+                    <td>Layer 2</td>
+                    <td>3-bit field in 802.1Q VLAN tag (trunk links only)</td>
+                </tr>
+                <tr>
+                    <td><strong>ACLs</strong></td>
+                    <td>Layers 3-4</td>
+                    <td>Match by source/dest IP, port, protocol</td>
+                </tr>
+                <tr>
+                    <td><strong>NBAR</strong></td>
+                    <td>Layer 7</td>
+                    <td>Network-Based Application Recognition (deep packet inspection)</td>
+                </tr>
+            </table>
+
+            <div class="info-box">
+                <strong>Best Practice:</strong> Use DSCP for Layer 3 classification and CoS for Layer 2 (switch-to-switch) links. DSCP values are preserved end-to-end across routed networks.
+            </div>
+
+            <div class="warning-box">
+                <strong>CoS Limitation:</strong> CoS only exists in 802.1Q tags, so it only works on trunk links. Access ports have no VLAN tag, so no CoS field!
+            </div>
+            <div class="slide-number">Slide 6 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 7: DSCP - The Standard -->
+        <div class="slide">
+            <h2>DSCP - Differentiated Services Code Point</h2>
+            <p>DSCP is the industry-standard method for classifying and marking IP traffic.</p>
+
+            <div class="key-point">
+                <strong>DSCP Field:</strong> 6 bits in the IP header (ToS byte)<br>
+                <strong>Range:</strong> 0-63 (64 possible values)<br>
+                <strong>Replaced:</strong> IP Precedence (old 3-bit field)
+            </div>
+
+            <h3>Standard DSCP Values (Per-Hop Behaviors):</h3>
+            <div class="dscp-visual">
+                <div class="dscp-card ef">
+                    <div>EF</div>
+                    <div style="font-size: 0.8em;">DSCP 46</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Expedited Forwarding<br>VOICE</div>
+                </div>
+                <div class="dscp-card af4">
+                    <div>AF41</div>
+                    <div style="font-size: 0.8em;">DSCP 34</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class 4 High<br>VIDEO</div>
+                </div>
+                <div class="dscp-card af3">
+                    <div>AF31</div>
+                    <div style="font-size: 0.8em;">DSCP 26</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class 3 High<br>CRITICAL DATA</div>
+                </div>
+                <div class="dscp-card af2">
+                    <div>AF21</div>
+                    <div style="font-size: 0.8em;">DSCP 18</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class 2 High<br>TRANSACTIONAL</div>
+                </div>
+                <div class="dscp-card af1">
+                    <div>AF11</div>
+                    <div style="font-size: 0.8em;">DSCP 10</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class 1 High<br>BULK DATA</div>
+                </div>
+                <div class="dscp-card default">
+                    <div>DF</div>
+                    <div style="font-size: 0.8em;">DSCP 0</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Default<br>BEST EFFORT</div>
+                </div>
+                <div class="dscp-card default">
+                    <div>CS0</div>
+                    <div style="font-size: 0.8em;">DSCP 0</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class Selector 0<br>BEST EFFORT</div>
+                </div>
+                <div class="dscp-card ef" style="background: #8b5cf6;">
+                    <div>CS5</div>
+                    <div style="font-size: 0.8em;">DSCP 40</div>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Class Selector 5<br>SIGNALING</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>EF (Expedited Forwarding):</strong> DSCP 46 - Highest priority, lowest latency. Used for VOICE.<br>
+                <strong>AF (Assured Forwarding):</strong> 4 classes × 3 drop precedences = 12 values (AF11-AF43)
+            </div>
+            <div class="slide-number">Slide 7 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 8: AF Classes Explained -->
+        <div class="slide">
+            <h2>AF Classes - Assured Forwarding</h2>
+            <p>Assured Forwarding provides 4 classes with 3 drop precedences each:</p>
+
+            <table>
+                <tr>
+                    <th>Class</th>
+                    <th>Low Drop (AF_1)</th>
+                    <th>Medium Drop (AF_2)</th>
+                    <th>High Drop (AF_3)</th>
+                </tr>
+                <tr>
+                    <td><strong>Class 4</strong></td>
+                    <td>AF41 (34)</td>
+                    <td>AF42 (36)</td>
+                    <td>AF43 (38)</td>
+                </tr>
+                <tr>
+                    <td><strong>Class 3</strong></td>
+                    <td>AF31 (26)</td>
+                    <td>AF32 (28)</td>
+                    <td>AF33 (30)</td>
+                </tr>
+                <tr>
+                    <td><strong>Class 2</strong></td>
+                    <td>AF21 (18)</td>
+                    <td>AF22 (20)</td>
+                    <td>AF23 (22)</td>
+                </tr>
+                <tr>
+                    <td><strong>Class 1</strong></td>
+                    <td>AF11 (10)</td>
+                    <td>AF12 (12)</td>
+                    <td>AF13 (14)</td>
+                </tr>
+            </table>
+
+            <div class="key-point">
+                <strong>AF Naming:</strong> AF<strong>XY</strong><br>
+                <strong>X</strong> = Class (4 is highest, 1 is lowest)<br>
+                <strong>Y</strong> = Drop Precedence (1 = low drop probability, 3 = high drop probability)
+            </div>
+
+            <div class="info-box">
+                <strong>Example:</strong> AF31 means:<br>
+                - Class 3 (medium-high priority)<br>
+                - Drop precedence 1 (low drop probability)<br>
+                - DSCP decimal value: 26
+            </div>
+
+            <div class="warning-box">
+                <strong>Drop Precedence:</strong> During congestion, AF_3 packets are dropped first, then AF_2, then AF_1. Higher drop precedence = more likely to be dropped.
+            </div>
+            <div class="slide-number">Slide 8 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 9: CoS - Layer 2 Marking -->
+        <div class="slide">
+            <h2>CoS - Class of Service (Layer 2)</h2>
+            <p>CoS is the Layer 2 equivalent of DSCP, used on 802.1Q trunk links.</p>
+
+            <div class="key-point">
+                <strong>CoS Field:</strong> 3 bits in the 802.1Q VLAN tag (PCP field)<br>
+                <strong>Range:</strong> 0-7 (8 possible values)<br>
+                <strong>Where:</strong> Only on trunk links (access ports have no VLAN tag!)
+            </div>
+
+            <h3>Standard CoS Values:</h3>
+            <table>
+                <tr>
+                    <th>CoS</th>
+                    <th>Name</th>
+                    <th>Traffic Type</th>
+                    <th>Maps to DSCP</th>
+                </tr>
+                <tr>
+                    <td><strong>7</strong></td>
+                    <td>Network Control</td>
+                    <td>Reserved (routing protocols)</td>
+                    <td>CS7 (56)</td>
+                </tr>
+                <tr>
+                    <td><strong>6</strong></td>
+                    <td>Internetwork Control</td>
+                    <td>Reserved (network management)</td>
+                    <td>CS6 (48)</td>
+                </tr>
+                <tr>
+                    <td><strong>5</strong></td>
+                    <td>Voice</td>
+                    <td>VoIP audio</td>
+                    <td>EF (46)</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td>Video</td>
+                    <td>Video conferencing</td>
+                    <td>AF41 (34)</td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>Critical Applications</td>
+                    <td>Mission-critical data</td>
+                    <td>AF31 (26)</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>Excellent Effort</td>
+                    <td>Business-important data</td>
+                    <td>AF21 (18)</td>
+                </tr>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>Background</td>
+                    <td>Bulk data, backups</td>
+                    <td>AF11 (10)</td>
+                </tr>
+                <tr>
+                    <td><strong>0</strong></td>
+                    <td>Best Effort</td>
+                    <td>Default traffic</td>
+                    <td>DF (0)</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <strong>CoS Limitation:</strong> CoS is Layer 2 only and doesn't survive routing. Use DSCP for end-to-end QoS across routed networks.
+            </div>
+            <div class="slide-number">Slide 9 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 10: Trust Boundaries -->
+        <div class="slide">
+            <h2>Trust Boundaries - Where to Trust Markings</h2>
+            <p>The trust boundary defines where you trust incoming QoS markings versus where you remark traffic.</p>
+
+            <div class="trust-boundary-diagram">
+                <div class="device-box untrusted">
+                    PC / Phone<br>
+                    <small>UNTRUSTED</small>
+                </div>
+                <div class="arrow">→</div>
+                <div class="device-box trusted">
+                    Access Switch<br>
+                    <small>TRUST BOUNDARY</small>
+                </div>
+                <div class="arrow">→</div>
+                <div class="device-box trusted">
+                    Distribution<br>
+                    <small>TRUSTED</small>
+                </div>
+                <div class="arrow">→</div>
+                <div class="device-box trusted">
+                    Core<br>
+                    <small>TRUSTED</small>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #ef4444; background: #fef2f2;">
+                    <h3 style="color: #dc2626;">❌ Untrusted Devices</h3>
+                    <ul>
+                        <li>End-user PCs</li>
+                        <li>Guest devices</li>
+                        <li>Unknown devices</li>
+                    </ul>
+                    <p><strong>Action:</strong> Ignore/overwrite markings, classify and mark at access switch</p>
+                </div>
+                <div class="comparison-box" style="border-color: #10b981; background: #f0fdf4;">
+                    <h3 style="color: #059669;">✅ Trusted Devices</h3>
+                    <ul>
+                        <li>IP phones (Cisco)</li>
+                        <li>Video endpoints</li>
+                        <li>Other network devices</li>
+                    </ul>
+                    <p><strong>Action:</strong> Trust incoming markings, preserve them</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Cisco IP Phone Exception:</strong> You can configure a switch port to trust CoS/DSCP markings from a Cisco IP phone while ignoring markings from the PC connected to the phone.
+            </div>
+
+            <div class="key-point">
+                <strong>Best Practice:</strong> Set the trust boundary as close to the source as possible (usually the access switch). Don't trust end-user devices unless necessary.
+            </div>
+            <div class="slide-number">Slide 10 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 11: Queuing Methods -->
+        <div class="slide">
+            <h2>Queuing - Managing Traffic Flow</h2>
+            <p>Queuing determines which packets get transmitted first when an interface becomes congested.</p>
+
+            <h3>Queuing Algorithms:</h3>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>How It Works</th>
+                    <th>When to Use</th>
+                </tr>
+                <tr>
+                    <td><strong>FIFO</strong></td>
+                    <td>First In, First Out - simple queue</td>
+                    <td>Default, no QoS (not recommended)</td>
+                </tr>
+                <tr>
+                    <td><strong>PQ (Priority Queuing)</strong></td>
+                    <td>4 queues, services high-priority queue first</td>
+                    <td>Legacy (can starve low-priority traffic)</td>
+                </tr>
+                <tr>
+                    <td><strong>WFQ (Weighted Fair Queuing)</strong></td>
+                    <td>Automatic per-flow fairness</td>
+                    <td>Default on serial links &lt;2 Mbps</td>
+                </tr>
+                <tr>
+                    <td><strong>CBWFQ</strong></td>
+                    <td>Class-Based WFQ - define classes with guaranteed bandwidth</td>
+                    <td>Modern QoS - custom classes</td>
+                </tr>
+                <tr>
+                    <td><strong>LLQ</strong></td>
+                    <td>CBWFQ + strict priority queue for delay-sensitive traffic</td>
+                    <td><strong>RECOMMENDED - Voice/video + data</strong></td>
+                </tr>
+            </table>
+
+            <div class="success-box">
+                <h3 style="color: #059669;">LLQ is the Gold Standard</h3>
+                <p>Low Latency Queuing (LLQ) combines:</p>
+                <ul>
+                    <li>Strict priority queue for voice/video (guaranteed low latency)</li>
+                    <li>Class-based queues for data (guaranteed bandwidth)</li>
+                    <li>Policing to prevent priority queue from starving others</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 11 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 12: FIFO vs Priority Queue -->
+        <div class="slide">
+            <h2>FIFO vs Priority Queuing</h2>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #6b7280; background: #f9fafb;">
+                    <h3 style="color: #374151;">FIFO (First In, First Out)</h3>
+                    <div class="queue-visual">
+                        <div class="queue-box" style="border-color: #6b7280;">
+                            <div class="queue-label">Single Queue</div>
+                            <div class="packet" style="background: #ef4444;">V</div>
+                            <div class="packet" style="background: #3b82f6;">D</div>
+                            <div class="packet" style="background: #10b981;">W</div>
+                            <div class="packet" style="background: #ef4444;">V</div>
+                            <div class="packet" style="background: #6b7280;">E</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>All packets treated equally</li>
+                        <li>Voice waits behind bulk data</li>
+                        <li>Simple but ineffective</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-box" style="border-color: #7c3aed; background: #faf5ff;">
+                    <h3 style="color: #7c3aed;">Priority Queuing (PQ)</h3>
+                    <div class="queue-visual">
+                        <div class="queue-box" style="border-color: #ef4444;">
+                            <div class="queue-label">High (Voice)</div>
+                            <div class="packet" style="background: #ef4444;">V</div>
+                            <div class="packet" style="background: #ef4444;">V</div>
+                        </div>
+                        <div class="queue-box" style="border-color: #3b82f6;">
+                            <div class="queue-label">Medium (Data)</div>
+                            <div class="packet" style="background: #3b82f6;">D</div>
+                        </div>
+                        <div class="queue-box" style="border-color: #6b7280;">
+                            <div class="queue-label">Low (Bulk)</div>
+                            <div class="packet" style="background: #6b7280;">E</div>
+                            <div class="packet" style="background: #6b7280;">E</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>High priority serviced first</li>
+                        <li>Can starve lower queues</li>
+                        <li>Good for voice but risky</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>Priority Queue Problem:</strong> If high-priority traffic is continuous, low-priority queues never get serviced (starvation). This is why LLQ adds policing.
+            </div>
+            <div class="slide-number">Slide 12 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 13: LLQ - Low Latency Queuing -->
+        <div class="slide">
+            <h2>LLQ - Low Latency Queuing (The Best Choice)</h2>
+            <p>LLQ combines strict priority queuing for delay-sensitive traffic with class-based fair queuing for data.</p>
+
+            <div class="key-point">
+                <strong>LLQ = CBWFQ + Priority Queue + Policing</strong><br>
+                Voice/video gets strict priority (serviced first), but with bandwidth limits to prevent starvation of other classes.
+            </div>
+
+            <div class="queue-visual" style="flex-direction: column; align-items: center;">
+                <div class="queue-box" style="border-color: #ef4444; background: #fef2f2; min-width: 300px;">
+                    <div class="queue-label" style="color: #ef4444;">🎤 Priority Queue (Voice) - 128 Kbps</div>
+                    <div style="display: flex; justify-content: center; gap: 5px;">
+                        <div class="packet" style="background: #ef4444;">V</div>
+                        <div class="packet" style="background: #ef4444;">V</div>
+                    </div>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Serviced FIRST, always</p>
+                </div>
+                <div style="margin: 10px 0; color: #7c3aed; font-size: 1.5em;">⬇️</div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="queue-box" style="border-color: #3b82f6;">
+                        <div class="queue-label" style="color: #3b82f6;">Video - 512 Kbps</div>
+                        <div class="packet" style="background: #3b82f6;">Vid</div>
+                    </div>
+                    <div class="queue-box" style="border-color: #10b981;">
+                        <div class="queue-label" style="color: #10b981;">Critical - 256 Kbps</div>
+                        <div class="packet" style="background: #10b981;">DB</div>
+                    </div>
+                    <div class="queue-box" style="border-color: #6b7280;">
+                        <div class="queue-label" style="color: #6b7280;">Default - remaining</div>
+                        <div class="packet" style="background: #6b7280;">Web</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3 style="color: #059669;">Why LLQ Works</h3>
+                <ul>
+                    <li><strong>Voice gets low latency:</strong> Priority queue is always serviced first</li>
+                    <li><strong>No starvation:</strong> Priority queue is policed (bandwidth limited)</li>
+                    <li><strong>Fair data treatment:</strong> Other classes get guaranteed bandwidth shares</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 13 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 14: Congestion Avoidance - WRED -->
+        <div class="slide">
+            <h2>Congestion Avoidance - WRED</h2>
+            <p>WRED (Weighted Random Early Detection) prevents TCP global synchronization by intelligently dropping packets BEFORE queues fill.</p>
+
+            <div class="key-point">
+                <strong>Problem Without WRED:</strong> When a queue fills, tail drop occurs - ALL new packets are dropped. This causes all TCP sessions to slow down simultaneously (global synchronization), then speed up together, causing oscillation.
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #ef4444; background: #fef2f2;">
+                    <h3 style="color: #dc2626;">Tail Drop (Bad)</h3>
+                    <ul>
+                        <li>Queue fills to 100%</li>
+                        <li>All new packets dropped</li>
+                        <li>All TCP sessions slow down together</li>
+                        <li>Then all speed up together</li>
+                        <li>Causes oscillation and inefficiency</li>
+                    </ul>
+                </div>
+                <div class="comparison-box" style="border-color: #10b981; background: #f0fdf4;">
+                    <h3 style="color: #059669;">WRED (Good)</h3>
+                    <ul>
+                        <li>Monitors queue depth</li>
+                        <li>Randomly drops packets as queue fills</li>
+                        <li>Different drop probability per DSCP</li>
+                        <li>Lower-priority traffic dropped first</li>
+                        <li>Prevents global synchronization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>WRED Drop Thresholds:</strong><br>
+                - <strong>Min Threshold:</strong> No drops below this queue depth<br>
+                - <strong>Max Threshold:</strong> Drop probability increases between min and max<br>
+                - <strong>Above Max:</strong> All packets dropped (tail drop)
+            </div>
+
+            <div class="warning-box">
+                <strong>WRED and Voice:</strong> NEVER use WRED on voice traffic! Voice is UDP and doesn't retransmit. Drops = bad audio. Use WRED only on TCP data classes.
+            </div>
+            <div class="slide-number">Slide 14 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 15: Policing vs Shaping -->
+        <div class="slide">
+            <h2>Traffic Conditioning - Policing vs Shaping</h2>
+            <p>Both limit traffic rates, but handle excess traffic differently:</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-box policing">
+                    <h3 style="color: #dc2626;">🚨 Policing</h3>
+                    <ul>
+                        <li><strong>Action on Excess:</strong> DROP or REMARK</li>
+                        <li><strong>Buffering:</strong> None</li>
+                        <li><strong>Effect:</strong> Can cause packet loss, TCP retransmissions</li>
+                        <li><strong>Where:</strong> Service provider edge, ingress</li>
+                        <li><strong>Direction:</strong> Inbound or outbound</li>
+                    </ul>
+                    <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px;">
+                        <strong>Example:</strong> ISP limits your upload to 10 Mbps. Excess packets are dropped.
+                    </div>
+                </div>
+                <div class="comparison-box shaping">
+                    <h3 style="color: #059669;">📊 Shaping</h3>
+                    <ul>
+                        <li><strong>Action on Excess:</strong> BUFFER (delay)</li>
+                        <li><strong>Buffering:</strong> Yes, uses queues</li>
+                        <li><strong>Effect:</strong> Increases latency, but fewer drops</li>
+                        <li><strong>Where:</strong> Customer edge, egress</li>
+                        <li><strong>Direction:</strong> Outbound only</li>
+                    </ul>
+                    <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px;">
+                        <strong>Example:</strong> You shape outbound to 10 Mbps to match ISP's limit. Excess buffered, not dropped.
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-point">
+                <strong>When to Use Each:</strong><br>
+                <strong>Policing:</strong> Enforce limits on untrusted traffic (ingress from customers/internet)<br>
+                <strong>Shaping:</strong> Smooth outbound traffic to avoid being policed by downstream device
+            </div>
+            <div class="slide-number">Slide 15 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 16: Token Bucket Algorithm -->
+        <div class="slide">
+            <h2>Token Bucket - How Policing/Shaping Works</h2>
+            <p>Both policing and shaping use the token bucket algorithm to measure traffic rates:</p>
+
+            <div class="key-point">
+                <strong>Token Bucket Concept:</strong><br>
+                - Tokens are added to a bucket at a configured rate (e.g., 1 token per bit)<br>
+                - Each packet needs tokens equal to its size to be transmitted<br>
+                - If enough tokens exist, packet is sent and tokens are removed<br>
+                - If not enough tokens, packet is dropped (policing) or buffered (shaping)
+            </div>
+
+            <h3>Key Parameters:</h3>
+            <div class="config-steps">
+                <div class="config-step">
+                    <div>
+                        <strong>CIR (Committed Information Rate)</strong><br>
+                        Target average rate in bps - tokens added at this rate
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>Bc (Committed Burst)</strong><br>
+                        Bucket size in bits - how many tokens the bucket can hold
+                    </div>
+                </div>
+                <div class="config-step">
+                    <div>
+                        <strong>Be (Excess Burst)</strong><br>
+                        Additional tokens for temporary bursts (policing only)
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Example:</strong> CIR = 1 Mbps, Bc = 8000 bits<br>
+                - Normal traffic: Uses tokens as they arrive at 1 Mbps<br>
+                - Burst: Can send 8000 bits instantly (if bucket is full)<br>
+                - Sustained excess: Tokens depleted, packets dropped/delayed
+            </div>
+            <div class="slide-number">Slide 16 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 17: QoS Configuration Example -->
+        <div class="slide">
+            <h2>Basic QoS Configuration - Class-Based</h2>
+            <p>Configuring QoS using MQC (Modular QoS CLI):</p>
+
+            <div class="code-block">
+! Step 1: Define traffic classes
+class-map match-any VOICE
+  match ip dscp ef
+
+class-map match-any VIDEO
+  match ip dscp af41
+
+class-map match-any CRITICAL-DATA
+  match ip dscp af31
+
+! Step 2: Define policy (what to do with each class)
+policy-map WAN-QoS
+  class VOICE
+    priority 128           ! Strict priority, 128 Kbps
+  class VIDEO
+    bandwidth 512          ! Guaranteed 512 Kbps
+  class CRITICAL-DATA
+    bandwidth 256          ! Guaranteed 256 Kbps
+  class class-default
+    fair-queue             ! Remaining bandwidth
+
+! Step 3: Apply policy to interface
+interface GigabitEthernet0/0
+  service-policy output WAN-QoS
+            </div>
+
+            <div class="info-box">
+                <strong>Three-Step MQC Process:</strong><br>
+                1. <code>class-map</code> - Define traffic classes (classification)<br>
+                2. <code>policy-map</code> - Define actions for each class (queuing, policing, marking)<br>
+                3. <code>service-policy</code> - Apply policy to interface
+            </div>
+            <div class="slide-number">Slide 17 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 18: Marking Configuration -->
+        <div class="slide">
+            <h2>Marking Traffic - Setting DSCP/CoS</h2>
+            <p>Marking traffic at the network edge:</p>
+
+            <div class="code-block">
+! Classify and mark voice traffic
+class-map match-any VOICE-TRAFFIC
+  match protocol rtp audio   ! Using NBAR
+
+policy-map MARK-TRAFFIC
+  class VOICE-TRAFFIC
+    set dscp ef              ! Mark as EF (46)
+  class VIDEO-TRAFFIC
+    set dscp af41            ! Mark as AF41 (34)
+  class BUSINESS-APPS
+    set dscp af31            ! Mark as AF31 (26)
+
+! Apply at access layer
+interface GigabitEthernet0/1
+  service-policy input MARK-TRAFFIC
+
+! On switches - trust DSCP from IP phones
+interface GigabitEthernet0/2
+  mls qos trust dscp         ! Trust incoming DSCP
+            </div>
+
+            <div class="warning-box">
+                <strong>Trust Boundary:</strong> Mark traffic at the access switch, then trust those markings throughout the rest of the network. Don't remark unnecessarily!
+            </div>
+
+            <div class="success-box">
+                <h3 style="color: #059669;">Marking Best Practices</h3>
+                <ul>
+                    <li>Mark as close to the source as possible</li>
+                    <li>Use standard DSCP values (EF, AF classes)</li>
+                    <li>Trust IP phones but not PCs</li>
+                    <li>Document your marking scheme</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 18 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 19: QoS Verification -->
+        <div class="slide">
+            <h2>Verification Commands</h2>
+            <p>Essential show commands for verifying QoS configuration:</p>
+
+            <div class="code-block">
+! Show applied service policy and statistics
+Router# show policy-map interface GigabitEthernet0/0
+
+! Show class-map configuration
+Router# show class-map
+
+! Show policy-map configuration
+Router# show policy-map
+
+! Show MQC statistics
+Router# show policy-map interface g0/0 output
+
+! On switches - show QoS status
+Switch# show mls qos
+
+! Show interface QoS trust state
+Switch# show mls qos interface GigabitEthernet0/1
+            </div>
+
+            <div class="info-box">
+                <strong>Key Output to Check:</strong><br>
+                - Traffic matched per class (packets/bytes)<br>
+                - Drops per class (indicates congestion)<br>
+                - Queue depth and usage<br>
+                - Priority queue packets offered vs dropped
+            </div>
+
+            <div class="warning-box">
+                <strong>Testing QoS:</strong> QoS only activates during congestion! If the link isn't congested, you won't see queuing or drops. Use traffic generators or simulate congestion to test.
+            </div>
+            <div class="slide-number">Slide 19 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+
+        <!-- Slide 20: Summary -->
+        <div class="slide">
+            <h2>Key Takeaways - QoS Essentials</h2>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #7c3aed; background: #faf5ff;">
+                    <h3 style="color: #7c3aed;">🎯 Why QoS?</h3>
+                    <ul>
+                        <li>Voice requires &lt;150ms latency, &lt;30ms jitter</li>
+                        <li>Limited bandwidth must be managed</li>
+                        <li>Different apps have different needs</li>
+                        <li>QoS prioritizes critical traffic</li>
+                    </ul>
+                </div>
+                <div class="comparison-box" style="border-color: #7c3aed; background: #faf5ff;">
+                    <h3 style="color: #7c3aed;">📋 Classification & Marking</h3>
+                    <ul>
+                        <li><strong>DSCP:</strong> 6-bit field, 0-63 (Layer 3)</li>
+                        <li><strong>EF (46):</strong> Voice priority</li>
+                        <li><strong>AF classes:</strong> 4 classes × 3 drop levels</li>
+                        <li><strong>CoS:</strong> 3-bit field, 0-7 (Layer 2, trunks only)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box" style="border-color: #7c3aed; background: #faf5ff;">
+                    <h3 style="color: #7c3aed;">⚙️ Queuing</h3>
+                    <ul>
+                        <li><strong>LLQ:</strong> Best for voice + data</li>
+                        <li>Priority queue for delay-sensitive traffic</li>
+                        <li>CBWFQ for guaranteed bandwidth</li>
+                        <li>WRED prevents TCP global sync</li>
+                    </ul>
+                </div>
+                <div class="comparison-box" style="border-color: #7c3aed; background: #faf5ff;">
+                    <h3 style="color: #7c3aed;">🎯 Key Differences</h3>
+                    <ul>
+                        <li><strong>Policing:</strong> Drops excess (ingress)</li>
+                        <li><strong>Shaping:</strong> Buffers excess (egress)</li>
+                        <li><strong>Trust Boundary:</strong> Access layer</li>
+                        <li><strong>MQC:</strong> class-map → policy-map → service-policy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="key-point" style="text-align: center;">
+                <p style="color: white; font-size: 1.3em; margin: 0;">🎓 QoS is essential for voice/video - Know DSCP values, LLQ, and policing vs shaping!</p>
+            </div>
+            <div class="slide-number">Slide 20 of 20</div>
+            <div class="prepared-by">Hexworth Academy</div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()" id="prevBtn">← Previous</button>
+        <button onclick="nextSlide()" id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                showSlide(0);
+            } else if (e.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Touch navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) {
+                nextSlide();
+            } else if (touchEndX - touchStartX > 50) {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
