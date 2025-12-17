@@ -2456,7 +2456,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.12.0</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.13.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2475,7 +2475,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.12.0</div>
+                        <div class="value" id="modalCurrentVersion">7.13.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -2995,6 +2995,30 @@
                         </ul>
                     </div>
                     <a href="resources/presentations/ipv6-presentation.html" class="btn" style="background: #10b981; color: #000; font-weight: bold;">🚀 View Presentation</a>
+                </div>
+
+                <!-- EtherChannel Presentation - NEW! -->
+                <div class="card" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3b82f6 100%); color: white; border: 3px solid #3b82f6;">
+                    <div class="card-header">
+                        <div class="card-icon">🔗</div>
+                        <div class="card-title" style="color: white;">EtherChannel & Link Aggregation ⭐ NEW!</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>20 Slides</strong></span>
+                        <span><span class="badge" style="background: #3b82f6; color: white;">CCNA 2.5</span></span>
+                    </div>
+                    <div class="card-description" style="color: #dbeafe;">
+                        <p>Complete EtherChannel/Link Aggregation for CCNA certification:</p>
+                        <ul style="color: #dbeafe;">
+                            <li>LACP vs PAgP protocols and modes</li>
+                            <li>Mode compatibility (active/passive, desirable/auto)</li>
+                            <li>Configuration and verification commands</li>
+                            <li>Load balancing methods</li>
+                            <li>Troubleshooting common issues</li>
+                        </ul>
+                    </div>
+                    <a href="resources/presentations/etherchannel-presentation.html" class="btn" style="background: #3b82f6; color: white; font-weight: bold;">🚀 View Presentation</a>
+                    <a href="resources/speaker-notes/etherchannel-speaker-notes.md" class="btn" style="background: rgba(255,255,255,0.2); color: white;">Speaker Notes</a>
                 </div>
 
                 <!-- ACL Presentation -->
@@ -3919,6 +3943,31 @@
                         </ul>
                     </div>
                     <a href="resources/tools/ipv6-visualizer.html" class="btn" style="background: #10b981; color: #000; font-weight: bold;">🚀 Launch Visualizer</a>
+                </div>
+
+                <!-- EtherChannel Visualizer - NEW! -->
+                <div class="card" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3b82f6 100%); color: white; border: 3px solid #3b82f6;">
+                    <div class="card-header">
+                        <div class="card-icon">🔗</div>
+                        <div class="card-title" style="color: white;">EtherChannel Visualizer ⭐ NEW!</div>
+                    </div>
+                    <div class="card-meta">
+                        <span style="color: white;"><strong>Interactive LACP/PAgP Tool</strong></span>
+                        <span><span class="badge" style="background: #3b82f6; color: white;">CCNA 2.5</span></span>
+                    </div>
+                    <div class="card-description" style="color: #dbeafe;">
+                        Master EtherChannel configuration with this interactive tool! Test LACP and PAgP mode combinations,
+                        see which configurations form a channel, and build configs step-by-step.
+                    </div>
+                    <div class="card-features" style="background: rgba(255,255,255,0.1); color: white;">
+                        <ul>
+                            <li><strong>Mode Simulator:</strong> Test active/passive, desirable/auto combinations live</li>
+                            <li><strong>Compatibility Matrix:</strong> Quick reference for all mode combinations</li>
+                            <li><strong>Config Builder:</strong> Generate LACP/PAgP configs with options</li>
+                            <li><strong>10-Question Quiz:</strong> Test your EtherChannel knowledge</li>
+                        </ul>
+                    </div>
+                    <a href="resources/tools/etherchannel-visualizer.html" class="btn" style="background: #3b82f6; color: white; font-weight: bold;">🚀 Launch Visualizer</a>
                 </div>
 
                 <!-- ACL Visualizer - NEW! -->
@@ -8550,6 +8599,7 @@
             { title: 'IP Addressing', type: 'Presentation', icon: '🎓', link: 'presentations/ip-presentation.html', keywords: ['ip address', 'ipv4', 'ipv6', 'classes', 'classful', 'addressing', 'binary'], section: 'section-presentations' },
             { title: 'Subnetting', type: 'Presentation', icon: '🎓', link: 'presentations/subnetting-presentation.html', keywords: ['subnet', 'subnetting', 'cidr', 'vlsm', 'mask', 'network address', 'broadcast'], section: 'section-presentations' },
             { title: 'IPv6 Addressing', type: 'Presentation', icon: '🎓', link: 'resources/presentations/ipv6-presentation.html', keywords: ['ipv6', 'ipv6 address', 'gua', 'link-local', 'slaac', 'dhcpv6', 'eui-64', 'multicast', 'anycast', 'compression', 'ccna'], section: 'section-presentations' },
+            { title: 'EtherChannel', type: 'Presentation', icon: '🎓', link: 'resources/presentations/etherchannel-presentation.html', keywords: ['etherchannel', 'lacp', 'pagp', 'link aggregation', 'port channel', 'active', 'passive', 'desirable', 'auto', 'bundle', 'ccna'], section: 'section-presentations' },
             { title: 'Ethernet Fundamentals', type: 'Presentation', icon: '🎓', link: 'presentations/ethernet-presentation.html', keywords: ['ethernet', 'csma/cd', 'frames', 'mac', '802.3', 'collision', 'duplex'], section: 'section-presentations' },
             { title: 'Network Topologies', type: 'Presentation', icon: '🎓', link: 'presentations/topology-presentation.html', keywords: ['topology', 'star', 'bus', 'ring', 'mesh', 'hybrid', 'point-to-point'], section: 'section-presentations' },
             { title: 'Cabling & Connectors', type: 'Presentation', icon: '🎓', link: 'presentations/cabling-presentation.html', keywords: ['cable', 'rj45', 'fiber', 'utp', 'stp', 'cat5', 'cat6', 'connector', 'straight-through', 'crossover'], section: 'section-presentations' },
@@ -8576,6 +8626,7 @@
             { title: 'Subnet Calculator', type: 'Interactive Tool', icon: '🔧', link: 'tools/subnet-calculator.html', keywords: ['subnet', 'calculator', 'cidr', 'vlsm', 'ip', 'network', 'broadcast'], section: 'section-tools' },
             { title: 'Binary Converter', type: 'Interactive Tool', icon: '🔧', link: 'tools/binary-converter.html', keywords: ['binary', 'decimal', 'converter', 'octet', 'ip address'], section: 'section-tools' },
             { title: 'IPv6 Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'resources/tools/ipv6-visualizer.html', keywords: ['ipv6', 'ipv6 address', 'slaac', 'dhcpv6', 'global unicast', 'link-local', 'compression', '128-bit', 'eui-64', 'stateless'], section: 'section-tools' },
+            { title: 'EtherChannel Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'resources/tools/etherchannel-visualizer.html', keywords: ['etherchannel', 'lacp', 'pagp', 'link aggregation', 'port channel', 'active', 'passive', 'desirable', 'auto', 'mode simulator', 'bundle'], section: 'section-tools' },
             { title: 'VLAN Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'tools/vlan-visualizer.html', keywords: ['vlan', 'trunk', 'tagging', 'visualization', '802.1q'], section: 'section-tools' },
             { title: 'STP Simulator', type: 'Interactive Tool', icon: '🔧', link: 'tools/stp-simulator.html', keywords: ['stp', 'spanning tree', 'root bridge', 'port states', 'simulation'], section: 'section-tools' },
             { title: 'Routing Table Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'tools/routing-visualizer.html', keywords: ['routing', 'table', 'longest match', 'metric', 'next hop'], section: 'section-tools' },
@@ -9543,7 +9594,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.12.0',
+            currentVersion: '7.13.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
@@ -9563,10 +9614,10 @@
          *
          * When to update:
          * - Version is automatically pulled from UPDATE_CONFIG.currentVersion
-         * - When you bump the version (currently 7.12.0), all resources will automatically
+         * - When you bump the version (currently 7.13.0), all resources will automatically
          *   use the new version parameter, forcing browsers to fetch fresh content
          *
-         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.12.0
+         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.13.0
          */
         (function applyCacheBusting() {
             const version = UPDATE_CONFIG.currentVersion;

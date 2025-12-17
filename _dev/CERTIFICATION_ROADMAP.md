@@ -16,14 +16,14 @@ This roadmap outlines the expansion of the Network Essentials catalog to provide
 
 Our approach: **Break down complex topics and make them interactive and easy to understand** for beginner-level students, avoiding "white paper speak" and using grounded, real-world analogies.
 
-### Current State (v7.12.0)
-- 13 Interactive Presentations (238 slides)
-- 10 Speaker Notes (625+ pages)
-- 5 Interactive Tools (2 simulators + OSPF, STP & IPv6 Visualizers)
+### Current State (v7.13.0)
+- 14 Interactive Presentations (258 slides)
+- 11 Speaker Notes (685+ pages)
+- 6 Interactive Tools (2 simulators + OSPF, STP, IPv6 & EtherChannel Visualizers)
 - 6 Cumulative Labs
 - 25 AWS Cloud Practitioner Applets
 - Cloud Lab Simulator
-- **IPv6 Presentation & Speaker Notes** (NEW! - Sprint 23 complete)
+- **EtherChannel Presentation, Speaker Notes & Visualizer** (NEW! - Sprint 24 complete)
 
 ### Target State (v5.0+)
 - 40+ Interactive Presentations
@@ -359,14 +359,20 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 - *Speaker Notes: Comprehensive instructor guide with timing, discussion prompts, exam tips*
 - *Visualizer: 5-tab interactive tool with compression practice, address types, quiz*
 
-### Sprint 24: EtherChannel
+### Sprint 24: EtherChannel ✅ COMPLETE
 **Covers:** CCNA 2.5
 
-| Task | Type | Priority |
-|------|------|----------|
-| EtherChannel Presentation | Presentation | High |
-| EtherChannel Visualizer - LACP/PAgP | Interactive Tool | High |
-| EtherChannel Lab Scenarios | Labs | Medium |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| EtherChannel Presentation (20 slides) | Presentation | High | ✅ v7.13.0 |
+| EtherChannel Speaker Notes (60+ pages) | Documentation | High | ✅ v7.13.0 |
+| EtherChannel Visualizer - LACP/PAgP | Interactive Tool | High | ✅ v7.13.0 |
+| ~~EtherChannel Lab Scenarios~~ | Labs | Medium | 🔜 Deferred |
+
+*All Sprint 24 deliverables complete:*
+- *Presentation: 20 slides covering link aggregation, LACP/PAgP modes, configuration, load balancing*
+- *Speaker Notes: Comprehensive instructor guide with mode compatibility tables, timing, exam tips*
+- *Visualizer: 4-tab interactive tool with Mode Simulator, Compatibility Matrix, Config Builder, Quiz*
 
 ### Sprint 25: First-Hop Redundancy
 **Covers:** CCNA 3.5

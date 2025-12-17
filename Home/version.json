@@ -1,11 +1,12 @@
 {
-  "version": "7.12.0",
+  "version": "7.13.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: IPv6 Presentation - 20 interactive slides covering CCNA 1.8, 1.9",
-    "Added: IPv6 Speaker Notes - 75+ pages comprehensive instructor guide",
-    "Added: Sprint 23 (IPv6 Deep Dive) now COMPLETE",
-    "Updated: Catalog with IPv6 presentation card and search entry",
+    "Added: EtherChannel Presentation - 20 interactive slides covering CCNA 2.5",
+    "Added: EtherChannel Speaker Notes - 60+ pages comprehensive instructor guide",
+    "Added: EtherChannel Visualizer - LACP/PAgP mode simulator, compatibility matrix, config builder",
+    "Added: Sprint 24 (EtherChannel) now COMPLETE",
+    "Updated: Catalog with EtherChannel presentation and visualizer cards",
     "Updated: Roadmap milestones and current state"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
