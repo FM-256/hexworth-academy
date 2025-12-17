@@ -1,13 +1,15 @@
 {
-  "version": "7.13.0",
+  "version": "7.14.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: EtherChannel Presentation - 20 interactive slides covering CCNA 2.5",
-    "Added: EtherChannel Speaker Notes - 60+ pages comprehensive instructor guide",
-    "Added: EtherChannel Visualizer - LACP/PAgP mode simulator, compatibility matrix, config builder",
-    "Added: Sprint 24 (EtherChannel) now COMPLETE",
-    "Updated: Catalog with EtherChannel presentation and visualizer cards",
-    "Updated: Roadmap milestones and current state"
+    "Added: FHRP Presentation & Visualizer - HSRP, VRRP, GLBP coverage (Sprint 25)",
+    "Added: QoS Presentation & Visualizer - DSCP, queuing, policing (Sprint 26)",
+    "Added: Wireless Architecture Presentation & Visualizer - WLC, CAPWAP (Sprint 27)",
+    "Added: Network Automation Presentation, Visualizer & Speaker Notes - REST API, JSON, Ansible (Sprint 28)",
+    "Added: OSI Deep Dive Presentation & Visualizer - All 7 layers in detail (Sprint 5)",
+    "Complete: Sprints 5, 25, 26, 27, 28 - 5 new presentations and 5 new visualizers",
+    "Updated: Catalog with all new presentation and visualizer cards",
+    "Updated: Search index with all new content entries"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json"
