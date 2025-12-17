@@ -1,11 +1,13 @@
 {
-  "version": "7.15.0",
+  "version": "7.16.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: The Unholy Dark Arts - Coming Soon teaser page",
-    "Added: Subtle 'another path' link in house selector for curious students",
-    "Dark Arts house placeholder with mysterious aesthetic and Five Gates preview",
-    "Previous: FHRP, QoS, Wireless, Automation presentations and visualizers (v7.14.0)"
+    "Added: Binary Fireflies - 20 floating 1s and 0s with organic movement",
+    "Added: Shooting Stars - Random binary-trail meteors every 8-15 seconds",
+    "Added: Firefly scatter effect when shooting stars pass nearby",
+    "Added: Mouse interaction - fireflies gently avoid cursor",
+    "Magical ambient effects adapt to house color scheme",
+    "Previous: Dark Arts Coming Soon page (v7.15.0)"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json"

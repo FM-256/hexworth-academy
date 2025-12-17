@@ -424,6 +424,91 @@
             50% { text-shadow: 2px 2px 4px rgba(0,0,0,0.4), 0 0 60px var(--glow-color), 0 0 120px var(--glow-color); }
         }
 
+        /* ==========================================
+           BINARY FIREFLIES & SHOOTING STARS
+           Magical ambient background effects
+           ========================================== */
+
+        .firefly-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .binary-firefly {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--accent, #9f7aea);
+            text-shadow:
+                0 0 5px var(--glow-color, rgba(159, 122, 234, 0.8)),
+                0 0 10px var(--glow-color, rgba(159, 122, 234, 0.6)),
+                0 0 20px var(--glow-color, rgba(159, 122, 234, 0.4));
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            user-select: none;
+        }
+
+        .binary-firefly.active {
+            opacity: 0.7;
+        }
+
+        .binary-firefly.scattered {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes fireflyPulse {
+            0%, 100% {
+                opacity: 0.5;
+                text-shadow:
+                    0 0 5px var(--glow-color),
+                    0 0 10px var(--glow-color),
+                    0 0 20px var(--glow-color);
+            }
+            50% {
+                opacity: 0.9;
+                text-shadow:
+                    0 0 8px var(--glow-color),
+                    0 0 15px var(--glow-color),
+                    0 0 30px var(--glow-color),
+                    0 0 40px var(--glow-color);
+            }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent, #9f7aea);
+            border-radius: 50%;
+            box-shadow:
+                0 0 6px 2px var(--accent, #9f7aea),
+                0 0 12px 4px var(--glow-color, rgba(159, 122, 234, 0.6));
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .shooting-star.active {
+            opacity: 1;
+        }
+
+        .shooting-star-trail {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: var(--accent, #9f7aea);
+            opacity: 0;
+            text-shadow: 0 0 5px var(--glow-color);
+            pointer-events: none;
+            user-select: none;
+        }
+
         header .subtitle {
             font-size: 1.3em;
             opacity: 0.95;
@@ -2294,6 +2379,9 @@
     </style>
 </head>
 <body>
+    <!-- Binary Fireflies Container -->
+    <div class="firefly-container" id="fireflyContainer"></div>
+
     <!-- Theme Fork - Magic vs Matrix Initial Choice -->
     <div class="theme-fork-overlay hidden" id="themeFork">
         <div class="theme-fork-container">
@@ -2456,7 +2544,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.15.0</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.16.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2475,7 +2563,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.15.0</div>
+                        <div class="value" id="modalCurrentVersion">7.16.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -9850,7 +9938,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.15.0',
+            currentVersion: '7.16.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
@@ -9870,10 +9958,10 @@
          *
          * When to update:
          * - Version is automatically pulled from UPDATE_CONFIG.currentVersion
-         * - When you bump the version (currently 7.15.0), all resources will automatically
+         * - When you bump the version (currently 7.16.0), all resources will automatically
          *   use the new version parameter, forcing browsers to fetch fresh content
          *
-         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.15.0
+         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.16.0
          */
         (function applyCacheBusting() {
             const version = UPDATE_CONFIG.currentVersion;
@@ -10159,6 +10247,308 @@
                     setTimeout(() => checkForUpdates(true), 2000);
                 }
             }
+        });
+
+        // ==========================================
+        // BINARY FIREFLIES & SHOOTING STARS SYSTEM
+        // Magical ambient background effects
+        // ==========================================
+
+        const FireflySystem = {
+            container: null,
+            fireflies: [],
+            fireflyCount: 20,
+            shootingStarInterval: null,
+            animationFrameId: null,
+
+            init() {
+                this.container = document.getElementById('fireflyContainer');
+                if (!this.container) return;
+
+                // Create fireflies
+                this.createFireflies();
+
+                // Start animation loop
+                this.animate();
+
+                // Start shooting stars
+                this.startShootingStars();
+
+                // Optional: Make fireflies react to mouse
+                document.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            },
+
+            createFireflies() {
+                for (let i = 0; i < this.fireflyCount; i++) {
+                    const firefly = document.createElement('div');
+                    firefly.className = 'binary-firefly';
+                    firefly.textContent = Math.random() > 0.5 ? '1' : '0';
+
+                    // Random starting position
+                    firefly.style.left = Math.random() * 100 + '%';
+                    firefly.style.top = Math.random() * 100 + '%';
+
+                    // Store movement data
+                    const data = {
+                        element: firefly,
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        baseSpeed: 0.3 + Math.random() * 0.4,
+                        wobbleOffset: Math.random() * Math.PI * 2,
+                        wobbleSpeed: 0.02 + Math.random() * 0.02,
+                        pulseOffset: Math.random() * Math.PI * 2,
+                        size: 12 + Math.random() * 6
+                    };
+
+                    firefly.style.fontSize = data.size + 'px';
+                    this.fireflies.push(data);
+                    this.container.appendChild(firefly);
+
+                    // Fade in with slight delay
+                    setTimeout(() => {
+                        firefly.classList.add('active');
+                    }, i * 100);
+                }
+            },
+
+            animate() {
+                const time = Date.now() * 0.001;
+
+                this.fireflies.forEach((f, index) => {
+                    // Organic wobble movement
+                    const wobbleX = Math.sin(time * f.wobbleSpeed + f.wobbleOffset) * 30;
+                    const wobbleY = Math.cos(time * f.wobbleSpeed * 0.7 + f.wobbleOffset) * 20;
+
+                    // Update velocity with slight randomness
+                    if (Math.random() < 0.01) {
+                        f.vx += (Math.random() - 0.5) * 0.2;
+                        f.vy += (Math.random() - 0.5) * 0.2;
+
+                        // Limit speed
+                        const speed = Math.sqrt(f.vx * f.vx + f.vy * f.vy);
+                        if (speed > f.baseSpeed) {
+                            f.vx = (f.vx / speed) * f.baseSpeed;
+                            f.vy = (f.vy / speed) * f.baseSpeed;
+                        }
+                    }
+
+                    // Move firefly
+                    f.x += f.vx + wobbleX * 0.01;
+                    f.y += f.vy + wobbleY * 0.01;
+
+                    // Wrap around screen
+                    if (f.x < -50) f.x = window.innerWidth + 50;
+                    if (f.x > window.innerWidth + 50) f.x = -50;
+                    if (f.y < -50) f.y = window.innerHeight + 50;
+                    if (f.y > window.innerHeight + 50) f.y = -50;
+
+                    // Apply position
+                    f.element.style.left = f.x + wobbleX + 'px';
+                    f.element.style.top = f.y + wobbleY + 'px';
+
+                    // Pulsing opacity
+                    const pulse = 0.4 + Math.sin(time * 2 + f.pulseOffset) * 0.3;
+                    f.element.style.opacity = pulse;
+
+                    // Occasionally change the digit
+                    if (Math.random() < 0.002) {
+                        f.element.textContent = Math.random() > 0.5 ? '1' : '0';
+                    }
+                });
+
+                this.animationFrameId = requestAnimationFrame(() => this.animate());
+            },
+
+            startShootingStars() {
+                const launchStar = () => {
+                    this.createShootingStar();
+                    // Random interval between 8-15 seconds
+                    const nextDelay = 8000 + Math.random() * 7000;
+                    this.shootingStarInterval = setTimeout(launchStar, nextDelay);
+                };
+
+                // First star after 3-6 seconds
+                setTimeout(launchStar, 3000 + Math.random() * 3000);
+            },
+
+            createShootingStar() {
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+
+                // Random start position (top or right edge)
+                const startFromTop = Math.random() > 0.5;
+                let startX, startY, endX, endY;
+
+                if (startFromTop) {
+                    startX = Math.random() * window.innerWidth * 0.8;
+                    startY = -10;
+                    endX = startX + 200 + Math.random() * 300;
+                    endY = window.innerHeight * 0.6 + Math.random() * window.innerHeight * 0.3;
+                } else {
+                    startX = window.innerWidth + 10;
+                    startY = Math.random() * window.innerHeight * 0.4;
+                    endX = -100;
+                    endY = startY + 200 + Math.random() * 300;
+                }
+
+                star.style.left = startX + 'px';
+                star.style.top = startY + 'px';
+                this.container.appendChild(star);
+
+                // Animate the star
+                const duration = 1500 + Math.random() * 1000;
+                const startTime = Date.now();
+
+                // Scatter nearby fireflies
+                this.scatterFireflies(startX, startY, endX, endY);
+
+                const animateStar = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out curve
+                    const easeProgress = 1 - Math.pow(1 - progress, 2);
+
+                    const currentX = startX + (endX - startX) * easeProgress;
+                    const currentY = startY + (endY - startY) * easeProgress;
+
+                    star.style.left = currentX + 'px';
+                    star.style.top = currentY + 'px';
+                    star.style.opacity = 1 - progress * 0.5;
+
+                    // Create trail particles
+                    if (Math.random() < 0.4) {
+                        this.createTrailParticle(currentX, currentY);
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animateStar);
+                    } else {
+                        star.remove();
+                    }
+                };
+
+                setTimeout(() => star.classList.add('active'), 10);
+                animateStar();
+            },
+
+            createTrailParticle(x, y) {
+                const particle = document.createElement('div');
+                particle.className = 'shooting-star-trail';
+                particle.textContent = Math.random() > 0.5 ? '1' : '0';
+                particle.style.left = x + (Math.random() - 0.5) * 10 + 'px';
+                particle.style.top = y + (Math.random() - 0.5) * 10 + 'px';
+                particle.style.opacity = 0.8;
+                this.container.appendChild(particle);
+
+                // Fade out and remove
+                let opacity = 0.8;
+                const fadeOut = () => {
+                    opacity -= 0.05;
+                    particle.style.opacity = opacity;
+                    if (opacity > 0) {
+                        requestAnimationFrame(fadeOut);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                fadeOut();
+            },
+
+            scatterFireflies(startX, startY, endX, endY) {
+                // Calculate the path of the shooting star
+                this.fireflies.forEach(f => {
+                    // Check if firefly is near the star's path
+                    const distToPath = this.pointToLineDistance(
+                        f.x, f.y, startX, startY, endX, endY
+                    );
+
+                    if (distToPath < 150) {
+                        // Scatter away from the path
+                        const angle = Math.atan2(f.y - startY, f.x - startX) + (Math.random() - 0.5);
+                        const force = (150 - distToPath) / 50;
+
+                        f.element.classList.add('scattered');
+                        f.vx += Math.cos(angle) * force * 2;
+                        f.vy += Math.sin(angle) * force * 2;
+
+                        // Remove scattered class after animation
+                        setTimeout(() => {
+                            f.element.classList.remove('scattered');
+                        }, 500);
+                    }
+                });
+            },
+
+            pointToLineDistance(px, py, x1, y1, x2, y2) {
+                const A = px - x1;
+                const B = py - y1;
+                const C = x2 - x1;
+                const D = y2 - y1;
+
+                const dot = A * C + B * D;
+                const lenSq = C * C + D * D;
+                let param = -1;
+
+                if (lenSq !== 0) param = dot / lenSq;
+
+                let xx, yy;
+
+                if (param < 0) {
+                    xx = x1;
+                    yy = y1;
+                } else if (param > 1) {
+                    xx = x2;
+                    yy = y2;
+                } else {
+                    xx = x1 + param * C;
+                    yy = y1 + param * D;
+                }
+
+                const dx = px - xx;
+                const dy = py - yy;
+                return Math.sqrt(dx * dx + dy * dy);
+            },
+
+            onMouseMove(e) {
+                // Subtle attraction/avoidance near cursor
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                this.fireflies.forEach(f => {
+                    const dx = f.x - mouseX;
+                    const dy = f.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 100 && dist > 0) {
+                        // Gentle push away from cursor
+                        const force = (100 - dist) / 5000;
+                        f.vx += (dx / dist) * force;
+                        f.vy += (dy / dist) * force;
+                    }
+                });
+            },
+
+            destroy() {
+                if (this.animationFrameId) {
+                    cancelAnimationFrame(this.animationFrameId);
+                }
+                if (this.shootingStarInterval) {
+                    clearTimeout(this.shootingStarInterval);
+                }
+                this.fireflies.forEach(f => f.element.remove());
+                this.fireflies = [];
+            }
+        };
+
+        // Initialize fireflies when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delay slightly to let the page load first
+            setTimeout(() => {
+                FireflySystem.init();
+            }, 500);
         });
     </script>
 </body>
