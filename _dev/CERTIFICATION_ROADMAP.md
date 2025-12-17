@@ -16,13 +16,14 @@ This roadmap outlines the expansion of the Network Essentials catalog to provide
 
 Our approach: **Break down complex topics and make them interactive and easy to understand** for beginner-level students, avoiding "white paper speak" and using grounded, real-world analogies.
 
-### Current State (v7.10.0)
+### Current State (v7.11.0)
 - 12 Interactive Presentations (218 slides)
 - 9 Speaker Notes (550+ pages)
-- 4 Interactive Tools (2 simulators + OSPF & STP Visualizers)
+- 5 Interactive Tools (2 simulators + OSPF, STP & IPv6 Visualizers)
 - 6 Cumulative Labs
-- **25 AWS Cloud Practitioner Applets** (NEW!)
-- **Cloud Lab Simulator** (NEW!)
+- 25 AWS Cloud Practitioner Applets
+- Cloud Lab Simulator
+- **IPv6 Comprehensive Visualizer** (NEW! - 5-tab learning tool)
 
 ### Target State (v5.0+)
 - 40+ Interactive Presentations
@@ -613,7 +614,8 @@ Located: `/home/eq/Ai content creation/network-essentials/CCNA/`
 | v5.0 | Network+ Full Coverage | TBD |
 | v5.5 | CCNA Full Coverage | TBD |
 | v6.0 | Gamification Complete | TBD |
-| **v7.10.0** | **AWS Cloud Practitioner CLF-C02 Complete** | **✅ Complete (Dec 16, 2025)** |
+| v7.10.0 | AWS Cloud Practitioner CLF-C02 Complete | ✅ Complete (Dec 16, 2025) |
+| **v7.11.0** | **IPv6 Comprehensive Visualizer (Sprint 23 partial)** | **✅ Complete (Dec 16, 2025)** |
 | v8.0 | All Certifications Complete | TBD |
 
 ---
