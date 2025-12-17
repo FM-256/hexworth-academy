@@ -16,14 +16,14 @@ This roadmap outlines the expansion of the Network Essentials catalog to provide
 
 Our approach: **Break down complex topics and make them interactive and easy to understand** for beginner-level students, avoiding "white paper speak" and using grounded, real-world analogies.
 
-### Current State (v7.13.0)
-- 14 Interactive Presentations (258 slides)
-- 11 Speaker Notes (685+ pages)
-- 6 Interactive Tools (2 simulators + OSPF, STP, IPv6 & EtherChannel Visualizers)
+### Current State (v7.14.0)
+- 19 Interactive Presentations (340+ slides)
+- 12 Speaker Notes (725+ pages)
+- 11 Interactive Visualizers (OSPF, STP, IPv6, EtherChannel, FHRP, QoS, Wireless, Automation, OSI Deep Dive)
 - 6 Cumulative Labs
 - 25 AWS Cloud Practitioner Applets
 - Cloud Lab Simulator
-- **EtherChannel Presentation, Speaker Notes & Visualizer** (NEW! - Sprint 24 complete)
+- **Sprints 5, 25-28 COMPLETE** (OSI Deep Dive, FHRP, QoS, Wireless Architecture, Automation)
 
 ### Target State (v5.0+)
 - 40+ Interactive Presentations
@@ -52,11 +52,11 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 | Domain | Weight | Topics | Status |
 |--------|--------|--------|--------|
 | **1.0 Network Fundamentals** | 20% | Network Components, Topologies, IPv4/IPv6, Virtualization | 🟡 Partial |
-| **2.0 Network Access** | 20% | VLANs, Trunking, EtherChannel, STP, Wireless | 🟢 Good Coverage |
-| **3.0 IP Connectivity** | 25% | Routing Concepts, OSPF, First-Hop Redundancy | 🟢 Good Coverage |
-| **4.0 IP Services** | 10% | NAT, NTP, DHCP, DNS, SNMP, QoS | 🟡 Partial |
+| **2.0 Network Access** | 20% | VLANs, Trunking, EtherChannel, STP, Wireless | 🟢 **Excellent** (Sprint 27 added) |
+| **3.0 IP Connectivity** | 25% | Routing Concepts, OSPF, First-Hop Redundancy | 🟢 **Excellent** (Sprint 25 added) |
+| **4.0 IP Services** | 10% | NAT, NTP, DHCP, DNS, SNMP, QoS | 🟢 Good Coverage (Sprint 26 added) |
 | **5.0 Security Fundamentals** | 15% | Security Concepts, VPNs, ACLs, Layer 2 Security | 🟡 Partial |
-| **6.0 Automation & Programmability** | 10% | REST APIs, Config Management, JSON/XML | 🔴 Not Started |
+| **6.0 Automation & Programmability** | 10% | REST APIs, Config Management, JSON/XML | 🟢 **COMPLETE** (Sprint 28) |
 
 ### AWS Cloud Practitioner CLF-C02 (4 Domains) 🆕
 
@@ -378,41 +378,60 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 - *Speaker Notes: Comprehensive instructor guide with mode compatibility tables, timing, exam tips*
 - *Visualizer: 4-tab interactive tool with Mode Simulator, Compatibility Matrix, Config Builder, Quiz*
 
-### Sprint 25: First-Hop Redundancy
+### Sprint 25: First-Hop Redundancy ✅ COMPLETE
 **Covers:** CCNA 3.5
 
-| Task | Type | Priority |
-|------|------|----------|
-| FHRP Presentation (HSRP focus) | Presentation | High |
-| HSRP Visualizer | Interactive Tool | High |
-| VRRP/GLBP Comparison | Documentation | Medium |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| FHRP Presentation (HSRP/VRRP/GLBP) | Presentation | High | ✅ v7.14.0 |
+| FHRP Visualizer | Interactive Tool | High | ✅ v7.14.0 |
+| VRRP/GLBP Comparison | Documentation | Medium | ✅ Included |
 
-### Sprint 26: QoS Basics
+*All Sprint 25 deliverables complete:*
+- *Presentation: HSRP, VRRP, GLBP coverage with failover scenarios*
+- *Visualizer: Interactive protocol comparison and failover simulation*
+
+### Sprint 26: QoS Basics ✅ COMPLETE
 **Covers:** CCNA 4.5
 
-| Task | Type | Priority |
-|------|------|----------|
-| QoS Presentation | Presentation | Medium |
-| QoS Visualizer - Marking/Queuing | Interactive Tool | Medium |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| QoS Presentation | Presentation | Medium | ✅ v7.14.0 |
+| QoS Visualizer - Marking/Queuing | Interactive Tool | Medium | ✅ v7.14.0 |
 
-### Sprint 27: Wireless Architectures
+*All Sprint 26 deliverables complete:*
+- *Presentation: DSCP, queuing, policing, traffic shaping*
+- *Visualizer: Interactive marking and queuing demonstration*
+
+### Sprint 27: Wireless Architectures ✅ COMPLETE
 **Covers:** CCNA 2.6, 2.7
 
-| Task | Type | Priority |
-|------|------|----------|
-| Cisco Wireless Presentation | Presentation | High |
-| WLC Visualizer | Interactive Tool | Medium |
-| Wireless Security (WPA3) | Presentation | High |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| Wireless Architecture Presentation | Presentation | High | ✅ v7.14.0 |
+| WLC/CAPWAP Visualizer | Interactive Tool | Medium | ✅ v7.14.0 |
+| Wireless Security (WPA3) | Presentation | High | ✅ Included |
 
-### Sprint 28: Automation & Programmability
+*All Sprint 27 deliverables complete:*
+- *Presentation: WLC, CAPWAP, autonomous vs lightweight APs*
+- *Visualizer: Wireless architecture topology explorer*
+
+### Sprint 28: Automation & Programmability ✅ COMPLETE
 **Covers:** CCNA 6.1-6.7
 
-| Task | Type | Priority |
-|------|------|----------|
-| Network Automation Presentation | Presentation | High |
-| REST API Basics | Presentation | High |
-| JSON/XML Visualizer | Interactive Tool | Medium |
-| Ansible/Puppet Overview | Documentation | Medium |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| Network Automation Presentation | Presentation | High | ✅ v7.14.0 |
+| Automation Visualizer | Interactive Tool | Medium | ✅ v7.14.0 |
+| Speaker Notes | Documentation | High | ✅ v7.14.0 |
+| REST API Basics | Presentation | High | ✅ Included |
+| JSON/XML Coverage | Interactive Tool | Medium | ✅ Included |
+| Ansible Overview | Documentation | Medium | ✅ Included |
+
+*All Sprint 28 deliverables complete:*
+- *Presentation: REST API, JSON, YAML, Ansible, Puppet, Chef*
+- *Visualizer: Interactive API explorer and config management demo*
+- *Speaker Notes: Comprehensive instructor guide*
 
 ---
 
@@ -628,7 +647,9 @@ Located: `/home/eq/Ai content creation/network-essentials/CCNA/`
 | v6.0 | Gamification Complete | TBD |
 | v7.10.0 | AWS Cloud Practitioner CLF-C02 Complete | ✅ Complete (Dec 16, 2025) |
 | v7.11.0 | IPv6 Comprehensive Visualizer | ✅ Complete (Dec 16, 2025) |
-| **v7.12.0** | **Sprint 23 Complete (IPv6 Presentation + Notes)** | **✅ Complete (Dec 16, 2025)** |
+| v7.12.0 | Sprint 23 Complete (IPv6 Presentation + Notes) | ✅ Complete (Dec 16, 2025) |
+| v7.13.0 | Sprint 24 Complete (EtherChannel) | ✅ Complete (Dec 16, 2025) |
+| **v7.14.0** | **Sprints 5, 25-28 Complete (OSI, FHRP, QoS, Wireless, Automation)** | **✅ Complete (Dec 16, 2025)** |
 | v8.0 | All Certifications Complete | TBD |
 
 ---
