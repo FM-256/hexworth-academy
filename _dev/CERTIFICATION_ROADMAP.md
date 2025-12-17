@@ -106,61 +106,54 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 ## PHASE 1: Foundation Completion (Sprints 1-4)
 *Fill gaps in existing content, complete speaker notes*
 
-### Sprint 1: Complete Existing Speaker Notes
+### Sprint 1: Complete Existing Speaker Notes ✅ COMPLETE
 **Goal:** Finish TCP/IP and DHCP speaker notes
+**Completed:** December 8, 2025
 
-| Task | Type | Est. Size | Priority |
-|------|------|-----------|----------|
-| TCP/IP Speaker Notes (70+ pages) | Documentation | Large | High |
-| DHCP Speaker Notes (65+ pages) | Documentation | Large | High |
-| Update coverage stats in README | Documentation | Small | Medium |
+| Task | Type | Status |
+|------|------|--------|
+| TCP/IP Speaker Notes (1,762 lines) | Documentation | ✅ Done |
+| DHCP Speaker Notes (1,709 lines) | Documentation | ✅ Done |
+| Update coverage stats in README | Documentation | ✅ Done |
 
-**Deliverable:** 11/12 presentations with speaker notes (92% coverage)
+**Deliverable:** 22/24 presentations with speaker notes (92% coverage)
 
-### Sprint 2: VLAN Visualizer
+### Sprint 2: VLAN Visualizer ✅ COMPLETE
 **Goal:** Create interactive VLAN visualizer
+**Completed:** December 2025
 
-| Task | Type | Est. Size | Priority |
-|------|------|-----------|----------|
-| VLAN Visualizer - Tab 1: What are VLANs? | Interactive Tool | Large | High |
-| VLAN Visualizer - Tab 2: Tagging Demo (802.1Q) | Interactive Tool | Large | High |
-| VLAN Visualizer - Tab 3: Trunk vs Access | Interactive Tool | Medium | High |
-| VLAN Visualizer - Tab 4: Inter-VLAN Routing | Interactive Tool | Large | High |
-| Add to catalog, rebuild package | Integration | Small | High |
+| Task | Type | Status |
+|------|------|--------|
+| VLAN Visualizer - Tab 1: What are VLANs? | Interactive Tool | ✅ Done |
+| VLAN Visualizer - Tab 2: 802.1Q Tagging | Interactive Tool | ✅ Done |
+| VLAN Visualizer - Tab 3: Trunk vs Access | Interactive Tool | ✅ Done |
+| VLAN Visualizer - Tab 4: Inter-VLAN Routing | Interactive Tool | ✅ Done |
+| Added to catalog | Integration | ✅ Done |
 
-**Objectives Covered:**
-- Network+ 2.3: Configure and deploy common Ethernet switching features
-- CCNA 2.1-2.3: VLANs and inter-VLAN routing
+**Location:** `resources/tools/vlan-visualizer.html` (1,952 lines)
 
-### Sprint 3: Subnetting Visualizer
+### Sprint 3: Subnetting Visualizer ✅ COMPLETE
 **Goal:** Create interactive subnetting calculator/visualizer
+**Completed:** December 2025
 
-| Task | Type | Est. Size | Priority |
-|------|------|-----------|----------|
-| Subnetting Visualizer - Tab 1: Binary Basics | Interactive Tool | Large | High |
-| Subnetting Visualizer - Tab 2: Subnet Calculator | Interactive Tool | Large | High |
-| Subnetting Visualizer - Tab 3: VLSM Designer | Interactive Tool | Large | Medium |
-| Subnetting Visualizer - Tab 4: Practice Mode | Interactive Tool | Large | High |
-| Add to catalog, rebuild package | Integration | Small | High |
+| Task | Type | Status |
+|------|------|--------|
+| Subnetting Visualizer - Multiple tabs | Interactive Tool | ✅ Done |
+| IP Applets Collection | Interactive Tools | ✅ Done |
+| Added to catalog | Integration | ✅ Done |
 
-**Objectives Covered:**
-- Network+ 1.4: Configure a subnet and use appropriate IP addressing schemes
-- CCNA 1.6: Configure and verify IPv4 addressing and subnetting
+**Location:** `resources/tools/subnetting-visualizer.html` + `resources/tools/ip-applets/`
 
-### Sprint 4: ACL Visualizer
+### Sprint 4: ACL Visualizer ✅ COMPLETE
 **Goal:** Create interactive ACL visualizer
+**Completed:** December 2025
 
-| Task | Type | Est. Size | Priority |
-|------|------|-----------|----------|
-| ACL Visualizer - Tab 1: What are ACLs? | Interactive Tool | Medium | High |
-| ACL Visualizer - Tab 2: Standard vs Extended | Interactive Tool | Large | High |
-| ACL Visualizer - Tab 3: Wildcard Mask Calculator | Interactive Tool | Medium | High |
-| ACL Visualizer - Tab 4: Packet Simulator | Interactive Tool | Large | High |
-| Add to catalog, rebuild package | Integration | Small | High |
+| Task | Type | Status |
+|------|------|--------|
+| ACL Visualizer - Interactive tabs | Interactive Tool | ✅ Done |
+| Added to catalog | Integration | ✅ Done |
 
-**Objectives Covered:**
-- Network+ 4.3: Apply network hardening techniques (ACLs)
-- CCNA 5.6: Configure and verify access control lists
+**Location:** `resources/tools/acl-visualizer.html`
 
 ---
 
@@ -349,15 +342,19 @@ Our approach: **Break down complex topics and make them interactive and easy to 
 ## PHASE 5: CCNA-Specific Content (Sprints 23-28)
 *Topics unique to CCNA not covered by Network+*
 
-### Sprint 23: IPv6 Deep Dive
+### Sprint 23: IPv6 Deep Dive ✅ PARTIAL
 **Covers:** CCNA 1.8, 1.9
 
-| Task | Type | Priority |
-|------|------|----------|
-| IPv6 Presentation (20 slides) | Presentation | High |
-| IPv6 Speaker Notes | Documentation | High |
-| IPv6 Visualizer - Address Types | Interactive Tool | High |
-| IPv6 Visualizer - SLAAC/DHCPv6 | Interactive Tool | High |
+| Task | Type | Priority | Status |
+|------|------|----------|--------|
+| IPv6 Presentation (20 slides) | Presentation | High | Pending |
+| IPv6 Speaker Notes | Documentation | High | Pending |
+| ~~IPv6 Visualizer - Address Types~~ | Interactive Tool | High | ✅ Combined |
+| ~~IPv6 Visualizer - SLAAC/DHCPv6~~ | Interactive Tool | High | ✅ Combined |
+| **IPv6 Comprehensive Visualizer** | Interactive Tool | High | ✅ v7.11.0 |
+
+*Note: Both visualizer tasks combined into single comprehensive 5-tab tool covering:*
+*Why IPv6, Address Format (interactive compressor), Address Types, Configuration (SLAAC/DHCPv6/Static), Quiz (10 questions)*
 
 ### Sprint 24: EtherChannel
 **Covers:** CCNA 2.5

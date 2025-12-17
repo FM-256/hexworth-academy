@@ -1,12 +1,13 @@
 {
-  "version": "7.10.0",
+  "version": "7.11.0",
   "releaseDate": "2025-12-16",
   "releaseNotes": [
-    "Added: AWS Cloud Practitioner (CLF-C02) applet collection - 25 interactive tools",
-    "Added: All 12 chapters covered with visualizers and quizzes",
-    "Added: AWS Service Explorer, Cloud Architecture Designer, Provider Comparison",
-    "Added: House of the Cloud section in index with AWS domain organization",
-    "Added: Search index entries for all AWS content"
+    "Added: IPv6 Comprehensive Visualizer - 5-tab interactive learning tool",
+    "Added: IPv6 address format with interactive compression tool",
+    "Added: IPv6 address types explorer (global unicast, link-local, multicast)",
+    "Added: IPv6 configuration methods (SLAAC, DHCPv6, Static)",
+    "Added: IPv6 quiz with 10 knowledge-check questions",
+    "Updated: Search index with IPv6 visualizer entry"
   ],
   "downloadUrl": "https://github.com/FM-256/hexworth-academy/archive/refs/heads/main.zip",
   "checkUrl": "https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json"

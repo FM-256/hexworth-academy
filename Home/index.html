@@ -2456,7 +2456,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.9.5</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.11.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2475,7 +2475,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.9.5</div>
+                        <div class="value" id="modalCurrentVersion">7.11.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -3869,6 +3869,33 @@
                         </ul>
                     </div>
                     <a href="resources/tools/subnetting-visualizer.html" class="btn" style="background: #4fc3f7; color: #000; font-weight: bold;">🚀 Launch Visualizer</a>
+                </div>
+
+                <!-- IPv6 Visualizer - NEW! -->
+                <div class="card" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); color: white; border: 3px solid #10b981;">
+                    <div class="card-header">
+                        <div class="card-icon">🌐</div>
+                        <div class="card-title" style="color: white;">IPv6 Visualizer ⭐ NEW!</div>
+                    </div>
+                    <div class="card-meta">
+                        <span style="color: white;"><strong>Interactive Learning Tool</strong></span>
+                        <span><span class="badge badge-complete" style="background: #10b981; color: #000;">v1.0</span></span>
+                    </div>
+                    <div class="card-description" style="color: #c0c0c0;">
+                        Master IPv6 addressing with this comprehensive interactive tool! Learn address format, compression rules,
+                        address types (unicast, multicast, anycast), and configuration methods (SLAAC, DHCPv6).
+                    </div>
+                    <div class="card-features" style="background: rgba(255,255,255,0.1); color: white;">
+                        <ul>
+                            <li><strong>Tab 1 - Why IPv6?:</strong> IPv4 exhaustion, benefits, IPv4 vs IPv6 comparison</li>
+                            <li><strong>Tab 2 - Address Format:</strong> 128-bit structure, compression rules, interactive compressor</li>
+                            <li><strong>Tab 3 - Address Types:</strong> Global, Link-Local, ULA, Multicast, Anycast explained</li>
+                            <li><strong>Tab 4 - Configuration:</strong> SLAAC, DHCPv6, static config with commands</li>
+                            <li><strong>Tab 5 - Quiz:</strong> 10-question assessment with explanations</li>
+                            <li>Perfect for CCNA 1.8, 1.9 objectives!</li>
+                        </ul>
+                    </div>
+                    <a href="resources/tools/ipv6-visualizer.html" class="btn" style="background: #10b981; color: #000; font-weight: bold;">🚀 Launch Visualizer</a>
                 </div>
 
                 <!-- ACL Visualizer - NEW! -->
@@ -8524,6 +8551,7 @@
             { title: 'OSI Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'tools/osi-visualizer.html', keywords: ['osi', 'layers', 'visualization', 'interactive', 'encapsulation'], section: 'section-tools' },
             { title: 'Subnet Calculator', type: 'Interactive Tool', icon: '🔧', link: 'tools/subnet-calculator.html', keywords: ['subnet', 'calculator', 'cidr', 'vlsm', 'ip', 'network', 'broadcast'], section: 'section-tools' },
             { title: 'Binary Converter', type: 'Interactive Tool', icon: '🔧', link: 'tools/binary-converter.html', keywords: ['binary', 'decimal', 'converter', 'octet', 'ip address'], section: 'section-tools' },
+            { title: 'IPv6 Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'resources/tools/ipv6-visualizer.html', keywords: ['ipv6', 'ipv6 address', 'slaac', 'dhcpv6', 'global unicast', 'link-local', 'compression', '128-bit', 'eui-64', 'stateless'], section: 'section-tools' },
             { title: 'VLAN Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'tools/vlan-visualizer.html', keywords: ['vlan', 'trunk', 'tagging', 'visualization', '802.1q'], section: 'section-tools' },
             { title: 'STP Simulator', type: 'Interactive Tool', icon: '🔧', link: 'tools/stp-simulator.html', keywords: ['stp', 'spanning tree', 'root bridge', 'port states', 'simulation'], section: 'section-tools' },
             { title: 'Routing Table Visualizer', type: 'Interactive Tool', icon: '🔧', link: 'tools/routing-visualizer.html', keywords: ['routing', 'table', 'longest match', 'metric', 'next hop'], section: 'section-tools' },
@@ -9491,7 +9519,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.9.5',
+            currentVersion: '7.11.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
@@ -9511,10 +9539,10 @@
          *
          * When to update:
          * - Version is automatically pulled from UPDATE_CONFIG.currentVersion
-         * - When you bump the version (currently 7.9.5), all resources will automatically
+         * - When you bump the version (currently 7.11.0), all resources will automatically
          *   use the new version parameter, forcing browsers to fetch fresh content
          *
-         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.9.5
+         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.11.0
          */
         (function applyCacheBusting() {
             const version = UPDATE_CONFIG.currentVersion;
