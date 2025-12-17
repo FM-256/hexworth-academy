@@ -2456,7 +2456,7 @@
             <div class="subtitle" id="catalogSubtitle">House of the Web - Networking Arts</div>
             <div class="prepared-by">Prepared by: EQ6</div>
             <div class="prepared-by">Last Updated: 2025-12-16</div>
-            <div class="prepared-by">Version: <span id="currentVersion">7.11.0</span></div>
+            <div class="prepared-by">Version: <span id="currentVersion">7.12.0</span></div>
             <div class="update-container">
                 <button class="update-btn" id="updateCheckBtn" onclick="checkForUpdates()">
                     <span class="update-icon">🔄</span>
@@ -2475,7 +2475,7 @@
                 <div class="version-info">
                     <div>
                         <div class="label">Current Version</div>
-                        <div class="value" id="modalCurrentVersion">7.11.0</div>
+                        <div class="value" id="modalCurrentVersion">7.12.0</div>
                     </div>
                     <div>
                         <div class="label">Latest Version</div>
@@ -2972,6 +2972,29 @@
                     </div>
                     <a href="resources/presentations/subnetting-presentation.html" class="btn">View Presentation</a>
                     <a href="resources/speaker-notes/subnetting-speaker-notes.md" class="btn btn-secondary">Speaker Notes</a>
+                </div>
+
+                <!-- IPv6 Presentation - NEW! -->
+                <div class="card" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); color: white; border: 3px solid #10b981;">
+                    <div class="card-header">
+                        <div class="card-icon">🌐</div>
+                        <div class="card-title" style="color: white;">IPv6 Addressing & Configuration ⭐ NEW!</div>
+                    </div>
+                    <div class="card-meta">
+                        <span><strong>20 Slides</strong></span>
+                        <span><span class="badge" style="background: #10b981; color: #000;">CCNA 1.8, 1.9</span></span>
+                    </div>
+                    <div class="card-description" style="color: #d1fae5;">
+                        <p>Complete IPv6 addressing for CCNA certification:</p>
+                        <ul style="color: #d1fae5;">
+                            <li>IPv6 address format & compression rules</li>
+                            <li>Address types: GUA, LLA, ULA, multicast, anycast</li>
+                            <li>Configuration: Static, SLAAC, DHCPv6</li>
+                            <li>EUI-64 interface ID generation</li>
+                            <li>Cisco IOS configuration commands</li>
+                        </ul>
+                    </div>
+                    <a href="resources/presentations/ipv6-presentation.html" class="btn" style="background: #10b981; color: #000; font-weight: bold;">🚀 View Presentation</a>
                 </div>
 
                 <!-- ACL Presentation -->
@@ -8526,6 +8549,7 @@
             { title: 'TCP/IP Model', type: 'Presentation', icon: '🎓', link: 'presentations/tcpip-presentation.html', keywords: ['tcp', 'ip', 'tcp/ip', 'protocol', 'suite', 'internet', 'four layers'], section: 'section-presentations' },
             { title: 'IP Addressing', type: 'Presentation', icon: '🎓', link: 'presentations/ip-presentation.html', keywords: ['ip address', 'ipv4', 'ipv6', 'classes', 'classful', 'addressing', 'binary'], section: 'section-presentations' },
             { title: 'Subnetting', type: 'Presentation', icon: '🎓', link: 'presentations/subnetting-presentation.html', keywords: ['subnet', 'subnetting', 'cidr', 'vlsm', 'mask', 'network address', 'broadcast'], section: 'section-presentations' },
+            { title: 'IPv6 Addressing', type: 'Presentation', icon: '🎓', link: 'resources/presentations/ipv6-presentation.html', keywords: ['ipv6', 'ipv6 address', 'gua', 'link-local', 'slaac', 'dhcpv6', 'eui-64', 'multicast', 'anycast', 'compression', 'ccna'], section: 'section-presentations' },
             { title: 'Ethernet Fundamentals', type: 'Presentation', icon: '🎓', link: 'presentations/ethernet-presentation.html', keywords: ['ethernet', 'csma/cd', 'frames', 'mac', '802.3', 'collision', 'duplex'], section: 'section-presentations' },
             { title: 'Network Topologies', type: 'Presentation', icon: '🎓', link: 'presentations/topology-presentation.html', keywords: ['topology', 'star', 'bus', 'ring', 'mesh', 'hybrid', 'point-to-point'], section: 'section-presentations' },
             { title: 'Cabling & Connectors', type: 'Presentation', icon: '🎓', link: 'presentations/cabling-presentation.html', keywords: ['cable', 'rj45', 'fiber', 'utp', 'stp', 'cat5', 'cat6', 'connector', 'straight-through', 'crossover'], section: 'section-presentations' },
@@ -9519,7 +9543,7 @@
     <script>
         // Configuration
         const UPDATE_CONFIG = {
-            currentVersion: '7.11.0',
+            currentVersion: '7.12.0',
             checkUrl: 'https://raw.githubusercontent.com/FM-256/hexworth-academy/main/Home/version.json',
             checkOnStartup: true,
             checkInterval: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
@@ -9539,10 +9563,10 @@
          *
          * When to update:
          * - Version is automatically pulled from UPDATE_CONFIG.currentVersion
-         * - When you bump the version (currently 7.11.0), all resources will automatically
+         * - When you bump the version (currently 7.12.0), all resources will automatically
          *   use the new version parameter, forcing browsers to fetch fresh content
          *
-         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.11.0
+         * Example: resources/presentations/osi.html becomes resources/presentations/osi.html?v=7.12.0
          */
         (function applyCacheBusting() {
             const version = UPDATE_CONFIG.currentVersion;
